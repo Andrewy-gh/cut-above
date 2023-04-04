@@ -5,12 +5,16 @@ import Login from './features/auth/Login';
 import RequireAuth from './features/auth/RequireAuth';
 import Welcome from './features/auth/Welcome';
 import Appointments from './features/appointments/Appointments';
+import Schedule from './features/schedule/Schedule';
+import NavBar from './components/NavBar';
 
 function App() {
   return (
     <BrowserRouter>
+      <NavBar />
       <Routes>
         <Route path="/*" element={<Home />} />
+        <Route path="/schedule" element={<Schedule />} />
         <Route path="/login" element={<Login />} />
         <Route element={<RequireAuth />}>
           <Route path="/welcome" element={<Welcome />} />

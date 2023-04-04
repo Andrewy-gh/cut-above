@@ -9,7 +9,9 @@ const logger = require('./utils/logger');
 const mongoose = require('mongoose');
 const appointmentRouter = require('./controllers/appointment');
 const authRouter = require('./controllers/auth');
+const logoutRouter = require('./controllers/logout');
 const refreshRouter = require('./controllers/refresh');
+const scheduleRouter = require('./controllers/schedule');
 
 logger.info('connecting to', config.MONGODB_URI);
 mongoose.set('strictQuery', false);
@@ -34,7 +36,9 @@ app.use(cookieParser());
 app.use(middleware.requestLogger);
 
 app.use('/auth', authRouter);
+app.use('/logout', logoutRouter);
 app.use('/refresh', refreshRouter);
+app.use('/schedule', scheduleRouter);
 app.use(middleware.verifyJWT);
 app.use('/appointment', appointmentRouter);
 

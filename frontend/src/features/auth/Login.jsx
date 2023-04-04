@@ -5,8 +5,8 @@ import { useLoginMutation } from './authApiSlice';
 import { useNavigate } from 'react-router-dom';
 
 function Login(props) {
-  const [user, setUser] = useState('');
-  const [password, setPassword] = useState('');
+  const [user, setUser] = useState('andy.yu617@gmail.com');
+  const [password, setPassword] = useState('pw');
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
