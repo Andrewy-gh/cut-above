@@ -42,4 +42,6 @@ app.use('/schedule', scheduleRouter);
 app.use(middleware.verifyJWT);
 app.use('/appointment', appointmentRouter);
 
+app.use(middleware.errorHandler);
+
 module.exports = app;

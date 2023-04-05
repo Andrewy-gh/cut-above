@@ -6,7 +6,14 @@ export const scheduleSlice = apiSlice.injectEndpoints({
       query: () => '/schedule',
       keepUnusedDataFor: 5,
     }),
+    addSchedule: builder.mutation({
+      query: (schedule) => ({
+        url: '/schedule',
+        method: 'POST',
+        body: schedule,
+      }),
+    }),
   }),
 });
 
-export const { useGetScheduleQuery } = scheduleSlice;
+export const { useGetScheduleQuery, useAddScheduleMutation } = scheduleSlice;

@@ -8,4 +8,24 @@ appointmentRouter.get('/', async (request, response) => {
   response.status(200).json(appointments);
 });
 
+appointmentRouter.post('/', async (request, response) => {
+  console.log('posting a new appointment');
+  const { date, time, employee } = request.body;
+  console.log({ date, time, employee });
+  const clientToBook = await User.findOne({ _id: request.user });
+  const employeeToBook = await User.findOne({ _id: employee });
+  const newAppt = new Appointment({
+    date,
+    time,
+    client: clientToBook,
+    employee: employeeToBook,
+  });
+  await newAppt.save();
+  response.status(201).json({
+    success: true,
+    message: 'Appointment successfully reserved',
+    data: newAppt,
+  });
+});
+
 module.exports = appointmentRouter;

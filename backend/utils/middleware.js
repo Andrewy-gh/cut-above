@@ -24,4 +24,11 @@ const verifyJWT = (req, res, next) => {
   });
 };
 
-module.exports = { requestLogger, verifyJWT };
+const errorHandler = (error, request, response, next) => {
+  logger.error(error.name);
+  logger.error(error.message);
+  response.status(500).send(error.message);
+  next(error);
+};
+
+module.exports = { errorHandler, requestLogger, verifyJWT };

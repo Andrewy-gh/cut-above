@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useGetAppointmentsQuery } from './apptApiSlice';
+import { useGetAppointmentsQuery } from './appointmentSlice';
 
 const Appointment = () => {
   const {
