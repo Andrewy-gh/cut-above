@@ -1,6 +1,6 @@
 const scheduleRouter = require('express').Router();
 const Schedule = require('../models/Schedule');
-const User = require('../models/User');
+// const User = require('../models/User');
 
 scheduleRouter.get('/', async (request, response) => {
   const schedule = await Schedule.find({}).populate(

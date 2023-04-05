@@ -22,7 +22,6 @@ const AddSchedule = () => {
           date: dateServices.convertEST(date),
         };
       });
-      // console.log('adding a new schedule', apptsForDate);
       await addSchedule(apptsForDate);
     } catch (error) {
       console.error('failed to save new schedule', error);

@@ -7,6 +7,7 @@ import Welcome from './features/auth/Welcome';
 import AddSchedule from './features/schedule/AddSchedule';
 import Appointments from './features/appointments/Appointments';
 import Schedule from './features/schedule/Schedule';
+import BookingPage from './features/schedule/BookingPage';
 import NavBar from './components/NavBar';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/*" element={<Home />} />
         <Route path="/schedule" element={<Schedule />} />
         <Route path="/add" element={<AddSchedule />} />
+        <Route path="/reserve" element={<BookingPage />} />
         <Route path="/login" element={<Login />} />
         <Route element={<RequireAuth />}>
           <Route path="/welcome" element={<Welcome />} />
