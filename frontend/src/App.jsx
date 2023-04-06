@@ -1,5 +1,6 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { CssBaseline, ThemeProvider, responsiveFontSizes } from '@mui/material';
 import Home from './components/Home';
 import Login from './features/auth/Login';
 import RequireAuth from './features/auth/RequireAuth';
@@ -9,22 +10,26 @@ import Appointments from './features/appointments/Appointments';
 import Schedule from './features/schedule/Schedule';
 import BookingPage from './features/schedule/BookingPage';
 import NavBar from './components/NavBar';
+import { theme } from './styles/styles';
 
 function App() {
   return (
     <BrowserRouter>
-      <NavBar />
-      <Routes>
-        <Route path="/*" element={<Home />} />
-        <Route path="/schedule" element={<Schedule />} />
-        <Route path="/add" element={<AddSchedule />} />
-        <Route path="/reserve" element={<BookingPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route element={<RequireAuth />}>
-          <Route path="/welcome" element={<Welcome />} />
-          <Route path="/appointments" element={<Appointments />} />
-        </Route>
-      </Routes>
+      <ThemeProvider theme={responsiveFontSizes(theme)}>
+        <CssBaseline />
+        <NavBar />
+        <Routes>
+          <Route path="/*" element={<Home />} />
+          <Route path="/schedule" element={<Schedule />} />
+          <Route path="/add" element={<AddSchedule />} />
+          <Route path="/reserve" element={<BookingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route element={<RequireAuth />}>
+            <Route path="/welcome" element={<Welcome />} />
+            <Route path="/appointments" element={<Appointments />} />
+          </Route>
+        </Routes>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }
