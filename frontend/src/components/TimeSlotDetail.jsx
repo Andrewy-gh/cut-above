@@ -22,7 +22,6 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const TimeSlotDetail = ({ selected }) => {
   const slot = useSelector((state) => selectScheduleById(state, selected));
-  console.log(slot);
 
   return (
     <>

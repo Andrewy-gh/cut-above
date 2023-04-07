@@ -5,19 +5,19 @@ const convertEST = (date) =>
 
 const currentDate = () => dayjs();
 
-const dateDash = (date) => dayjs(date).format('YYYY-MM-DD');
-
-const dateHyphen = (date) => dayjs(date).format('MM/DD/YYYY');
+const dateHyphen = (date) => dayjs(date).format('YYYY-MM-DD');
 
 const dateShort = (date) => dayjs(date).format('M/D');
+
+const dateSlash = (date) => dayjs(date).format('MM/DD/YYYY');
 
 const time = (date) => dayjs(date).format('h:mma');
 
 export default {
   convertEST,
   currentDate,
-  dateDash,
   dateHyphen,
   dateShort,
+  dateSlash,
   time,
 };

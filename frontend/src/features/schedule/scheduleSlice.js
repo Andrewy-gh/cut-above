@@ -1,5 +1,10 @@
 import { createSelector, createEntityAdapter } from '@reduxjs/toolkit';
 import { apiSlice } from '../../app/api/apiSlice';
+import {
+  selectDate,
+  selectDateDisabled,
+  selectEmployee,
+} from '../filter/filterSlice';
 import date from '../date/date';
 
 const scheduleAdapter = createEntityAdapter({
@@ -41,3 +46,18 @@ export const { selectAll: selectAllSchedule, selectById: selectScheduleById } =
   scheduleAdapter.getSelectors(
     (state) => selectScheduleData(state) ?? initialState
   );
+
+export const selectScheduleByFilter = createSelector(
+  selectAllSchedule,
+  selectDate,
+  selectEmployee,
+  (schedule, date, employee) => {
+    return date && employee
+      ? schedule.filter((s) => s.date === date && s.employee === employee)
+      : date
+      ? schedule.filter((s) => s.date === date)
+      : employee
+      ? schedule.filter((s) => s.employee === employee)
+      : schedule;
+  }
+);

@@ -7,27 +7,27 @@ import TimeSlotDetail from '../../components/TimeSlotDetail';
 import dateServices from '../date/date';
 import { selectAllSchedule, useGetScheduleQuery } from './scheduleSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { setDate, setEmployee } from '../filter/filterSlice';
+import { selectDate, selectDateDisabled, setDate } from '../filter/filterSlice';
 import EmployeeSelect from '../employees/EmployeeSelect';
+import DateDisabled from '../filter/DateDisabled';
+import dayjs from 'dayjs';
 
 const BookingPage = () => {
   const dispatch = useDispatch();
-  const [search, setSearch] = useState({
-    employee: 'any',
-    date: dateServices.currentDate(),
-  });
+  const date = useSelector(selectDate);
+  const convertedDate = dayjs(date);
+  const dateDisabled = useSelector(selectDateDisabled);
   const [selected, setSelected] = useState();
   const { isLoading, isSuccess, isError, error } = useGetScheduleQuery();
 
   const schedule = useSelector(selectAllSchedule);
 
   const handleDateChange = (newDate) => {
-    console.log('newDate', newDate);
-    dispatch(setDate(newDate));
+    dispatch(setDate(newDate.toISOString()));
   };
 
   const timeSlots = schedule.filter(
-    (s) => dateServices.dateDash(s.date) === dateServices.dateDash(search.date)
+    (s) => dateServices.dateHyphen(s.date) === dateServices.dateHyphen(date)
   );
 
   let content;
@@ -47,10 +47,15 @@ const BookingPage = () => {
           }}
         >
           <EmployeeSelect />
-          <DatePicker handleDateChange={handleDateChange} />
+          <DateDisabled />
+          <DatePicker
+            date={convertedDate}
+            handleDateChange={handleDateChange}
+            dateDisabled={dateDisabled}
+          />
+          <TimeSlots timeSlots={timeSlots} setSelected={setSelected} />
+          {selected && <TimeSlotDetail selected={selected} />}
         </Box>
-        <TimeSlots timeSlots={timeSlots} setSelected={setSelected} />
-        {selected && <TimeSlotDetail selected={selected} />}
       </Container>
     );
   } else if (isError) {
