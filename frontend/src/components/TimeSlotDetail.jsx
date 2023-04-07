@@ -1,24 +1,10 @@
-import { Paper, Stack } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import { selectScheduleById } from '../features/schedule/scheduleSlice';
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  cursor: 'pointer',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: '2rem',
-}));
+import Employee from '../features/employees/Employee';
 
 const TimeSlotDetail = ({ selected }) => {
   const slot = useSelector((state) => selectScheduleById(state, selected));
@@ -34,14 +20,7 @@ const TimeSlotDetail = ({ selected }) => {
             {slot.available.map((person) => {
               return (
                 <Box key={person.id}>
-                  <Item>
-                    <Avatar
-                      alt={person.firstName}
-                      src={person.image}
-                      sx={{ width: 56, height: 56 }}
-                    />
-                    <Typography variant="body1">{person.firstName}</Typography>
-                  </Item>
+                  <Employee employeeId={person.id} />
                 </Box>
               );
             })}

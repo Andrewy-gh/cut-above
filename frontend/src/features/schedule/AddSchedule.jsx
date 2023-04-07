@@ -43,7 +43,7 @@ const AddSchedule = () => {
       >
         <DatePicker date={date} handleDateChange={handleDateChange} />
         <TimeCheckBox
-          date={dateServices.dateSlash(date)}
+          date={dateServices.dateHyphen(date)}
           createClasses={addClasses}
         />
       </Box>

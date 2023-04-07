@@ -1,13 +1,9 @@
-import { useGetScheduleQuery } from './scheduleSlice';
+import { useSelector } from 'react-redux';
+import { selectAllSchedule, useGetScheduleQuery } from './scheduleSlice';
 
 function Schedule() {
-  const {
-    data: schedule,
-    isLoading,
-    isSuccess,
-    isError,
-    error,
-  } = useGetScheduleQuery();
+  const { isLoading, isSuccess, isError, error } = useGetScheduleQuery();
+  const schedule = useSelector(selectAllSchedule);
 
   let content;
   if (isLoading) {
