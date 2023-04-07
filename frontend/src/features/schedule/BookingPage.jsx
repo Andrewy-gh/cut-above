@@ -7,14 +7,21 @@ import TimeSlotDetail from '../../components/TimeSlotDetail';
 import dateServices from '../date/date';
 import { selectAllSchedule, useGetScheduleQuery } from './scheduleSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectDate, selectDateDisabled, setDate } from '../filter/filterSlice';
+import {
+  selectDate,
+  selectDateDisabled,
+  selectEmployee,
+  setDate,
+} from '../filter/filterSlice';
 import EmployeeSelect from '../employees/EmployeeSelect';
 import DateDisabled from '../filter/DateDisabled';
 import dayjs from 'dayjs';
+import Employee from '../employees/Employee';
 
 const BookingPage = () => {
   const dispatch = useDispatch();
   const date = useSelector(selectDate);
+  const employeePref = useSelector(selectEmployee);
   const convertedDate = dayjs(date);
   const dateDisabled = useSelector(selectDateDisabled);
   const [selected, setSelected] = useState();
@@ -55,6 +62,7 @@ const BookingPage = () => {
           />
           <TimeSlots timeSlots={timeSlots} setSelected={setSelected} />
           {selected && <TimeSlotDetail selected={selected} />}
+          {employeePref !== 'any' && <Employee employeeId={employeePref} />}
         </Box>
       </Container>
     );

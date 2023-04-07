@@ -1,9 +1,13 @@
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
+import { theme } from '../styles/styles';
+import { useSelector } from 'react-redux';
 import date from '../features/date/date';
+import { selectEmployee } from '../features/filter/filterSlice';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -16,12 +20,31 @@ const Item = styled(Paper)(({ theme }) => ({
   marginBottom: theme.spacing(1),
 }));
 
-const TimeSlot = ({ slot, handleClick }) => {
+const selectedStyle = {
+  backgroundColor: theme.palette.secondary.light,
+};
+
+const selectedFont = {
+  color: '#1A2027',
+};
+const TimeSlot = ({ slot, handleClick, style }) => {
+  const preference = useSelector(selectEmployee);
+
   return (
     <Grid item>
-      <Item onClick={() => handleClick(slot.id)}>
-        <Typography variant="body1">
+      <Item
+        onClick={() => handleClick(slot.id)}
+        style={style ? selectedStyle : null}
+      >
+        <Typography variant="body1" style={style ? selectedFont : null}>
           {date.dateShort(slot.date)} {date.time(slot.time)}{' '}
+          {preference === 'any' && (
+            <>
+              {slot.available.length}
+              {slot.available.length > 1 ? ' slots ' : ' slot '}
+              left
+            </>
+          )}
         </Typography>
       </Item>
     </Grid>
@@ -29,7 +52,10 @@ const TimeSlot = ({ slot, handleClick }) => {
 };
 
 const TimeSlots = ({ setSelected, timeSlots }) => {
+  const [styledId, setStyledId] = useState(null);
+  const style = (id) => id === styledId;
   const handleClick = (id) => {
+    setStyledId(id);
     setSelected(id);
   };
   return (
@@ -39,7 +65,12 @@ const TimeSlots = ({ setSelected, timeSlots }) => {
       </Typography>
       <Grid container spacing={1} justifyContent="center">
         {timeSlots.map((slot) => (
-          <TimeSlot slot={slot} key={slot.id} handleClick={handleClick} />
+          <TimeSlot
+            slot={slot}
+            key={slot.id}
+            handleClick={handleClick}
+            style={style(slot.id)}
+          />
         ))}
       </Grid>
     </Box>
