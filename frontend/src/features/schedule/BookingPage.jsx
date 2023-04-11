@@ -61,7 +61,7 @@ const BookingPage = () => {
             dateDisabled={dateDisabled}
           />
           <TimeSlots timeSlots={timeSlots} setSelected={setSelected} />
-          {selected && <TimeSlotDetail selected={selected} />}
+          {selected && <TimeSlotDetail key={selected} selected={selected} />}
           {employeePref !== 'any' && <Employee employeeId={employeePref} />}
         </Box>
       </Container>

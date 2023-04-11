@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
+import { theme } from '../../styles/styles';
 import { useSelector } from 'react-redux';
 import { useGetEmployeesQuery } from './employeeSlice';
 import { selectEmployeeById } from './employeeSlice';
@@ -23,7 +24,15 @@ const Item = styled(Paper)(({ theme }) => ({
   gap: '2rem',
 }));
 
-const Employee = ({ employeeId }) => {
+const selectedStyle = {
+  backgroundColor: theme.palette.secondary.light,
+};
+
+const selectedFont = {
+  color: '#1A2027',
+};
+
+const Employee = ({ employeeId, style }) => {
   const { isLoading, isSuccess, isError, error } = useGetEmployeesQuery();
   const employee = useSelector((state) =>
     selectEmployeeById(state, employeeId)
@@ -40,14 +49,16 @@ const Employee = ({ employeeId }) => {
           src={employee.image}
           sx={{ width: 56, height: 56 }}
         />
-        <Typography variant="body1">{employee.firstName}</Typography>
+        <Typography variant="body1" style={style ? selectedFont : null}>
+          {employee.firstName}
+        </Typography>
       </>
     );
   } else if (isError) {
     content = <p>{error}</p>;
   }
 
-  return <Item>{content}</Item>;
+  return <Item style={style ? selectedStyle : null}>{content}</Item>;
 };
 
 export default Employee;
