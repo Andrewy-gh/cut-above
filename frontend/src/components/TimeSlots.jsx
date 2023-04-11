@@ -56,7 +56,7 @@ const TimeSlots = ({ setSelected, timeSlots }) => {
   const style = (id) => id === styledId;
   const handleClick = (id) => {
     setStyledId(id);
-    setSelected(id);
+    setSelected({ slot: id, employee: null });
   };
   return (
     <Box sx={{ mt: 2, mb: 2 }}>
