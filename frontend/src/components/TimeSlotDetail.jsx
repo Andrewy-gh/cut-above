@@ -8,13 +8,14 @@ import { selectScheduleById } from '../features/schedule/scheduleSlice';
 import Employee from '../features/employees/Employee';
 import { useState } from 'react';
 
-const TimeSlotDetail = ({ selected }) => {
-  const slot = useSelector((state) => selectScheduleById(state, selected));
+const TimeSlotDetail = ({ selected, setSelected }) => {
+  const slot = useSelector((state) => selectScheduleById(state, selected.slot));
 
   const [styledId, setStyledId] = useState(null);
   const style = (id) => id === styledId;
   const handleClick = (id) => {
     setStyledId(id);
+    setSelected({ ...selected, employee: id });
   };
 
   return (

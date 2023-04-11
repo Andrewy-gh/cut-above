@@ -24,7 +24,11 @@ const BookingPage = () => {
   const employeePref = useSelector(selectEmployee);
   const convertedDate = dayjs(date);
   const dateDisabled = useSelector(selectDateDisabled);
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState({
+    slot: null,
+    employee: null,
+  });
+  console.log(selected);
   const { isLoading, isSuccess, isError, error } = useGetScheduleQuery();
 
   const schedule = useSelector(selectAllSchedule);
@@ -61,7 +65,13 @@ const BookingPage = () => {
             dateDisabled={dateDisabled}
           />
           <TimeSlots timeSlots={timeSlots} setSelected={setSelected} />
-          {selected && <TimeSlotDetail key={selected} selected={selected} />}
+          {selected.slot && (
+            <TimeSlotDetail
+              key={selected.slot}
+              selected={selected}
+              setSelected={setSelected}
+            />
+          )}
           {employeePref !== 'any' && <Employee employeeId={employeePref} />}
         </Box>
       </Container>

@@ -10,7 +10,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     getEmployees: builder.query({
       query: () => '/employee',
       transformResponse: (responseData) => {
-        console.log('reponse data', responseData);
+        console.log('response data', responseData);
         return employeeAdapter.setAll(initialState, responseData);
       },
       keepUnusedDataFor: 5,
