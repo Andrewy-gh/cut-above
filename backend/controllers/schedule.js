@@ -5,10 +5,6 @@ const User = require('../models/User');
 
 scheduleRouter.get('/', async (request, response) => {
   const schedule = await Schedule.find({});
-  // const schedule = await Schedule.find({}).populate(
-  //   'available',
-  //   'id email firstName image'
-  // );
   response.json(schedule);
 });
 
@@ -40,13 +36,10 @@ scheduleRouter.put('/:id', async (request, response) => {
   dateToUpdate.available.splice(index, 1);
   dateToUpdate.appointments.push(bookedAppt);
   await dateToUpdate.save();
-  const updatedTime = await Schedule.findOne({
-    _id: request.params.id,
-  }).populate('available', 'id firstName image email');
 
   response
     .status(200)
-    .json({ success: true, message: 'Class reserved', data: updatedTime });
+    .json({ success: true, message: 'Class reserved', data: dateToUpdate });
 });
 
 module.exports = scheduleRouter;
