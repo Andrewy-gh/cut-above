@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
-import { useGetAppointmentsQuery } from './appointmentSlice';
+import {
+  selectAllAppointment,
+  useGetAppointmentQuery,
+} from './appointmentSlice';
+import { useSelector } from 'react-redux';
+import Employee from '../employees/Employee';
 
 const Appointment = () => {
-  const {
-    data: appointments,
-    isLoading,
-    isSuccess,
-    isError,
-    error,
-  } = useGetAppointmentsQuery();
+  const { isLoading, isSuccess, isError, error } = useGetAppointmentQuery();
+  const appointments = useSelector(selectAllAppointment);
 
   let content;
   if (isLoading) {
@@ -25,7 +25,7 @@ const Appointment = () => {
       >
         <div>{appt.date}</div>
         <div>{appt.time}</div>
-        <div>{appt.employee.firstName}</div>
+        <Employee employeeId={appt.employee} />
       </div>
     ));
   } else if (isError) {

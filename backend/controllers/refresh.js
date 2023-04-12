@@ -7,7 +7,9 @@ refreshRouter.get('/', async (req, res) => {
   console.log('=======REFRESHING========');
   console.log('=====================');
   const cookies = req.cookies;
-  console.log('refreshing route cookies?', cookies);
+  if (cookies) {
+    console.log('refresh cookie:', cookies?.jwt.slice(-4));
+  }
   if (!cookies?.jwt) return res.sendStatus(401);
   const refreshToken = cookies.jwt;
   res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });

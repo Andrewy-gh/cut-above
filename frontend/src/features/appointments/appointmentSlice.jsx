@@ -1,10 +1,26 @@
+import { createSelector, createEntityAdapter } from '@reduxjs/toolkit';
 import { apiSlice } from '../../app/api/apiSlice';
+import date from '../date/date';
 
-export const appointmentSlice = apiSlice.injectEndpoints({
+const appointmentAdapter = createEntityAdapter({
+  sortComparer: (a, b) => a.date.localeCompare(b.date),
+});
+
+const initialState = appointmentAdapter.getInitialState();
+
+export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getAppointments: builder.query({
+    getAppointment: builder.query({
       query: () => '/appointment',
-      keepUnusedDataFor: 5,
+      transformResponse: (responseData) => {
+        const loadedPosts = responseData.map((appt) => ({
+          ...appt,
+          date: date.dateSlash(appt.date),
+          time: date.time(appt.time),
+        }));
+        return appointmentAdapter.setAll(initialState, loadedPosts);
+      },
+      // keepUnusedDataFor: 5,
       providesTags: ['Appointment'],
     }),
     addAppointment: builder.mutation({
@@ -18,5 +34,20 @@ export const appointmentSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetAppointmentsQuery, useAddAppointmentMutation } =
-  appointmentSlice;
+export const { useGetAppointmentQuery, useAddAppointmentMutation } =
+  extendedApiSlice;
+
+export const selectAppointmentResult =
+  extendedApiSlice.endpoints.getAppointment.select();
+
+const selectAppointmentData = createSelector(
+  selectAppointmentResult,
+  (AppointmentResult) => AppointmentResult.data
+);
+
+export const {
+  selectAll: selectAllAppointment,
+  selectById: selectAppointmentById,
+} = appointmentAdapter.getSelectors(
+  (state) => selectAppointmentData(state) ?? initialState
+);

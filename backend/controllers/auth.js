@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 authRouter.post('/login', async (req, res) => {
   const cookies = req.cookies;
-  console.log('existing refresh token?', cookies.jwt);
+  console.log('existing refresh token?', cookies.jwt.slice(-4));
 
   const { email, password } = req.body;
   if (!email || !password)
@@ -27,7 +27,7 @@ authRouter.post('/login', async (req, res) => {
       { expiresIn: '15s' }
     );
     console.log('=AUTH CONTROLLERS===============');
-    console.log('ACCESS TOKEN', accessToken);
+    console.log('ACCESS TOKEN', accessToken.slice(-4));
     const newRefreshToken = jwt.sign(
       {
         id: foundUser._id,
@@ -36,7 +36,7 @@ authRouter.post('/login', async (req, res) => {
       { expiresIn: '10m' }
     );
     console.log('=AUTH CONTROLLERS===============');
-    console.log('REFRESH TOKEN', newRefreshToken);
+    console.log('REFRESH TOKEN', newRefreshToken.slice(-4));
     // Changed to let keyword
     let newRefreshTokenArray = !cookies?.jwt
       ? foundUser.refreshToken
@@ -68,7 +68,7 @@ authRouter.post('/login', async (req, res) => {
     // Saving refreshToken with current user
     foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
     const result = await foundUser.save();
-    console.log('successfully logged in', result);
+    console.log('successfully logged in', result.refreshToken);
 
     // Creates Secure Cookie with refresh token
     res.cookie('jwt', newRefreshToken, {

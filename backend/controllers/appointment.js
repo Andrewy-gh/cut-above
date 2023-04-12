@@ -5,7 +5,12 @@ const User = require('../models/User');
 appointmentRouter.get('/', async (request, response) => {
   const appointments = await Appointment.find({
     $or: [{ client: request.user }, { employee: request.user }],
-  }).populate('client employee', 'id email firstName image');
+  });
+  // console.log('apptTest', apptTest);
+  // const appointments = await Appointment.find({
+  //   $or: [{ client: request.user }, { employee: request.user }],
+  // }).populate('client employee', 'id email firstName image');
+  console.log(appointments);
   response.status(200).json(appointments);
 });
 
