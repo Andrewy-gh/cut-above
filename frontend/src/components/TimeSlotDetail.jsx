@@ -2,7 +2,6 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { theme } from '../styles/styles';
 import { useSelector } from 'react-redux';
 import { selectScheduleById } from '../features/schedule/scheduleSlice';
 import Employee from '../features/employees/Employee';

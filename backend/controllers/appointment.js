@@ -9,9 +9,7 @@ appointmentRouter.get('/', async (request, response) => {
 });
 
 appointmentRouter.post('/', async (request, response) => {
-  console.log('posting a new appointment');
   const { date, time, employee } = request.body;
-  console.log({ date, time, employee });
   const clientToBook = await User.findOne({ _id: request.user });
   const employeeToBook = await User.findOne({ _id: employee });
   const newAppt = new Appointment({
