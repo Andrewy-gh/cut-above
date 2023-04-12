@@ -7,7 +7,7 @@ import { selectAllEmployees, useGetEmployeesQuery } from './employeeSlice';
 import { theme } from '../../styles/styles';
 import { selectEmployee, setEmployee } from '../filter/filterSlice';
 
-const EmployeeSelect = () => {
+const EmployeeSelect = ({ selected, setSelected, setConfirmDisabled }) => {
   const dispatch = useDispatch();
   const employees = useSelector(selectAllEmployees);
   const employee = useSelector(selectEmployee);
@@ -15,6 +15,8 @@ const EmployeeSelect = () => {
   const { isLoading, isSuccess, isError, error } = useGetEmployeesQuery();
 
   const handleEmployeeChange = (employee) => {
+    setSelected({ ...selected, slot: null });
+    setConfirmDisabled(true);
     dispatch(setEmployee(employee));
   };
 

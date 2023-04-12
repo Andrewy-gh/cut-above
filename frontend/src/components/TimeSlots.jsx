@@ -27,9 +27,8 @@ const selectedStyle = {
 const selectedFont = {
   color: '#1A2027',
 };
-const TimeSlot = ({ slot, handleClick, style }) => {
-  const preference = useSelector(selectEmployee);
 
+const TimeSlot = ({ slot, handleClick, style, preference }) => {
   return (
     <Grid item>
       <Item
@@ -51,12 +50,25 @@ const TimeSlot = ({ slot, handleClick, style }) => {
   );
 };
 
-const TimeSlots = ({ setSelected, timeSlots }) => {
-  const [styledId, setStyledId] = useState(null);
+const TimeSlots = ({
+  selected,
+  setSelected,
+  timeSlots,
+  setConfirmDisabled,
+}) => {
+  const employeePref = useSelector(selectEmployee);
+  const [styledId, setStyledId] = useState(selected.slot);
+  console.log('styleId', selected.slot, styledId);
+  if (selected.slot !== styledId) {
+    setStyledId(null);
+  }
   const style = (id) => id === styledId;
   const handleClick = (id) => {
+    if (employeePref !== 'any') {
+      setConfirmDisabled(false);
+    }
     setStyledId(id);
-    setSelected({ slot: id, employee: null });
+    setSelected({ ...selected, slot: id });
   };
   return (
     <Box sx={{ mt: 2, mb: 2 }}>
@@ -68,6 +80,7 @@ const TimeSlots = ({ setSelected, timeSlots }) => {
           <TimeSlot
             slot={slot}
             key={slot.id}
+            preference={employeePref}
             handleClick={handleClick}
             style={style(slot.id)}
           />

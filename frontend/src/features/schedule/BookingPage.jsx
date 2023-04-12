@@ -1,34 +1,67 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
+import ConfirmDialog from '../../components/ConfirmDialog';
 import Container from '@mui/material/Container';
 import DatePicker from '../../components/Datepicker';
 import TimeSlots from '../../components/TimeSlots';
 import TimeSlotDetail from '../../components/TimeSlotDetail';
 import dateServices from '../date/date';
-import { selectAllSchedule, useGetScheduleQuery } from './scheduleSlice';
+import {
+  selectAllSchedule,
+  selectScheduleById,
+  useGetScheduleQuery,
+} from './scheduleSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   selectDate,
   selectDateDisabled,
   selectEmployee,
   setDate,
+  setEmployee,
 } from '../filter/filterSlice';
+import { selectEmployeeById } from '../employees/employeeSlice';
 import EmployeeSelect from '../employees/EmployeeSelect';
-import DateDisabled from '../filter/DateDisabled';
+import DateDisabledSwitch from '../filter/DateDisabledSwitch';
 import dayjs from 'dayjs';
 import Employee from '../employees/Employee';
-
 const BookingPage = () => {
   const dispatch = useDispatch();
   const date = useSelector(selectDate);
   const employeePref = useSelector(selectEmployee);
   const convertedDate = dayjs(date);
   const dateDisabled = useSelector(selectDateDisabled);
+  const [confirmDisabled, setConfirmDisabled] = useState(true);
   const [selected, setSelected] = useState({
     slot: null,
     employee: null,
   });
-  console.log(selected);
+  const employee = useSelector((state) =>
+    selectEmployeeById(state, selected.employee)
+  );
+  const slotInfo = useSelector((state) =>
+    selectScheduleById(state, selected.slot)
+  );
+
+  if (employeePref !== 'any') {
+    setEmployee({ ...selected, employee: employeePref });
+  }
+
+  console.log('selected slot:', selected.slot);
+  // console.log(
+  //   'employeePref:',
+  //   employeePref,
+  //   'selected employee:',
+  //   selected.employee,
+  //   'selected slot:',
+  //   selected.slot,
+  //   'slot info:',
+  //   slotInfo
+  // );
+
+  // Change selected on select change
+  // Slot option: If employeePref, not any, disabled = false
+  // Employee option: disabled = false
+
   const { isLoading, isSuccess, isError, error } = useGetScheduleQuery();
 
   const schedule = useSelector(selectAllSchedule);
@@ -40,6 +73,14 @@ const BookingPage = () => {
   const timeSlots = schedule.filter(
     (s) => dateServices.dateHyphen(s.date) === dateServices.dateHyphen(date)
   );
+
+  const reserveDialog = {
+    button: 'Reserve Now',
+    title: 'Would you like to reserve this appointment?',
+    content: `With ${employee?.firstName} on ${dateServices.dateSlash(
+      slotInfo?.date
+    )} on ${dateServices.time(slotInfo?.time)}?`,
+  };
 
   let content;
   if (isLoading) {
@@ -57,15 +98,24 @@ const BookingPage = () => {
             mb: 3,
           }}
         >
-          <EmployeeSelect />
-          <DateDisabled />
+          <EmployeeSelect
+            setConfirmDisabled={setConfirmDisabled}
+            selected={selected}
+            setSelected={setSelected}
+          />
+          <DateDisabledSwitch />
           <DatePicker
             date={convertedDate}
             handleDateChange={handleDateChange}
             dateDisabled={dateDisabled}
           />
-          <TimeSlots timeSlots={timeSlots} setSelected={setSelected} />
-          {selected.slot && (
+          <TimeSlots
+            timeSlots={timeSlots}
+            selected={selected}
+            setConfirmDisabled={setConfirmDisabled}
+            setSelected={setSelected}
+          />
+          {selected.slot && employeePref === 'any' && (
             <TimeSlotDetail
               key={selected.slot}
               selected={selected}
@@ -73,6 +123,7 @@ const BookingPage = () => {
             />
           )}
           {employeePref !== 'any' && <Employee employeeId={employeePref} />}
+          <ConfirmDialog disabled={confirmDisabled} dialog={reserveDialog} />
         </Box>
       </Container>
     );

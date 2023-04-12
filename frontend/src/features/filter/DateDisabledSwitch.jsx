@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectDateDisabled, setDateDisabled } from './filterSlice';
 import { useState } from 'react';
 
-const DateDisabled = () => {
+const DateDisabledSwitch = () => {
   const dispatch = useDispatch();
   const dateDisabled = useSelector(selectDateDisabled);
   const [checked, setChecked] = useState(false);
@@ -25,4 +25,4 @@ const DateDisabled = () => {
   );
 };
 
-export default DateDisabled;
+export default DateDisabledSwitch;
