@@ -16,7 +16,7 @@ refreshRouter.get('/', async (req, res) => {
   const foundUser = await User.findOne({
     refreshToken: { $in: [refreshToken] },
   }).exec();
-  console.log('foundUser check', foundUser);
+  console.log('foundUser check');
 
   // Detected refresh token reuse!
   if (!foundUser) {

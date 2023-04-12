@@ -26,10 +26,10 @@ const TimeSlotDetail = ({ selected, setConfirmDisabled, setSelected }) => {
             <Typography variant="h6" align="center">
               Available Barbers
             </Typography>
-            {slot.available.map((person) => {
+            {slot.available.map((employeeId) => {
               return (
-                <Box key={person.id} onClick={() => handleClick(person.id)}>
-                  <Employee employeeId={person.id} style={style(person.id)} />
+                <Box key={employeeId} onClick={() => handleClick(employeeId)}>
+                  <Employee employeeId={employeeId} style={style(employeeId)} />
                 </Box>
               );
             })}

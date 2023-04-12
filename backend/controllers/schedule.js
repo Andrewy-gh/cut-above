@@ -4,10 +4,11 @@ const Schedule = require('../models/Schedule');
 const User = require('../models/User');
 
 scheduleRouter.get('/', async (request, response) => {
-  const schedule = await Schedule.find({}).populate(
-    'available',
-    'id email firstName image'
-  );
+  const schedule = await Schedule.find({});
+  // const schedule = await Schedule.find({}).populate(
+  //   'available',
+  //   'id email firstName image'
+  // );
   response.json(schedule);
 });
 
