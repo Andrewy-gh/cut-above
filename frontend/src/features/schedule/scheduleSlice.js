@@ -21,6 +21,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         return scheduleAdapter.setAll(initialState, responseData);
       },
       keepUnusedDataFor: 5,
+      providesTags: ['Schedule'],
     }),
     addSchedule: builder.mutation({
       query: (schedule) => ({
@@ -28,6 +29,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: schedule,
       }),
+      invalidatesTags: ['Schedule'],
     }),
     updateSchedule: builder.mutation({
       query: (schedule) => ({
@@ -35,6 +37,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         method: 'PUT',
         body: schedule,
       }),
+      invalidatesTags: ['Schedule'],
     }),
   }),
 });

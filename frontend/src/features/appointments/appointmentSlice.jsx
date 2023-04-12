@@ -5,6 +5,7 @@ export const appointmentSlice = apiSlice.injectEndpoints({
     getAppointments: builder.query({
       query: () => '/appointment',
       keepUnusedDataFor: 5,
+      providesTags: ['Appointment'],
     }),
     addAppointment: builder.mutation({
       query: (appointment) => ({
@@ -12,6 +13,7 @@ export const appointmentSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: appointment,
       }),
+      invalidatesTags: ['Appointment'],
     }),
   }),
 });
