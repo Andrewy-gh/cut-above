@@ -40,8 +40,8 @@ app.use('/auth', authRouter);
 app.use('/logout', logoutRouter);
 app.use('/refresh', refreshRouter);
 app.use('/employee', employeeRouter);
-app.use('/schedule', scheduleRouter);
 app.use(middleware.verifyJWT);
+app.use('/schedule', scheduleRouter);
 app.use('/appointment', appointmentRouter);
 
 app.use(middleware.errorHandler);

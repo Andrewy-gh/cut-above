@@ -82,7 +82,7 @@ refreshRouter.get('/', async (req, res) => {
       // Saving refreshToken with current user
       foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
       const result = await foundUser.save();
-      console.log('success', result);
+      console.log('success');
 
       // Creates Secure Cookie with refresh token
       res.cookie('jwt', newRefreshToken, {

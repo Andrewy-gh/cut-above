@@ -29,10 +29,21 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         body: schedule,
       }),
     }),
+    updateSchedule: builder.mutation({
+      query: (schedule) => ({
+        url: `/schedule/${schedule.id}`,
+        method: 'PUT',
+        body: schedule,
+      }),
+    }),
   }),
 });
 
-export const { useGetScheduleQuery, useAddScheduleMutation } = extendedApiSlice;
+export const {
+  useGetScheduleQuery,
+  useAddScheduleMutation,
+  useUpdateScheduleMutation,
+} = extendedApiSlice;
 
 export const selectScheduleResult =
   extendedApiSlice.endpoints.getSchedule.select();

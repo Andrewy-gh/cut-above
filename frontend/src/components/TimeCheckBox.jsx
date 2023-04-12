@@ -57,7 +57,6 @@ const TimeCheckBox = ({ date, createClasses }) => {
   const fullTimes = times.map((slot) => {
     return { ...slot, time: `${date}T${slot.time}` };
   });
-  console.log(fullTimes);
 
   return (
     <Box

@@ -1,5 +1,6 @@
 const appointmentRouter = require('express').Router();
 const Appointment = require('../models/Appointment');
+const User = require('../models/User');
 
 appointmentRouter.get('/', async (request, response) => {
   const appointments = await Appointment.find({

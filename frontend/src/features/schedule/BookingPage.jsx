@@ -10,6 +10,7 @@ import {
   selectAllSchedule,
   selectScheduleById,
   useGetScheduleQuery,
+  useUpdateScheduleMutation,
 } from './scheduleSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -32,6 +33,7 @@ const BookingPage = () => {
   const convertedDate = dayjs(date);
   const dateDisabled = useSelector(selectDateDisabled);
   const [addAppointment] = useAddAppointmentMutation();
+  const [updateSchedule] = useUpdateScheduleMutation();
   const [confirmDisabled, setConfirmDisabled] = useState(true);
   const [selected, setSelected] = useState({
     slot: null,
@@ -67,16 +69,22 @@ const BookingPage = () => {
       slotInfo?.date
     )} on ${dateServices.time(slotInfo?.time)}?`,
   };
-
+  // TODO: check if I need to repopulate
   const handleBooking = async () => {
     try {
-      const { date, time } = slotInfo;
+      const { id, date, time } = slotInfo;
       const newAppt = await addAppointment({
         date,
         time,
         employee: employee.id,
       }).unwrap();
       // newAppt.data
+      const updatedSchedule = await updateSchedule({
+        id,
+        appointment: newAppt.data.id,
+        employee: employee.id,
+      });
+      console.log('updatedSchedule', updatedSchedule);
     } catch (error) {
       console.error('Error booking your appointment:', error);
     }
