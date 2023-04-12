@@ -19,7 +19,7 @@ const verifyJWT = (req, res, next) => {
     if (err) {
       return res.sendStatus(403); //invalid token
     }
-    console.log('user extracted');
+    console.log('middleware: user extracted');
     req.user = decoded.id;
     next();
   });

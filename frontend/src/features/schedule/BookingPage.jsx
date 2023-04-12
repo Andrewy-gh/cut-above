@@ -7,7 +7,7 @@ import TimeSlots from '../../components/TimeSlots';
 import TimeSlotDetail from '../../components/TimeSlotDetail';
 import dateServices from '../date/date';
 import {
-  selectAllSchedule,
+  selectScheduleByFilter,
   selectScheduleById,
   useGetScheduleQuery,
   useUpdateScheduleMutation,
@@ -26,6 +26,7 @@ import DateDisabledSwitch from '../filter/DateDisabledSwitch';
 import dayjs from 'dayjs';
 import Employee from '../employees/Employee';
 import { useAddAppointmentMutation } from '../appointments/appointmentSlice';
+
 const BookingPage = () => {
   const dispatch = useDispatch();
   const date = useSelector(selectDate);
@@ -52,15 +53,12 @@ const BookingPage = () => {
 
   const { isLoading, isSuccess, isError, error } = useGetScheduleQuery();
 
-  const schedule = useSelector(selectAllSchedule);
-
   const handleDateChange = (newDate) => {
+    setSelected({ ...selected, slot: null });
     dispatch(setDate(newDate.toISOString()));
   };
 
-  const timeSlots = schedule.filter(
-    (s) => dateServices.dateHyphen(s.date) === dateServices.dateHyphen(date)
-  );
+  const timeSlots = useSelector(selectScheduleByFilter);
 
   const reserveDialog = {
     button: 'Reserve Now',

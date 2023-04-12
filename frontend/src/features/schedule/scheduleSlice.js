@@ -5,7 +5,7 @@ import {
   selectDateDisabled,
   selectEmployee,
 } from '../filter/filterSlice';
-import date from '../date/date';
+import dateServices from '../date/date';
 
 const scheduleAdapter = createEntityAdapter({
   sortComparer: (a, b) => a.date.localeCompare(b.date),
@@ -66,11 +66,18 @@ export const selectScheduleByFilter = createSelector(
   selectDate,
   selectEmployee,
   (schedule, date, employee) => {
-    return date && employee
-      ? schedule.filter((s) => s.date === date && s.employee === employee)
+    return date && employee !== 'any'
+      ? schedule.filter(
+          (s) =>
+            dateServices.dateHyphen(s.date) === dateServices.dateHyphen(date) &&
+            s.employee === employee
+        )
       : date
-      ? schedule.filter((s) => s.date === date)
-      : employee
+      ? schedule.filter(
+          (s) =>
+            dateServices.dateHyphen(s.date) === dateServices.dateHyphen(date)
+        )
+      : employee !== 'any'
       ? schedule.filter((s) => s.employee === employee)
       : schedule;
   }
