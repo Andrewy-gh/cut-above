@@ -59,7 +59,6 @@ const BookingPage = () => {
   // );
 
   // Change selected on select change
-  // Slot option: If employeePref, not any, disabled = false
   // Employee option: disabled = false
 
   const { isLoading, isSuccess, isError, error } = useGetScheduleQuery();
@@ -119,6 +118,7 @@ const BookingPage = () => {
             <TimeSlotDetail
               key={selected.slot}
               selected={selected}
+              setConfirmDisabled={setConfirmDisabled}
               setSelected={setSelected}
             />
           )}

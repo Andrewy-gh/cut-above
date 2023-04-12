@@ -58,14 +58,16 @@ const TimeSlots = ({
 }) => {
   const employeePref = useSelector(selectEmployee);
   const [styledId, setStyledId] = useState(selected.slot);
-  console.log('styleId', selected.slot, styledId);
   if (selected.slot !== styledId) {
     setStyledId(null);
   }
+
   const style = (id) => id === styledId;
   const handleClick = (id) => {
     if (employeePref !== 'any') {
       setConfirmDisabled(false);
+    } else {
+      setConfirmDisabled(true);
     }
     setStyledId(id);
     setSelected({ ...selected, slot: id });
