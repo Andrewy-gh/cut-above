@@ -115,6 +115,7 @@ const BookingPage = () => {
             handleDateChange={handleDateChange}
             dateDisabled={dateDisabled}
             minDate={dayjs()}
+            maxDate={dayjs().add(1, 'month')}
           />
           <TimeSlots
             timeSlots={timeSlots}
