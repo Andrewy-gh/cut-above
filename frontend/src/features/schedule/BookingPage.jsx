@@ -70,7 +70,6 @@ const BookingPage = () => {
     )} on ${dateServices.time(slotInfo?.time)}?`,
   };
 
-  // TODO: check if I need to repopulate
   const handleBooking = async () => {
     try {
       const { id, date, time } = slotInfo;

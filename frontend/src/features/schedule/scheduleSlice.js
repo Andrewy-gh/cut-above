@@ -82,3 +82,26 @@ export const selectScheduleByFilter = createSelector(
       : schedule;
   }
 );
+
+// export const selectScheduleByFilter = createSelector(
+//   selectAllSchedule,
+//   selectDate,
+//   selectDateDisabled,
+//   selectEmployee,
+//   (schedule, date, dateDisabled, employee) => {
+//     return !dateDisabled && employee !== 'any'
+//       ? schedule.filter(
+//           (s) =>
+//             dateServices.dateHyphen(s.date) === dateServices.dateHyphen(date) &&
+//             s.employee === employee
+//         )
+//       : !dateDisabled && employee === 'any'
+//       ? schedule.filter(
+//           (s) =>
+//             dateServices.dateHyphen(s.date) === dateServices.dateHyphen(date)
+//         )
+//       : dateDisabled && employee !== 'any'
+//       ? schedule.filter((s) => s.employee === employee)
+//       : schedule;
+//   }
+// );

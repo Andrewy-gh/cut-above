@@ -1,7 +1,6 @@
-import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CssBaseline, ThemeProvider, responsiveFontSizes } from '@mui/material';
-import Home from './components/Home';
+import Home from './components/Home/Home';
 import Login from './features/auth/Login';
 import RequireAuth from './features/auth/RequireAuth';
 import Welcome from './features/auth/Welcome';
@@ -19,7 +18,7 @@ function App() {
         <CssBaseline />
         <NavBar />
         <Routes>
-          <Route path="/*" element={<Home />} />
+          <Route index element={<Home />} />
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/add" element={<AddSchedule />} />
           <Route path="/reserve" element={<BookingPage />} />
