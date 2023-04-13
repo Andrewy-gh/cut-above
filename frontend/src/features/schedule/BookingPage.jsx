@@ -114,6 +114,7 @@ const BookingPage = () => {
             date={convertedDate}
             handleDateChange={handleDateChange}
             dateDisabled={dateDisabled}
+            minDate={dayjs()}
           />
           <TimeSlots
             timeSlots={timeSlots}

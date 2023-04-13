@@ -3,7 +3,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
-const DatePicker = ({ date, handleDateChange, dateDisabled }) => {
+const DatePicker = ({ date, handleDateChange, dateDisabled, minDate }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <MobileDatePicker
@@ -16,6 +16,7 @@ const DatePicker = ({ date, handleDateChange, dateDisabled }) => {
           display: { xs: 'block', md: 'none' },
         }}
         disabled={dateDisabled}
+        minDate={minDate}
       />
       <DateCalendar
         value={date}
@@ -24,6 +25,7 @@ const DatePicker = ({ date, handleDateChange, dateDisabled }) => {
           display: { xs: 'none', md: 'block' },
         }}
         disabled={dateDisabled}
+        minDate={minDate}
       />
     </LocalizationProvider>
   );
