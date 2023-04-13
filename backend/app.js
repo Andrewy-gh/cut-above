@@ -9,6 +9,7 @@ const logger = require('./utils/logger');
 const mongoose = require('mongoose');
 const appointmentRouter = require('./controllers/appointment');
 const authRouter = require('./controllers/auth');
+const emailRouter = require('./controllers/email');
 const employeeRouter = require('./controllers/employee');
 const logoutRouter = require('./controllers/logout');
 const refreshRouter = require('./controllers/refresh');
@@ -43,6 +44,7 @@ app.use('/employee', employeeRouter);
 app.use('/schedule', scheduleRouter);
 app.use(middleware.verifyJWT);
 app.use('/appointment', appointmentRouter);
+app.use('/send', emailRouter);
 
 app.use(middleware.errorHandler);
 

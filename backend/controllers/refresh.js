@@ -18,7 +18,7 @@ refreshRouter.get('/', async (req, res) => {
   const foundUser = await User.findOne({
     refreshToken: { $in: [refreshToken] },
   }).exec();
-  console.log('foundUser check');
+  console.log('found user');
 
   // Detected refresh token reuse!
   if (!foundUser) {
@@ -55,7 +55,8 @@ refreshRouter.get('/', async (req, res) => {
         const result = await foundUser.save();
       }
       if (err || foundUser._id.toString() !== decoded.id) {
-        console.log('failing here', foundUser._id, decoded.id);
+        console.log('failing here');
+        // console.log('failing here', foundUser._id, decoded.id);
         return res.sendStatus(403);
       }
 
@@ -75,12 +76,14 @@ refreshRouter.get('/', async (req, res) => {
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: '10m' }
       );
-      console.log(
-        'old',
-        cookies.jwt.slice(-4),
-        'new',
-        newRefreshToken.slice(-4)
-      );
+      if (newRefreshToken) {
+        console.log(
+          'old',
+          cookies?.jwt.slice(-4),
+          'new',
+          newRefreshToken.slice(-4)
+        );
+      }
       // Saving refreshToken with current user
       foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
       const result = await foundUser.save();

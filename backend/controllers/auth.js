@@ -5,7 +5,9 @@ const jwt = require('jsonwebtoken');
 
 authRouter.post('/login', async (req, res) => {
   const cookies = req.cookies;
-  console.log('existing refresh token?', cookies.jwt.slice(-4));
+  // if (cookies) {
+  //   console.log('existing refresh token?', cookies?.jwt.slice(-4));
+  // }
 
   const { email, password } = req.body;
   if (!email || !password)
@@ -18,6 +20,7 @@ authRouter.post('/login', async (req, res) => {
   // evaluate password
   const match = await bcrypt.compare(password, foundUser.passwordHash);
   if (match) {
+    console.log('there is a match');
     // create JWTs
     const accessToken = jwt.sign(
       {
@@ -27,7 +30,7 @@ authRouter.post('/login', async (req, res) => {
       { expiresIn: '15s' }
     );
     console.log('=AUTH CONTROLLERS===============');
-    console.log('ACCESS TOKEN', accessToken.slice(-4));
+    // console.log('ACCESS TOKEN', accessToken.slice(-4));
     const newRefreshToken = jwt.sign(
       {
         id: foundUser._id,
@@ -36,7 +39,7 @@ authRouter.post('/login', async (req, res) => {
       { expiresIn: '10m' }
     );
     console.log('=AUTH CONTROLLERS===============');
-    console.log('REFRESH TOKEN', newRefreshToken.slice(-4));
+    // console.log('REFRESH TOKEN', newRefreshToken.slice(-4));
     // Changed to let keyword
     let newRefreshTokenArray = !cookies?.jwt
       ? foundUser.refreshToken

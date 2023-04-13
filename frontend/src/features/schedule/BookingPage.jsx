@@ -26,6 +26,7 @@ import DateDisabledSwitch from '../filter/DateDisabledSwitch';
 import dayjs from 'dayjs';
 import Employee from '../employees/Employee';
 import { useAddAppointmentMutation } from '../appointments/appointmentSlice';
+import { useSendConfirmationMutation } from '../email/emailSlice';
 
 const BookingPage = () => {
   const dispatch = useDispatch();
@@ -35,6 +36,7 @@ const BookingPage = () => {
   const dateDisabled = useSelector(selectDateDisabled);
   const [addAppointment] = useAddAppointmentMutation();
   const [updateSchedule] = useUpdateScheduleMutation();
+  const [sendConfirmation] = useSendConfirmationMutation();
   const [confirmDisabled, setConfirmDisabled] = useState(true);
   const [selected, setSelected] = useState({
     slot: null,
@@ -67,6 +69,7 @@ const BookingPage = () => {
       slotInfo?.date
     )} on ${dateServices.time(slotInfo?.time)}?`,
   };
+
   // TODO: check if I need to repopulate
   const handleBooking = async () => {
     try {
@@ -76,13 +79,17 @@ const BookingPage = () => {
         time,
         employee: employee.id,
       }).unwrap();
-      // newAppt.data
-      const updatedSchedule = await updateSchedule({
+      await updateSchedule({
         id,
         appointment: newAppt.data.id,
         employee: employee.id,
       });
-      console.log('updatedSchedule', updatedSchedule);
+      const sentConfirmation = await sendConfirmation({
+        employee: employee.firstName,
+        date: dateServices.dateSlash(date),
+        time: dateServices.time(time),
+      });
+      console.log('sentConfirmtaion response:', sentConfirmation);
     } catch (error) {
       console.error('Error booking your appointment:', error);
     }
