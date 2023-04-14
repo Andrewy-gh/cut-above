@@ -20,7 +20,6 @@ const Notification = () => {
   const severity = useSelector(selectSeverity);
   const vertical = 'bottom';
   const horizontal = 'center';
-  console.log('open: ', open, 'alert: ', alert, 'severity: ', severity);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {

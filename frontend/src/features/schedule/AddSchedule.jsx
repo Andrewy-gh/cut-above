@@ -6,11 +6,7 @@ import dateServices from '../date/date';
 import { useState } from 'react';
 import { useAddScheduleMutation } from './scheduleSlice';
 import { useDispatch } from 'react-redux';
-import {
-  clearAlert,
-  setError,
-  setSuccess,
-} from '../notification/notificationSlice';
+import { setError, setSuccess } from '../notification/notificationSlice';
 
 const AddSchedule = () => {
   const dispatch = useDispatch();
