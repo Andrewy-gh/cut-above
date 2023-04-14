@@ -1,10 +1,11 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { logoutUser } from './authSlice';
 import { useLogoutMutation } from './authApiSlice';
+import { Button } from '@mui/material';
 
 const LogoutButton = () => {
   const dispatch = useDispatch();
-  const [logout, { isLoading }] = useLogoutMutation();
+  const [logout] = useLogoutMutation();
 
   const handleLogout = async () => {
     try {
@@ -14,7 +15,11 @@ const LogoutButton = () => {
       console.error('Error logging out: ', error);
     }
   };
-  return <button onClick={handleLogout}>Logout</button>;
+  return (
+    <Button variant="contained" onClick={handleLogout}>
+      Logout
+    </Button>
+  );
 };
 
 export default LogoutButton;
