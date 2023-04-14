@@ -4,10 +4,10 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import { theme } from '../styles/styles';
+import { theme } from '../../styles/styles';
 import { useSelector } from 'react-redux';
-import date from '../features/date/date';
-import { selectEmployee } from '../features/filter/filterSlice';
+import date from '../../features/date/date';
+import { selectEmployee } from '../../features/filter/filterSlice';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',

@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
-import ConfirmDialog from '../../components/ConfirmDialog';
+import ConfirmDialog from '../ConfirmDialog';
 import Container from '@mui/material/Container';
-import DatePicker from '../../components/Datepicker';
-import TimeSlots from '../../components/TimeSlots';
-import TimeSlotDetail from '../../components/TimeSlotDetail';
-import dateServices from '../date/date';
+import DatePicker from '../Datepicker';
+import TimeSlots from './TimeSlots';
+import TimeSlotDetail from './TimeSlotDetail';
+import dateServices from '../../features/date/date';
 import {
   selectScheduleByFilter,
   selectScheduleById,
   useGetScheduleQuery,
   useUpdateScheduleMutation,
-} from './scheduleSlice';
+} from '../../features/schedule/scheduleSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   selectDate,
@@ -19,14 +19,14 @@ import {
   selectEmployee,
   setDate,
   setEmployee,
-} from '../filter/filterSlice';
-import { selectEmployeeById } from '../employees/employeeSlice';
-import EmployeeSelect from '../employees/EmployeeSelect';
-import DateDisabledSwitch from '../filter/DateDisabledSwitch';
+} from '../../features/filter/filterSlice';
+import { selectEmployeeById } from '../../features/employees/employeeSlice';
+import EmployeeSelect from '../../features/employees/EmployeeSelect';
+import DateDisabledSwitch from '../../features/filter/DateDisabledSwitch';
 import dayjs from 'dayjs';
-import Employee from '../employees/Employee';
-import { useAddAppointmentMutation } from '../appointments/appointmentSlice';
-import { useSendConfirmationMutation } from '../email/emailSlice';
+import Employee from '../../features/employees/Employee';
+import { useAddAppointmentMutation } from '../../features/appointments/appointmentSlice';
+import { useSendConfirmationMutation } from '../../features/email/emailSlice';
 
 const BookingPage = () => {
   const dispatch = useDispatch();

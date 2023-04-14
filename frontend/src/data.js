@@ -12,6 +12,11 @@ export const links = [
   { id: 7, name: 'Schedule', path: '/schedule' },
 ];
 
+export const roles = [
+  { id: 1, title: 'Client', data: 'client' },
+  { id: 2, title: 'Admin', data: 'admin' },
+];
+
 export const services = [
   {
     id: 1,

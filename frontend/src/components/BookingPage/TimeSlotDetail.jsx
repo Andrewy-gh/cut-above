@@ -3,8 +3,8 @@ import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useSelector } from 'react-redux';
-import { selectScheduleById } from '../features/schedule/scheduleSlice';
-import Employee from '../features/employees/Employee';
+import { selectScheduleById } from '../../features/schedule/scheduleSlice';
+import Employee from '../../features/employees/Employee';
 import { useState } from 'react';
 
 const TimeSlotDetail = ({ selected, setConfirmDisabled, setSelected }) => {

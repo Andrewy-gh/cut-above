@@ -13,11 +13,12 @@ const emailRouter = require('./controllers/email');
 const employeeRouter = require('./controllers/employee');
 const logoutRouter = require('./controllers/logout');
 const refreshRouter = require('./controllers/refresh');
+const registerRouter = require('./controllers/register');
 const scheduleRouter = require('./controllers/schedule');
 
 logger.info('connecting to', config.MONGODB_URI);
 mongoose.set('strictQuery', false);
-mongoose
+mongoosek
   .connect(config.MONGODB_URI)
   .then(() => {
     logger.info('connected to MongoDB');
@@ -37,7 +38,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(middleware.requestLogger);
 
+// TODO: move email for contact us form
 app.use('/auth', authRouter);
+app.use('/signup', registerRouter);
 app.use('/logout', logoutRouter);
 app.use('/refresh', refreshRouter);
 app.use('/employee', employeeRouter);

@@ -3,7 +3,7 @@ const registerRouter = require('express').Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
-registerRouter.post('/register', async (request, response) => {
+registerRouter.post('/signup', async (request, response) => {
   const { firstName, lastName, email, password, role } = request.body;
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -19,11 +19,12 @@ registerRouter.post('/register', async (request, response) => {
     passwordHash,
     role,
   });
+  s;
   await newUser.save();
 
   response
     .status(201)
-    .send({ message: 'Successfully registered account', user: newUser });
+    .send({ success: true, message: 'Successfully registered account' });
 });
 
 module.exports = registerRouter;
