@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import ConfirmDialog from '../ConfirmDialog';
 import Container from '@mui/material/Container';
 import DatePicker from '../Datepicker';
+import Loading from '../Loading';
 import TimeSlots from './TimeSlots';
 import TimeSlotDetail from './TimeSlotDetail';
 import dateServices from '../../features/date/date';
@@ -96,7 +97,7 @@ const Search = () => {
 
   let content;
   if (isLoading) {
-    content = <p>Loading...</p>;
+    content = <Loading />;
   } else if (isSuccess) {
     content = (
       <Container>
