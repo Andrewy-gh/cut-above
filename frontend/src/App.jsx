@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CssBaseline, ThemeProvider, responsiveFontSizes } from '@mui/material';
+import Box from '@mui/material/Box';
 import Home from './components/Home/Home';
+import Footer from './components/Footer';
 import Register from './features/register/Register';
 import Login from './features/auth/Login';
 import RequireAuth from './features/auth/RequireAuth';
@@ -19,19 +21,29 @@ const App = () => {
       <ThemeProvider theme={responsiveFontSizes(theme)}>
         <CssBaseline />
         <Notification />
-        <NavBar />
-        <Routes>
-          <Route index element={<Home />} />
-          <Route path="/schedule" element={<Schedule />} />
-          <Route path="/add" element={<AddSchedule />} />
-          <Route path="/reserve" element={<BookingPage />} />
-          <Route path="/signup" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route element={<RequireAuth />}>
-            <Route path="/profile" element={<Welcome />} />
-            <Route path="/appointments" element={<Appointments />} />
-          </Route>
-        </Routes>
+        <Box
+          sx={{
+            minHeight: '100vh',
+            minHeight: '100dvh',
+            display: 'grid',
+            gridTemplateRows: 'auto 1fr auto',
+          }}
+        >
+          <NavBar />
+          <Routes>
+            <Route index element={<Home />} />
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/add" element={<AddSchedule />} />
+            <Route path="/reserve" element={<BookingPage />} />
+            <Route path="/signup" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route element={<RequireAuth />}>
+              <Route path="/profile" element={<Welcome />} />
+              <Route path="/appointments" element={<Appointments />} />
+            </Route>
+          </Routes>
+          <Footer />
+        </Box>
       </ThemeProvider>
     </BrowserRouter>
   );
