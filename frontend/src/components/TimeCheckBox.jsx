@@ -8,23 +8,24 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import dateServices from '../features/date/date';
 
+// TODO: move to data
 const times = [
   { id: 1, time: '09:00:00-05:00' },
   { id: 2, time: '10:00:00-05:00' },
   { id: 3, time: '11:00:00-05:00' },
 ];
 
-const TimeCheckBox = ({ date, createClasses }) => {
+const TimeCheckBox = ({ date, createSchedule }) => {
   const [activeCheck, setActiveCheck] = useState([]);
   const defaultNumberOfSlots = 3;
 
-  const addClasses = () => {
+  const addSchedule = () => {
     const timesToCreate = activeCheck.map((a) => {
       return {
         time: a.time,
       };
     });
-    createClasses(timesToCreate);
+    createSchedule(timesToCreate);
   };
 
   const found = (id) => {
@@ -108,7 +109,7 @@ const TimeCheckBox = ({ date, createClasses }) => {
           })}
         </Box>
         {activeCheck && (
-          <Button onClick={addClasses} variant="contained" fullWidth>
+          <Button onClick={addSchedule} variant="contained" fullWidth>
             Add Classes
           </Button>
         )}

@@ -5,16 +5,22 @@ import TimeCheckBox from '../../components/TimeCheckBox';
 import dateServices from '../date/date';
 import { useState } from 'react';
 import { useAddScheduleMutation } from './scheduleSlice';
+import { useDispatch } from 'react-redux';
+import {
+  clearAlert,
+  setError,
+  setSuccess,
+} from '../notification/notificationSlice';
 
 const AddSchedule = () => {
+  const dispatch = useDispatch();
   const [date, setDate] = useState(dateServices.currentDate());
   const [addSchedule, { isLoading }] = useAddScheduleMutation();
 
   const handleDateChange = (newDate) => {
     setDate(newDate);
   };
-
-  const addClasses = async (obj) => {
+  const handleAddSchedule = async (obj) => {
     try {
       const apptsForDate = obj.map((o) => {
         return {
@@ -22,9 +28,10 @@ const AddSchedule = () => {
           date: dateServices.convertEST(date),
         };
       });
-      await addSchedule(apptsForDate);
+      const addedSchedule = await addSchedule(apptsForDate).unwrap();
+      dispatch(setSuccess(addedSchedule.message));
     } catch (error) {
-      console.error('failed to save new schedule', error);
+      dispatch(setError(`Failed to save new schedule: ${error}`));
     }
   };
 
@@ -44,7 +51,7 @@ const AddSchedule = () => {
         <DatePicker date={date} handleDateChange={handleDateChange} />
         <TimeCheckBox
           date={dateServices.dateHyphen(date)}
-          createClasses={addClasses}
+          createSchedule={handleAddSchedule}
         />
       </Box>
     </Container>

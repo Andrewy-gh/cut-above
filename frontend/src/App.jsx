@@ -10,12 +10,14 @@ import Schedule from './features/schedule/Schedule';
 import BookingPage from './features/schedule/BookingPage';
 import NavBar from './components/NavBar';
 import { theme } from './styles/styles';
+import Notification from './features/notification/Notification';
 
 function App() {
   return (
     <BrowserRouter>
       <ThemeProvider theme={responsiveFontSizes(theme)}>
         <CssBaseline />
+        <Notification />
         <NavBar />
         <Routes>
           <Route index element={<Home />} />
@@ -24,7 +26,7 @@ function App() {
           <Route path="/reserve" element={<BookingPage />} />
           <Route path="/login" element={<Login />} />
           <Route element={<RequireAuth />}>
-            <Route path="/welcome" element={<Welcome />} />
+            <Route path="/profile" element={<Welcome />} />
             <Route path="/appointments" element={<Appointments />} />
           </Route>
         </Routes>

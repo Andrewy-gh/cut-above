@@ -5,9 +5,6 @@ const jwt = require('jsonwebtoken');
 
 authRouter.post('/login', async (req, res) => {
   const cookies = req.cookies;
-  // if (cookies) {
-  //   console.log('existing refresh token?', cookies?.jwt.slice(-4));
-  // }
 
   const { email, password } = req.body;
   if (!email || !password)
@@ -29,8 +26,6 @@ authRouter.post('/login', async (req, res) => {
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: '15s' }
     );
-    console.log('=AUTH CONTROLLERS===============');
-    // console.log('ACCESS TOKEN', accessToken.slice(-4));
     const newRefreshToken = jwt.sign(
       {
         id: foundUser._id,
@@ -38,9 +33,6 @@ authRouter.post('/login', async (req, res) => {
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: '10m' }
     );
-    console.log('=AUTH CONTROLLERS===============');
-    // console.log('REFRESH TOKEN', newRefreshToken.slice(-4));
-    // Changed to let keyword
     let newRefreshTokenArray = !cookies?.jwt
       ? foundUser.refreshToken
       : foundUser.refreshToken.filter((rt) => rt !== cookies.jwt);

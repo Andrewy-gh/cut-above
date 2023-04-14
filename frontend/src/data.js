@@ -2,6 +2,16 @@ import haircut from './assets/images/hair-spies-ClilMdu189E-unsplash.jpg';
 import beard from './assets/images/allef-vinicius-IvQeAVeJULw-unsplash.jpg';
 import shave from './assets/images/christoffer-engstrom-1ouGlRChSbY-unsplash.jpg';
 
+export const links = [
+  { id: 1, name: 'Home', path: '/' },
+  { id: 2, name: 'Booking', path: '/reserve' },
+  { id: 3, name: 'Add Schedule', path: '/add' },
+  { id: 4, name: 'Register', path: '/register' },
+  { id: 5, name: 'Login', path: '/login', loggedIn: false },
+  { id: 6, name: 'Profile', path: '/profile' },
+  { id: 7, name: 'Schedule', path: '/schedule' },
+];
+
 export const services = [
   {
     id: 1,
