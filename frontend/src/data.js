@@ -10,6 +10,7 @@ export const links = [
   { id: 5, name: 'Login', path: '/login', loggedIn: false },
   { id: 6, name: 'Profile', path: '/profile' },
   { id: 7, name: 'Schedule', path: '/schedule' },
+  { id: 8, name: 'Appointments', path: '/appointments' },
 ];
 
 export const roles = [
