@@ -8,39 +8,18 @@ import { theme } from '../../styles/styles';
 import { useSelector } from 'react-redux';
 import { useGetEmployeesQuery } from './employeeSlice';
 import { selectEmployeeById } from './employeeSlice';
+import CircleProgress from '../../components/Loading/CircleProgress';
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  cursor: 'pointer',
-  marginTop: theme.spacing(1),
-  marginBottom: theme.spacing(1),
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: '2rem',
-}));
-
-const selectedStyle = {
-  backgroundColor: theme.palette.secondary.light,
-};
-
-const selectedFont = {
-  color: '#1A2027',
-};
-
-const Employee = ({ employeeId, style }) => {
+const Employee = ({ employeeId }) => {
   const { isLoading, isSuccess, isError, error } = useGetEmployeesQuery();
   const employee = useSelector((state) =>
     selectEmployeeById(state, employeeId)
   );
+  console.log(employee);
 
   let content;
   if (isLoading) {
-    content = <p>Loading...</p>;
+    content = <CircleProgress />;
   } else if (isSuccess) {
     content = (
       <>
@@ -49,16 +28,14 @@ const Employee = ({ employeeId, style }) => {
           src={employee.image}
           sx={{ width: 56, height: 56 }}
         />
-        <Typography variant="body1" style={style ? selectedFont : null}>
-          {employee.firstName}
-        </Typography>
+        <Typography variant="body1">{employee.firstName}</Typography>
       </>
     );
   } else if (isError) {
     content = <p>{error}</p>;
   }
 
-  return <Item style={style ? selectedStyle : null}>{content}</Item>;
+  return <>{content}</>;
 };
 
 export default Employee;
