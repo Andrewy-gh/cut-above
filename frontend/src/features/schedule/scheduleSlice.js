@@ -56,10 +56,13 @@ const selectScheduleData = createSelector(
   (scheduleResult) => scheduleResult.data // normalized state object with ids & entities
 );
 
-export const { selectAll: selectAllSchedule, selectById: selectScheduleById } =
-  scheduleAdapter.getSelectors(
-    (state) => selectScheduleData(state) ?? initialState
-  );
+export const {
+  selectAll: selectAllSchedule,
+  selectById: selectScheduleById,
+  selectIds,
+} = scheduleAdapter.getSelectors(
+  (state) => selectScheduleData(state) ?? initialState
+);
 
 export const selectScheduleByFilter = createSelector(
   selectAllSchedule,

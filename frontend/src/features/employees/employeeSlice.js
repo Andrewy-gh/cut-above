@@ -27,7 +27,10 @@ const selectEmployeesData = createSelector(
   (employeeResult) => employeeResult.data // normalized state object with ids & entities
 );
 
-export const { selectAll: selectAllEmployees, selectById: selectEmployeeById } =
-  employeeAdapter.getSelectors(
-    (state) => selectEmployeesData(state) ?? initialState
-  );
+export const {
+  selectAll: selectAllEmployees,
+  selectById: selectEmployeeById,
+  selectIds: selectEmployeeIds,
+} = employeeAdapter.getSelectors(
+  (state) => selectEmployeesData(state) ?? initialState
+);
