@@ -27,9 +27,10 @@ const Login = () => {
         email: user.toLowerCase(),
         password,
       }).unwrap();
+      console.log('userData', userData);
       dispatch(
         setCredentials({
-          user,
+          user: userData.user,
           accessToken: userData.accessToken,
         })
       );

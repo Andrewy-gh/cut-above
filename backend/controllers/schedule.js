@@ -27,7 +27,7 @@ scheduleRouter.post('/', async (request, response) => {
 
 scheduleRouter.put('/:id', async (request, response) => {
   const { appointment, employee } = request.body;
-
+  console.log('controllers', appointment, employee);
   const bookedAppt = await Appointment.findOne({ _id: appointment });
   const dateToUpdate = await Schedule.findOne({ _id: request.params.id });
   const index = dateToUpdate.available.findIndex(

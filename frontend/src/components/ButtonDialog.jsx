@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
-const ConfirmDialog = ({
+const ButtonDialog = ({
   disabled = false,
   dialog,
   agreeHandler,
@@ -37,7 +37,6 @@ const ConfirmDialog = ({
     setOpen(false);
     agreeHandler();
   };
-
   return (
     <Box>
       <Button
@@ -64,4 +63,4 @@ const ConfirmDialog = ({
   );
 };
 
-export default ConfirmDialog;
+export default ButtonDialog;

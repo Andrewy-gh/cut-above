@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 const Welcome = () => {
   const user = useSelector(selectCurrentUser);
+  console.log(user);
   const token = useSelector(selectCurrentToken);
 
   const welcome = user ? `Welcome ${user}!` : 'Welcome!';

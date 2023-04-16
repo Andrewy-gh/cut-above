@@ -63,7 +63,14 @@ authRouter.post('/login', async (req, res) => {
     // Saving refreshToken with current user
     foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
     const result = await foundUser.save();
-    console.log('successfully logged in', result.refreshToken);
+    console.log('successfully logged in', result);
+
+    const user = {
+      firstName: result.firstName,
+      lastName: result.lastName,
+      email: result.email,
+      role: result.role,
+    };
 
     // Creates Secure Cookie with refresh token
     res.cookie('jwt', newRefreshToken, {
@@ -74,7 +81,7 @@ authRouter.post('/login', async (req, res) => {
     });
 
     // Send authorization roles and access token to user
-    res.json({ accessToken });
+    res.json({ user, accessToken });
   } else {
     res.sendStatus(401);
   }

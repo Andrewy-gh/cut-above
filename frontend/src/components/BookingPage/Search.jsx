@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
-import ConfirmDialog from '../ConfirmDialog';
+import ButtonDialog from '../ButtonDialog';
 import Container from '@mui/material/Container';
 import DatePicker from '../Datepicker';
 import CircleProgress from '../Loading/CircleProgress';
@@ -63,9 +63,9 @@ const Search = () => {
 
   const timeSlots = useSelector(selectScheduleByFilter);
 
-  const reserveDialog = {
-    button: 'Reserve Now',
-    title: 'Would you like to reserve this appointment?',
+  const bookDialog = {
+    button: 'Book Now',
+    title: 'Would you like to book this appointment?',
     content: `With ${employee?.firstName} on ${dateServices.dateSlash(
       slotInfo?.date
     )} on ${dateServices.time(slotInfo?.time)}?`,
@@ -139,9 +139,9 @@ const Search = () => {
             />
           )}
           {employeePref !== 'any' && <Employee employeeId={employeePref} />}
-          <ConfirmDialog
+          <ButtonDialog
             disabled={confirmDisabled}
-            dialog={reserveDialog}
+            dialog={bookDialog}
             agreeHandler={handleBooking}
           />
         </Box>

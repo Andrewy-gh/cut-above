@@ -9,6 +9,8 @@ import Typography from '@mui/material/Typography';
 import Item from '../../components/Item';
 import CircleProgress from '../../components/Loading/CircleProgress';
 import Stack from '@mui/material/Stack';
+import CancelAppointment from './CancelAppointment';
+import ModifyAppointment from './ModifyAppointment';
 
 const Appointment = () => {
   const { isLoading, isSuccess, isError, error } = useGetAppointmentQuery();
@@ -42,6 +44,8 @@ const Appointment = () => {
                 <Typography variant="body1">{appt.date}</Typography>
                 <Typography variant="body1">{appt.time}</Typography>
                 <Employee employeeId={appt.employee} />
+                <ModifyAppointment appt={appt} />
+                <CancelAppointment appt={appt} />
               </Box>
             </Box>
           </Item>

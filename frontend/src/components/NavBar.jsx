@@ -172,7 +172,7 @@ const NavBar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }} />
           {token ? (
             <DesktopDisplay>
-              <Link to="user/profile">
+              <Link to="/profile">
                 <IconButton
                   edge="start"
                   sx={{ mr: 1, color: theme.palette.secondary.dark }}
