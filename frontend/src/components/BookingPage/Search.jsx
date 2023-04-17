@@ -33,6 +33,11 @@ import {
   selectCancelId,
   selectRescheduling,
 } from '../../features/appointments/appointmentSlice';
+import { useCancelAppointmentMutation } from '../../features/appointments/apptApiSlice';
+import {
+  setError,
+  setSuccess,
+} from '../../features/notification/notificationSlice';
 
 const Search = () => {
   const dispatch = useDispatch();
@@ -43,6 +48,7 @@ const Search = () => {
   const convertedDate = dayjs(date);
   const dateDisabled = useSelector(selectDateDisabled);
   const [addAppointment] = useAddAppointmentMutation();
+  const [cancelAppointment] = useCancelAppointmentMutation();
   const [updateSchedule] = useUpdateScheduleMutation();
   const [sendConfirmation] = useSendConfirmationMutation();
   const [confirmDisabled, setConfirmDisabled] = useState(true);
@@ -94,14 +100,18 @@ const Search = () => {
         appointment: newAppt.data.id,
         employee: employee.id,
       });
-      const sentConfirmation = await sendConfirmation({
+      if (rescheduling && cancelId) {
+        await cancelAppointment({ id: cancelId });
+        dispatch(endRescheduling());
+      }
+      await sendConfirmation({
         employee: employee.firstName,
         date: dateServices.dateSlash(date),
         time: dateServices.time(time),
       });
-      console.log('sentConfirmtaion response:', sentConfirmation);
+      dispatch(setSuccess(newAppt.message));
     } catch (error) {
-      console.error('Error booking your appointment:', error);
+      dispatch(setError(`Error booking your appointment: ${error}`));
     }
   };
 

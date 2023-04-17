@@ -39,7 +39,7 @@ scheduleRouter.put('/:id', async (request, response) => {
 
   response
     .status(200)
-    .json({ success: true, message: 'Class reserved', data: dateToUpdate });
+    .json({ success: true, message: 'Schedule updated', data: dateToUpdate });
 });
 
 module.exports = scheduleRouter;
