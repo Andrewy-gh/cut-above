@@ -26,13 +26,20 @@ import EmployeeSelect from '../../features/employees/EmployeeSelect';
 import DateDisabledSwitch from '../../features/filter/DateDisabledSwitch';
 import dayjs from 'dayjs';
 import Employee from '../../features/employees/Employee';
-import { useAddAppointmentMutation } from '../../features/appointments/appointmentSlice';
+import { useAddAppointmentMutation } from '../../features/appointments/apptApiSlice';
 import { useSendConfirmationMutation } from '../../features/email/emailSlice';
+import {
+  endRescheduling,
+  selectCancelId,
+  selectRescheduling,
+} from '../../features/appointments/appointmentSlice';
 
 const Search = () => {
   const dispatch = useDispatch();
   const date = useSelector(selectDate);
   const employeePref = useSelector(selectEmployee);
+  const rescheduling = useSelector(selectRescheduling);
+  const cancelId = useSelector(selectCancelId);
   const convertedDate = dayjs(date);
   const dateDisabled = useSelector(selectDateDisabled);
   const [addAppointment] = useAddAppointmentMutation();
@@ -62,6 +69,9 @@ const Search = () => {
   };
 
   const timeSlots = useSelector(selectScheduleByFilter);
+
+  const appointment = useSelector(({ appointment }) => appointment);
+  console.log('appointment', appointment);
 
   const bookDialog = {
     button: 'Book Now',

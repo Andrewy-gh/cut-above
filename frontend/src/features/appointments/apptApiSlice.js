@@ -25,17 +25,27 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     }),
     addAppointment: builder.mutation({
       query: (appointment) => ({
-        url: 'appointment',
+        url: '/appointment',
         method: 'POST',
         body: appointment,
+      }),
+      invalidatesTags: ['Appointment'],
+    }),
+    cancelAppointment: builder.mutation({
+      query: (appointment) => ({
+        url: `/appointment/${appointment.id}`,
+        method: 'DELETE',
       }),
       invalidatesTags: ['Appointment'],
     }),
   }),
 });
 
-export const { useGetAppointmentQuery, useAddAppointmentMutation } =
-  extendedApiSlice;
+export const {
+  useGetAppointmentQuery,
+  useAddAppointmentMutation,
+  useCancelAppointmentMutation,
+} = extendedApiSlice;
 
 export const selectAppointmentResult =
   extendedApiSlice.endpoints.getAppointment.select();

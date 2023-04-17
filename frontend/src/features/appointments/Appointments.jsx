@@ -1,7 +1,4 @@
-import {
-  selectAllAppointment,
-  useGetAppointmentQuery,
-} from './appointmentSlice';
+import { selectAllAppointment, useGetAppointmentQuery } from './apptApiSlice';
 import { useSelector } from 'react-redux';
 import Employee from '../employees/Employee';
 import Box from '@mui/material/Box';
@@ -60,7 +57,7 @@ const Appointment = () => {
   }
 
   return (
-    <>
+    <Box>
       <Typography
         component="h3"
         variant="h4"
@@ -71,7 +68,7 @@ const Appointment = () => {
         Upcoming appointments
       </Typography>
       <Stack spacing={2}>{content}</Stack>
-    </>
+    </Box>
   );
 };
 

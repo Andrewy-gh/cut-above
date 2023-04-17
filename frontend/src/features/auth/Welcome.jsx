@@ -3,15 +3,14 @@ import { selectCurrentUser, selectCurrentToken } from './authSlice';
 import { Link } from 'react-router-dom';
 
 const Welcome = () => {
-  const user = useSelector(selectCurrentUser);
-  console.log(user);
+  const { email } = useSelector(selectCurrentUser);
   const token = useSelector(selectCurrentToken);
 
-  const welcome = user ? `Welcome ${user}!` : 'Welcome!';
+  const welcome = email ? `Welcome ${email}!` : 'Welcome!';
   const tokenAbbr = `${token.slice(0, 9)}...`;
 
   const content = (
-    <section className="welcome">
+    <section>
       <h1>{welcome}</h1>
       <p>Token: {tokenAbbr}</p>
       <p>

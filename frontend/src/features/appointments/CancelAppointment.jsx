@@ -1,13 +1,24 @@
-import { useSelector } from 'react-redux';
-import date from '../date/date';
+import { useDispatch, useSelector } from 'react-redux';
 import ButtonDialog from '../../components/ButtonDialog';
 import { selectEmployeeById } from '../employees/employeeSlice';
+import { useCancelAppointmentMutation } from './apptApiSlice';
+import { setError, setSuccess } from '../notification/notificationSlice';
 
 const CancelAppointment = ({ appt }) => {
+  const dispatch = useDispatch();
   const employee = useSelector((state) =>
     selectEmployeeById(state, appt.employee)
   );
-  console.log(appt);
+  const [cancelAppointment] = useCancelAppointmentMutation();
+
+  const handleCancel = async (id) => {
+    try {
+      const cancelledAppt = await cancelAppointment({ id }).unwrap();
+      dispatch(setSuccess(cancelledAppt.message));
+    } catch (error) {
+      dispatch(setError(`Error cancelling appointment: ${error}`));
+    }
+  };
 
   const dialog = (appt) => {
     return {
@@ -17,7 +28,13 @@ const CancelAppointment = ({ appt }) => {
     };
   };
 
-  return <ButtonDialog dialog={dialog(appt)} />;
+  return (
+    <ButtonDialog
+      dialog={dialog(appt)}
+      agreeHandler={() => handleCancel(appt.id)}
+      closeHandler={() => void 0}
+    />
+  );
 };
 
 export default CancelAppointment;

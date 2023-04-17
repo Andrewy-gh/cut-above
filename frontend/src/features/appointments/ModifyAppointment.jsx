@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import date from '../date/date';
 import ButtonDialog from '../../components/ButtonDialog';
 import { selectEmployeeById } from '../employees/employeeSlice';
+import { beginRescheduling } from './appointmentSlice';
 
 const ModifyAppointment = ({ appt }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const employee = useSelector((state) =>
@@ -12,6 +14,7 @@ const ModifyAppointment = ({ appt }) => {
   );
 
   const handleModify = () => {
+    dispatch(beginRescheduling(appt.id));
     navigate('/reserve');
   };
 
@@ -27,6 +30,7 @@ const ModifyAppointment = ({ appt }) => {
     <ButtonDialog
       dialog={dialog(appt)}
       agreeHandler={() => handleModify(appt.id)}
+      closeHandler={() => void 0}
     />
   );
 };
