@@ -18,11 +18,11 @@ const ButtonDialog = ({
 }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(openDialog);
 
-  useEffect(() => {
-    setOpen(openDialog);
-  }, [openDialog]);
+  // useEffect(() => {
+  //   setOpen(openDialog);
+  // }, [openDialog]);
 
   const handleClick = () => {
     setOpen(true);

@@ -10,9 +10,12 @@ import { useDispatch } from 'react-redux';
 import { setCredentials } from './authSlice';
 import { useLoginMutation } from './authApiSlice';
 import { setError, setSuccess } from '../notification/notificationSlice';
+import { useSelector } from 'react-redux';
+import { selectHoldStatus } from '../filter/filterSlice';
 
 // TODO useEffect navigate to profile?
 const Login = () => {
+  const holding = useSelector(selectHoldStatus);
   const [user, setUser] = useState('andy.yu617@gmail.com');
   const [password, setPassword] = useState('pw');
   const navigate = useNavigate();
@@ -37,7 +40,11 @@ const Login = () => {
       setUser('');
       setPassword('');
       dispatch(setSuccess('Successfully logged in'));
-      navigate('/profile');
+      if (holding) {
+        navigate('/reserve');
+      } else {
+        navigate('/profile');
+      }
     } catch (error) {
       dispatch(setError(`Error logging in: ${error}`));
     }

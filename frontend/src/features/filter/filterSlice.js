@@ -10,6 +10,11 @@ const filterSlice = createSlice({
     date: currentDate,
     dateDisabled: false,
     employee: 'any',
+    holdStatus: false,
+    savedSelections: {
+      slot: null,
+      employee: null,
+    },
   },
   reducers: {
     setDate: (state, action) => {
@@ -21,11 +26,31 @@ const filterSlice = createSlice({
     setEmployee: (state, action) => {
       state.employee = action.payload;
     },
+    setSavedSelections: (state, action) => {
+      const { slot, employee } = action.payload;
+      state.holdStatus = true;
+      state.savedSelections = { slot, employee };
+    },
+    clearSavedSelections: (state, action) => {
+      state.holdStatus = false;
+      state.savedSelections = {
+        slot: null,
+        employee: null,
+      };
+    },
   },
 });
 
 export const selectDate = (state) => state.filter.date;
 export const selectDateDisabled = (state) => state.filter.dateDisabled;
 export const selectEmployee = (state) => state.filter.employee;
-export const { setDate, setEmployee, setDateDisabled } = filterSlice.actions;
+export const selectHoldStatus = (state) => state.filter.holdStatus;
+export const selectSavedSelections = (state) => state.filter.savedSelections;
+export const {
+  setDate,
+  setEmployee,
+  setDateDisabled,
+  setSavedSelections,
+  clearSavedSelections,
+} = filterSlice.actions;
 export default filterSlice.reducer;
