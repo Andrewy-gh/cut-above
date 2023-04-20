@@ -9,20 +9,17 @@ scheduleRouter.get('/', async (request, response) => {
 });
 
 scheduleRouter.post('/', async (request, response) => {
-  const apptForDate = request.body;
-  const employees = await User.find({ role: 'admin' });
-  const apptToAdd = apptForDate.map(
-    (appt) =>
-      new Schedule({
-        ...appt,
-        available: employees,
-      })
-  );
-  const apptToSave = apptToAdd.map((appt) => appt.save());
-  const savedAppts = await Promise.all(apptToSave);
+  const { date, open, close } = request.body;
+  console.log('controller test', date, open, close);
+  const newSchedule = new Schedule({
+    date,
+    open,
+    close,
+  });
+  await newSchedule.save();
   response
     .status(201)
-    .json({ message: 'New schedule added', data: savedAppts });
+    .json({ message: 'New schedule added', data: newSchedule });
 });
 
 scheduleRouter.put('/:id', async (request, response) => {

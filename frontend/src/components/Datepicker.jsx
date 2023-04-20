@@ -1,5 +1,3 @@
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
@@ -11,7 +9,7 @@ const DatePicker = ({
   maxDate,
 }) => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <>
       <MobileDatePicker
         label="Pick a date"
         format="MM/DD/YYYY"
@@ -35,7 +33,7 @@ const DatePicker = ({
         minDate={minDate}
         maxDate={maxDate}
       />
-    </LocalizationProvider>
+    </>
   );
 };
 

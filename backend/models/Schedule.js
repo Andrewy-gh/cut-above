@@ -5,16 +5,14 @@ const scheduleSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  time: {
+  open: {
     type: Date,
     required: true,
   },
-  available: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-    },
-  ],
+  close: {
+    type: Date,
+    required: true,
+  },
   appointments: [
     {
       type: mongoose.Schema.Types.ObjectId,

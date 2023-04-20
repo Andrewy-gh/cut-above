@@ -19,7 +19,6 @@ function Schedule() {
         }}
       >
         <div>{sc.date}</div>
-        <div>{sc.time}</div>
         <div>{sc.available.length} slots available</div>
       </div>
     ));
