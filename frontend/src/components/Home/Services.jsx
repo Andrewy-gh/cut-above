@@ -8,8 +8,12 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { services } from '../../data';
+import { Link } from 'react-router-dom';
+import { setService } from '../../features/filter/filterSlice';
+import { useDispatch } from 'react-redux';
 
 const Services = () => {
+  const dispatch = useDispatch();
   return (
     <Container sx={{ py: 8 }} maxWidth="lg">
       <Typography component="h3" variant="h4" align="center" gutterBottom>
@@ -52,9 +56,14 @@ const Services = () => {
                 <Typography variant="body2">{service.description}</Typography>
               </CardContent>
               <CardActions sx={{ marginInline: 'auto', mb: 2 }}>
-                <Button size="small" variant="contained">
-                  {`Schedule ${service.name}`}
-                </Button>
+                <Link
+                  to="/reserve"
+                  onClick={() => dispatch(setService(service.name))}
+                >
+                  <Button size="small" variant="contained">
+                    {`Schedule ${service.name}`}
+                  </Button>
+                </Link>
               </CardActions>
             </Grid>
             <Grid item md={6} lg={5}>

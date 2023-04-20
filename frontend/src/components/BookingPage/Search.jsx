@@ -44,6 +44,7 @@ import {
   setSuccess,
 } from '../../features/notification/notificationSlice';
 import { selectCurrentToken } from '../../features/auth/authSlice';
+import ServiceSelect from './ServiceSelect';
 
 const Search = () => {
   const navigate = useNavigate();
@@ -155,10 +156,11 @@ const Search = () => {
             flexDirection: 'column',
             // flexDirection: { sm: 'row', md: 'column' },
             alignItems: 'center',
-            gap: 1,
+            gap: 2,
             mb: 3,
           }}
         >
+          <ServiceSelect />
           <EmployeeSelect
             setConfirmDisabled={setConfirmDisabled}
             selected={selected}
