@@ -51,9 +51,11 @@ const Services = () => {
                 </Typography>
                 <Typography variant="body2">{service.description}</Typography>
               </CardContent>
-              {/* <CardActions>
-                <Button size="small">Book</Button>
-              </CardActions> */}
+              <CardActions sx={{ marginInline: 'auto', mb: 2 }}>
+                <Button size="small" variant="contained">
+                  {`Schedule ${service.name}`}
+                </Button>
+              </CardActions>
             </Grid>
             <Grid item md={6} lg={5}>
               <CardMedia
