@@ -5,12 +5,12 @@ const User = require('../models/User');
 
 scheduleRouter.get('/', async (request, response) => {
   const schedule = await Schedule.find({});
+  console.log('schedule controller', schedule);
   response.json(schedule);
 });
 
 scheduleRouter.post('/', async (request, response) => {
   const { date, open, close } = request.body;
-  console.log('controller test', date, open, close);
   const newSchedule = new Schedule({
     date,
     open,

@@ -12,11 +12,11 @@ const ServiceSelect = () =>
   {
     const dispatch = useDispatch();
     const service = useSelector(selectService);
-    console.log('service', service);
 
-    const handleServiceChange = (service) => {
-      // setSelected({ ...selected, service });
-      dispatch(setService(service));
+    const handleServiceChange = (serviceId) => {
+      const service = services.find((service) => service.id === serviceId);
+      const { name, duration } = service;
+      dispatch(setService({ id: serviceId, name, duration }));
     };
 
     return (
@@ -28,14 +28,18 @@ const ServiceSelect = () =>
         <InputLabel>Choose a service</InputLabel>
         <Select
           label="Barber"
-          value={service}
+          value={service.id}
           fullWidth
           onChange={(e) => handleServiceChange(e.target.value)}
           sx={{ color: theme.palette.secondary.main }}
         >
           {services.map((service) => {
             return (
-              <MenuItem value={service.name} key={service.id}>
+              <MenuItem
+                value={service.id}
+                duration={service.duration}
+                key={service.id}
+              >
                 {service.name}
               </MenuItem>
             );

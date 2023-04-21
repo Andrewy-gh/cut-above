@@ -11,7 +11,7 @@ const filterSlice = createSlice({
     dateDisabled: false,
     employee: 'any',
     holdStatus: false,
-    service: 'Haircut',
+    service: { id: 1, name: 'Haircut', duration: 30 },
     savedSelections: {
       slot: null,
       employee: null,

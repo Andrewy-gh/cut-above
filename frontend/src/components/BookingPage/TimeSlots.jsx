@@ -8,6 +8,7 @@ import { theme } from '../../styles/styles';
 import { useSelector } from 'react-redux';
 import date from '../../features/date/date';
 import { selectEmployee } from '../../features/filter/filterSlice';
+import dayjs from 'dayjs';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -36,7 +37,8 @@ const TimeSlot = ({ slot, handleClick, style, preference }) => {
         style={style ? selectedStyle : null}
       >
         <Typography variant="body1" style={style ? selectedFont : null}>
-          {date.dateShort(slot.date)} {date.time(slot.time)}{' '}
+          {/* {date.dateShort(slot.date)}{' '} */}
+          {dayjs(slot.start, 'HH:mm').format('h:mma')}{' '}
           {preference === 'any' && (
             <>
               {slot.available.length}
@@ -61,7 +63,6 @@ const TimeSlots = ({
   if (selected.slot !== styledId) {
     setStyledId(null);
   }
-
   const style = (id) => id === styledId;
   const handleClick = (id) => {
     if (employeePref !== 'any') {
@@ -72,23 +73,32 @@ const TimeSlots = ({
     setStyledId(id);
     setSelected({ ...selected, slot: id });
   };
+
   return (
-    <Box sx={{ mt: 2, mb: 2 }}>
-      <Typography variant="h6" align="center">
-        Times Available
-      </Typography>
-      <Grid container spacing={1} justifyContent="center">
-        {timeSlots.map((slot) => (
-          <TimeSlot
-            slot={slot}
-            key={slot.id}
-            preference={employeePref}
-            handleClick={handleClick}
-            style={style(slot.id)}
-          />
-        ))}
-      </Grid>
-    </Box>
+    <>
+      {timeSlots.length > 0 ? (
+        <Box sx={{ mt: 2, mb: 2 }}>
+          <Typography variant="h6" align="center">
+            Times Available
+          </Typography>
+          <Grid container spacing={1} justifyContent="center">
+            {timeSlots.map((slot) => (
+              <TimeSlot
+                slot={slot}
+                key={slot.id}
+                preference={employeePref}
+                handleClick={handleClick}
+                style={style(slot.id)}
+              />
+            ))}
+          </Grid>
+        </Box>
+      ) : (
+        <Typography variant="h6" align="center">
+          No Times Available
+        </Typography>
+      )}
+    </>
   );
 };
 

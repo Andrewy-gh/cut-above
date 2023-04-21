@@ -8,12 +8,14 @@ import { selectScheduleById } from '../../features/schedule/scheduleSlice';
 import Employee from '../../features/employees/Employee';
 import Item from '../Item';
 import { theme } from '../../styles/styles';
+import { selectScheduleByFilter } from '../../features/schedule/scheduleSlice';
 
 const TimeSlotDetail = ({ selected, setConfirmDisabled, setSelected }) => {
-  const slot = useSelector((state) => selectScheduleById(state, selected.slot));
-
   const [styledId, setStyledId] = useState(null);
   const style = (id) => id === styledId;
+
+  const timeSlots = useSelector(selectScheduleByFilter);
+  const slot = timeSlots.find((ts) => ts.id === selected.slot);
 
   const handleClick = (id) => {
     setConfirmDisabled(false);

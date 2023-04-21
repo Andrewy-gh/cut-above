@@ -5,8 +5,8 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import DatePicker from '../../components/Datepicker';
 import dateServices from '../date/date';
 import { useState } from 'react';
-import { useAddScheduleMutation } from './scheduleSlice';
-import { useDispatch } from 'react-redux';
+import { selectAllSchedule, useAddScheduleMutation } from './scheduleSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { setError, setSuccess } from '../notification/notificationSlice';
 import dayjs from 'dayjs';
 
@@ -28,6 +28,8 @@ const AddSchedule = () => {
     setDate(newDate);
   };
 
+  const schedule = useSelector(selectAllSchedule);
+  console.log('schedule', schedule);
   const handleAddSchedule = async () => {
     try {
       // const apptsForDate = obj.map((o) => {

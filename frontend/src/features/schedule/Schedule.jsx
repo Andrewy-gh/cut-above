@@ -19,7 +19,6 @@ function Schedule() {
         }}
       >
         <div>{sc.date}</div>
-        <div>{sc.available.length} slots available</div>
       </div>
     ));
   } else if (isError) {

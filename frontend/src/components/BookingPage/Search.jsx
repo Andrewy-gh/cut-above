@@ -9,6 +9,7 @@ import TimeSlots from './TimeSlots';
 import TimeSlotDetail from './TimeSlotDetail';
 import dateServices from '../../features/date/date';
 import {
+  selectAllSchedule,
   selectScheduleByFilter,
   selectScheduleById,
   useGetScheduleQuery,
@@ -45,7 +46,9 @@ import {
 } from '../../features/notification/notificationSlice';
 import { selectCurrentToken } from '../../features/auth/authSlice';
 import ServiceSelect from './ServiceSelect';
+import { selectService } from '../../features/filter/filterSlice';
 
+// TODO: backend
 const Search = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -55,6 +58,7 @@ const Search = () => {
   const cancelId = useSelector(selectCancelId);
   const holding = useSelector(selectHoldStatus);
   const savedSelections = useSelector(selectSavedSelections);
+  const service = useSelector(selectService);
   const convertedDate = dayjs(date);
   const dateDisabled = useSelector(selectDateDisabled);
   const token = useSelector(selectCurrentToken);
@@ -68,14 +72,8 @@ const Search = () => {
     employee: savedSelections.employee,
   });
 
-  console.log('selected: ', selected);
-  console.log('holding', holding);
-
   const employee = useSelector((state) =>
     selectEmployeeById(state, selected.employee)
-  );
-  const slotInfo = useSelector((state) =>
-    selectScheduleById(state, selected.slot)
   );
 
   if (employeePref !== 'any') {
@@ -91,12 +89,16 @@ const Search = () => {
 
   const timeSlots = useSelector(selectScheduleByFilter);
 
+  const slotInfo = timeSlots.find((ts) => ts.id === selected.slot);
+
   const bookDialog = {
     button: 'Book Now',
     title: 'Would you like to book this appointment?',
-    content: `With ${employee?.firstName} on ${dateServices.dateSlash(
-      slotInfo?.date
-    )} on ${dateServices.time(slotInfo?.time)}?`,
+    content: `${service.name} with ${
+      employee?.firstName
+    } on ${dateServices.dateSlash(date)} from ${slotInfo?.start} to ${
+      slotInfo?.end
+    }?`,
   };
 
   let openDialog = false;
