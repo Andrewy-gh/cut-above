@@ -13,13 +13,19 @@ const appointmentSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  service: {
+    type: String,
+    required: true,
+  },
   client: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true,
   },
   employee: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true,
   },
 });
 

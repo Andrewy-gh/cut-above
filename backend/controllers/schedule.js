@@ -4,8 +4,10 @@ const Schedule = require('../models/Schedule');
 const User = require('../models/User');
 
 scheduleRouter.get('/', async (request, response) => {
-  const schedule = await Schedule.find({});
-  console.log('schedule controller', schedule);
+  const schedule = await Schedule.find({}).populate(
+    'appointments',
+    'start end employee'
+  );
   response.json(schedule);
 });
 
@@ -23,20 +25,15 @@ scheduleRouter.post('/', async (request, response) => {
 });
 
 scheduleRouter.put('/:id', async (request, response) => {
-  const { appointment, employee } = request.body;
-  console.log('controllers', appointment, employee);
+  const { appointment } = request.body;
   const bookedAppt = await Appointment.findOne({ _id: appointment });
-  const dateToUpdate = await Schedule.findOne({ _id: request.params.id });
-  const index = dateToUpdate.available.findIndex(
-    (a) => a._id.toString() === employee
-  );
-  dateToUpdate.available.splice(index, 1);
-  dateToUpdate.appointments.push(bookedAppt);
-  await dateToUpdate.save();
+  const schedule = await Schedule.findOne({ _id: request.params.id });
+  schedule.appointments.push(bookedAppt);
+  await schedule.save();
 
   response
     .status(200)
-    .json({ success: true, message: 'Schedule updated', data: dateToUpdate });
+    .json({ success: true, message: 'Schedule updated', data: schedule });
 });
 
 module.exports = scheduleRouter;

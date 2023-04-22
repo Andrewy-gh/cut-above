@@ -10,6 +10,7 @@ import TimeSlotDetail from './TimeSlotDetail';
 import dateServices from '../../features/date/date';
 import {
   selectAllSchedule,
+  selectScheduleByDate,
   selectScheduleByFilter,
   selectScheduleById,
   useGetScheduleQuery,
@@ -49,6 +50,7 @@ import ServiceSelect from './ServiceSelect';
 import { selectService } from '../../features/filter/filterSlice';
 
 // TODO: backend
+// TODO: cohesive time formatting
 const Search = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -71,6 +73,7 @@ const Search = () => {
     slot: savedSelections.slot,
     employee: savedSelections.employee,
   });
+  const convertTimeFormat = (time) => dayjs(time, 'HH:mm').format('h:mma');
 
   const employee = useSelector((state) =>
     selectEmployeeById(state, selected.employee)
@@ -87,6 +90,7 @@ const Search = () => {
     dispatch(setDate(newDate.toISOString()));
   };
 
+  const scheduleByDate = useSelector(selectScheduleByDate);
   const timeSlots = useSelector(selectScheduleByFilter);
 
   const slotInfo = timeSlots.find((ts) => ts.id === selected.slot);
@@ -96,9 +100,9 @@ const Search = () => {
     title: 'Would you like to book this appointment?',
     content: `${service.name} with ${
       employee?.firstName
-    } on ${dateServices.dateSlash(date)} from ${slotInfo?.start} to ${
-      slotInfo?.end
-    }?`,
+    } on ${dateServices.dateSlash(date)} from ${convertTimeFormat(
+      slotInfo?.start
+    )} to ${convertTimeFormat(slotInfo?.end)}?`,
   };
 
   let openDialog = false;
@@ -119,26 +123,29 @@ const Search = () => {
         dispatch(setSavedSelections({ slot, employee }));
         return;
       }
-      const { id, date, time } = slotInfo;
+      const dateToBook = dateServices.dateHyphen(date);
+      const { start, end } = slotInfo;
       const newAppt = await addAppointment({
-        date,
-        time,
+        date: dateToBook,
+        start: `${dateToBook} ${start}`,
+        end: `${dateToBook} ${end}`,
+        service: service.name,
         employee: employee.id,
       }).unwrap();
+      console.log(newAppt);
       await updateSchedule({
-        id,
+        id: scheduleByDate.id,
         appointment: newAppt.data.id,
-        employee: employee.id,
       });
-      if (rescheduling && cancelId) {
-        await cancelAppointment({ id: cancelId });
-        dispatch(endRescheduling());
-      }
-      await sendConfirmation({
-        employee: employee.firstName,
-        date: dateServices.dateSlash(date),
-        time: dateServices.time(time),
-      });
+      // if (rescheduling && cancelId) {
+      //   await cancelAppointment({ id: cancelId });
+      //   dispatch(endRescheduling());
+      // }
+      // await sendConfirmation({
+      //   employee: employee.firstName,
+      //   date: dateServices.dateSlash(date),
+      //   time: dateServices.time(time),
+      // });
       dispatch(clearSavedSelections());
       dispatch(setSuccess(newAppt.message));
     } catch (error) {

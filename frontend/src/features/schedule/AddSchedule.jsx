@@ -14,7 +14,7 @@ import dayjs from 'dayjs';
 const AddSchedule = () => {
   const dispatch = useDispatch();
   const openTime = '10:00';
-  const closeTime = '18:00';
+  const closeTime = '11:00';
   const [date, setDate] = useState(dateServices.currentDate());
   const currentDate = dayjs().format('YYYY-MM-DD');
   const openString = `${currentDate} ${openTime}`;
@@ -28,8 +28,8 @@ const AddSchedule = () => {
     setDate(newDate);
   };
 
-  const schedule = useSelector(selectAllSchedule);
-  console.log('schedule', schedule);
+  // const schedule = useSelector(selectAllSchedule);
+
   const handleAddSchedule = async () => {
     try {
       // const apptsForDate = obj.map((o) => {
@@ -38,7 +38,11 @@ const AddSchedule = () => {
       //     date: dateServices.convertEST(date),
       //   };
       // });
-      const addedSchedule = await addSchedule({ date, open, close }).unwrap();
+      const addedSchedule = await addSchedule({
+        date: dateServices.convertEST(date),
+        open,
+        close,
+      }).unwrap();
       dispatch(setSuccess(addedSchedule.message));
     } catch (error) {
       dispatch(setError(`Failed to save new schedule: ${error}`));

@@ -68,21 +68,27 @@ export const { selectAll: selectAllSchedule, selectById: selectScheduleById } =
     (state) => selectScheduleData(state) ?? initialState
   );
 
-export const selectScheduleByFilter = createSelector(
+export const selectScheduleByDate = createSelector(
   selectAllSchedule,
   selectDate,
+  (schedule, date) => {
+    return schedule.find(
+      (s) => dateServices.dateHyphen(s.date) === dateServices.dateHyphen(date)
+    );
+  }
+);
+
+export const selectScheduleByFilter = createSelector(
+  selectScheduleByDate,
   selectEmployee,
   selectEmployeeIds,
   selectService,
-  (schedule, date, employee, employees, service) => {
-    const scheduleByDate = schedule.find(
-      (s) => dateServices.dateHyphen(s.date) === dateServices.dateHyphen(date)
-    );
-    if (!scheduleByDate) {
-      return null;
+  (schedule, employee, employees, service) => {
+    if (!schedule) {
+      return [];
     }
     const availableTimeSlots = findAvailableTimeSlots(
-      scheduleByDate,
+      schedule,
       service.duration,
       employees
     );
@@ -92,6 +98,7 @@ export const selectScheduleByFilter = createSelector(
 
 function findAvailableTimeSlots(obj, userInput, employees) {
   const { open, close, appointments } = obj;
+  console.log('appointments', appointments);
   const dateFormat = 'HH:mm';
   const slotDuration = userInput;
   const searchIncrement = 15;
@@ -112,13 +119,16 @@ function findAvailableTimeSlots(obj, userInput, employees) {
       const employeeAppointments = appointments.filter(
         (appointment) => appointment.employee === employeeId
       );
-      const employeeBooked = employeeAppointments.some(
-        (appointment) =>
-          dayjs(appointment.start, dateFormat).isBefore(currentSlotEnd) &&
-          dayjs(appointment.end, dateFormat).isAfter(slotStart)
-      );
+      console.log('employeeAppointments', employeeAppointments);
+      const employeeBooked = employeeAppointments.some((appointment) => {
+        return (
+          dayjs(appointment.start).isBefore(currentSlotEnd) &&
+          dayjs(appointment.end).isAfter(slotStart)
+        );
+      });
       return !employeeBooked;
     });
+    console.log('availableEmployees', availableEmployees);
 
     if (availableEmployees.length > 0) {
       slots.push({
