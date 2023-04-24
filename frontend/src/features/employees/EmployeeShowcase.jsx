@@ -42,7 +42,9 @@ const Profile = ({ employeeId }) => {
           <Typography gutterBottom component="h4" variant="h5" align="center">
             {employee.firstName}
           </Typography>
-          <Typography variant="body2">{employee.profile}</Typography>
+          <Typography variant="body2" align="center">
+            {employee.profile}
+          </Typography>
         </CardContent>
         <CardActions sx={{ marginInline: 'auto', mb: 2 }}>
           <Link

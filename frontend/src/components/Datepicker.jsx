@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
@@ -9,7 +10,7 @@ const DatePicker = ({
   maxDate,
 }) => {
   return (
-    <>
+    <Box>
       <MobileDatePicker
         label="Pick a date"
         format="MM/DD/YYYY"
@@ -33,7 +34,7 @@ const DatePicker = ({
         minDate={minDate}
         maxDate={maxDate}
       />
-    </>
+    </Box>
   );
 };
 

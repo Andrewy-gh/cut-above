@@ -53,7 +53,9 @@ const Services = () => {
                 >
                   {service.name}
                 </Typography>
-                <Typography variant="body2">{service.description}</Typography>
+                <Typography variant="body2" align="center">
+                  {service.description}
+                </Typography>
               </CardContent>
               <CardActions sx={{ marginInline: 'auto', mb: 2 }}>
                 <Link

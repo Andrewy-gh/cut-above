@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import ButtonDialog from '../ButtonDialog';
@@ -79,9 +79,11 @@ const Search = () => {
     selectEmployeeById(state, selected.employee)
   );
 
-  if (employeePref !== 'any') {
-    setEmployee({ ...selected, employee: employeePref });
-  }
+  useEffect(() => {
+    if (employeePref !== 'any') {
+      setSelected({ ...selected, employee: employeePref });
+    }
+  }, [employeePref]);
 
   const { isLoading, isSuccess, isError, error } = useGetScheduleQuery();
 
@@ -115,6 +117,7 @@ const Search = () => {
     openDialog = false;
   };
 
+  console.log('employee', selected.employee);
   const handleBooking = async () => {
     try {
       if (!token) {
@@ -132,15 +135,14 @@ const Search = () => {
         service: service.name,
         employee: employee.id,
       }).unwrap();
-      console.log(newAppt);
       await updateSchedule({
         id: scheduleByDate.id,
         appointment: newAppt.data.id,
       });
-      // if (rescheduling && cancelId) {
-      //   await cancelAppointment({ id: cancelId });
-      //   dispatch(endRescheduling());
-      // }
+      if (rescheduling && cancelId) {
+        await cancelAppointment({ id: cancelId });
+        dispatch(endRescheduling());
+      }
       // await sendConfirmation({
       //   employee: employee.firstName,
       //   date: dateServices.dateSlash(date),
