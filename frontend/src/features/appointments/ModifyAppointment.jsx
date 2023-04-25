@@ -4,6 +4,7 @@ import date from '../date/date';
 import ButtonDialog from '../../components/ButtonDialog';
 import { selectEmployeeById } from '../employees/employeeSlice';
 import { beginRescheduling } from './appointmentSlice';
+import CircleProgress from '../../components/Loading/CircleProgress';
 
 const ModifyAppointment = ({ appt }) => {
   const dispatch = useDispatch();
@@ -25,6 +26,10 @@ const ModifyAppointment = ({ appt }) => {
       content: `With ${employee.firstName} on ${appt.date} at ${appt.time}?`,
     };
   };
+
+  if (!employee) {
+    return <CircleProgress />;
+  }
 
   return (
     <ButtonDialog

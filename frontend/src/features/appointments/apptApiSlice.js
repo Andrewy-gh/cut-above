@@ -16,7 +16,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         const loadedPosts = responseData.map((appt) => ({
           ...appt,
           date: date.dateSlash(appt.date),
-          time: date.time(appt.time),
+          start: date.time(appt.start),
         }));
         return appointmentAdapter.setAll(initialState, loadedPosts);
       },

@@ -3,6 +3,7 @@ import ButtonDialog from '../../components/ButtonDialog';
 import { selectEmployeeById } from '../employees/employeeSlice';
 import { useCancelAppointmentMutation } from './apptApiSlice';
 import { setError, setSuccess } from '../notification/notificationSlice';
+import CircleProgress from '../../components/Loading/CircleProgress';
 
 const CancelAppointment = ({ appt }) => {
   const dispatch = useDispatch();
@@ -27,6 +28,10 @@ const CancelAppointment = ({ appt }) => {
       content: `With ${employee.firstName} on ${appt.date} at ${appt.time}?`,
     };
   };
+
+  if (!employee) {
+    return <CircleProgress />;
+  }
 
   return (
     <ButtonDialog

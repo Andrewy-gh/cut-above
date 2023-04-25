@@ -12,30 +12,43 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useRegisterAccountMutation } from './registerSlice';
 import { roles } from '../../data';
+import { useDispatch } from 'react-redux';
+import { setError, setSuccess } from '../notification/notificationSlice';
 
 // TODO: Register Account
 const Register = () => {
   const navigate = useNavigate();
-  const [role, setRole] = useState('');
+  const dispatch = useDispatch();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPwd, setConfirmPwd] = useState('');
+  const [role, setRole] = useState('');
+  const [error, setError] = useState(false);
+  const [helperText, setHelperText] = useState('');
 
   const [registerAccount] = useRegisterAccountMutation();
 
-  const handleFirstNameChange = (e) => setFirstName(e.target.value);
-  const handleLastNameChange = (e) => setLastName(e.target.value);
-  const handleEmailChange = (e) => setEmail(e.target.value);
-  const handlePwdChange = (e) => setPassword(e.target.value);
-  const handleConfirmPwdChange = (e) => setConfirmPwd(e.target.value);
+  const handlePwdChange = (e) => {
+    setError(false);
+    setHelperText('');
+    setPassword(e.target.value);
+  };
+
+  const handleConfirmPwdChange = (e) => {
+    setError(false);
+    setHelperText('');
+    setConfirmPwd(e.target.value);
+  };
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
       if (password !== confirmPwd) {
         // set a error message
+        setError(true);
+        setHelperText('Passwords do not match');
         return;
       }
       setEmail((email) => {
@@ -43,9 +56,19 @@ const Register = () => {
         const lowercaseEmail = trimmedEmail.toLowerCase();
         return lowercaseEmail;
       });
-      console.log(firstName, lastName, email);
+      console.log(firstName, lastName, email, role);
+      const newAccount = await registerAccount({
+        firstName,
+        lastName,
+        email,
+        password,
+        role,
+      }).unwrap();
+      console.log('newAccount', newAccount);
+      dispatch(setSuccess(newAccount.message));
     } catch (error) {
       console.error('Error registering account: ', error);
+      dispatch(setError(`Error registering account: ${error.error}`));
     }
   };
 
@@ -66,14 +89,19 @@ const Register = () => {
           Register
         </Typography>
         <Box component="form" onSubmit={handleSubmit}>
-          <Grid container spacing={2} justifyContent="space-between">
+          <Grid
+            container
+            spacing={2}
+            justifyContent="space-between"
+            sx={{ mb: 1 }}
+          >
             <Grid item xs={6}>
               <TextField
                 label="First name"
                 margin="normal"
                 fullWidth
                 value={firstName}
-                onChange={handleFirstNameChange}
+                onChange={({ target }) => setFirstName(target.value)}
               ></TextField>
             </Grid>
             <Grid item xs={6}>
@@ -82,7 +110,7 @@ const Register = () => {
                 margin="normal"
                 fullWidth
                 value={lastName}
-                onChange={handleLastNameChange}
+                onChange={({ target }) => setLastName(target.value)}
               ></TextField>
             </Grid>
           </Grid>
@@ -92,9 +120,10 @@ const Register = () => {
             required
             fullWidth
             value={email}
-            onChange={handleEmailChange}
+            onChange={({ target }) => setEmail(target.value)}
           ></TextField>
           <TextField
+            error={error}
             label="Password"
             type="password"
             required
@@ -104,6 +133,8 @@ const Register = () => {
             onChange={handlePwdChange}
           ></TextField>
           <TextField
+            error={error}
+            helperText={helperText}
             label="Confirm password"
             type="password"
             required
@@ -113,13 +144,13 @@ const Register = () => {
             onChange={handleConfirmPwdChange}
           ></TextField>
 
-          <FormControl
-            fullWidth
-            margin="normal"
-            onChange={(e) => setRole(e.target.value)}
-          >
+          <FormControl fullWidth margin="normal">
             <InputLabel>Role</InputLabel>
-            <Select value={role} label="role">
+            <Select
+              value={role}
+              label="role"
+              onChange={({ target }) => setRole(target.value)}
+            >
               <MenuItem value="">Select a role</MenuItem>
               {roles.map((role) => (
                 <MenuItem key={role.id} value={role.data}>

@@ -39,7 +39,7 @@ const Appointment = () => {
                 }}
               >
                 <Typography variant="body1">{appt.date}</Typography>
-                <Typography variant="body1">{appt.time}</Typography>
+                <Typography variant="body1">{appt.start}</Typography>
                 <Employee employeeId={appt.employee} />
                 <ModifyAppointment appt={appt} />
                 <CancelAppointment appt={appt} />
