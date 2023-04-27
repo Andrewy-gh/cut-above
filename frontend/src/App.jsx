@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CssBaseline, ThemeProvider, responsiveFontSizes } from '@mui/material';
 import Box from '@mui/material/Box';
+import Admin from './components/Admin/Admin';
 import Home from './components/Home/Home';
 import Footer from './components/Footer';
 import Register from './features/register/Register';
@@ -40,6 +41,7 @@ const App = () => {
             <Route element={<RequireAuth />}>
               <Route path="/profile" element={<Welcome />} />
               <Route path="/appointments" element={<Appointments />} />
+              <Route path="/admin" element={<Admin />} />
             </Route>
           </Routes>
           <Footer />

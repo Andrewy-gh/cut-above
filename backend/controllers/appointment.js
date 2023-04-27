@@ -24,6 +24,7 @@ appointmentRouter.post('/', async (request, response) => {
     client: clientToBook,
     employee: employeeToBook,
   });
+  console.log('newAppt in controller', newAppt);
   await newAppt.save();
   response.status(201).json({
     success: true,

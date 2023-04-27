@@ -10,6 +10,7 @@ import { selectEmployeeIds } from '../employees/employeeSlice';
 import dateServices from '../date/date';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import date from '../date/date';
 
 dayjs.extend(customParseFormat);
 
@@ -24,7 +25,12 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     getSchedule: builder.query({
       query: () => '/schedule',
       transformResponse: (responseData) => {
-        return scheduleAdapter.setAll(initialState, responseData);
+        const loadedPosts = responseData.map((s) => ({
+          ...s,
+          date: date.dateHyphen(s.date),
+        }));
+        console.log('loadedPosts', loadedPosts);
+        return scheduleAdapter.setAll(initialState, loadedPosts);
       },
       // keepUnusedDataFor: 5,
       providesTags: ['Schedule'],
@@ -74,10 +80,7 @@ export const selectScheduleByDate = createSelector(
   (schedule, date, dateDisabled) => {
     console.log('dateDisabled', dateDisabled);
     return !dateDisabled
-      ? schedule.find(
-          (s) =>
-            dateServices.dateHyphen(s.date) === dateServices.dateHyphen(date)
-        )
+      ? schedule.find((s) => s.date === dateServices.dateHyphen(date))
       : schedule;
   }
 );
@@ -88,7 +91,6 @@ export const selectScheduleByFilter = createSelector(
   selectEmployeeIds,
   selectService,
   (schedule, employee, employees, service) => {
-    console.log('schedule slice', schedule);
     if (!schedule) {
       return [];
     }

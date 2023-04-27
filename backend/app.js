@@ -15,6 +15,7 @@ const logoutRouter = require('./controllers/logout');
 const refreshRouter = require('./controllers/refresh');
 const registerRouter = require('./controllers/register');
 const scheduleRouter = require('./controllers/schedule');
+const userRouter = require('./controllers/user');
 
 logger.info('connecting to', config.MONGODB_URI);
 mongoose.set('strictQuery', false);
@@ -46,6 +47,7 @@ app.use('/refresh', refreshRouter);
 app.use('/employee', employeeRouter);
 app.use('/schedule', scheduleRouter);
 app.use(middleware.verifyJWT);
+app.use('/user', userRouter);
 app.use('/appointment', appointmentRouter);
 app.use('/send', emailRouter);
 

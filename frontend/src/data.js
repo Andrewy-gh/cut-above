@@ -15,7 +15,8 @@ export const links = [
 
 export const roles = [
   { id: 1, title: 'Client', data: 'client' },
-  { id: 2, title: 'Admin', data: 'admin' },
+  { id: 2, title: 'Employee', data: 'employee' },
+  { id: 3, title: 'Admin', data: 'admin' },
 ];
 
 export const services = [

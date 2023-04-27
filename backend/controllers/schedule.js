@@ -1,12 +1,11 @@
 const scheduleRouter = require('express').Router();
 const Appointment = require('../models/Appointment');
 const Schedule = require('../models/Schedule');
-const User = require('../models/User');
 
 scheduleRouter.get('/', async (request, response) => {
   const schedule = await Schedule.find({}).populate(
     'appointments',
-    'start end employee'
+    'start end client employee service'
   );
   response.json(schedule);
 });
