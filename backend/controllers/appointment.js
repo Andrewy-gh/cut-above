@@ -13,7 +13,6 @@ appointmentRouter.get('/', async (request, response) => {
 // TODO: date has time
 appointmentRouter.post('/', async (request, response) => {
   const { date, start, end, service, employee } = request.body;
-  console.log(date, start, end, service, employee);
   const clientToBook = await User.findOne({ _id: request.user });
   const employeeToBook = await User.findOne({ _id: employee });
   const newAppt = new Appointment({
@@ -24,7 +23,6 @@ appointmentRouter.post('/', async (request, response) => {
     client: clientToBook,
     employee: employeeToBook,
   });
-  console.log('newAppt in controller', newAppt);
   await newAppt.save();
   response.status(201).json({
     success: true,

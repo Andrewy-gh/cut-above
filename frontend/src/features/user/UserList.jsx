@@ -1,3 +1,5 @@
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import Item from '../../components/Item';
 import { selectAllUsers } from './userSlice';
 import { useGetUsersQuery } from './userSlice';
@@ -22,10 +24,17 @@ const UserList = () => {
       </>
     );
   } else if (isError) {
-    content = <p>{error}</p>;
+    content = <Typography variant="body2">{error}</Typography>;
   }
 
-  return <>{content}</>;
+  return (
+    <Box>
+      <Typography variant="h5" align="center">
+        Users
+      </Typography>
+      {content}
+    </Box>
+  );
 };
 
 export default UserList;

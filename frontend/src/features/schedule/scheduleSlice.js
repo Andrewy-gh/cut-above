@@ -25,10 +25,18 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     getSchedule: builder.query({
       query: () => '/schedule',
       transformResponse: (responseData) => {
-        const loadedPosts = responseData.map((s) => ({
-          ...s,
-          date: date.dateHyphen(s.date),
-        }));
+        const loadedPosts = responseData.map((s) => {
+          const sortedAppointments = s.appointments.sort((a, b) => {
+            const dateA = new Date(a.start);
+            const dateB = new Date(b.start);
+            return dateA.getTime() - dateB.getTime();
+          });
+          return {
+            ...s,
+            date: date.dateHyphen(s.date),
+            appointments: sortedAppointments,
+          };
+        });
         console.log('loadedPosts', loadedPosts);
         return scheduleAdapter.setAll(initialState, loadedPosts);
       },
