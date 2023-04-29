@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import Item from '../Item';
 import User from '../../features/user/User';
 import date from '../../features/date/date';
+import CheckInAppointment from './CheckInAppointment';
 
 const AppointmentItem = ({ appointment }) => {
   return (
@@ -35,14 +36,15 @@ const AppointmentItem = ({ appointment }) => {
         <TimelineConnector />
       </TimelineSeparator>
       <TimelineContent sx={{ py: '12px', px: 2 }}>
-        <Item>
+        <CheckInAppointment appointment={appointment} />
+        {/* <Item>
           <Typography variant="body1" component="div">
             <User userId={appointment.client} />
           </Typography>
           <Typography variant="body1" component="div">
             {appointment.service}
           </Typography>
-        </Item>
+        </Item> */}
       </TimelineContent>
     </TimelineItem>
   );
