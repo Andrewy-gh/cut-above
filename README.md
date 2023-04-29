@@ -2,7 +2,7 @@
 
 This project is a full-stack application for a barber shop that provides users with the ability to book appointments and log in using authentication.
 
-![alt tag](https://ibb.co/dGphr3q)
+![alt tag](https://i.ibb.co/2gMbyLQ/app-screenshot.png)
 
 **Link to project:**
 
