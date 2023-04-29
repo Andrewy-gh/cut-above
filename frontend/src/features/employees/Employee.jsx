@@ -15,6 +15,10 @@ const Employee = ({ selected, employeeId }) => {
     selectEmployeeById(state, employeeId)
   );
 
+  if (!employee) {
+    return <p>Loading...</p>;
+  }
+
   let content;
   if (isLoading) {
     content = <CircleProgress />;

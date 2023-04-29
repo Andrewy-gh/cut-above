@@ -10,13 +10,16 @@ appointmentRouter.get('/', async (request, response) => {
   response.status(200).json(appointments);
 });
 
+// TODO: date has time
 appointmentRouter.post('/', async (request, response) => {
-  const { date, time, employee } = request.body;
+  const { date, start, end, service, employee } = request.body;
   const clientToBook = await User.findOne({ _id: request.user });
   const employeeToBook = await User.findOne({ _id: employee });
   const newAppt = new Appointment({
     date,
-    time,
+    start,
+    end,
+    service,
     client: clientToBook,
     employee: employeeToBook,
   });

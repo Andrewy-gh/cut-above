@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import ButtonDialog from '../ButtonDialog';
@@ -9,6 +9,8 @@ import TimeSlots from './TimeSlots';
 import TimeSlotDetail from './TimeSlotDetail';
 import dateServices from '../../features/date/date';
 import {
+  selectAllSchedule,
+  selectScheduleByDate,
   selectScheduleByFilter,
   selectScheduleById,
   useGetScheduleQuery,
@@ -44,7 +46,11 @@ import {
   setSuccess,
 } from '../../features/notification/notificationSlice';
 import { selectCurrentToken } from '../../features/auth/authSlice';
+import ServiceSelect from './ServiceSelect';
+import { selectService } from '../../features/filter/filterSlice';
 
+// TODO: backend
+// TODO: cohesive time formatting
 const Search = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -54,6 +60,7 @@ const Search = () => {
   const cancelId = useSelector(selectCancelId);
   const holding = useSelector(selectHoldStatus);
   const savedSelections = useSelector(selectSavedSelections);
+  const service = useSelector(selectService);
   const convertedDate = dayjs(date);
   const dateDisabled = useSelector(selectDateDisabled);
   const token = useSelector(selectCurrentToken);
@@ -66,20 +73,17 @@ const Search = () => {
     slot: savedSelections.slot,
     employee: savedSelections.employee,
   });
-
-  console.log('selected: ', selected);
-  console.log('holding', holding);
+  const convertTimeFormat = (time) => dayjs(time, 'HH:mm').format('h:mma');
 
   const employee = useSelector((state) =>
     selectEmployeeById(state, selected.employee)
   );
-  const slotInfo = useSelector((state) =>
-    selectScheduleById(state, selected.slot)
-  );
 
-  if (employeePref !== 'any') {
-    setEmployee({ ...selected, employee: employeePref });
-  }
+  useEffect(() => {
+    if (employeePref !== 'any') {
+      setSelected({ ...selected, employee: employeePref });
+    }
+  }, [employeePref]);
 
   const { isLoading, isSuccess, isError, error } = useGetScheduleQuery();
 
@@ -88,14 +92,19 @@ const Search = () => {
     dispatch(setDate(newDate.toISOString()));
   };
 
+  const scheduleByDate = useSelector(selectScheduleByDate);
   const timeSlots = useSelector(selectScheduleByFilter);
+
+  const slotInfo = timeSlots.find((ts) => ts.id === selected.slot);
 
   const bookDialog = {
     button: 'Book Now',
     title: 'Would you like to book this appointment?',
-    content: `With ${employee?.firstName} on ${dateServices.dateSlash(
-      slotInfo?.date
-    )} on ${dateServices.time(slotInfo?.time)}?`,
+    content: `${service.name} with ${
+      employee?.firstName
+    } on ${dateServices.dateSlash(date)} from ${convertTimeFormat(
+      slotInfo?.start
+    )} to ${convertTimeFormat(slotInfo?.end)}?`,
   };
 
   let openDialog = false;
@@ -108,6 +117,7 @@ const Search = () => {
     openDialog = false;
   };
 
+  console.log('employee', selected.employee);
   const handleBooking = async () => {
     try {
       if (!token) {
@@ -116,26 +126,28 @@ const Search = () => {
         dispatch(setSavedSelections({ slot, employee }));
         return;
       }
-      const { id, date, time } = slotInfo;
+      const dateToBook = dateServices.dateHyphen(date);
+      const { start, end } = slotInfo;
       const newAppt = await addAppointment({
-        date,
-        time,
+        date: dateToBook,
+        start: `${dateToBook} ${start}`,
+        end: `${dateToBook} ${end}`,
+        service: service.name,
         employee: employee.id,
       }).unwrap();
       await updateSchedule({
-        id,
+        id: scheduleByDate.id,
         appointment: newAppt.data.id,
-        employee: employee.id,
       });
       if (rescheduling && cancelId) {
         await cancelAppointment({ id: cancelId });
         dispatch(endRescheduling());
       }
-      await sendConfirmation({
-        employee: employee.firstName,
-        date: dateServices.dateSlash(date),
-        time: dateServices.time(time),
-      });
+      // await sendConfirmation({
+      //   employee: employee.firstName,
+      //   date: dateServices.dateSlash(date),
+      //   time: dateServices.time(time),
+      // });
       dispatch(clearSavedSelections());
       dispatch(setSuccess(newAppt.message));
     } catch (error) {
@@ -155,10 +167,11 @@ const Search = () => {
             flexDirection: 'column',
             // flexDirection: { sm: 'row', md: 'column' },
             alignItems: 'center',
-            gap: 1,
+            gap: 2,
             mb: 3,
           }}
         >
+          <ServiceSelect />
           <EmployeeSelect
             setConfirmDisabled={setConfirmDisabled}
             selected={selected}

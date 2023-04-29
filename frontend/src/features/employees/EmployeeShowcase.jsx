@@ -7,15 +7,17 @@ import CardActions from '@mui/material/CardActions';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   selectEmployeeById,
   selectEmployeeIds,
   useGetEmployeesQuery,
 } from './employeeSlice';
 import SkeletonImage from '../../components/Loading/SkeletonImage';
+import { setEmployee } from '../filter/filterSlice';
 
 const Profile = ({ employeeId }) => {
+  const dispatch = useDispatch();
   const employee = useSelector((state) =>
     selectEmployeeById(state, employeeId)
   );
@@ -40,10 +42,16 @@ const Profile = ({ employeeId }) => {
           <Typography gutterBottom component="h4" variant="h5" align="center">
             {employee.firstName}
           </Typography>
-          <Typography variant="body2">{employee.profile}</Typography>
+          <Typography variant="body2" align="center">
+            {employee.profile}
+          </Typography>
         </CardContent>
         <CardActions sx={{ marginInline: 'auto', mb: 2 }}>
-          <Link to="/reserve" state={{ employee: employee.id }}>
+          <Link
+            to="/reserve"
+            // state={{ employee: employee.id }}
+            onClick={() => dispatch(setEmployee(employeeId))}
+          >
             <Button
               size="small"
               variant="contained"

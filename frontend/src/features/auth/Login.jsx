@@ -16,7 +16,7 @@ import { selectHoldStatus } from '../filter/filterSlice';
 // TODO useEffect navigate to profile?
 const Login = () => {
   const holding = useSelector(selectHoldStatus);
-  const [user, setUser] = useState('andy.yu617@gmail.com');
+  const [user, setUser] = useState('admin@cutabove.com');
   const [password, setPassword] = useState('pw');
   const navigate = useNavigate();
 

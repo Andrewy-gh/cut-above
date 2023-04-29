@@ -1,5 +1,10 @@
 import { useSelector } from 'react-redux';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { selectAllSchedule, useGetScheduleQuery } from './scheduleSlice';
+import Item from '../../components/Item';
+import User from '../user/User';
+import date from '../date/date';
 
 function Schedule() {
   const { isLoading, isSuccess, isError, error } = useGetScheduleQuery();
@@ -7,31 +12,39 @@ function Schedule() {
 
   let content;
   if (isLoading) {
-    content = <p>Loading...</p>;
+    content = <Typography variant="body2">Loading...</Typography>;
   } else if (isSuccess) {
     content = schedule.map((sc) => (
-      <div
-        key={sc.id}
-        style={{
-          display: 'flex',
-          gap: '1rem',
-          outline: 'solid lightblue',
-        }}
-      >
-        <div>{sc.date}</div>
-        <div>{sc.time}</div>
-        <div>{sc.available.length} slots available</div>
-      </div>
+      <Box key={sc.id}>
+        <Typography variant="h6">{date.dateSlash(sc.date)}</Typography>
+        {sc.appointments.map((appt) => (
+          <Item key={appt.id}>
+            <Typography variant="body2">
+              Start: {date.time(appt.start)}
+            </Typography>
+            <Typography variant="body2">End: {date.time(appt.end)} </Typography>
+            <Typography variant="body2">
+              <User userId={appt.client} />
+            </Typography>
+            <Typography variant="body2">
+              <User userId={appt.employee} />
+            </Typography>
+            <Typography variant="body2">{appt.service}</Typography>
+          </Item>
+        ))}
+      </Box>
     ));
   } else if (isError) {
-    content = <p>{error}</p>;
+    content = <Typography variant="body2">{error}</Typography>;
   }
 
   return (
-    <main>
-      <h1>Schedule</h1>
+    <Box>
+      <Typography variant="h5" align="center">
+        Schedule
+      </Typography>
       {content}
-    </main>
+    </Box>
   );
 }
 

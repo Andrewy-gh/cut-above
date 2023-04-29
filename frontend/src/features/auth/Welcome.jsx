@@ -16,6 +16,9 @@ const Welcome = () => {
       <p>
         <Link to="/appointments">Go to your Appointments List</Link>
       </p>
+      <p>
+        <Link to="/admin">Go to Admin page</Link>
+      </p>
     </section>
   );
 

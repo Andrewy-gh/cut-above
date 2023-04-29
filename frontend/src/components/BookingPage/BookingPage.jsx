@@ -19,7 +19,7 @@ const BookingPage = () => {
       >
         Schedule your appointment
       </Typography>
-      <Grid container spacing={6}>
+      {/* <Grid container spacing={6}>
         <Grid item sm={12} sx={{ display: { sm: 'block', md: 'none' } }}>
           <Card>
             <CardMedia
@@ -32,9 +32,9 @@ const BookingPage = () => {
             ></CardMedia>
           </Card>
         </Grid>
-        <Grid item sm={12} md={6}>
-          <Search />
-        </Grid>
+        <Grid item sm={12} md={6}> */}
+      <Search />
+      {/* </Grid>
         <Grid
           item
           md={6}
@@ -51,7 +51,7 @@ const BookingPage = () => {
             ></CardMedia>
           </Card>
         </Grid>
-      </Grid>
+      </Grid> */}
     </Container>
   );
 };
