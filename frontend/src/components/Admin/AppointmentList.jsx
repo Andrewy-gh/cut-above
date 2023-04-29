@@ -15,7 +15,7 @@ import AppointmentItem from './AppointmentItem';
 
 const AppointmentList = ({ appointments }) => {
   return (
-    <Timeline>
+    <Timeline position="alternate">
       {appointments.map((appt) => (
         <AppointmentItem key={appt.id} appointment={appt} />
       ))}
