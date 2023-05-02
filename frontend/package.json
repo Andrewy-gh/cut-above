@@ -16,9 +16,11 @@
     "@mui/lab": "^5.0.0-alpha.128",
     "@mui/material": "^5.11.16",
     "@mui/x-date-pickers": "^6.0.4",
+    "@mui/x-date-pickers-pro": "^6.3.0",
     "@reduxjs/toolkit": "^1.9.3",
     "dayjs": "^1.11.7",
     "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.10.0"

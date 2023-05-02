@@ -30,7 +30,7 @@ const AppointmentItem = ({ appointment }) => {
       </TimelineOppositeContent>
       <TimelineSeparator>
         <TimelineConnector />
-        <TimelineDot>
+        <TimelineDot variant="primary" sx={{ color: 'red' }}>
           <FastfoodIcon />
         </TimelineDot>
         <TimelineConnector />

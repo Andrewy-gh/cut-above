@@ -27,6 +27,11 @@ const appointmentSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  status: {
+    type: String,
+    required: true,
+    default: 'scheduled',
+  },
 });
 
 appointmentSchema.set('toJSON', {

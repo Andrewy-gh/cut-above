@@ -11,16 +11,15 @@ scheduleRouter.get('/', async (request, response) => {
 });
 
 scheduleRouter.post('/', async (request, response) => {
-  const { date, open, close } = request.body;
-  const newSchedule = new Schedule({
-    date,
-    open,
-    close,
+  const schedules = request.body;
+  const newSchedules = schedules
+    .map((schedule) => new Schedule(schedule))
+    .map((newSchedule) => newSchedule.save());
+  await Promise.all(newSchedules);
+  response.status(201).json({
+    message: 'New schedule added',
+    data: newSchedules,
   });
-  await newSchedule.save();
-  response
-    .status(201)
-    .json({ message: 'New schedule added', data: newSchedule });
 });
 
 scheduleRouter.put('/:id', async (request, response) => {

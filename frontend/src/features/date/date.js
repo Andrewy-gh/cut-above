@@ -1,4 +1,7 @@
 import dayjs, { Dayjs } from 'dayjs';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+
+dayjs.extend(isSameOrBefore);
 
 const convertEST = (date) =>
   `${dayjs(date).format('YYYY-MM-DD')}T00:00:00-05:00`;
@@ -13,6 +16,23 @@ const dateShort = (date) => dayjs(date).format('M/D');
 
 const dateSlash = (date) => dayjs(date).format('MM/DD/YYYY');
 
+const generateDateRanges = (dates, open, close) => {
+  const [startDate, endDate] = dates;
+  const startDateString = dateHyphen(startDate);
+  const endDateString = dateHyphen(endDate);
+  const datesToSchedule = [];
+  let currentDate = dayjs(startDateString);
+  while (currentDate.isSameOrBefore(endDateString, 'day')) {
+    datesToSchedule.push({
+      date: convertEST(currentDate),
+      open: open,
+      close: close,
+    });
+    currentDate = currentDate.add(1, 'day');
+  }
+  return datesToSchedule;
+};
+
 const time = (date) => dayjs(date).format('h:mma');
 
 export default {
@@ -22,5 +42,6 @@ export default {
   dateHyphen,
   dateShort,
   dateSlash,
+  generateDateRanges,
   time,
 };

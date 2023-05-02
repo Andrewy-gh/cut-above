@@ -31,6 +31,8 @@ appointmentRouter.post('/', async (request, response) => {
   });
 });
 
+// appointmentRouter.put('/:id', )
+
 appointmentRouter.delete('/:id', async (request, response) => {
   const { employee, time } = await Appointment.findByIdAndDelete(
     request.params.id
