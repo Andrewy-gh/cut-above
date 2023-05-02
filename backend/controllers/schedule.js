@@ -5,7 +5,7 @@ const Schedule = require('../models/Schedule');
 scheduleRouter.get('/', async (request, response) => {
   const schedule = await Schedule.find({}).populate(
     'appointments',
-    'start end client employee service'
+    'start end client employee service status'
   );
   response.json(schedule);
 });

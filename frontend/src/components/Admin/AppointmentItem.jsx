@@ -17,37 +17,47 @@ import CheckInAppointment from './CheckInAppointment';
 
 const AppointmentItem = ({ appointment }) => {
   return (
-    <TimelineItem>
-      <TimelineOppositeContent
-        sx={{ m: 'auto 0' }}
-        align="right"
-        variant="body2"
-        color="text.secondary"
-      >
-        <Typography variant="body1" component="div">
-          {date.time(appointment.start)}
-        </Typography>
-      </TimelineOppositeContent>
-      <TimelineSeparator>
-        <TimelineConnector />
-        <TimelineDot variant="primary" sx={{ color: 'red' }}>
-          <FastfoodIcon />
-        </TimelineDot>
-        <TimelineConnector />
-      </TimelineSeparator>
-      <TimelineContent sx={{ py: '12px', px: 2 }}>
-        <CheckInAppointment appointment={appointment} />
-        {/* <Item>
-          <Typography variant="body1" component="div">
-            <User userId={appointment.client} />
-          </Typography>
-          <Typography variant="body1" component="div">
-            {appointment.service}
-          </Typography>
-        </Item> */}
-      </TimelineContent>
-    </TimelineItem>
+    <>
+      <Typography variant="body1" component="div">
+        {date.time(appointment.start)}
+      </Typography>
+      <CheckInAppointment appointment={appointment} />
+    </>
   );
 };
+// const AppointmentItem = ({ appointment }) => {
+//   return (
+//     <TimelineItem>
+//       <TimelineOppositeContent
+//         sx={{ m: 'auto 0' }}
+//         align="right"
+//         variant="body2"
+//         color="text.secondary"
+//       >
+//         <Typography variant="body1" component="div">
+//           {date.time(appointment.start)}
+//         </Typography>
+//       </TimelineOppositeContent>
+//       <TimelineSeparator>
+//         <TimelineConnector />
+//         <TimelineDot variant="primary" sx={{ color: 'red' }}>
+//           <FastfoodIcon />
+//         </TimelineDot>
+//         <TimelineConnector />
+//       </TimelineSeparator>
+//       <TimelineContent sx={{ py: '12px', px: 2 }}>
+//         <CheckInAppointment appointment={appointment} />
+//         {/* <Item>
+//           <Typography variant="body1" component="div">
+//             <User userId={appointment.client} />
+//           </Typography>
+//           <Typography variant="body1" component="div">
+//             {appointment.service}
+//           </Typography>
+//         </Item> */}
+//       </TimelineContent>
+//     </TimelineItem>
+//   );
+// };
 
 export default AppointmentItem;

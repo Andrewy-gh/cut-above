@@ -11,6 +11,7 @@ import Tab from '@mui/material/Tab';
 import { useState } from 'react';
 
 import AppointmentList from '../../components/Admin/AppointmentList';
+import AppointmentBoard from '../../components/Admin/AppointmentBoard';
 
 const ScheduleTabPanel = (props) => {
   const { children, value, index, ...other } = props;
@@ -60,7 +61,7 @@ const ScheduleTabs = () => {
         </Box>
         {schedule.map((sc, index) => (
           <ScheduleTabPanel value={value} index={index} key={index}>
-            <AppointmentList appointments={sc.appointments} />
+            <AppointmentBoard appointments={sc.appointments} />
           </ScheduleTabPanel>
         ))}
       </Box>
