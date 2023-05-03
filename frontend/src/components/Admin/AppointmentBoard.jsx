@@ -1,12 +1,12 @@
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Item from '../Item';
 import AppointmentItem from './AppointmentItem';
+import ChangeStatus from './ChangeStatus';
 
-const Column = styled(Paper)(({ theme }) => ({
+const Column = styled(Box)(({ theme }) => ({
   margin: '8px',
   border: '1px solid white',
   borderRadius: '2px',
@@ -24,28 +24,42 @@ const AppointmentBoard = ({ appointments }) => {
 
   return (
     <Container>
-      <Box sx={{ display: 'flex' }}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+        }}
+      >
         <Column>
-          <Typography variant="h5">Checked In</Typography>
+          <Typography variant="h5" component="div">
+            Checked In
+          </Typography>
           {checkedIn.map((ci) => (
-            <Item>
+            <Item key={ci.id}>
               <AppointmentItem appointment={ci} />
+              <ChangeStatus appointment={ci} newStatus={'completed'} />
             </Item>
           ))}
         </Column>
         <Column>
-          <Typography variant="h5">Scheduled</Typography>
+          <Typography variant="h5" component="div">
+            Scheduled
+          </Typography>
           {scheduled.map((sc) => (
-            <Item>
+            <Item key={sc.id}>
               <AppointmentItem appointment={sc} />
+              <ChangeStatus appointment={sc} newStatus={'checked-in'} />
             </Item>
           ))}
         </Column>
         <Column>
-          <Typography variant="h5">Completed</Typography>
+          <Typography variant="h5" component="div">
+            Completed
+          </Typography>
           {completed.map((c) => (
-            <Item>
+            <Item key={c.id}>
               <AppointmentItem appointment={c} />
+              <ChangeStatus appointment={c} newStatus={'scheduled'} />
             </Item>
           ))}
         </Column>

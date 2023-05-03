@@ -13,7 +13,6 @@ import Typography from '@mui/material/Typography';
 import Item from '../Item';
 import User from '../../features/user/User';
 import date from '../../features/date/date';
-import CheckInAppointment from './CheckInAppointment';
 
 const AppointmentItem = ({ appointment }) => {
   return (
@@ -21,7 +20,6 @@ const AppointmentItem = ({ appointment }) => {
       <Typography variant="body1" component="div">
         {date.time(appointment.start)}
       </Typography>
-      <CheckInAppointment appointment={appointment} />
     </>
   );
 };

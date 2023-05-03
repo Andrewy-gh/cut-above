@@ -5,7 +5,7 @@ import ButtonDialog from '../ButtonDialog';
 import CircleProgress from '../Loading/CircleProgress';
 import { useUpdateAppointmentMutation } from '../../features/appointments/apptApiSlice';
 
-const CheckInAppointment = ({ appointment }) => {
+const ChangeStatus = ({ appointment, newStatus }) => {
   const [updateAppointment] = useUpdateAppointmentMutation();
   const client = useSelector((state) =>
     selectUserById(state, appointment.client)
@@ -21,30 +21,42 @@ const CheckInAppointment = ({ appointment }) => {
     return <CircleProgress />;
   }
 
-  const dialog = (appointment) => {
+  const dialog = (appointment, newStatus) => {
+    let content;
+
+    if (newStatus === 'checked-in') {
+      content = 'Would you like to check-in this appointment?';
+    } else if (newStatus === 'completed') {
+      content = 'Would you like to mark this appointment as completed?';
+    } else if (newStatus === 'scheduled') {
+      content =
+        'This appointment has been completed. Would you like to return it back to a scheduled appointment?';
+    } else {
+      content = 'Unknown status';
+    }
     return {
       button: client ? client.email : 'Loading',
       title: employee
         ? `${appointment.service} with ${employee.email}`
         : 'Loading',
-      content: 'Would you like to check-in?',
+      content,
     };
   };
 
-  const handleCheckIn = async (appointment) => {
+  const handleAgree = async (appointment, newStatus) => {
     const checkedInAppt = await updateAppointment({
       ...appointment,
-      status: 'checked-in',
+      status: newStatus,
     });
-    console.log('checkedIn', checkedInAppt);
+    console.log(checkedInAppt);
   };
 
   return (
     <ButtonDialog
-      dialog={dialog(appointment)}
-      agreeHandler={() => handleCheckIn(appointment)}
+      dialog={dialog(appointment, newStatus)}
+      agreeHandler={() => handleAgree(appointment, newStatus)}
     />
   );
 };
 
-export default CheckInAppointment;
+export default ChangeStatus;
