@@ -3,7 +3,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import { Link } from 'react-router-dom';
-import UserList from '../../features/user/userList';
 import Schedule from '../../features/schedule/Schedule';
 import ScheduleTabs from '../../features/schedule/ScheduleTabs';
 
@@ -22,6 +21,12 @@ const Admin = () => {
         <Link to="/add">
           <Typography variant="h5" component="div" align="center">
             Add new Schedule
+          </Typography>
+        </Link>
+        <Divider />
+        <Link to="/user-list">
+          <Typography variant="h5" component="div" align="center">
+            Users List
           </Typography>
         </Link>
         <Divider />

@@ -14,7 +14,8 @@ const ChangeStatus = ({ appointment, newStatus }) => {
     selectUserById(state, appointment.employee)
   );
   if (!client) {
-    return <CircleProgress />;
+    // return <CircleProgress />;
+    return <p>Removed User</p>;
   }
 
   if (!employee) {
@@ -55,6 +56,7 @@ const ChangeStatus = ({ appointment, newStatus }) => {
     <ButtonDialog
       dialog={dialog(appointment, newStatus)}
       agreeHandler={() => handleAgree(appointment, newStatus)}
+      closeHandler={() => void 0}
     />
   );
 };

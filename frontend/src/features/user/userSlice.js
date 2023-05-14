@@ -13,12 +13,20 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         console.log('user response data', responseData);
         return userAdapter.setAll(initialState, responseData);
       },
-      keepUnusedDataFor: 5,
+      // keepUnusedDataFor: 5,
+      providesTags: ['User'],
+    }),
+    deleteUser: builder.mutation({
+      query: (user) => ({
+        url: `/user/${user.id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['User'],
     }),
   }),
 });
 
-export const { useGetUsersQuery } = extendedApiSlice;
+export const { useGetUsersQuery, useDeleteUserMutation } = extendedApiSlice;
 
 export const selectUsersResult = extendedApiSlice.endpoints.getUsers.select();
 

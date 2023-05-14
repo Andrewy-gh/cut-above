@@ -46,7 +46,8 @@ const Login = () => {
         navigate('/profile');
       }
     } catch (error) {
-      dispatch(setError(`Error logging in: ${error}`));
+      console.error(error);
+      dispatch(setError(`Error logging in: ${error.error}`));
     }
   };
 
