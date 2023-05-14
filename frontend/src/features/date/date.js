@@ -1,6 +1,8 @@
 import dayjs, { Dayjs } from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
+dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
 const convertEST = (date) =>
@@ -33,6 +35,15 @@ const generateDateRanges = (dates, open, close) => {
   return datesToSchedule;
 };
 
+const filterBySevenDays = (arr) =>
+  arr.filter((obj) => {
+    const date = dayjs(obj.date);
+    return (
+      date.isSameOrAfter(dayjs(), 'day') &&
+      date.isBefore(dayjs().add(6, 'day'), 'day')
+    );
+  });
+
 const time = (date) => dayjs(date).format('h:mma');
 
 export default {
@@ -42,6 +53,7 @@ export default {
   dateHyphen,
   dateShort,
   dateSlash,
+  filterBySevenDays,
   generateDateRanges,
   time,
 };

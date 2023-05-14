@@ -1,6 +1,8 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import Divider from '@mui/material/Divider';
+import { Link } from 'react-router-dom';
 import UserList from '../../features/user/userList';
 import Schedule from '../../features/schedule/Schedule';
 import ScheduleTabs from '../../features/schedule/ScheduleTabs';
@@ -16,6 +18,13 @@ const Admin = () => {
         <Typography variant="h3" component="h1" align="center">
           Admin Page
         </Typography>
+        <Divider />
+        <Link to="/add">
+          <Typography variant="h5" component="div" align="center">
+            Add new Schedule
+          </Typography>
+        </Link>
+        <Divider />
         <ScheduleTabs />
         {/* <Schedule /> */}
         {/* <UserList /> */}

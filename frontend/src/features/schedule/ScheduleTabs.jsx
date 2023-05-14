@@ -24,11 +24,7 @@ const ScheduleTabPanel = (props) => {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 };
@@ -41,6 +37,8 @@ const ScheduleTabs = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const sevenDaySchedule = date.filterBySevenDays(schedule);
+  console.log({ sevenDaySchedule });
 
   let content;
   if (isLoading) {
@@ -54,12 +52,12 @@ const ScheduleTabs = () => {
             onChange={handleChange}
             aria-label="basic tabs example"
           >
-            {schedule.map((sc, index) => (
+            {sevenDaySchedule.map((sc, index) => (
               <Tab label={sc.date} key={index} />
             ))}
           </Tabs>
         </Box>
-        {schedule.map((sc, index) => (
+        {sevenDaySchedule.map((sc, index) => (
           <ScheduleTabPanel value={value} index={index} key={index}>
             <AppointmentBoard appointments={sc.appointments} />
           </ScheduleTabPanel>
