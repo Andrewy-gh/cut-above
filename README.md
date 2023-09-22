@@ -12,16 +12,17 @@ Web page for a barbershop. Users can sign up and book an appointment.
 
 Material UI for components, styles, theming, and responsiveness. Redux Toolkit for state management and data fetching. Vite allows larger bundles to be separated so that load times are kept minimal.
 
-**Backend:** Node.js, Express, MonogDB, Nodemailer
+**Backend:** Node.js, Express, MongoDB, Nodemailer
+
 Nodemailer to send account and appointment information to users.
 
 ## Features
 
 - Scheduling of appointments based on various needs like service, time, and employee availablity.
 
-- Appointment modifying and cancelling.
+- Appointment modifying and cancelling for users.
 
-- User authentication with Jwt token. Refreshing of tokens to keep users authenticated.
+- User authentication with JWT tokens. Refresh rotation of tokens to keep users authenticated.
 
 - Admin dashboard for quickly modifying, checking in, or cancelling appointments.
 
