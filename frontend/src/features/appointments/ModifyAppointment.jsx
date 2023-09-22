@@ -7,6 +7,7 @@ import { beginRescheduling } from './appointmentSlice';
 import CircleProgress from '../../components/Loading/CircleProgress';
 
 const ModifyAppointment = ({ appt }) => {
+  console.log(appt);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -23,7 +24,7 @@ const ModifyAppointment = ({ appt }) => {
     return {
       button: 'Modify',
       title: `Would you like to modify this appointment?`,
-      content: `With ${employee.firstName} on ${appt.date} at ${appt.time}?`,
+      content: `With ${employee.firstName} on ${appt.date} at ${appt.start}?`,
     };
   };
 

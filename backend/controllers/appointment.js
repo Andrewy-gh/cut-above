@@ -46,9 +46,12 @@ appointmentRouter.put('/:id', async (request, response) => {
 });
 
 appointmentRouter.delete('/:id', async (request, response) => {
+  console.log('req.body', request.body);
   const { employee, time } = await Appointment.findByIdAndDelete(
     request.params.id
   );
+  console.log('employee: ', employee);
+  console.log('time: ', time);
   const scheduleToUpdate = await Schedule.findOne({ time: time });
   const index = scheduleToUpdate.appointments.findIndex(
     (appt) => appt._id.toString() === request.params.id

@@ -1,33 +1,42 @@
-# Barbershop Full Stack Application
+# Cut Above Barbershop
 
-This project is a full-stack application for a barber shop that provides users with the ability to book appointments and log in using authentication.
+Web page for a barbershop. Users can sign up and book an appointment.
 
-![alt tag](https://i.ibb.co/2gMbyLQ/app-screenshot.png)
+**Link to project:** https://cutaboveshop.fly.dev
 
-**Link to project:**
+![alt tag]()
 
 ## How It's Made:
 
-**Tech used:** HTML, CSS, JavaScript, React, Material UI
+**Frontend:** Javascript, React, Material UI, Redux Toolkit.
 
-For the full-stack application for the barber shop, I used a combination of backend and frontend technologies to create a seamless experience for users.
+Material UI for components, styles, theming, and responsiveness. Redux Toolkit for state management and data fetching. Vite allows larger bundles to be separated so that load times are kept minimal.
 
-On the backend, I used Node.js and the Express framework to handle HTTP requests and responses. Express is a lightweight framework that makes it easy to create web applications quickly. Additionally, I used MongoDB as the database to store user information and appointment data. MongoDB is a NoSQL database that is great for storing unstructured data such as JSON.
+**Backend:** Node.js, Express, MonogDB, Nodemailer
+Nodemailer to send account and appointment information to users.
 
-For the frontend, I used React, a popular JavaScript library for building user interfaces. React allows you to create reusable components that make it easy to build complex UIs. Additionally, I used Material UI, a React UI framework that provides pre-built components that follow Google's Material Design guidelines. Material UI helped me to create a consistent and intuitive user interface for the application.
+## Features
 
-To handle authentication, I used the JSON Web Token (JWT) standard. JWT is a secure way to transmit information between parties as a JSON object. I created an API endpoint that generates a JWT token for a user when they log in. The token is then used to authenticate the user for subsequent requests.
+- Scheduling of appointments based on various needs like service, time, and employee availablity.
 
-For the booking system, I created an API endpoint that allows users to create appointments. When a user creates an appointment, the data is stored in the MongoDB database. Users can view their appointments by logging in and navigating to the appointments page.
+- Appointment modifying and cancelling.
 
-Overall, the combination of these technologies allowed me to create a robust and scalable application that provides users with an intuitive booking experience.
+- User authentication with Jwt token. Refreshing of tokens to keep users authenticated.
 
-## Lessons Learned:
+- Admin dashboard for quickly modifying, checking in, or cancelling appointments.
 
-One of the most important lessons I learned was how to use the principles of refreshing JWT tokens to keep users authenticated. I implemented an approach that involved sending a new token to the user before the old token expired, which ensured that the user was always authenticated. This allowed for a smooth user experience without having to manually refresh the token.
+- Email service for users which allow them to access appointment and account settings.
 
-I also used Redux Toolkit Query for data fetching, which provided a clean and concise way to fetch data from the backend API. Redux Toolkit Query is a library that provides a set of utilities for fetching and caching data in Redux. One of the key benefits of using this library was the ease of handling expired tokens. With Redux Toolkit Query, I was able to set up automatic token refreshing without having to write complex code.
+## How to Run:
 
-Another benefit of using Redux Toolkit Query was the ability to cache API responses. Caching allowed me to optimize performance by reducing the number of network requests made to the server. Additionally, it provided a way to display data to the user instantly without waiting for the server to respond.
+1. Fork the repository
 
-The use of modern tools and technologies like Redux Toolkit Query made the development process more enjoyable and allowed me to deliver a high-quality product. I am constantly learning new things as an engineer and I look forward to applying these lessons in future projects.
+2. In the project root directory. Enter these commands:
+   `cd client && npm install` to install client side dependencies, and then
+   `cd ../server && npm run install` to install server side dependencies
+
+3. Change `.env-example` to `.env` and fill in all the appropiate information.
+
+4. Run `npm run build:ui`. This creates the build process for the client side code.
+
+5. After the build process is done, you are ready to use. Just run `npm run start` while still inside the `server` directory, and navigate to `http://localhost:3000` in your browser.

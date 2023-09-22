@@ -17,7 +17,8 @@ const CancelAppointment = ({ appt }) => {
       const cancelledAppt = await cancelAppointment({ id }).unwrap();
       dispatch(setSuccess(cancelledAppt.message));
     } catch (error) {
-      dispatch(setError(`Error cancelling appointment: ${error}`));
+      console.error(error);
+      dispatch(setError(`Error cancelling appointment`));
     }
   };
 
@@ -25,7 +26,7 @@ const CancelAppointment = ({ appt }) => {
     return {
       button: 'Cancel',
       title: `Would you like to cancel this appointment?`,
-      content: `With ${employee.firstName} on ${appt.date} at ${appt.time}?`,
+      content: `With ${employee.firstName} on ${appt.date} at ${appt.start}?`,
     };
   };
 
