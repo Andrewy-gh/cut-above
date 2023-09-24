@@ -4,7 +4,8 @@ Web page for a barbershop. Users can sign up and book an appointment.
 
 **Link to project:** https://cutaboveshop.fly.dev
 
-![alt tag]()
+![alt tag](https://github.com/Andrewyithub/cut-above-barbershop/assets/17731837/35958cd0-07e1-44e3-a0b3-2be928c285a6)
+
 
 ## How It's Made:
 
