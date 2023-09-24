@@ -1,0 +1,21 @@
+use('cutAboveV2');
+const newAppointments = [
+  ObjectId('64fa5de45ad5051e0a83475a'),
+  ObjectId('64fa5de45ad5051e0a83475b'),
+  ObjectId('64fa5de45ad5051e0a83475c'),
+  ObjectId('64fa5de45ad5051e0a83475d'),
+  ObjectId('64fa5de45ad5051e0a83475e'),
+  ObjectId('64fa5de45ad5051e0a83475f'),
+  ObjectId('64fa5de45ad5051e0a834760'),
+];
+const queryDate = '2023-09-12T04:00:00Z';
+const query = {
+  date: ISODate(queryDate),
+};
+// const update = {
+//   $push: { appointments: newAppointments },
+// };
+const update = {
+  $push: { appointments: { $each: newAppointments } },
+};
+db.schedules.updateMany(query, update);

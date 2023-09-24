@@ -1,0 +1,30 @@
+// TEMPLATE
+// db.users.insertOne({ _id: 2, email: 'jane_smith@aol.com' });
+// db.users.insertOne({ _id: 3, email: 'bob_smith@aol.com' });
+// const sampleIds = [2, 3];
+// db.users.deleteOne({ _id: 1 });
+// db.users.deleteMany({ _id: { $in: sampleIds } });
+
+// const sampleData = [
+//   '64d190017604af6f920c32e1',
+//   '64d190017604af6f920c32e2',
+//   '64d190017604af6f920c32e3',
+//   '64d190017604af6f920c32e4',
+//   '64d190017604af6f920c32e5',
+//   '64d190017604af6f920c32e6',
+//   '64d190017604af6f920c32e7',
+//   '64d190017604af6f920c32e8',
+//   '64d190017604af6f920c32e9',
+//   '64d190017604af6f920c32ea',
+//   '64d190017604af6f920c32eb',
+//   '64d190017604af6f920c32ec',
+//   '64d190017604af6f920c32ed',
+//   '64d190017604af6f920c32ee',
+//   '64d190017604af6f920c32ef',
+//   '64d190017604af6f920c32f0',
+//   '64d190017604af6f920c32f1',
+//   '64d190017604af6f920c32f2',
+//   '64d190017604af6f920c32f3',
+// ];
+
+use('cutAboveV2');

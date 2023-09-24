@@ -1,0 +1,125 @@
+const sampleUsers = [
+  {
+    _id: 1034,
+    firstName: 'James',
+    lastName: 'Smith',
+    email: 'james.smith@gmail.com',
+  },
+  {
+    _id: 1035,
+    firstName: 'John',
+    lastName: 'Johnson',
+    email: 'john.johnson@yahoo.com',
+  },
+  {
+    _id: 1036,
+    firstName: 'Michael',
+    lastName: 'Williams',
+    email: 'michael.williams@outlook.com',
+  },
+  {
+    _id: 1037,
+    firstName: 'Robert',
+    lastName: 'Jones',
+    email: 'robert.jones@hotmail.com',
+  },
+  {
+    _id: 1038,
+    firstName: 'William',
+    lastName: 'Brown',
+    email: 'william.brown@aol.com',
+  },
+  {
+    _id: 1039,
+    firstName: 'David',
+    lastName: 'Davis',
+    email: 'david.davis@gmail.com',
+  },
+  {
+    _id: 1040,
+    firstName: 'Richard',
+    lastName: 'Miller',
+    email: 'richard.miller@yahoo.com',
+  },
+  {
+    _id: 1041,
+    firstName: 'Joseph',
+    lastName: 'Wilson',
+    email: 'joseph.wilson@outlook.com',
+  },
+  {
+    _id: 1042,
+    firstName: 'Charles',
+    lastName: 'Clark',
+    email: 'charles.clark@gmail.com',
+  },
+  {
+    _id: 1043,
+    firstName: 'Thomas',
+    lastName: 'Hall',
+    email: 'thomas.hall@yahoo.com',
+  },
+  {
+    _id: 1044,
+    firstName: 'Daniel',
+    lastName: 'Allen',
+    email: 'daniel.allen@outlook.com',
+  },
+  {
+    _id: 1045,
+    firstName: 'Matthew',
+    lastName: 'Young',
+    email: 'matthew.young@aol.com',
+  },
+  {
+    _id: 1046,
+    firstName: 'Anthony',
+    lastName: 'Scott',
+    email: 'anthony.scott@gmail.com',
+  },
+  {
+    _id: 1047,
+    firstName: 'Donald',
+    lastName: 'Green',
+    email: 'donald.green@yahoo.com',
+  },
+  {
+    _id: 1048,
+    firstName: 'Mark',
+    lastName: 'Baker',
+    email: 'mark.baker@hotmail.com',
+  },
+  {
+    _id: 1049,
+    firstName: 'Paul',
+    lastName: 'Nelson',
+    email: 'paul.nelson@aol.com',
+  },
+  {
+    _id: 1050,
+    firstName: 'Steven',
+    lastName: 'Carter',
+    email: 'steven.carter@gmail.com',
+  },
+  {
+    _id: 1051,
+    firstName: 'Andrew',
+    lastName: 'Mitchell',
+    email: 'andrew.mitchell@yahoo.com',
+  },
+  {
+    _id: 1052,
+    firstName: 'Kenneth',
+    lastName: 'Turner',
+    email: 'kenneth.turner@outlook.com',
+  },
+  {
+    _id: 1053,
+    firstName: 'George',
+    lastName: 'Parker',
+    email: 'george.parker@hotmail.com',
+  },
+];
+
+use('cutAboveV2');
+db.users.insertMany(sampleUsers);
