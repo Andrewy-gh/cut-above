@@ -6,9 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "NODE_ENV=development nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "email": "NODE_ENV=development node controllers/email.js",
-    "sample": "node db/dataTester.js"
+    "build:ui": "rm -rf dist && cd ../client && npm run build && mv dist ../server"
   },
   "author": "",
   "license": "ISC",
