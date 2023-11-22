@@ -62,7 +62,7 @@ const handlePasswordReset = async (req, res) => {
   const emailSent = await email.sendEmail({
     receiver: user.email,
     option: 'reset password',
-    emailLink: `https://cutaboveshop.fly.dev/resetpw/?token=${emailToken}`,
+    emailLink: `https://cutaboveshop.fly.dev/resetpw/?token=${resetEmailToken}`,
   });
   res.status(200).json({
     success: true,

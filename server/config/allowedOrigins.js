@@ -1,3 +1,3 @@
-const allowedOrigins = ['https://cutaboveshop.fly.dev'];
+const allowedOrigins = ['http://localhost:3000'];
 
 module.exports = allowedOrigins;
