@@ -4,13 +4,13 @@ const AppError = require('./AppError');
 const databaseServices = require('./database');
 
 const requestLogger = (req, res, next) => {
+  logger.info('Method:', req.method);
+  logger.info('Path:  ', req.path);
   // prevents logging of user information
-  if (req.path !== '/auth') {
-    logger.info('Method:', req.method);
-    logger.info('Path:  ', req.path);
+  if (req.path !== '/auth' && req.path !== '/signup') {
     logger.info('Body:  ', req.body);
-    logger.info('---');
   }
+  logger.info('---');
   next();
 };
 
