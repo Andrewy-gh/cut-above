@@ -3,7 +3,7 @@ import { setCredentials, logoutUser } from '../../features/auth/authSlice';
 
 const baseUrl =
   process.env.NODE_ENV === 'production'
-    ? 'your_production_url_here'
+    ? 'http://localhost:3000'
     : 'http://localhost:3001';
 
 const baseQuery = fetchBaseQuery({
