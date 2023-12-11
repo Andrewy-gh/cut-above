@@ -1,6 +1,7 @@
 const email = require('../utils/email');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const config = require('../config/config');
 
 const handleConfirmation = async (req, res) => {
   const { employee, date, time, emailId } = req.body;
@@ -12,7 +13,7 @@ const handleConfirmation = async (req, res) => {
     date,
     time,
     option: 'confirmation',
-    emailLink: `https://cutaboveshop.fly.dev/appointment/${emailId}`,
+    emailLink: `${config.CLIENT_URL}/appointment/${emailId}`,
   });
   res.status(200).json({ success: true, message: 'Confirmation email sent' });
 };
@@ -27,7 +28,7 @@ const handleModification = async (req, res) => {
     date,
     time,
     option: 'modification',
-    emailLink: `https://cutaboveshop.fly.dev/appointment/${emailId}`,
+    emailLink: `${config.CLIENT_URL}/appointment/${emailId}`,
   });
   res.status(200).json({ success: true, message: 'Modification email sent' });
 };
@@ -62,7 +63,7 @@ const handlePasswordReset = async (req, res) => {
   const emailSent = await email.sendEmail({
     receiver: user.email,
     option: 'reset password',
-    emailLink: `https://cutaboveshop.fly.dev/resetpw/?token=${resetEmailToken}`,
+    emailLink: `${config.CLIENT_URL}/resetpw/?token=${resetEmailToken}`,
   });
   res.status(200).json({
     success: true,
@@ -71,9 +72,29 @@ const handlePasswordReset = async (req, res) => {
   });
 };
 
+const handleMessageReceived = async (req, res) => {
+  console.log(req.body);
+  const { contactDetails } = req.body;
+  const messageRecordKeeping = await email.sendEmail({
+    receiver: config.EMAIL_USER,
+    option: 'message submission',
+    contactDetails,
+  });
+  const messageAutoResponse = await email.sendEmail({
+    receiver: contactDetails.email,
+    option: 'message auto reply',
+  });
+  res.status(200).json({
+    success: true,
+    message:
+      'Message has been received. You can expect a response in a timely manner.',
+  });
+};
+
 module.exports = {
   handleConfirmation,
   handleModification,
   handleCancellation,
   handlePasswordReset,
+  handleMessageReceived,
 };

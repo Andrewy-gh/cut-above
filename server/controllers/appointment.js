@@ -6,6 +6,7 @@ const databaseServices = require('../utils/database');
 const dateServices = require('../utils/date');
 const emailServices = require('../utils/email');
 const AppError = require('../utils/AppError');
+const config = require('../config/config');
 
 const jwt = require('jsonwebtoken');
 const dayjs = require('dayjs');
@@ -31,7 +32,7 @@ const bookAppointment = async (req, res) => {
   session.startTransaction();
   req.session = session;
 
-  // Create new appointment
+  // ! 1: Create new appointment
   const { date, start, end, service, employee } = req.body;
   const client = await User.findOne({ _id: req.user });
   const employeeToBook = await User.findOne({ _id: employee });
@@ -46,7 +47,7 @@ const bookAppointment = async (req, res) => {
     emailId: formattedData.emailId,
   });
 
-  // Validate availability
+  // ! 2: Validate availability
   const schedule = await Schedule.findOne({
     date: formattedData.date,
   }).populate('appointments', 'start end employee');
@@ -56,14 +57,14 @@ const bookAppointment = async (req, res) => {
   }
   await newAppt.save({ session });
 
-  // Add to schedule
+  // ! 3: Add to schedule
   schedule.appointments.push(newAppt);
   await schedule.save({ session });
 
-  // Creating user email token
+  // ! 4: Creating user email token
   const appointmentDateTime = dayjs(formattedData.date);
 
-  // Calculate expiration date
+  // ! 5: Calculate expiration date
   const expirationDateTime = appointmentDateTime.subtract(2, 'day');
   const expiresInSec = expirationDateTime.diff(dayjs(), 'second');
 
@@ -78,14 +79,14 @@ const bookAppointment = async (req, res) => {
   client.emailToken.push(emailId);
   await client.save({ session });
 
-  // Sending confirmation
+  // ! 6: Sending confirmation
   const emailSent = await emailServices.sendEmail({
     receiver: client.email,
     employee: employeeToBook.firstName,
     date: dateServices.formatDateSlash(formattedData.date),
     time: dateServices.formatTime(formattedData.start),
     option: 'confirmation',
-    emailLink: `https://cutaboveshop.fly.dev/appointment/${formattedData.emailId}/?token=${userEmailToken}`,
+    emailLink: `${config.CLIENT_URL}/appointment/${formattedData.emailId}/?token=${userEmailToken}`,
   });
 
   await session.commitTransaction();
@@ -169,6 +170,7 @@ const modifyAppointment = async (req, res) => {
   // Handling used and creating new token
   let client;
   if (req.emailId) {
+    client = await User.findOne({ emailToken: req.emailId });
     client.emailToken = client.emailToken.filter((id) => id !== req.emailId);
   } else {
     // ! Change this if admin modifying
@@ -203,7 +205,7 @@ const modifyAppointment = async (req, res) => {
     date: dateServices.formatDateSlash(formattedData.date),
     time: dateServices.formatTime(formattedData.start),
     option: 'modification',
-    emailLink: `https://cutaboveshop.fly.dev/appointment/${formattedData.emailId}/?token=${userEmailToken}`,
+    emailLink: `${config.CLIENT_URL}/appointment/${formattedData.emailId}/?token=${userEmailToken}`,
   });
 
   res.status(200).json({

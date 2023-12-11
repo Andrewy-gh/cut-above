@@ -1,2 +1,0 @@
-use('cutAboveV2');
-db.users.findOne({ _id: 1036 });

@@ -36,6 +36,7 @@ const easternDateTime = (inputDate, inputTime) => {
   return dateObj.hour(Number(hour)).minute(Number(minute));
 };
 
+// takes eastern standard date and converts it into utc time ex. 00:00 => 04:00
 const easternDate = (inputDate) => {
   return dayjs.tz(inputDate, 'America/New_York');
 };

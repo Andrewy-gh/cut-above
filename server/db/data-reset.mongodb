@@ -1,3 +1,0 @@
-use('cutAboveV2');
-db.appointments.deleteMany({});
-db.schedules.deleteMany({});

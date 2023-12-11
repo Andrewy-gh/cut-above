@@ -1,3 +1,4 @@
-const allowedOrigins = ['http://localhost:3000'];
+const config = require('./config');
+const allowedOrigins = [config.CLIENT_URL];
 
 module.exports = allowedOrigins;

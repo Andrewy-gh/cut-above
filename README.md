@@ -6,7 +6,6 @@ Web page for a barbershop. Users can sign up and book an appointment.
 
 ![alt tag](https://github.com/Andrewyithub/cut-above-barbershop/assets/17731837/35958cd0-07e1-44e3-a0b3-2be928c285a6)
 
-
 ## How It's Made:
 
 **Frontend:** Javascript, React, Material UI, Redux Toolkit.
@@ -37,7 +36,7 @@ Nodemailer to send account and appointment information to users.
    `cd client && npm install` to install client side dependencies, and then
    `cd ../server && npm run install` to install server side dependencies
 
-3. Change `.env-example` to `.env` and fill in all the appropiate information.
+3. Change `.env.example` to `.env` and fill in all the appropiate information.
 
 4. Run `npm run build:ui`. This creates the build process for the client side code.
 

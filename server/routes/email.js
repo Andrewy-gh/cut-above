@@ -18,6 +18,7 @@ router.post(
   middleware.verifyJWT,
   emailRouter.handleCancellation
 );
+router.post('/new-message', emailRouter.handleMessageReceived);
 router.post('/reset-pw', emailRouter.handlePasswordReset);
 
 module.exports = router;
