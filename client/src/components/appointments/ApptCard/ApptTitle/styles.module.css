@@ -1,0 +1,13 @@
+.date_time,
+.service {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.date_time {
+  margin-bottom: 1rem;
+}
+
+.date {
+  margin-right: 1rem;
+}

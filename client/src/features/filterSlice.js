@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getRandomEmployee } from '../utils/employee';
 import { initialCurrentDate } from '../utils/date';
 
 const filterSlice = createSlice({
@@ -28,14 +27,7 @@ const filterSlice = createSlice({
     setEmployee: (state, action) => {
       state.employee = action.payload;
     },
-    chooseEmployeePref: (state, action) => {
-      const availableEmployees = action.payload;
-      if (state.employee === 'any') {
-        state.employee = getRandomEmployee(availableEmployees);
-      } else {
-        return state;
-      }
-    },
+    // ! TODO: implement these if user has selected slots but has not logged in
     setSavedSelections: (state, action) => {
       const { slot, employee } = action.payload;
       state.holdStatus = true;

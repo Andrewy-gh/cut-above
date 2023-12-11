@@ -73,7 +73,6 @@ const handlePasswordReset = async (req, res) => {
 };
 
 const handleMessageReceived = async (req, res) => {
-  console.log(req.body);
   const { contactDetails } = req.body;
   const messageRecordKeeping = await email.sendEmail({
     receiver: config.EMAIL_USER,

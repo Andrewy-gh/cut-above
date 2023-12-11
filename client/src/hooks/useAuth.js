@@ -3,15 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import {
   useLoginMutation,
   useLogoutMutation,
-} from '../features/auth/authApiSlice';
+} from '@/features/auth/authApiSlice';
 import {
   logoutUser,
   selectCurrentToken,
   selectCurrentUser,
   selectCurrentUserRole,
   setCredentials,
-} from '../features/auth/authSlice';
+} from '@/features/auth/authSlice';
 import { useNotification } from './useNotification';
+import { cleanEmail } from '@/utils/email';
 
 export function useAuth() {
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ export function useAuth() {
   const handleLogin = async (email, password) => {
     try {
       const loggedInUser = await login({
-        email: email.trim().toLowerCase(),
+        email: cleanEmail(email),
         password,
       }).unwrap();
       if (loggedInUser.success) {

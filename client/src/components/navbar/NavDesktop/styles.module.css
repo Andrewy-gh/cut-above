@@ -1,0 +1,16 @@
+.grid_col_3 {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.list_item {
+  place-self: center center;
+  font-family: 'Corben';
+  font-size: 1.3125rem;
+  font-weight: 700;
+}
+
+.place_self {
+  place-self: center end;
+}

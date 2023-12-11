@@ -1,7 +1,7 @@
 import DialogContent from '@mui/material/DialogContent';
 import CustomDialog from '../CustomDialog';
 import BookingDialogContent from './BookingDialogContent';
-import { useFilter } from '../../hooks/useFilter';
+import { useFilter } from '@/hooks/useFilter';
 import EmployeeAccordion from './EmployeeAccordion';
 import EmployeeRadio from './EmployeeRadio';
 import EmployeeEdit from './EmployeeEdit';

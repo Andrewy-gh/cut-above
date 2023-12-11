@@ -1,4 +1,4 @@
-import { useEmployeesQuery } from '../hooks/useEmployeesQuery';
+import { useEmployeesQuery } from '@/hooks/useEmployeesQuery';
 
 export default function Employee({ employeeId }) {
   const { employee } = useEmployeesQuery(employeeId);

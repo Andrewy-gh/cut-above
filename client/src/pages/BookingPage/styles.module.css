@@ -1,0 +1,17 @@
+.flex_container {
+  margin-bottom: 4rem;
+  min-height: calc(100vh - 4rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.container {
+  width: min(40ch, 100% - 2rem);
+  margin-inline: auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}

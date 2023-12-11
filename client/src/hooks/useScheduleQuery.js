@@ -3,7 +3,8 @@ import {
   selectAllSchedule,
   selectScheduleById,
   useGetScheduleQuery,
-} from '../features/scheduleSlice';
+} from '@/features/scheduleSlice';
+import { splitByUpcomingAndPast } from '@/utils/date';
 
 export function useScheduleQuery(scheduleId) {
   const { data } = useGetScheduleQuery();
@@ -12,10 +13,13 @@ export function useScheduleQuery(scheduleId) {
     selectScheduleById(state, scheduleId)
   );
   const appointments = schedule && schedule.appointments;
+  const [upcomingSchedules, pastSchedules] = splitByUpcomingAndPast(schedules);
 
   return {
     schedules,
     schedule,
     appointments,
+    upcomingSchedules,
+    pastSchedules,
   };
 }

@@ -1,0 +1,16 @@
+.header {
+  text-align: center;
+}
+
+.container {
+  width: min(80ch, 100% - 2rem);
+  margin-inline: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.card {
+  padding: 1rem;
+  border-radius: 1.5625rem;
+}

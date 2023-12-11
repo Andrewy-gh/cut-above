@@ -1,0 +1,29 @@
+.appointment_card {
+  width: min(600px, calc(100% - 2rem));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+  background-color: #1f1f1f;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-right: auto;
+  margin-left: 0;
+  margin-bottom: 1rem;
+}
+
+.column,
+.flex_col {
+  display: flex;
+  flex-direction: column;
+}
+
+.column {
+  padding-block: 1rem;
+}
+
+.buttons_wrap {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}

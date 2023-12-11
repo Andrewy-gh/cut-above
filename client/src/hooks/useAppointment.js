@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import {
   useCancelAppointmentMutation,
   useUpdateAppointmentStatusMutation,
-} from '../features/appointments/apptApiSlice';
+} from '@/features/appointments/apptApiSlice';
 import {
   endRescheduling,
   selectModifyingApptId,
   selectRescheduling,
-} from '../features/appointments/appointmentSlice';
-import { useNotification } from '../hooks/useNotification';
+} from '@/features/appointments/appointmentSlice';
+import { useNotification } from '@/hooks/useNotification';
 
 export function useAppointment() {
   const dispatch = useDispatch();

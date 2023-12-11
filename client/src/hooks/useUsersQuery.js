@@ -3,7 +3,7 @@ import {
   selectAllUsers,
   selectUserById,
   useGetUsersQuery,
-} from '../features/userSlice';
+} from '@/features/userSlice';
 
 export function useUsersQuery(userId) {
   const { data } = useGetUsersQuery();

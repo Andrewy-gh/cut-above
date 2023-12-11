@@ -30,6 +30,13 @@ export const emailSlice = apiSlice.injectEndpoints({
         body: email,
       }),
     }),
+    sendMessageResponse: builder.mutation({
+      query: (email) => ({
+        url: '/api/email/new-message',
+        method: 'POST',
+        body: email,
+      }),
+    }),
   }),
 });
 
@@ -38,4 +45,5 @@ export const {
   useSendModificationMutation,
   useSendCancellationMutation,
   useSendPasswordResetMutation,
+  useSendMessageResponseMutation,
 } = emailSlice;

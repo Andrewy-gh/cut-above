@@ -1,0 +1,14 @@
+.header {
+  text-align: center;
+  margin-top: 0;
+}
+
+.paragraph {
+  text-align: center;
+  margin-inline: auto;
+}
+
+.card_container {
+  width: min(1200px, 100% - 2rem);
+  margin-inline: auto;
+}

@@ -6,7 +6,7 @@ import {
   setSuccess,
   setError,
   clearMessage,
-} from '../features/notificationSlice';
+} from '@/features/notificationSlice';
 
 export function useNotification() {
   const dispatch = useDispatch();

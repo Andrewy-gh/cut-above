@@ -3,7 +3,7 @@ import {
   selectAllEmployees,
   selectEmployeeById,
   useGetEmployeesQuery,
-} from '../features/employeeSlice';
+} from '@/features/employeeSlice';
 
 export function useEmployeesQuery(employeeId) {
   const { data } = useGetEmployeesQuery();

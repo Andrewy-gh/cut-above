@@ -1,0 +1,15 @@
+.flex {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.header {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.mx_auto {
+  margin-inline: auto;
+}

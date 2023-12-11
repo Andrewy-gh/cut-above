@@ -1,12 +1,13 @@
 import dayjs from 'dayjs';
-import DatePicker from '../datePickers/DatePicker';
+import DatePicker from '@/components/datePickers/DatePicker';
 import EmployeeSelect from './EmployeeSelect';
 import ServiceSelect from './ServiceSelect';
-import AvailableTimes from './AvailableTimes';
-import { useFilter } from '../../hooks/useFilter';
-import { selectScheduleByFilter } from '../../features/scheduleSlice';
-import { currentDate, oneMonthFromCurrent } from '../../utils/date';
+import AvailableTimes from './AvailableTimes/';
+import { useFilter } from '@/hooks/useFilter';
+import { selectScheduleByFilter } from '@/features/scheduleSlice';
+import { currentDate, oneMonthFromCurrent } from '@/utils/date';
 import { useSelector } from 'react-redux';
+import styles from './styles.module.css';
 
 export default function BookingForm({ handleOpen }) {
   const { date, handleDateChange } = useFilter();
@@ -14,17 +15,7 @@ export default function BookingForm({ handleOpen }) {
 
   return (
     <>
-      <div
-        style={{
-          width: 'min(40ch, 100% - 2rem)',
-          marginInline: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '1.5rem',
-        }}
-      >
+      <div className={styles.container}>
         <EmployeeSelect />
         <ServiceSelect />
         <DatePicker

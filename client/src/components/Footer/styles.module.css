@@ -1,0 +1,19 @@
+.font {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.spacing {
+  width: 100%;
+  padding: 0.75rem 0.75rem;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.spacing_scale {
+  width: clamp(150px, 40%, 250px);
+}

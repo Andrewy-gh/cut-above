@@ -7,10 +7,9 @@ import {
   setDate,
   setEmployee,
   setService,
-} from '../features/filterSlice';
-import { services } from '../data/data';
-
-import { formatDate } from '../utils/date';
+} from '@/features/filterSlice';
+import { services } from '@/data/data';
+import { formatDate } from '@/utils/date';
 
 export function useFilter() {
   const dispatch = useDispatch();
@@ -26,14 +25,17 @@ export function useFilter() {
   const handleEmployeeChange = (id) => {
     dispatch(setEmployee(id));
   };
+
   const handleSelectionChange = (data) => {
     setSelection(data);
   };
+
   const handleServiceChange = (serviceId) => {
     const service = services.find((service) => service.id === serviceId);
     const { name, duration } = service;
     dispatch(setService({ id: serviceId, name, duration }));
   };
+
   return {
     date,
     employee,

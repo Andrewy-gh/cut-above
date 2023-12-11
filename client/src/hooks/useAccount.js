@@ -1,11 +1,11 @@
 import { useDispatch } from 'react-redux';
-import { logoutUser, updateUserDetails } from '../features/auth/authSlice';
+import { logoutUser, updateUserDetails } from '@/features/auth/authSlice';
 import {
   useChangeUserEmailMutation,
   useChangeUserPasswordMutation,
   useDeleteUserMutation,
   useResetUserPasswordMutation,
-} from '../features/userSlice';
+} from '@/features/userSlice';
 import { useNotification } from './useNotification';
 
 export function useAccount() {

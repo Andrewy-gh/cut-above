@@ -1,0 +1,17 @@
+.flex,
+.flex_sb {
+  display: flex;
+  align-items: center;
+}
+
+.flex {
+  gap: 0.5rem;
+}
+
+.flex_sb {
+  justify-content: space-between;
+}
+
+.yellow {
+  color: #e6b953;
+}
