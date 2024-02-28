@@ -45,7 +45,6 @@ export const findAvailableTimeSlots = (
   employee
 ) => {
   const { date, open, close, appointments } = schedule;
-  const timeFormat = 'HH:mm';
   const searchIncrement = 15;
   const slots = [];
   const currentEstTime = convertUtcToEst(currentDate);
@@ -58,17 +57,14 @@ export const findAvailableTimeSlots = (
 
   while (slotStart.isBefore(slotEnd)) {
     const currentSlotEnd = slotStart.add(duration, 'minute');
-    const currentSlotStartString = slotStart.format(timeFormat);
-    const currentSlotEndString = currentSlotEnd.format(timeFormat);
-
     if (currentSlotEnd.isAfter(slotEnd)) {
       break;
     }
 
-    const selectedEmployees = employee !== 'any' ? [employee] : employees;
+    const selectedEmployees = employee !== 'any' ? [employee.id] : employees;
     const availableEmployees = selectedEmployees.filter((employeeId) => {
       const employeeAppointments = appointments.filter(
-        (appointment) => appointment.employee === employeeId
+        (appointment) => appointment.employeeId === employeeId
       );
       const employeeBooked = employeeAppointments.some(
         (appointment) =>
@@ -77,19 +73,17 @@ export const findAvailableTimeSlots = (
       );
       return !employeeBooked;
     });
-
     if (availableEmployees.length > 0) {
       slots.push({
         id: crypto.randomUUID(),
-        start: currentSlotStartString,
-        end: currentSlotEndString,
+        start: slotStart,
+        end: currentSlotEnd,
         available: availableEmployees,
       });
     }
 
     slotStart = slotStart.add(searchIncrement, 'minute');
   }
-
   return slots;
 };
 
@@ -122,12 +116,16 @@ export const splitByUpcomingAndPast = (dateObj) => {
 };
 
 export const sortAndFormatApptByStartTime = (apptObj) => {
-  return apptObj
-    .toSorted((a, b) => new Date(a.start) - new Date(b.start))
-    .map((appt) => {
-      return {
-        ...appt,
-        start: formatDateToTime(appt.start),
-      };
-    });
+  if (apptObj) {
+    return apptObj
+      .toSorted((a, b) => new Date(a.start) - new Date(b.start))
+      .map((appt) => {
+        return {
+          ...appt,
+          start: formatDateToTime(appt.start),
+        };
+      });
+  } else {
+    return [];
+  }
 };

@@ -1,14 +1,13 @@
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import IconButton from '@mui/material/IconButton';
+import { useAuth } from '@/hooks/useAuth';
 import { theme } from '@/styles/styles';
-import { selectCurrentToken } from '@/features/auth/authSlice';
 import styles from './styles.module.css';
 
 export default function NavDesktop() {
-  const token = useSelector(selectCurrentToken);
+  const { user } = useAuth();
 
   return (
     <ul className={styles.grid_col_3}>
@@ -23,7 +22,7 @@ export default function NavDesktop() {
       >
         <Link to="/">Cut Above</Link>
       </li>
-      {token ? (
+      {user ? (
         <li className={styles.place_self}>
           <Link to="/account">
             <IconButton

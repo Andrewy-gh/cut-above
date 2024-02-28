@@ -12,7 +12,7 @@ import logoTop from '@/assets/cover-logo-top-small.webp';
 import styles from './styles.module.css';
 
 export default function DrawerMenu() {
-  const { role, token, handleLogout } = useAuth();
+  const { role, user, handleLogout } = useAuth();
   const [open, setOpen] = useState(false);
 
   const getList = () => (
@@ -40,9 +40,10 @@ export default function DrawerMenu() {
             />
           </IconButton>
         </div>
+        {/* Links conditionally rendered on login status */}
         <ul className={styles.list}>
           {navigation.map((link) =>
-            renderLink(link, token, role) ? (
+            renderLink(link, user, role) ? (
               <li
                 key={link.id}
                 className={styles.list_item}
@@ -52,7 +53,8 @@ export default function DrawerMenu() {
               </li>
             ) : null
           )}
-          {token && (
+          {/* Logout Button */}
+          {user && (
             <li
               onClick={handleLogout}
               className={`${styles.list_item} ${styles.cursor_pointer}`}

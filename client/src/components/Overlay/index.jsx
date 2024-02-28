@@ -1,4 +1,5 @@
 import styles from './styles.module.css';
+import PropTypes from 'prop-types';
 
 export default function Overlay({ children }) {
   return (
@@ -8,3 +9,7 @@ export default function Overlay({ children }) {
     </div>
   );
 }
+
+Overlay.propTypes = {
+  children: PropTypes.object.isRequired,
+};

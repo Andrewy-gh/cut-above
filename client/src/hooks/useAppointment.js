@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   useCancelAppointmentMutation,
   useUpdateAppointmentStatusMutation,
@@ -14,33 +14,31 @@ import { useNotification } from '@/hooks/useNotification';
 export function useAppointment() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const rescheduling = useSelector(selectRescheduling);
   const modifyingApptId = useSelector(selectModifyingApptId);
   const [cancelAppointment] = useCancelAppointmentMutation();
   const [updateAppointmentStatus] = useUpdateAppointmentStatusMutation();
   const { handleSuccess, handleError } = useNotification();
 
-  const handleCancel = async (id, emailToken) => {
+  const handleCancel = async (id) => {
     try {
       const cancelledAppt = await cancelAppointment({
         id,
-        emailToken,
       }).unwrap();
       if (cancelledAppt.success) {
         handleSuccess(cancelledAppt.message);
-        navigate('/');
+        if (location.pathname.startsWith('/appointment/')) {
+          navigate('/cancellation');
+        }
       }
     } catch (err) {
       handleError(err);
     }
   };
 
-  const handleBeginRescheduling = (id, token) => {
-    if (token) {
-      navigate(`/bookings/${id}/?token=${token}`);
-    } else {
-      navigate(`/bookings/${id}`);
-    }
+  const handleBeginRescheduling = (id) => {
+    navigate(`/bookings/${id}`);
   };
 
   const handleEndRescheduling = () => dispatch(endRescheduling());

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  resetFilter,
   selectDate,
   selectEmployee,
   selectService,
@@ -8,22 +9,24 @@ import {
   setEmployee,
   setService,
 } from '@/features/filterSlice';
+import { useEmployeesQuery } from './useEmployeesQuery';
 import { services } from '@/data/data';
-import { formatDate } from '@/utils/date';
 
 export function useFilter() {
   const dispatch = useDispatch();
+  const { employees } = useEmployeesQuery();
   const [selection, setSelection] = useState({});
   const date = useSelector(selectDate);
   const employee = useSelector(selectEmployee);
   const service = useSelector(selectService);
 
   const handleDateChange = (newDate) => {
-    dispatch(setDate(formatDate(newDate)));
+    dispatch(setDate(newDate.toISOString()));
   };
 
   const handleEmployeeChange = (id) => {
-    dispatch(setEmployee(id));
+    const employee = id === 'any' ? 'any' : employees.find((e) => e.id === id);
+    dispatch(setEmployee(employee));
   };
 
   const handleSelectionChange = (data) => {
@@ -36,11 +39,16 @@ export function useFilter() {
     dispatch(setService({ id: serviceId, name, duration }));
   };
 
+  const handleFilterReset = () => {
+    dispatch(resetFilter());
+  };
+
   return {
     date,
     employee,
     handleDateChange,
     handleEmployeeChange,
+    handleFilterReset,
     handleSelectionChange,
     handleServiceChange,
     selection,

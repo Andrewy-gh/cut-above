@@ -61,7 +61,7 @@ export const theme = createTheme({
   },
   components: {
     MuiCssBaseline: {
-      styleOverrides: (themeParam) => `
+      styleOverrides: () => `
         a {
           color: inherit;
           text-decoration: none;

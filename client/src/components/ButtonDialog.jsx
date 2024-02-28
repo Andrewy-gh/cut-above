@@ -1,25 +1,29 @@
 import Button from '@mui/material/Button';
 import CustomDialog from './CustomDialog';
+import { theme } from '@/styles/styles';
+import PropTypes from 'prop-types';
 
-export default function ButtonDialog({
-  children,
-  color,
-  buttonStyle,
-  buttonText,
-  fullWidth,
-  open,
-  handleOpen,
-  handleClose,
-  variant = 'contained',
-}) {
+const buttonStyle = {
+  color: theme.palette.secondary.dark,
+};
+
+export default function ButtonDialog(props) {
+  const {
+    children,
+    buttonText,
+    open,
+    handleOpen,
+    handleClose,
+    variant = 'contained',
+    ...buttonProps
+  } = props;
   return (
     <>
       <Button
         variant={variant}
-        onClick={handleOpen}
-        fullWidth={fullWidth}
         sx={buttonStyle}
-        color={color}
+        onClick={handleOpen}
+        {...buttonProps}
       >
         {buttonText}
       </Button>
@@ -29,3 +33,12 @@ export default function ButtonDialog({
     </>
   );
 }
+
+ButtonDialog.propTypes = {
+  children: PropTypes.object,
+  buttonText: PropTypes.string.isRequired,
+  open: PropTypes.bool.isRequired,
+  handleOpen: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  variant: PropTypes.string,
+};

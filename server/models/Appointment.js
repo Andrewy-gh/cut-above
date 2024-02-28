@@ -1,49 +1,45 @@
-const mongoose = require('mongoose');
+import { Model, DataTypes } from 'sequelize';
+import { sequelize } from '../utils/db.js';
 
-const appointmentSchema = new mongoose.Schema({
-  date: {
-    type: Date,
-    required: true,
-  },
-  start: {
-    type: Date,
-    required: true,
-  },
-  end: {
-    type: Date,
-    required: true,
-  },
-  service: {
-    type: String,
-    required: true,
-  },
-  client: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  employee: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  status: {
-    type: String,
-    required: true,
-    default: 'scheduled',
-  },
-  emailId: {
-    type: String,
-    required: true,
-  },
-});
+class Appointment extends Model {}
 
-appointmentSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
+Appointment.init(
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
+      primaryKey: true,
+    },
+    date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    start: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    end: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    service: {
+      type: DataTypes.ENUM(
+        'Haircut',
+        'Beard Trim',
+        'Straight Razor Shave',
+        'Cut and Shave Package',
+        'The Full Package'
+      ),
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.ENUM('scheduled', 'checked-in', 'completed', 'no show'),
+      allowNull: false,
+      defaultValue: 'scheduled',
+    },
   },
-});
+  { sequelize, timestamps: false, underscored: true, modelName: 'appointment' }
+);
 
-module.exports = mongoose.model('Appointment', appointmentSchema);
+export default Appointment;

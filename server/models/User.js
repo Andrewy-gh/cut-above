@@ -1,40 +1,62 @@
-const mongoose = require('mongoose');
+import { Model, DataTypes } from 'sequelize';
+import { sequelize } from '../utils/db.js';
 
-const userSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-  },
-  lastName: {
-    type: String,
-  },
-  email: {
-    type: String,
-    require: true,
-  },
-  passwordHash: {
-    type: String,
-  },
-  role: {
-    type: String,
-    enum: ['client', 'employee', 'admin'],
-    default: 'client',
-  },
-  schedule: {
-    type: String,
-  },
-  refreshToken: [String],
-  emailToken: [String],
-});
+class User extends Model {}
 
-userSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-    // the passwordHash should not be revealed
-    delete returnedObject.refreshToken;
-    delete returnedObject.passwordHash;
+User.init(
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
+      primaryKey: true,
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false,
+      validate: { isEmail: true },
+    },
+    passwordHash: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    role: {
+      type: DataTypes.ENUM('client', 'employee', 'admin'),
+      defaultValue: 'client',
+      allowNull: false,
+    },
+    image: {
+      type: DataTypes.STRING,
+    },
+    profile: {
+      type: DataTypes.STRING,
+    },
   },
-});
+  {
+    defaultScope: { attributes: { exclude: ['passwordHash'] } },
+    scopes: {
+      withoutPassword: {
+        attributes: { exclude: ['passwordHash'] },
+      },
+      // only used to log in user
+      withPassword: {
+        attributes: { include: ['passwordHash'] },
+      },
+    },
+    sequelize,
+    timestamps: false,
+    underscored: true,
+    modelName: 'user',
+  }
+);
 
-module.exports = mongoose.model('User', userSchema);
+export default User;

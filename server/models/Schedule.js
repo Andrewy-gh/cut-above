@@ -1,32 +1,30 @@
-const mongoose = require('mongoose');
+import { Model, DataTypes } from 'sequelize';
+import { sequelize } from '../utils/db.js';
 
-const scheduleSchema = new mongoose.Schema({
-  date: {
-    type: Date,
-    required: true,
-  },
-  open: {
-    type: Date,
-    required: true,
-  },
-  close: {
-    type: Date,
-    required: true,
-  },
-  appointments: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Appointment',
+class Schedule extends Model {}
+
+Schedule.init(
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
+      primaryKey: true,
     },
-  ],
-});
-
-scheduleSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
+    date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    open: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    close: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
   },
-});
+  { sequelize, timestamps: false, underscored: true, modelName: 'schedule' }
+);
 
-module.exports = mongoose.model('Schedule', scheduleSchema);
+export default Schedule;

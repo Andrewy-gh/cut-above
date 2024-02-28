@@ -40,6 +40,11 @@ const filterSlice = createSlice({
         employee: null,
       };
     },
+    resetFilter: (state) => {
+      state.date = initialCurrentDate;
+      state.employee = 'any';
+      state.service = { id: 1, name: 'Haircut', duration: 30 };
+    },
   },
 });
 
@@ -47,7 +52,7 @@ export const selectDate = (state) => state.filter.date;
 export const selectDateDisabled = (state) => state.filter.dateDisabled;
 export const selectEmployee = (state) => state.filter.employee;
 export const selectService = (state) => state.filter.service;
-export const selectHoldStatus = (state) => state.filter.holdStatus;
+export const seklectHoldStatus = (state) => state.filter.holdStatus;
 export const selectSavedSelections = (state) => state.filter.savedSelections;
 export const {
   setDate,
@@ -57,5 +62,6 @@ export const {
   setService,
   setSavedSelections,
   clearSavedSelections,
+  resetFilter,
 } = filterSlice.actions;
 export default filterSlice.reducer;

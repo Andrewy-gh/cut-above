@@ -16,6 +16,13 @@ export default defineConfig({
       '@': '/src',
     },
   },
+  optimizeDeps: {
+    include: [
+      'prop-types',
+      // eslint-disable-next-line no-undef
+      process.env.NODE_ENV === 'production' ? undefined : 'prop-types',
+    ],
+  },
   build: {
     rollupOptions: {
       output: {

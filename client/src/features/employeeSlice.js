@@ -8,17 +8,22 @@ const initialState = employeeAdapter.getInitialState();
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getEmployees: builder.query({
-      query: () => '/api/employee',
+      query: () => '/api/employees',
       transformResponse: (responseData) => {
         return employeeAdapter.setAll(initialState, responseData);
       },
       keepUnusedDataFor: 5,
       providesTags: ['Employee'],
     }),
+    getEmployeesProfiles: builder.query({
+      query: () => '/api/employees/profiles',
+      transformResponse: (responseData) => responseData,
+    }),
   }),
 });
 
-export const { useGetEmployeesQuery } = extendedApiSlice;
+export const { useGetEmployeesQuery, useGetEmployeesProfilesQuery } =
+  extendedApiSlice;
 
 export const selectEmployeesResult =
   extendedApiSlice.endpoints.getEmployees.select();

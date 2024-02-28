@@ -8,6 +8,7 @@ import {
   currentDate,
   findAvailableTimeSlots,
   formatDate,
+  formatDateFull,
 } from '../utils/date';
 
 const scheduleAdapter = createEntityAdapter({});
@@ -17,9 +18,20 @@ const initialState = scheduleAdapter.getInitialState();
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getSchedule: builder.query({
-      query: () => '/api/schedule',
+      query: () => '/api/schedules',
       transformResponse: (responseData) => {
-        const loadedPosts = responseData;
+        const loadedPosts = responseData
+          .sort((a, b) => new Date(a.date) - new Date(b.date))
+          .map((s) => {
+            const appointments = s.appointments.map((appt) => ({
+              ...appt,
+              date: formatDateFull(appt.date),
+            }));
+            return {
+              ...s,
+              appointments,
+            };
+          });
         return scheduleAdapter.setAll(initialState, loadedPosts);
       },
       // keepUnusedDataFor: 5,
@@ -27,7 +39,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     }),
     addSchedule: builder.mutation({
       query: (schedule) => ({
-        url: '/api/schedule',
+        url: '/api/schedules',
         method: 'POST',
         body: schedule,
       }),
@@ -35,7 +47,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     }),
     updateSchedule: builder.mutation({
       query: (schedule) => ({
-        url: `/api/schedule/${schedule.id}`,
+        url: `/api/schedules/${schedule.id}`,
         method: 'PUT',
         body: schedule,
       }),
@@ -69,20 +81,16 @@ export const selectScheduleByDate = createSelector(
   // selectDateDisabled,
   // add dateDisabled to below
   (schedule, date) => {
-    // ! Recent change
     const currentEstTime = convertUtcToEst(currentDate);
     const formattedCurrentDate = formatDate(currentEstTime);
     const inputDate = formatDate(date);
-    // ! Recent change
     if (inputDate === formattedCurrentDate) {
       // prevents user from making appointments after closing time if searching for current day appointments
       return schedule.find(
-        (s) =>
-          formatDate(s.date) === inputDate &&
-          checkIsBefore(currentDate, s.close) // currentDate holds the hours and minutes, currentDate and s.close are in UTC
+        (s) => s.date === date && checkIsBefore(currentDate, s.close) // currentDate holds the hours and minutes, currentDate and s.close are in UTC
       );
     } else {
-      return schedule.find((s) => formatDate(s.date) === inputDate);
+      return schedule.find((s) => s.date === date);
     }
   }
 );

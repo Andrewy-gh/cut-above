@@ -6,7 +6,7 @@ import {
 } from '@/features/employeeSlice';
 
 export function useEmployeesQuery(employeeId) {
-  const { data } = useGetEmployeesQuery();
+  useGetEmployeesQuery();
   const employees = useSelector(selectAllEmployees);
   const employee = useSelector((state) =>
     selectEmployeeById(state, employeeId)

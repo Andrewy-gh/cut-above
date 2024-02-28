@@ -1,15 +1,19 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   useLoginMutation,
   useLogoutMutation,
+  useChangeUserEmailMutation,
+  useChangeUserPasswordMutation,
+  useDeleteUserMutation,
+  useResetUserPasswordMutation,
 } from '@/features/auth/authApiSlice';
 import {
   logoutUser,
-  selectCurrentToken,
   selectCurrentUser,
   selectCurrentUserRole,
   setCredentials,
+  updateUserDetails,
 } from '@/features/auth/authSlice';
 import { useNotification } from './useNotification';
 import { cleanEmail } from '@/utils/email';
@@ -17,11 +21,16 @@ import { cleanEmail } from '@/utils/email';
 export function useAuth() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const email = useSelector(selectCurrentUser);
+  const user = useSelector(selectCurrentUser);
   const role = useSelector(selectCurrentUserRole);
-  const token = useSelector(selectCurrentToken);
   const [login] = useLoginMutation();
   const [logout] = useLogoutMutation();
+  const [changeUserEmail] = useChangeUserEmailMutation();
+  const [changeUserPassword] = useChangeUserPasswordMutation();
+  const [deleteUser] = useDeleteUserMutation();
+  const [resetUserPassword] = useResetUserPasswordMutation();
+
+  const location = useLocation();
 
   const { handleSuccess, handleError } = useNotification();
 
@@ -32,15 +41,15 @@ export function useAuth() {
         password,
       }).unwrap();
       if (loggedInUser.success) {
+        const { from } = location.state || {};
         dispatch(
           setCredentials({
-            user: loggedInUser.user,
-            role: loggedInUser.role,
-            token: loggedInUser.token,
+            user: loggedInUser.user.email,
+            role: loggedInUser.user.role,
           })
         );
         handleSuccess(loggedInUser.message);
-        navigate('/account');
+        navigate(from || '/account');
       }
     } catch (err) {
       handleError(err);
@@ -49,12 +58,75 @@ export function useAuth() {
 
   const handleLogout = async () => {
     try {
-      await logout().unwrap();
+      await logout();
       dispatch(logoutUser());
     } catch (error) {
-      console.error('Error logging out: ', error);
+      handleError('Error logging out: ', error);
     }
   };
 
-  return { email, role, token, handleLogin, handleLogout };
+  const handleUserEmailChange = async (newEmailObj) => {
+    try {
+      const updatedUser = await changeUserEmail(newEmailObj).unwrap();
+      if (updatedUser.success) {
+        dispatch(
+          updateUserDetails({
+            user: updatedUser.user.email,
+            role: updatedUser.user.role,
+          })
+        );
+        handleSuccess(updatedUser.message);
+        return true;
+      }
+    } catch (error) {
+      handleError(`Error changing email: ${error}`);
+    }
+  };
+
+  const handleUserPasswordChange = async (newPasswordObj) => {
+    try {
+      const updatedUser = await changeUserPassword(newPasswordObj).unwrap();
+      if (updatedUser.success) {
+        handleSuccess(updatedUser.message);
+        return true;
+      }
+    } catch (error) {
+      handleError(`Error changing password: ${error}`);
+    }
+  };
+
+  const handleUserDelete = async () => {
+    try {
+      const deletedUser = await deleteUser().unwrap();
+      if (deletedUser.success) {
+        handleSuccess(deletedUser.message);
+        dispatch(logoutUser());
+      }
+    } catch (error) {
+      handleError(`Error deleting user: ${error}`);
+    }
+  };
+
+  const handleUserPasswordReset = async (newCredentials) => {
+    try {
+      const updatedUser = await resetUserPassword(newCredentials).unwrap();
+      if (updatedUser.success) {
+        handleSuccess(updatedUser.message);
+        return true;
+      }
+    } catch (err) {
+      handleError(err);
+    }
+  };
+
+  return {
+    user,
+    role,
+    handleLogin,
+    handleLogout,
+    handleUserEmailChange,
+    handleUserPasswordChange,
+    handleUserDelete,
+    handleUserPasswordReset,
+  };
 }

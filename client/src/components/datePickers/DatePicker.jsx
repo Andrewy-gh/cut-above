@@ -1,10 +1,12 @@
+import dayjs from 'dayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import PropTypes from 'prop-types';
 
 export default function DatePicker({
-  date = currentDate,
+  date,
   handleDateChange,
-  dateDisabled,
+  // dateDisabled,
   minDate,
   maxDate,
 }) {
@@ -19,7 +21,7 @@ export default function DatePicker({
           width: '100%',
           display: { xs: 'block', md: 'none' },
         }}
-        disabled={dateDisabled}
+        // disabled={dateDisabled}
         minDate={minDate}
         maxDate={maxDate}
       />
@@ -29,10 +31,17 @@ export default function DatePicker({
         sx={{
           display: { xs: 'none', md: 'block' },
         }}
-        disabled={dateDisabled}
+        // disabled={dateDisabled}
         minDate={minDate}
         maxDate={maxDate}
       />
     </div>
   );
 }
+
+DatePicker.propTypes = {
+  date: PropTypes.instanceOf(dayjs).isRequired,
+  handleDateChange: PropTypes.func.isRequired,
+  minDate: PropTypes.instanceOf(dayjs).isRequired,
+  maxDate: PropTypes.instanceOf(dayjs).isRequired,
+};

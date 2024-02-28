@@ -2,7 +2,7 @@
 
 Web page for a barbershop. Users can sign up and book an appointment.
 
-**Link to project:** https://cutaboveshop.fly.dev
+**Link to project:** https://cutabove.fly.dev
 
 ![alt tag](https://github.com/Andrewyithub/cut-above-barbershop/assets/17731837/35958cd0-07e1-44e3-a0b3-2be928c285a6)
 
@@ -12,9 +12,9 @@ Web page for a barbershop. Users can sign up and book an appointment.
 
 Material UI for components, styles, theming, and responsiveness. Redux Toolkit for state management and data fetching. Vite allows larger bundles to be separated so that load times are kept minimal.
 
-**Backend:** Node.js, Express, MongoDB, Nodemailer
+**Backend:** Node.js, Express, Postgres, Redis, Nodemailer
 
-Nodemailer to send account and appointment information to users.
+Cookie based session storage through Redis. Pub/Sub through redis to handle email services. Nodemailer to send account and appointment information to users.
 
 ## Features
 
@@ -22,7 +22,7 @@ Nodemailer to send account and appointment information to users.
 
 - Appointment modifying and cancelling for users.
 
-- User authentication with JWT tokens. Refresh rotation of tokens to keep users authenticated.
+- User authentication with Redis session storage.
 
 - Admin dashboard for quickly modifying, checking in, or cancelling appointments.
 
@@ -34,7 +34,7 @@ Nodemailer to send account and appointment information to users.
 
 2. In the project root directory. Enter these commands:
    `cd client && npm install` to install client side dependencies, and then
-   `cd ../server && npm run install` to install server side dependencies
+   `cd ../server && npm install` to install server side dependencies
 
 3. Change `.env.example` to `.env` and fill in all the appropiate information.
 

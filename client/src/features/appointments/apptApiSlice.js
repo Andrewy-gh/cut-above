@@ -9,7 +9,7 @@ const initialState = appointmentAdapter.getInitialState();
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAppointment: builder.query({
-      query: () => '/api/appointment',
+      query: () => '/api/appointments',
       transformResponse: (responseData) => {
         const loadedPosts = responseData
           .sort((a, b) => a.start.localeCompare(b.start))
@@ -23,7 +23,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       providesTags: ['Appointment'],
     }),
     getSingleAppointment: builder.query({
-      query: (id) => `/api/appointment/${id}`,
+      query: (id) => `/api/appointments/${id}`,
       transformResponse: (responseData) => {
         return {
           ...responseData,
@@ -35,23 +35,25 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     }),
     addAppointment: builder.mutation({
       query: (appointment) => ({
-        url: '/api/appointment',
+        url: '/api/appointments',
         method: 'POST',
         body: appointment,
       }),
       invalidatesTags: ['Appointment', 'Schedule'],
     }),
     modifyAppointment: builder.mutation({
-      query: (appointment) => ({
-        url: `/api/appointment/${appointment.id}`,
+      // destructure to separate id from body
+      query: ({ id, ...appointment }) => ({
+        url: `/api/appointments/${id}`,
         method: 'PUT',
         body: appointment,
       }),
       invalidatesTags: ['Appointment', 'Schedule'],
     }),
     updateAppointmentStatus: builder.mutation({
-      query: (appointment) => ({
-        url: `/api/appointment/status/${appointment.id}`,
+      // destructure to separate id from body
+      query: ({ id, ...appointment }) => ({
+        url: `/api/appointments/status/${id}`,
         method: 'PUT',
         body: appointment,
       }),
@@ -59,9 +61,8 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     }),
     cancelAppointment: builder.mutation({
       query: (appointment) => ({
-        url: `/api/appointment/${appointment.id}`,
+        url: `/api/appointments/${appointment.id}`,
         method: 'DELETE',
-        body: appointment,
       }),
       invalidatesTags: ['Appointment', 'Schedule'],
     }),
