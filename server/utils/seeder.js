@@ -19,4 +19,5 @@ export const seedTokens = async () => {
   logger.info(JSON.stringify(newTokens));
 };
 
+seedData();
 seedTokens();
