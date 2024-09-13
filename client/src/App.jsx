@@ -18,7 +18,7 @@ const Cancellation = lazy(() => import('./routes/Cancellation'));
 const RequireAuth = lazy(() => import('./routes/RequireAuth'));
 const AppointmentPage = lazy(() => import('./routes/AppointmentPage'));
 const AppointmentError = lazy(() => import('./routes/AppointmentPage/error'));
-const Appointments = lazy(() => import('./routes/appointments'));
+const Appointments = lazy(() => import('./routes/Appointments'));
 const AddSchedule = lazy(() => import('./routes/AddSchedule'));
 const DashboardSchedule = lazy(() => import('./routes/DashboardSchedule'));
 const DashboardAppointment = lazy(() =>
