@@ -2,8 +2,9 @@ import crypto from 'crypto';
 import { users, appointments } from './data.js';
 import { Appointment, PasswordResetToken, User } from '../models/index.js';
 import logger from './logger/index.js';
+import { sequelize } from './db.js';
 
-export const seedData = async () => {
+export const seedUsers = async () => {
   const newUsers = await User.bulkCreate(users);
   logger.info('new users created');
   logger.info(JSON.stringify(newUsers));
@@ -19,5 +20,26 @@ export const seedTokens = async () => {
   logger.info(JSON.stringify(newTokens));
 };
 
-seedData();
-seedTokens();
+async function main() {
+  seedTokens();
+  try {
+    await sequelize.authenticate();
+    logger.info('Connected to the database');
+    logger.info('Starting to seed users');
+    await seedUsers(); // No transaction
+    logger.info('Users seeded successfully');
+  } catch (error) {
+    logger.error('An error occurred while seeding the database:', error);
+  } finally {
+    try {
+      await sequelize.close();
+      logger.info('Database connection closed');
+    } catch (closeError) {
+      logger.error('Error closing the database connection:', closeError);
+    }
+  }
+}
+
+main().catch((err) => {
+  logger.error('An error occurred while attempting to seed the database:', err);
+});
