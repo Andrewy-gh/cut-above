@@ -1,6 +1,10 @@
 import cors from 'cors';
 
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001'];
+const allowedOrigins = [
+  'https://cutaboveshop.fly.dev',
+  'http://localhost:3000',
+  'http://localhost:3001',
+];
 
 const corsOptions = {
   origin: (origin, callback) => {

@@ -5,7 +5,7 @@ import { clearMessage, setError } from '@/features/notificationSlice';
 const baseUrl =
   // eslint-disable-next-line no-undef
   process.env.NODE_ENV === 'production'
-    ? 'http://localhost:3000'
+    ? 'https://cutaboveshop.fly.dev'
     : 'http://localhost:3001';
 
 const baseQuery = fetchBaseQuery({

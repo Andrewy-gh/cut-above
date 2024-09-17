@@ -55,7 +55,7 @@ export const logout = async (req, res) => {
   res.clearCookie('cutabove', {
     httpOnly: true,
     sameSite: 'lax',
-    secure: false, // if true: only transmit cookie over https, in prod, always activate this
+    secure: process.env.NODE_ENV === 'development' ? false : true, // if true: only transmit cookie over https, in prod, always activate this
   });
   res.status(204).end();
 };

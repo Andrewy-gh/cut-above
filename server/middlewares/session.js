@@ -13,7 +13,7 @@ const sessionConfig = {
   saveUninitialized: false,
   name: 'cutabove',
   cookie: {
-    secure: false, // change to true in production
+    secure: process.env.NODE_ENV === 'development' ? false : true, // change to true in production
     httpOnly: true, // if true: prevents client side JS from reading the cookie
     maxAge: 1000 * 60 * 60, // session max age in milliseconds, currently 60 minutes
     sameSite: 'lax',
