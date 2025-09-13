@@ -32,8 +32,7 @@ PasswordResetToken.init(
   },
   {
     sequelize,
-    timestamps: true,
-    updatedAt: false,
+    timestamps: false,
     underscored: true,
     modelName: 'password_reset_token',
   }
