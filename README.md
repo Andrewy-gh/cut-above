@@ -33,11 +33,11 @@ Cookie based session storage through Redis. Pub/Sub through redis to handle emai
 1. Fork the repository
 
 2. In the project root directory. Enter these commands:
-   `cd client && npm install` to install client side dependencies, and then
-   `cd ../server && npm install` to install server side dependencies
+   `cd client && pnpm install` to install client side dependencies, and then
+   `cd ../server && pnpm install` to install server side dependencies
 
 3. Change `.env.example` to `.env` and fill in all the appropiate information.
 
-4. Run `npm run build:ui`. This creates the build process for the client side code.
+4. Run `pnpm run build:ui`. This creates the build process for the client side code.
 
-5. After the build process is done, you are ready to use. Just run `npm run start` while still inside the `server` directory, and navigate to `http://localhost:3000` in your browser.
+5. After the build process is done, you are ready to use. Just run `pnpm run start` while still inside the `server` directory, and navigate to `http://localhost:3000` in your browser.
