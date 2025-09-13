@@ -18,9 +18,4 @@ Schedule.hasMany(Appointment, { foreignKey: 'scheduleId', as: 'appointments' });
 Appointment.belongsTo(Schedule, { foreignKey: 'scheduleId', as: 'schedule' });
 PasswordResetToken.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
-User.sync({ alter: true });
-Appointment.sync({ alter: true });
-Schedule.sync({ alter: true });
-PasswordResetToken.sync({ alter: true });
-
 export { User, Appointment, Schedule, PasswordResetToken };
