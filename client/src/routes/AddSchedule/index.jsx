@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import DateRangePicker from '@/components/DatePickers/DateRangePicker';
+import DateRangePicker from '@/components/DatePickers/DateRangePicker.jsx';
 import dayjs from 'dayjs';
 import { useAddScheduleMutation } from '@/features/scheduleSlice';
 import { useNotification } from '@/hooks/useNotification';
