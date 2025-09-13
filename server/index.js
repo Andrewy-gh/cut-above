@@ -37,9 +37,6 @@ app.use(session);
 // rate limiter middleware
 app.use(limiter);
 
-// automatic cron job
-cronJob();
-
 // pub/sub message listener
 listenForMessage();
 

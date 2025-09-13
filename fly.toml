@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for cutaboveshop on 2024-09-16T21:07:02-04:00
+# fly.toml app configuration file generated for cutaboveshop on 2025-09-13T19:28:11-04:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -17,6 +17,4 @@ primary_region = 'bos'
   processes = ['app']
 
 [[vm]]
-  memory = '1gb'
-  cpu_kind = 'shared'
-  cpus = 1
+  size = 'shared-cpu-1x'
