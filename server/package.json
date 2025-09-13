@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "NODE_ENV=development nodemon index.js",
-    "build:ui": "rm -rf dist && cd ../client && npm run build && mv dist ../server",
+    "build:ui": "rm -rf dist && cd ../client && pnpm run build && mv dist ../server",
     "db:seed:dev": "NODE_ENV=development node ./utils/seeder.js",
     "db:reset:dev": "NODE_ENV=development node ./utils/dbReset.js"
   },
