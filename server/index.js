@@ -43,11 +43,11 @@ listenForMessage();
 // routes
 app.use(router);
 
-// error handler middleware
-app.use(errorHandler);
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
+
+app.use(errorHandler);
 
 const start = async () => {
   await connectToDatabase();
