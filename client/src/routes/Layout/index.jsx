@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
-import NavBar from '@/components/NavBar';
+import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Notification from '@/components/Notification';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -10,7 +10,7 @@ export default function Layout() {
   return (
     <>
       <div className={styles.container}>
-        <NavBar />
+        <Navbar />
         <div className={styles.grow}>
           <Suspense fallback={<LoadingSpinner />}>
             <Outlet />

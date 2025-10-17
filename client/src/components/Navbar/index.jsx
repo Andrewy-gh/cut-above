@@ -5,7 +5,7 @@ import NavDesktop from './NavDesktop';
 import NavMobile from './NavMobile';
 import { theme } from '@/styles/styles';
 
-export default function NavBar() {
+export default function Navbar() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return (
     <div>
