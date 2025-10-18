@@ -97,6 +97,7 @@ export const seedTokens = async (users) => {
 
 export const createTables = async () => {
   try {
+    await sequelize.sync({ force: true });
     logger.info('All tables created successfully');
   } catch (error) {
     logger.error('Error creating tables:', error);

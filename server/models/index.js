@@ -1,7 +1,7 @@
-import User from './user.js';
-import Appointment from './appointment.js';
-import Schedule from './schedule.js';
-import PasswordResetToken from './passwordResetToken.js';
+import User from './User.js';
+import Appointment from './Appointment.js';
+import Schedule from './Schedule.js';
+import PasswordResetToken from './PasswordResetToken.js';
 
 User.hasMany(Appointment, {
   foreignKey: 'clientId',
