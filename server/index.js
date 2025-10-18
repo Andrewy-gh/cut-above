@@ -50,8 +50,8 @@ app.use(errorHandler);
 
 const start = async () => {
   await connectToDatabase();
-  app.listen(PORT, () => {
-    logger.info(`Server running on ${PORT}`);
+  app.listen(PORT, '0.0.0.0', () => {
+    logger.info(`Server running on 0.0.0.0:${PORT}`);
   });
 };
 
