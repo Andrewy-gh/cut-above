@@ -11,7 +11,7 @@ const router = Router();
 router.use('/api/users', userRoutes);
 router.use('/api/appointments', appointmentRoutes);
 router.use('/api/schedules', schedulesRoutes);
-router.use(authRoutes);
+router.use('/api/auth', authRoutes);
 router.use('/api/employees', employeeRoutes);
 router.use('/api/email', emailRoutes);
 

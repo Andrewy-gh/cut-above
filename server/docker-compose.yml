@@ -10,3 +10,9 @@ services:
     volumes:
       - ./db-data:/var/lib/postgresql/data
     container_name: cutabove-db
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - 6379:6379
+    container_name: cutabove-redis

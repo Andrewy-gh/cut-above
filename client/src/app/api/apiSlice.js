@@ -6,7 +6,7 @@ const baseUrl =
   // eslint-disable-next-line no-undef
   process.env.NODE_ENV === 'production'
     ? 'https://cutaboveshop.fly.dev'
-    : 'http://localhost:3001';
+    : '';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: baseUrl,
