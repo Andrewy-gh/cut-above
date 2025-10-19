@@ -3,7 +3,7 @@ import cors from 'cors';
 const allowedOrigins = [
   'https://cutaboveshop.fly.dev',
   'http://localhost:3000',
-  'http://localhost:3001',
+  'http://localhost:5173',
 ];
 
 const corsOptions = {

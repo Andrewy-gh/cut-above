@@ -9,7 +9,9 @@
     "dev": "NODE_ENV=development nodemon index.js",
     "build:ui": "rm -rf dist && cd ../client && pnpm run build && mv dist ../server",
     "db:seed:dev": "NODE_ENV=development node ./utils/seeder.js",
-    "db:reset:dev": "NODE_ENV=development node ./utils/dbReset.js"
+    "db:reset:dev": "NODE_ENV=development node ./utils/dbReset.js",
+    "docker:dev": "docker-compose up -d db redis",
+    "docker:down": "docker-compose down"
   },
   "keywords": [],
   "author": "",

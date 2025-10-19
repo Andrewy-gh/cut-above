@@ -4,7 +4,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (credentials) => ({
-        url: '/login',
+        url: '/api/auth/login',
         method: 'POST',
         body: { ...credentials },
       }),
@@ -12,20 +12,20 @@ export const authApiSlice = apiSlice.injectEndpoints({
     }),
     logout: builder.mutation({
       query: () => ({
-        url: '/logout',
+        url: '/api/auth/logout',
       }),
       invalidatesTags: ['User'],
     }),
     registerAccount: builder.mutation({
       query: (register) => ({
-        url: '/signup',
+        url: '/api/auth/signup',
         method: 'POST',
         body: register,
       }),
     }),
     changeUserEmail: builder.mutation({
       query: (email) => ({
-        url: '/email',
+        url: '/api/auth/email',
         method: 'PUT',
         body: email,
       }),
@@ -33,7 +33,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
     }),
     changeUserPassword: builder.mutation({
       query: (password) => ({
-        url: '/password',
+        url: '/api/auth/password',
         method: 'PUT',
         body: password,
       }),
@@ -48,14 +48,14 @@ export const authApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['User'],
     }),
     validateToken: builder.query({
-      query: (req) => `/validation/${req.id}/${req.token}`,
+      query: (req) => `/api/auth/validation/${req.id}/${req.token}`,
       transformResponse: (responseData) => {
         return responseData;
       },
     }),
     resetUserPassword: builder.mutation({
       query: ({ id, token, password }) => ({
-        url: `/reset-pw/${id}/${token}`,
+        url: `/api/auth/reset-pw/${id}/${token}`,
         method: 'PUT',
         body: { password },
       }),
