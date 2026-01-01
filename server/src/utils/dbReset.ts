@@ -2,14 +2,14 @@ import { sequelize } from './db.js';
 import logger from './logger/index.js';
 import '../models/index.js';
 
-const resetDatabase = async () => {
+const resetDatabase = async (): Promise<boolean> => {
   try {
     await sequelize.authenticate();
     logger.info('Connected to the database');
-    
+
     await sequelize.sync({ force: true });
     logger.info('All tables dropped and recreated successfully');
-    
+
     return true;
   } catch (error) {
     logger.error('Error resetting database:', error);
@@ -17,7 +17,7 @@ const resetDatabase = async () => {
   }
 };
 
-async function main() {
+async function main(): Promise<void> {
   try {
     logger.info('Starting database reset...');
     await resetDatabase();
