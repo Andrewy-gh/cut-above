@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, type Router as IRouter } from 'express';
 import {
   handleNewMessage,
   sendPasswordReset,
@@ -9,7 +9,7 @@ import {
 } from '../schemas/emailSchema.js';
 import { validate } from '../middlewares/validate.js';
 
-const router = Router();
+const router: IRouter = Router();
 
 router
   .route('/new-message')

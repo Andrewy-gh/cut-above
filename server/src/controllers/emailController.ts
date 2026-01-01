@@ -17,6 +17,9 @@ export const handleNewMessage = async (req: Request, res: Response): Promise<voi
   });
   // Error: Message failed: 432 4.3.2 Concurrent connections limit exceeded.
   setTimeout(async () => {
+    if (!EMAIL_USER) {
+      throw new Error('EMAIL_USER must be defined in environment variables');
+    }
     await publishMessage({
       receiver: EMAIL_USER,
       option: 'message submission',

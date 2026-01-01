@@ -4,8 +4,6 @@ import timezone from 'dayjs/plugin/timezone.js';
 import isBetween from 'dayjs/plugin/isBetween.js';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore.js';
 
-import logger from './logger/index.js';
-
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isBetween);
@@ -39,8 +37,8 @@ export const checkAvailability = (
     const end = dayjs(`${appt.date}T${appt.end}`);
     if (appt.employeeId === newAppt.employeeId) {
       if (
-        newStart.isBetween(start, end, 'time', '[)') ||
-        newEnd.isBetween(start, end, 'time', '(]')
+        newStart.isBetween(start, end, 'minute', '[)') ||
+        newEnd.isBetween(start, end, 'minute', '(]')
       ) {
         return false; // overlap found
       }

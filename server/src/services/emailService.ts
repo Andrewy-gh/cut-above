@@ -4,12 +4,21 @@ import { pub, sub } from '../utils/redis.js';
 import { EMAIL_SERVICE, EMAIL_USER, EMAIL_PASSWORD } from '../utils/config.js';
 import { options } from '../utils/emailOptions.js';
 
+type EmailOption =
+  | 'confirmation'
+  | 'modification'
+  | 'cancellation'
+  | 'reset password'
+  | 'reset password success'
+  | 'message auto reply'
+  | 'message submission';
+
 export interface EmailData {
   receiver: string;
   employee?: string;
   date?: string;
   time?: string;
-  option?: string;
+  option?: EmailOption;
   emailLink?: string;
   contactDetails?: {
     firstName: string;
@@ -41,11 +50,11 @@ export const sendEmail = async ({
   };
 
   const emailTemplate = options(
-    employee,
-    date,
-    time,
-    option,
-    emailLink,
+    employee || '',
+    date || '',
+    time || '',
+    option || 'confirmation',
+    emailLink || '',
     contactDetails
   );
 
@@ -73,7 +82,8 @@ export const listenForMessage = async (lastId: string = '$'): Promise<void> => {
     'email-stream',
     lastId
   );
-  const [key, messages] = results[0]; // `key` equals to "user-stream"
+  if (!results) return;
+  const [_key, messages] = results[0]; // `key` equals to "user-stream"
 
   messages.forEach(async (message) => {
     logger.info(`Id: ${message[0]}. Data: ${message[1]}`);

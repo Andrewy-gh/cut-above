@@ -5,8 +5,8 @@ import type { AppointmentService } from '../types/index.js';
 
 export interface NewAppointmentData {
   date: string;
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
   service: AppointmentService;
   clientId: string;
   employeeId: string;
@@ -94,8 +94,15 @@ export const checkScheduleAvailability = async (newAppt: NewAppointmentData): Pr
   }
   // TODO: Eager load appointments
   const appointments = await schedule.getAppointments();
+  // Convert appointments to the format expected by checkAvailability
+  const appointmentsCheck = appointments.map(a => ({
+    date: a.date.toISOString().split('T')[0],
+    start: a.start.toISOString().split('T')[1].substring(0, 5),
+    end: a.end.toISOString().split('T')[1].substring(0, 5),
+    employeeId: a.employeeId,
+  }));
   // TODO: check before open or check after close too
-  const available = checkAvailability(appointments, newAppt);
+  const available = checkAvailability(appointmentsCheck, newAppt);
   if (!available) {
     throw new ApiError(410, 'Appointment not available'); // Gone
   }

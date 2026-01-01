@@ -3,7 +3,7 @@ import ApiError from '../utils/ApiError.js';
 
 export const authenticateUser = async (
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ): Promise<void> => {
   if (!req.session) {
@@ -17,7 +17,7 @@ export const authenticateUser = async (
 
 export const authenticateRole = async (
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ): Promise<void> => {
   if (!req.session.isAdmin) {

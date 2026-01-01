@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, type Router as IRouter } from 'express';
 import {
   getAllAppointments,
   getSingleAppointment,
@@ -18,7 +18,7 @@ import {
 } from '../middlewares/authenticateUser.js';
 import { validate } from '../middlewares/validate.js';
 
-const router = Router();
+const router: IRouter = Router();
 
 router
   .route('/')

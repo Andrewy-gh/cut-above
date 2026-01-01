@@ -32,6 +32,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 export const login = async (req: Request, res: Response): Promise<void> => {
   const user = await authenticateUser(req.body);
   req.session.user = user;
+  req.session.userId = user.id;
+  req.session.isAdmin = user.role === 'admin';
   res
     .status(200)
     .json({ success: true, message: 'Successfully logged in', user: user });
@@ -70,9 +72,10 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
 export const changeEmail = async (req: Request, res: Response): Promise<void> => {
   const user = await updateEmail({
     email: req.body.email,
-    id: req.session.user.id,
+    id: req.session.user!.id,
   });
   req.session.user = user;
+  req.session.userId = user.id;
   res.status(200).json({
     success: true,
     message: 'User email successfully changed',
@@ -88,7 +91,7 @@ export const changeEmail = async (req: Request, res: Response): Promise<void> =>
 export const changePassword = async (req: Request, res: Response): Promise<void> => {
   await updatePassword({
     password: req.body.password,
-    id: req.session.user.id,
+    id: req.session.user!.id,
   });
   res
     .status(200)
@@ -101,7 +104,7 @@ export const changePassword = async (req: Request, res: Response): Promise<void>
  * @method GET
  */
 export const handleTokenValidation = async (req: Request, res: Response): Promise<void> => {
-  await validateToken(req.params);
+  await validateToken(req.params as { id: string; token: string });
   res.json({ success: true, message: 'Token is valid' });
 };
 

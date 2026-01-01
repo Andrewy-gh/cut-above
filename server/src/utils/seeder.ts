@@ -10,17 +10,6 @@ import logger from './logger/index.js';
 import { sequelize } from './db.js';
 import { convertDateAndTime, convertDate } from './dateTime.js';
 
-interface SeededUser {
-  id: string;
-  email: string;
-  role: string;
-}
-
-interface SeededSchedule {
-  id: string;
-  date: Date;
-}
-
 export const seedUsers = async (): Promise<any[]> => {
   const newUsers = await User.bulkCreate(users, { returning: true });
   logger.info('new users created');
@@ -35,9 +24,9 @@ export const seedUsers = async (): Promise<any[]> => {
 export const seedSchedules = async (): Promise<any[]> => {
   const schedulesWithFormattedDates = schedules.map((schedule) => ({
     ...schedule,
-    date: convertDate(schedule.date),
-    open: convertDateAndTime(schedule.date, schedule.open),
-    close: convertDateAndTime(schedule.date, schedule.close),
+    date: convertDate(schedule.date).toDate(),
+    open: convertDateAndTime(schedule.date, schedule.open).toDate(),
+    close: convertDateAndTime(schedule.date, schedule.close).toDate(),
   }));
 
   const newSchedules = await Schedule.bulkCreate(schedulesWithFormattedDates, {
@@ -68,9 +57,9 @@ export const seedAppointments = async (
       clientId: client.id,
       employeeId: employee.id,
       scheduleId: schedule ? schedule.id : null,
-      date: convertDate(appointment.date),
-      start: convertDateAndTime(appointment.date, appointment.start),
-      end: convertDateAndTime(appointment.date, appointment.end),
+      date: convertDate(appointment.date).toDate(),
+      start: convertDateAndTime(appointment.date, appointment.start).toDate(),
+      end: convertDateAndTime(appointment.date, appointment.end).toDate(),
     };
   });
 
@@ -128,22 +117,19 @@ async function main(): Promise<void> {
     await createTables();
 
     logger.info('Starting to seed users');
-    const seededUsers = await seedUsers();
+    const _seededUsers = await seedUsers();
     logger.info('Users seeded successfully');
 
     logger.info('Starting to seed schedules');
-    const seededSchedules = await seedSchedules();
+    const _seededSchedules = await seedSchedules();
     logger.info('Schedules seeded successfully');
 
     logger.info('Starting to seed appointments');
-    const seededAppointments = await seedAppointments(
-      seededUsers,
-      seededSchedules
-    );
+    await seedAppointments(_seededUsers, _seededSchedules);
     logger.info('Appointments seeded successfully');
 
     logger.info('Starting to seed password reset tokens');
-    const seededTokens = await seedTokens(seededUsers);
+    await seedTokens(_seededUsers);
     logger.info('Tokens seeded successfully');
 
     logger.info('Database seeding completed successfully');

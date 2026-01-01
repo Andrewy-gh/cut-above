@@ -11,6 +11,7 @@ export interface RegisterCredentials {
   lastName: string;
   email: string;
   password: string;
+  role?: UserRole;
 }
 
 export interface LoginCredentials {
@@ -40,12 +41,14 @@ export interface UserResponse {
   firstName: string;
   lastName: string;
   role: UserRole;
+  image: string | null;
+  profile: string | null;
 }
 
 export const registerUser = async (credentials: RegisterCredentials): Promise<User> => {
-  const { firstName, lastName, email, password } = credentials;
+  const { firstName, lastName, email, password, role = 'client' } = credentials;
   const passwordHash = await bcrypt.hash(password, 10);
-  return await User.create({ firstName, lastName, email, passwordHash });
+  return await User.create({ firstName, lastName, email, passwordHash, role });
 };
 
 export const authenticateUser = async (credentials: LoginCredentials): Promise<UserResponse> => {
@@ -65,6 +68,8 @@ export const authenticateUser = async (credentials: LoginCredentials): Promise<U
     firstName: user.firstName,
     lastName: user.lastName,
     role: user.role,
+    image: user.image,
+    profile: user.profile,
   };
 };
 
@@ -81,6 +86,8 @@ export const updateEmail = async (user: UpdateEmailData): Promise<UserResponse> 
     firstName: currentUser.firstName,
     lastName: currentUser.lastName,
     role: currentUser.role,
+    image: currentUser.image,
+    profile: currentUser.profile,
   };
 };
 
@@ -120,7 +127,7 @@ export const validateToken = async (user: ValidateTokenData): Promise<PasswordRe
   if (!resetToken) {
     throw new ApiError(401, 'Unauthorized');
   }
-  if (new Date().toISOString() > resetToken.expiresAt) {
+  if (new Date() > new Date(resetToken.expiresAt)) {
     await resetToken.destroy();
     throw new ApiError(401, 'Unauthorized');
   }

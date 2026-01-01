@@ -1,11 +1,21 @@
 import { formatDateSlash, formatTime } from './dateTime.js';
 import { generateAppointmentLink } from './emailOptions.js';
+import type { AppointmentService } from '../types/index.js';
+
+type EmailOption =
+  | 'confirmation'
+  | 'modification'
+  | 'cancellation'
+  | 'reset password'
+  | 'reset password success'
+  | 'message auto reply'
+  | 'message submission';
 
 interface AppointmentInput {
   date: string;
   start: string;
   end: string;
-  service: string;
+  service: AppointmentService;
   employee: {
     id: string;
     firstName: string;
@@ -14,14 +24,14 @@ interface AppointmentInput {
 
 interface EmailAppointmentInput extends AppointmentInput {
   id: string;
-  option: string;
+  option: EmailOption;
 }
 
 interface FormattedAppointment {
   date: string;
   start: string;
   end: string;
-  service: string;
+  service: AppointmentService;
   employeeId: string;
 }
 
@@ -29,7 +39,7 @@ interface FormattedEmail {
   date: string;
   time: string;
   employee: string;
-  option: string;
+  option: EmailOption;
   emailLink: string;
 }
 

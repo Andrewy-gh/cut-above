@@ -42,15 +42,18 @@ listenForMessage();
 // routes
 app.use(router);
 
-app.get('*', (req, res) => {
+app.get('*', (_req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
 });
 
 app.use(errorHandler);
 
 const start = async (): Promise<void> => {
+  if (!PORT) {
+    throw new Error('PORT must be defined in environment variables');
+  }
   await connectToDatabase();
-  app.listen(PORT, '0.0.0.0', () => {
+  app.listen(Number(PORT), '0.0.0.0', () => {
     logger.info(`Server running on 0.0.0.0:${PORT}`);
   });
 };

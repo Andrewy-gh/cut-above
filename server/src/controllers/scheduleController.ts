@@ -36,9 +36,9 @@ export const createNewSchedule = async (req: Request, res: Response): Promise<vo
   const dateRangeToSchedule = generateRange(dates, open, close);
   const newSchedules = dateRangeToSchedule.map((s) => {
     return Schedule.create({
-      date: s.date,
-      open: s.open,
-      close: s.close,
+      date: s.date.toDate(),
+      open: s.open.toDate(),
+      close: s.close.toDate(),
     });
   });
   const savedSchedules = await Promise.all(newSchedules);

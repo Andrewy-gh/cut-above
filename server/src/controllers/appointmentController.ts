@@ -8,6 +8,7 @@ import {
 } from '../services/appointmentService.js';
 import { publishMessage } from '../services/emailService.js';
 import { formatAppt, formatEmail } from '../utils/formatters.js';
+import ApiError from '../utils/ApiError.js';
 
 /**
  * @description retrieve all appointments
@@ -15,7 +16,10 @@ import { formatAppt, formatEmail } from '../utils/formatters.js';
  * @method GET
  */
 export const getAllAppointments = async (req: Request, res: Response): Promise<void> => {
-  const user = await User.findByPk(req.session.user.id);
+  const user = await User.findByPk(req.session.user!.id);
+  if (!user) {
+    throw new ApiError(404, 'User not found');
+  }
   const appointments = await getAppointmentsByRole(user);
   res.json(appointments);
 };
@@ -39,7 +43,7 @@ export const bookAppointment = async (req: Request, res: Response): Promise<void
   const appointment = formatAppt(req.body);
   const newAppointment = await createNew({
     ...appointment,
-    clientId: req.session.user.id,
+    clientId: String(req.session.user!.id),
   });
   const newBookingEmail = formatEmail({
     ...req.body,
@@ -48,7 +52,7 @@ export const bookAppointment = async (req: Request, res: Response): Promise<void
   });
   await publishMessage({
     ...newBookingEmail,
-    receiver: req.session.user.email,
+    receiver: req.session.user!.email,
   });
   res.status(200).json({
     success: true,
@@ -64,7 +68,11 @@ export const bookAppointment = async (req: Request, res: Response): Promise<void
 export const modifyAppointment = async (req: Request, res: Response): Promise<void> => {
   const appointment = formatAppt(req.body);
   const modifiedAppointment = await update({
-    ...appointment,
+    date: appointment.date,
+    start: appointment.start,
+    end: appointment.end,
+    service: appointment.service,
+    employeeId: appointment.employeeId,
     id: req.params.id,
   });
   const modifyEmail = formatEmail({
@@ -74,7 +82,7 @@ export const modifyAppointment = async (req: Request, res: Response): Promise<vo
   });
   await publishMessage({
     ...modifyEmail,
-    receiver: req.session.user.email,
+    receiver: req.session.user!.email,
   });
   res.status(200).json({
     success: true,
@@ -105,15 +113,21 @@ export const updateAppointmentStatus = async (req: Request, res: Response): Prom
 export const deleteAppointmentById = async (req: Request, res: Response): Promise<void> => {
   const appointment = await Appointment.findByPk(req.params.id, {
     include: [{ model: User, as: 'employee' }],
-  });
+  }) as (Appointment & { employee: User }) | null;
+  if (!appointment) {
+    throw new ApiError(404, 'Appointment not found');
+  }
   await appointment.destroy();
   const deleteEmail = formatEmail({
-    date: appointment.date,
-    time: appointment.start,
+    id: appointment.id,
+    date: appointment.date.toISOString(),
+    start: appointment.start.toISOString(),
+    end: appointment.end.toISOString(),
+    service: appointment.service,
     employee: appointment.employee,
     option: 'cancellation',
   });
-  await publishMessage({ ...deleteEmail, receiver: req.session.user.email });
+  await publishMessage({ ...deleteEmail, receiver: req.session.user!.email });
   res
     .status(200)
     .json({ success: true, message: 'Appointment successfully cancelled' });

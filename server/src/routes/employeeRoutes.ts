@@ -1,10 +1,10 @@
-import { Router } from 'express';
+import { Router, type Router as IRouter } from 'express';
 import {
   getAllEmployees,
   getEmployeeProfiles,
 } from '../controllers/employeeController.js';
 
-const router = Router();
+const router: IRouter = Router();
 
 router.route('/').get(getAllEmployees);
 

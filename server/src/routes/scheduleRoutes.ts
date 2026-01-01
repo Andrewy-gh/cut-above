@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, type Router as IRouter } from 'express';
 import {
   getAllSchedulesPublic,
   getAllSchedulesPrivate,
@@ -9,7 +9,7 @@ import {
   authenticateRole,
 } from '../middlewares/authenticateUser.js';
 
-const router = Router();
+const router: IRouter = Router();
 
 router
   .route('/')

@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, type Router as IRouter } from 'express';
 import {
   login,
   logout,
@@ -19,7 +19,7 @@ import {
   tokenUrlSchema,
 } from '../schemas/authSchema.js';
 
-const router = Router();
+const router: IRouter = Router();
 
 router.route('/login').post(validate({ body: loginSchema }), login);
 

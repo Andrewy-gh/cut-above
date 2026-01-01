@@ -1,9 +1,14 @@
-import session from 'express-session';
+import session, { type SessionOptions } from 'express-session';
+import type { RequestHandler } from 'express';
 import RedisStore from 'connect-redis';
 import { SESSION_SECRET } from '../utils/config.js';
 import { redisClient } from '../utils/redis.js';
 
-const sessionConfig: session.SessionOptions = {
+if (!SESSION_SECRET) {
+  throw new Error('SESSION_SECRET must be defined in environment variables');
+}
+
+const sessionConfig: SessionOptions = {
   store: new RedisStore({
     client: redisClient,
     prefix: 'session:',
@@ -20,4 +25,5 @@ const sessionConfig: session.SessionOptions = {
   },
 };
 
-export default (() => session(sessionConfig))();
+const sessionMiddleware: RequestHandler = session(sessionConfig);
+export default sessionMiddleware;

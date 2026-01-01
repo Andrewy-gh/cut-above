@@ -45,10 +45,11 @@ const isValidTime = (timeString: string): boolean => {
 };
 
 const parseTime = (timeString: unknown): string => {
-  if (!parseString(timeString) || !isValidTime(timeString)) {
+  const parsed = parseString(timeString);
+  if (!isValidTime(parsed)) {
     throw new Error('Incorrect or missing time');
   }
-  return timeString;
+  return parsed;
 };
 
 const isService = (service: string): service is AppointmentService => {
@@ -56,10 +57,11 @@ const isService = (service: string): service is AppointmentService => {
 };
 
 const parseService = (service: unknown): AppointmentService => {
-  if (!parseString(service) || !isService(service)) {
+  const parsed = parseString(service);
+  if (!isService(parsed)) {
     throw new Error('Incorrect or missing service');
   }
-  return service;
+  return parsed;
 };
 
 const parseUser = async (userId: unknown, role: UserRole): Promise<string> => {
