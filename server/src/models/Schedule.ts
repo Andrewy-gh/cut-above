@@ -4,8 +4,11 @@ import {
   InferAttributes,
   InferCreationAttributes,
   CreationOptional,
+  HasManyGetAssociationsMixin,
+  HasManyRemoveAssociationMixin,
 } from 'sequelize';
 import { sequelize } from '../utils/db.js';
+import type Appointment from './Appointment.js';
 
 class Schedule extends Model<
   InferAttributes<Schedule>,
@@ -15,6 +18,10 @@ class Schedule extends Model<
   declare date: Date;
   declare open: Date;
   declare close: Date;
+
+  // Association methods
+  declare getAppointments: HasManyGetAssociationsMixin<Appointment>;
+  declare removeAppointment: HasManyRemoveAssociationMixin<Appointment, string>;
 }
 
 Schedule.init(

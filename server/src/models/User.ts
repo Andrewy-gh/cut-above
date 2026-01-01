@@ -4,9 +4,11 @@ import {
   InferAttributes,
   InferCreationAttributes,
   CreationOptional,
+  HasManyGetAssociationsMixin,
 } from 'sequelize';
 import { sequelize } from '../utils/db.js';
 import { UserRole } from '../types/index.js';
+import type Appointment from './Appointment.js';
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: CreationOptional<string>;
@@ -17,6 +19,10 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare role: UserRole;
   declare image: string | null;
   declare profile: string | null;
+
+  // Association methods
+  declare getAppointments: HasManyGetAssociationsMixin<Appointment>;
+  declare getEmployeeAppointments: HasManyGetAssociationsMixin<Appointment>;
 }
 
 User.init(

@@ -5,9 +5,11 @@ import {
   InferCreationAttributes,
   CreationOptional,
   ForeignKey,
+  BelongsToGetAssociationMixin,
 } from 'sequelize';
 import { sequelize } from '../utils/db.js';
 import { AppointmentService, AppointmentStatus } from '../types/index.js';
+import type Schedule from './Schedule.js';
 
 class Appointment extends Model<
   InferAttributes<Appointment>,
@@ -22,6 +24,9 @@ class Appointment extends Model<
   declare clientId: ForeignKey<string>;
   declare employeeId: ForeignKey<string>;
   declare scheduleId: ForeignKey<string>;
+
+  // Association methods
+  declare getSchedule: BelongsToGetAssociationMixin<Schedule>;
 }
 
 Appointment.init(
