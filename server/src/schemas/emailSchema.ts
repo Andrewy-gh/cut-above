@@ -6,14 +6,7 @@ const lastName = v.optional(v.string(), '');
 
 const email = v.pipe(
   v.string(),
-  v.email(),
-  v.check(
-    (value) => {
-      const allowedTLDs = ['.com', '.net', '.org', '.edu'];
-      return allowedTLDs.some(tld => value.endsWith(tld));
-    },
-    'Email domain must end with .com, .net, .org, or .edu'
-  )
+  v.email()
 );
 
 const message = v.optional(v.string(), '');
