@@ -4,6 +4,7 @@ import type { NewAppointmentData } from './scheduleService.js';
 import ApiError from '../utils/ApiError.js';
 import { sequelize } from '../utils/db.js';
 import type { AppointmentService, AppointmentStatus } from '../types/index.js';
+import type { AppointmentAttributes } from '../types/models.js';
 import { convertDateAndTime } from '../utils/dateTime.js';
 
 export interface UpdateAppointmentData {
@@ -101,7 +102,7 @@ export const update = async (newAppt: UpdateAppointmentData): Promise<Appointmen
       const schedule = await appointment.getSchedule();
       await schedule.removeAppointment(appointment);
 
-      const updates: any = {
+      const updates: Partial<AppointmentAttributes> = {
         scheduleId: availbleScheduleId,
         service: newAppt.service,
         status: newAppt.status,
@@ -117,7 +118,7 @@ export const update = async (newAppt: UpdateAppointmentData): Promise<Appointmen
     });
     return result;
   } else {
-    const updates: any = {
+    const updates: Partial<AppointmentAttributes> = {
       service: newAppt.service,
       status: newAppt.status,
       employeeId: newAppt.employeeId,

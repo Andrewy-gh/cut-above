@@ -10,18 +10,18 @@ import logger from './logger/index.js';
 import { sequelize } from './db.js';
 import { convertDateAndTime, convertDate } from './dateTime.js';
 
-export const seedUsers = async (): Promise<any[]> => {
+export const seedUsers = async (): Promise<User[]> => {
   const newUsers = await User.bulkCreate(users, { returning: true });
   logger.info('new users created');
   logger.info(
     JSON.stringify(
-      newUsers.map((u: any) => ({ id: u.id, email: u.email, role: u.role }))
+      newUsers.map((u) => ({ id: u.id, email: u.email, role: u.role }))
     )
   );
   return newUsers;
 };
 
-export const seedSchedules = async (): Promise<any[]> => {
+export const seedSchedules = async (): Promise<Schedule[]> => {
   const schedulesWithFormattedDates = schedules.map((schedule) => ({
     ...schedule,
     date: convertDate(schedule.date).toDate(),
@@ -34,15 +34,15 @@ export const seedSchedules = async (): Promise<any[]> => {
   });
   logger.info('new schedules created');
   logger.info(
-    JSON.stringify(newSchedules.map((s: any) => ({ id: s.id, date: s.date })))
+    JSON.stringify(newSchedules.map((s) => ({ id: s.id, date: s.date })))
   );
   return newSchedules;
 };
 
 export const seedAppointments = async (
-  users: any[],
-  schedules: any[]
-): Promise<any[]> => {
+  users: User[],
+  schedules: Schedule[]
+): Promise<Appointment[]> => {
   const clients = users.filter((u) => u.role === 'client');
   const employees = users.filter((u) => u.role === 'employee');
 
@@ -56,7 +56,7 @@ export const seedAppointments = async (
       ...appointment,
       clientId: client.id,
       employeeId: employee.id,
-      scheduleId: schedule ? schedule.id : null,
+      scheduleId: schedule!.id,
       date: convertDate(appointment.date).toDate(),
       start: convertDateAndTime(appointment.date, appointment.start).toDate(),
       end: convertDateAndTime(appointment.date, appointment.end).toDate(),
@@ -69,7 +69,7 @@ export const seedAppointments = async (
   logger.info('new appointments created');
   logger.info(
     JSON.stringify(
-      newAppointments.map((a: any) => ({
+      newAppointments.map((a) => ({
         id: a.id,
         date: a.date,
         service: a.service,
@@ -80,7 +80,7 @@ export const seedAppointments = async (
   return newAppointments;
 };
 
-export const seedTokens = async (users: any[]): Promise<any[]> => {
+export const seedTokens = async (users: User[]): Promise<PasswordResetToken[]> => {
   const clients = users.filter((u) => u.role === 'client');
 
   const tokens = clients.map((client) => ({
@@ -93,7 +93,7 @@ export const seedTokens = async (users: any[]): Promise<any[]> => {
   });
   logger.info('new tokens created');
   logger.info(
-    JSON.stringify(newTokens.map((t: any) => ({ id: t.id, userId: t.userId })))
+    JSON.stringify(newTokens.map((t) => ({ id: t.id, userId: t.userId })))
   );
   return newTokens;
 };

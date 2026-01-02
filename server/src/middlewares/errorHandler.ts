@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
+import { ValidationError } from 'sequelize';
 import ApiError from '../utils/ApiError.js';
 import logger from '../utils/logger/index.js';
 
 const errorHandler = async (
-  err: any,
+  err: unknown,
   _req: Request,
   res: Response,
   _next: NextFunction
@@ -16,13 +17,16 @@ const errorHandler = async (
     return res.status(err.statusCode).json({ error: err.message });
   }
 
-  // Handles sequelize validation errors
-  if (err.errors) {
-    const errorMessage = err?.errors.map((error: any) => error.message).join(', ');
+  if (err instanceof ValidationError) {
+    const errorMessage = err.errors.map((error) => error.message).join(', ');
     return res.status(400).json({ error: errorMessage });
   }
 
-  return res.status(500).json({ error: err.message });
+  if (err instanceof Error) {
+    return res.status(500).json({ error: err.message });
+  }
+
+  return res.status(500).json({ error: 'Unknown error occurred' });
 };
 
 export default errorHandler;
