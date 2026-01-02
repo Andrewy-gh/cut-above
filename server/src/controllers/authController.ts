@@ -31,7 +31,6 @@ export const register = async (req: Request, res: Response): Promise<void> => {
  */
 export const login = async (req: Request, res: Response): Promise<void> => {
   const user = await authenticateUser(req.body);
-  req.session.user = user;
   req.session.userId = user.id;
   req.session.isAdmin = user.role === 'admin';
   res
@@ -45,7 +44,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
  * @method POST
  */
 export const logout = async (req: Request, res: Response): Promise<void> => {
-  const { user } = req.session;
+  const userId = req.session.userId;
+  let user: User | null = null;
+  if (userId) {
+    user = await User.findByPk(userId);
+  }
   req.session.destroy((err) => {
     if (err) {
       logger.error('Error performing logout:');
@@ -72,10 +75,8 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
 export const changeEmail = async (req: Request, res: Response): Promise<void> => {
   const user = await updateEmail({
     email: req.body.email,
-    id: req.session.user!.id,
+    id: req.session.userId!,
   });
-  req.session.user = user;
-  req.session.userId = user.id;
   res.status(200).json({
     success: true,
     message: 'User email successfully changed',
@@ -91,7 +92,7 @@ export const changeEmail = async (req: Request, res: Response): Promise<void> =>
 export const changePassword = async (req: Request, res: Response): Promise<void> => {
   await updatePassword({
     password: req.body.password,
-    id: req.session.user!.id,
+    id: req.session.userId!,
   });
   res
     .status(200)
