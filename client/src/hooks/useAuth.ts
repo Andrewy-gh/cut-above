@@ -7,7 +7,6 @@ import {
   useChangeUserPasswordMutation,
   useDeleteUserMutation,
   useResetUserPasswordMutation,
-// @ts-expect-error TS(2307): Cannot find module '@/features/auth/authApiSlice' ... Remove this comment to see the full error message
 } from '@/features/auth/authApiSlice';
 import {
   logoutUser,
@@ -15,11 +14,9 @@ import {
   selectCurrentUserRole,
   setCredentials,
   updateUserDetails,
-// @ts-expect-error TS(2307): Cannot find module '@/features/auth/authSlice' or ... Remove this comment to see the full error message
 } from '@/features/auth/authSlice';
 import { useNotification } from './useNotification';
 
-// @ts-expect-error TS(2307): Cannot find module '@/utils/email' or its correspo... Remove this comment to see the full error message
 import { cleanEmail } from '@/utils/email';
 
 export function useAuth() {
@@ -66,7 +63,6 @@ export function useAuth() {
       dispatch(logoutUser());
     } catch (error) {
 
-      // @ts-expect-error TS(2554): Expected 1 arguments, but got 2.
       handleError('Error logging out: ', error);
     }
   };

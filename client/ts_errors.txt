@@ -1,0 +1,8 @@
+src/components/Notification.tsx(19,53): error TS1005: '}' expected.
+src/components/Notification.tsx(19,77): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/Notification.tsx(20,53): error TS1005: '}' expected.
+src/components/Notification.tsx(20,77): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/routes/Home/ContactUs/index.tsx(67,47): error TS1005: '}' expected.
+src/routes/Home/ContactUs/index.tsx(67,57): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/routes/Home/ContactUs/index.tsx(68,47): error TS1005: '}' expected.
+src/routes/Home/ContactUs/index.tsx(68,57): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?

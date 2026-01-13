@@ -3,25 +3,18 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useAuth' or its corres... Remove this comment to see the full error message
 import { useAuth } from '@/hooks/useAuth';
 
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useNotification' or it... Remove this comment to see the full error message
 import { useNotification } from '@/hooks/useNotification';
 
-// @ts-expect-error TS(2307): Cannot find module '@/features/emailSlice' or its ... Remove this comment to see the full error message
 import { useSendPasswordResetMutation } from '@/features/emailSlice';
 
-// @ts-expect-error TS(2307): Cannot find module '@/components/Overlay' or its c... Remove this comment to see the full error message
 import Overlay from '@/components/Overlay';
 
-// @ts-expect-error TS(2307): Cannot find module '@/components/PasswordInput' or... Remove this comment to see the full error message
 import PasswordInput from '@/components/PasswordInput';
 
-// @ts-expect-error TS(2307): Cannot find module '@/utils/email' or its correspo... Remove this comment to see the full error message
 import { emailIsValid } from '@/utils/email';
 
-// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
 
 export default function Login() {
@@ -83,9 +76,7 @@ export default function Login() {
           <PasswordInput
             error={error}
             value={password}
-            onChange={({
-              target
-            }: any) => setPassword(target.value)}
+            onChange={({ target }: any) => setPassword(target.value)}
             label="Password *"
           />
           <Button

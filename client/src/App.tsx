@@ -1,28 +1,22 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-// @ts-expect-error TS(2307): Cannot find module '@/routes/Layout' or its corres... Remove this comment to see the full error message
 import Layout from '@/routes/Layout';
 
-// @ts-expect-error TS(2307): Cannot find module '@/routes/Home' or its correspo... Remove this comment to see the full error message
 import Home from '@/routes/Home';
 
-// @ts-expect-error TS(2307): Cannot find module '@/routes/BookingPage' or its c... Remove this comment to see the full error message
 import BookingPage from '@/routes/BookingPage';
 
-// @ts-expect-error TS(2307): Cannot find module '@/routes/Login' or its corresp... Remove this comment to see the full error message
 import Login from '@/routes/Login';
 
-// @ts-expect-error TS(2307): Cannot find module '@/routes/Register' or its corr... Remove this comment to see the full error message
 import Register from '@/routes/Register';
 import TokenValidation from './routes/TokenVaidation';
 import LoadingSpinner from './components/LoadingSpinner';
 
 import { disableReactDevTools } from '@fvilers/disable-react-devtools';
 
-// @ts-expect-error TS(2591): Cannot find name 'process'. Do you need to install... Remove this comment to see the full error message
-// eslint-disable-next-line no-undef
-if (process.env.NODE_ENV === 'production') disableReactDevTools();
+// @ts-ignore
+if (import.meta.env?.PROD) disableReactDevTools();
 
 // Lazy-loaded components
 const Account = lazy(() => import('./routes/Account'));
@@ -33,8 +27,8 @@ const AppointmentError = lazy(() => import('./routes/AppointmentPage/error'));
 const Appointments = lazy(() => import('./routes/Appointments'));
 const AddSchedule = lazy(() => import('./routes/AddSchedule'));
 const DashboardSchedule = lazy(() => import('./routes/DashboardSchedule'));
-const DashboardAppointment = lazy(() =>
-  import('./routes/DashboardAppointment')
+const DashboardAppointment = lazy(
+  () => import('./routes/DashboardAppointment')
 );
 const Settings = lazy(() => import('./routes/Settings'));
 const Unauthorized = lazy(() => import('./routes/RequireAuth/Unauthorized'));
@@ -103,7 +97,6 @@ const router = createBrowserRouter([
         ],
       },
       {
-
         // @ts-expect-error TS(2786): 'TokenValidation' cannot be used as a JSX componen... Remove this comment to see the full error message
         element: <TokenValidation />,
         errorElement: (
