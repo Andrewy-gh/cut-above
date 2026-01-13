@@ -9,6 +9,8 @@ export default function ErrorPage() {
       <h1>Oops!</h1>
       <p>Sorry, an unexpected error has occurred.</p>
       <p>
+        // @ts-expect-error TS(2571): Object is of type 'unknown'.
+        // @ts-expect-error TS(2571): Object is of type 'unknown'.
         <i>{error.statusText || error.message}</i>
       </p>
       <Link to="/">

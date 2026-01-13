@@ -1,15 +1,19 @@
 import dayjs from 'dayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from 'prop-types';
 
 export default function DatePicker({
   date,
   handleDateChange,
+
   // dateDisabled,
   minDate,
-  maxDate,
-}) {
+
+  maxDate
+}: any) {
   return (
     <div>
       <MobileDatePicker

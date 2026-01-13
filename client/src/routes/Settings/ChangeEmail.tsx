@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+
+// @ts-expect-error TS(2307): Cannot find module '@/hooks/useAuth' or its corres... Remove this comment to see the full error message
 import { useAuth } from '@/hooks/useAuth';
+
+// @ts-expect-error TS(2307): Cannot find module '@/utils/email' or its correspo... Remove this comment to see the full error message
 import { cleanEmail, emailIsValid } from '@/utils/email';
 
 export default function ChangeEmail() {
@@ -11,19 +15,19 @@ export default function ChangeEmail() {
   const [helperText, setHelperText] = useState('');
   const { handleUserEmailChange } = useAuth();
 
-  const handleNewEmailChange = (e) => {
+  const handleNewEmailChange = (e: any) => {
     setError(false);
     setHelperText('');
     setNewEmail(e.target.value);
   };
 
-  const handleConfirmNewEmailChange = (e) => {
+  const handleConfirmNewEmailChange = (e: any) => {
     setError(false);
     setHelperText('');
     setConfirmNewEmail(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (!emailIsValid(newEmail)) {
       setError(true);

@@ -1,44 +1,49 @@
 import { apiSlice } from '../../app/api/apiSlice';
 
 export const authApiSlice = apiSlice.injectEndpoints({
-  endpoints: (builder) => ({
+  endpoints: (builder: any) => ({
     login: builder.mutation({
-      query: (credentials) => ({
+      query: (credentials: any) => ({
         url: '/api/auth/login',
         method: 'POST',
-        body: { ...credentials },
+        body: { ...credentials }
       }),
       providesTags: ['User'],
     }),
+
     logout: builder.mutation({
       query: () => ({
         url: '/api/auth/logout',
       }),
       invalidatesTags: ['User'],
     }),
+
     registerAccount: builder.mutation({
-      query: (register) => ({
+      query: (register: any) => ({
         url: '/api/auth/signup',
         method: 'POST',
-        body: register,
+        body: register
       }),
     }),
+
     changeUserEmail: builder.mutation({
-      query: (email) => ({
+      query: (email: any) => ({
         url: '/api/auth/email',
         method: 'PUT',
-        body: email,
+        body: email
       }),
       invalidatesTags: ['User'],
     }),
+
     changeUserPassword: builder.mutation({
-      query: (password) => ({
+      query: (password: any) => ({
         url: '/api/auth/password',
         method: 'PUT',
-        body: password,
+        body: password
       }),
       invalidatesTags: ['User'],
     }),
+
     // ! TODO
     deleteUser: builder.mutation({
       query: () => ({
@@ -47,20 +52,26 @@ export const authApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['User'],
     }),
+
     validateToken: builder.query({
-      query: (req) => `/api/auth/validation/${req.id}/${req.token}`,
-      transformResponse: (responseData) => {
+      query: (req: any) => `/api/auth/validation/${req.id}/${req.token}`,
+      transformResponse: (responseData: any) => {
         return responseData;
       },
     }),
+
     resetUserPassword: builder.mutation({
-      query: ({ id, token, password }) => ({
+      query: ({
+        id,
+        token,
+        password
+      }: any) => ({
         url: `/api/auth/reset-pw/${id}/${token}`,
         method: 'PUT',
         body: { password },
       }),
       invalidatesTags: ['User'],
-    }),
+    })
   }),
 });
 

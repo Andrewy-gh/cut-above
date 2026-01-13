@@ -16,16 +16,17 @@ const scheduleAdapter = createEntityAdapter({});
 const initialState = scheduleAdapter.getInitialState();
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
-  endpoints: (builder) => ({
+  endpoints: (builder: any) => ({
     getSchedule: builder.query({
       query: () => '/api/schedules',
-      transformResponse: (responseData) => {
+      transformResponse: (responseData: any) => {
         const loadedPosts = responseData
-          .sort((a, b) => new Date(a.date) - new Date(b.date))
-          .map((s) => {
-            const appointments = s.appointments.map((appt) => ({
+          // @ts-expect-error TS(2362): The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
+          .sort((a: any, b: any) => new Date(a.date) - new Date(b.date))
+          .map((s: any) => {
+            const appointments = s.appointments.map((appt: any) => ({
               ...appt,
-              date: formatDateFull(appt.date),
+              date: formatDateFull(appt.date)
             }));
             return {
               ...s,
@@ -37,22 +38,24 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       // keepUnusedDataFor: 5,
       providesTags: ['Schedule'],
     }),
+
     addSchedule: builder.mutation({
-      query: (schedule) => ({
+      query: (schedule: any) => ({
         url: '/api/schedules',
         method: 'POST',
-        body: schedule,
+        body: schedule
       }),
       invalidatesTags: ['Appointment', 'Schedule'],
     }),
+
     updateSchedule: builder.mutation({
-      query: (schedule) => ({
+      query: (schedule: any) => ({
         url: `/api/schedules/${schedule.id}`,
         method: 'PUT',
-        body: schedule,
+        body: schedule
       }),
       invalidatesTags: ['Appointment', 'Schedule'],
-    }),
+    })
   }),
 });
 
@@ -75,6 +78,8 @@ export const { selectAll: selectAllSchedule, selectById: selectScheduleById } =
     (state) => selectScheduleData(state) ?? initialState
   );
 
+
+// @ts-expect-error TS(2742): The inferred type of 'selectScheduleByDate' cannot... Remove this comment to see the full error message
 export const selectScheduleByDate = createSelector(
   selectAllSchedule,
   selectDate,
@@ -87,14 +92,20 @@ export const selectScheduleByDate = createSelector(
     if (inputDate === formattedCurrentDate) {
       // prevents user from making appointments after closing time if searching for current day appointments
       return schedule.find(
+
+        // @ts-expect-error TS(2571): Object is of type 'unknown'.
         (s) => s.date === date && checkIsBefore(currentDate, s.close) // currentDate holds the hours and minutes, currentDate and s.close are in UTC
       );
     } else {
+
+      // @ts-expect-error TS(2571): Object is of type 'unknown'.
       return schedule.find((s) => s.date === date);
     }
   }
 );
 
+
+// @ts-expect-error TS(2742): The inferred type of 'selectScheduleByFilter' cann... Remove this comment to see the full error message
 export const selectScheduleByFilter = createSelector(
   selectScheduleByDate,
   selectService,

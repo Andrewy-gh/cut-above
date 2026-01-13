@@ -1,10 +1,16 @@
 import AppTitle from '../ApptTitle';
 import ModifyAppointment from '../ApptButton/ModifyAppointment';
 import CancelAppointment from '../ApptButton/CancelAppointment';
+
+// @ts-expect-error TS(2307): Cannot find module '@/hooks/useAuth' or its corres... Remove this comment to see the full error message
 import { useAuth } from '@/hooks/useAuth';
+
+// @ts-expect-error TS(2307): Cannot find module '@/utils/propTypes' or its corr... Remove this comment to see the full error message
 import { appointmentPropType } from '@/utils/propTypes';
 
-export default function UpcomingCard({ appointment }) {
+export default function UpcomingCard({
+  appointment
+}: any) {
   const { role } = useAuth();
   return (
     <div

@@ -12,13 +12,17 @@ export default function ServiceSelect() {
       <InputLabel>Choose a service</InputLabel>
       <Select
         label="Service"
+
+        // @ts-expect-error TS(2571): Object is of type 'unknown'.
         value={service.id}
         fullWidth
         onChange={(e) => handleServiceChange(e.target.value)}
         sx={{ color: theme.palette.secondary.main }}
       >
-        {services.map((service) => {
+        {services.map((service: any) => {
           return (
+
+            // @ts-expect-error TS(2769): No overload matches this call.
             <MenuItem
               value={service.id}
               duration={service.duration}

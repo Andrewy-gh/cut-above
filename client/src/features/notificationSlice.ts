@@ -23,11 +23,13 @@ const notificationSlice = createSlice({
   },
 });
 
+
+// @ts-expect-error TS(2339): Property 'setSeverity' does not exist on type 'Cas... Remove this comment to see the full error message
 export const { setSuccess, setError, setSeverity, clearMessage } =
   notificationSlice.actions;
 
 export default notificationSlice.reducer;
 
-export const selectOpen = (state) => state.notification.open;
-export const selectMessage = (state) => state.notification.message;
-export const selectSeverity = (state) => state.notification.severity;
+export const selectOpen = (state: any) => state.notification.open;
+export const selectMessage = (state: any) => state.notification.message;
+export const selectSeverity = (state: any) => state.notification.severity;

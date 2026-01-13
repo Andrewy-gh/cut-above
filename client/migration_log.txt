@@ -1,0 +1,44 @@
+Welcome to TS Migrate! :D
+
+This script will migrate a frontend folder to a compiling (or almost compiling) TS project.
+
+It is recommended that you take the following steps before continuing...
+
+1. Make sure you have a clean git slate.
+   Run `git status` to make sure you have no local changes that may get lost.
+   Check in or stash your changes, then re-run this script.
+
+2. Check out a new branch for the migration.
+   For example, `git checkout -b lenny--ts-migrate` if you're migrating several folders or
+   `git checkout -b lenny--ts-migrate-src` if you're just migrating src.
+
+3. Make sure you're on the latest, clean master.
+   `git fetch origin master && git reset --hard origin/master`
+
+4. Make sure you have the latest npm modules installed.
+   `npm install` or `yarn install`
+
+If you need help or have feedback, please file an issue on Github!
+
+Your default tsc path is ./node_modules/.bin/tsc.
+
+[Step 1 of 4] Initializing ts-config for the "src"...
+
+[refactor-client-ts 5240aa3] [ts-migrate][src] Init tsconfig.json file
+ 1 file changed, 1 insertion(+)
+/c/E/2026/cut-above/client
+
+[Step 2 of 4] Renaming files from JS/JSX to TS/TSX and updating project.json\...
+
+No JS/JSX files to rename.
+On branch refactor-client-ts
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   ../pnpm-lock.yaml
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	../migration_log.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")

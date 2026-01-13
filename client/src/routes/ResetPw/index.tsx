@@ -2,8 +2,14 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import FormHelperText from '@mui/material/FormHelperText';
+
+// @ts-expect-error TS(2307): Cannot find module '@/components/PasswordInput' or... Remove this comment to see the full error message
 import PasswordInput from '@/components/PasswordInput';
+
+// @ts-expect-error TS(2307): Cannot find module '@/hooks/useAuth' or its corres... Remove this comment to see the full error message
 import { useAuth } from '@/hooks/useAuth';
+
+// @ts-expect-error TS(2307): Cannot find module '@/utils/password' or its corre... Remove this comment to see the full error message
 import { passwordIsValid, passwordValidationError } from '@/utils/password';
 
 // This is the Reset Password page when accessed through email
@@ -24,17 +30,17 @@ export default function ResetPw() {
     throw new Error('no token');
   }
 
-  const handlePwdChange = (e) => {
+  const handlePwdChange = (e: any) => {
     setPwdError({ error: false, helperText: '' });
     setUser({ ...user, password: e.target.value });
   };
 
-  const handleConfirmPwdChange = (e) => {
+  const handleConfirmPwdChange = (e: any) => {
     setPwdError({ error: false, helperText: '' });
     setUser({ ...user, confirmPwd: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (!passwordIsValid(user.password)) {
       setPwdError({

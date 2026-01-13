@@ -1,10 +1,16 @@
 import ButtonDialog from '../../ButtonDialog';
 import CustomDialogContent from '../../CustomDialogContent';
+
+// @ts-expect-error TS(2307): Cannot find module '@/hooks/useAppointment' or its... Remove this comment to see the full error message
 import { useAppointment } from '@/hooks/useAppointment';
+
+// @ts-expect-error TS(2307): Cannot find module '@/hooks/useDialog' or its corr... Remove this comment to see the full error message
 import { useDialog } from '@/hooks/useDialog';
+
+// @ts-expect-error TS(2307): Cannot find module '@/utils/propTypes' or its corr... Remove this comment to see the full error message
 import { appointmentPropType } from '@/utils/propTypes';
 
-const dialog = (appointment) => {
+const dialog = (appointment: any) => {
   return {
     button: 'Modify',
     title: `Are you sure you want to modify your ${appointment.service}?`,
@@ -14,7 +20,9 @@ const dialog = (appointment) => {
   };
 };
 
-export default function ModifyAppointment({ appointment }) {
+export default function ModifyAppointment({
+  appointment
+}: any) {
   const { open, handleOpen, handleClose } = useDialog();
   const { handleBeginRescheduling } = useAppointment();
 

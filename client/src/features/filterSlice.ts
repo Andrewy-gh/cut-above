@@ -48,15 +48,17 @@ const filterSlice = createSlice({
   },
 });
 
-export const selectDate = (state) => state.filter.date;
-export const selectDateDisabled = (state) => state.filter.dateDisabled;
-export const selectEmployee = (state) => state.filter.employee;
-export const selectService = (state) => state.filter.service;
-export const seklectHoldStatus = (state) => state.filter.holdStatus;
-export const selectSavedSelections = (state) => state.filter.savedSelections;
+export const selectDate = (state: any) => state.filter.date;
+export const selectDateDisabled = (state: any) => state.filter.dateDisabled;
+export const selectEmployee = (state: any) => state.filter.employee;
+export const selectService = (state: any) => state.filter.service;
+export const seklectHoldStatus = (state: any) => state.filter.holdStatus;
+export const selectSavedSelections = (state: any) => state.filter.savedSelections;
 export const {
   setDate,
   setEmployee,
+
+  // @ts-expect-error TS(2339): Property 'chooseEmployeePref' does not exist on ty... Remove this comment to see the full error message
   chooseEmployeePref,
   setDateDisabled,
   setService,

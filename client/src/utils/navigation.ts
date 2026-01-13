@@ -1,4 +1,4 @@
-export const renderLink = (link, user, role) => {
+export const renderLink = (link: any, user: any, role: any) => {
   if ((link.path === '/signup' && user) || (link.path === '/login' && user)) {
     return false;
   } else if (link.path === '/account') {

@@ -1,9 +1,21 @@
 import { useParams } from 'react-router-dom';
+
+// @ts-expect-error TS(2307): Cannot find module '@/features/appointments/apptAp... Remove this comment to see the full error message
 import { useGetSingleAppointmentQuery } from '@/features/appointments/apptApiSlice';
+
+// @ts-expect-error TS(2307): Cannot find module '@/components/ApptCard/ApptButt... Remove this comment to see the full error message
 import CancelAppointment from '@/components/ApptCard/ApptButton/CancelAppointment';
+
+// @ts-expect-error TS(2307): Cannot find module '@/components/ApptCard/ApptButt... Remove this comment to see the full error message
 import ModifyAppointment from '@/components/ApptCard/ApptButton/ModifyAppointment';
+
+// @ts-expect-error TS(2307): Cannot find module '@/components/ApptCard/ApptTitl... Remove this comment to see the full error message
 import ApptTitle from '@/components/ApptCard/ApptTitle';
+
+// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
+
+// @ts-expect-error TS(2307): Cannot find module '@/components/LoadingSpinner' o... Remove this comment to see the full error message
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 // This is the single Appontment page shown when accessing through email

@@ -3,8 +3,14 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+
+// @ts-expect-error TS(2307): Cannot find module '@/features/employeeSlice' or i... Remove this comment to see the full error message
 import { selectAllEmployees } from '@/features/employeeSlice';
+
+// @ts-expect-error TS(2307): Cannot find module '@/hooks/useFilter' or its corr... Remove this comment to see the full error message
 import { useFilter } from '@/hooks/useFilter';
+
+// @ts-expect-error TS(2307): Cannot find module '@/styles/styles' or its corres... Remove this comment to see the full error message
 import { theme } from '@/styles/styles';
 
 export default function EmployeeSelect() {
@@ -21,7 +27,9 @@ export default function EmployeeSelect() {
         sx={{ color: theme.palette.secondary.main }}
       >
         <MenuItem value="any">No preference</MenuItem>
-        {employees.map((employee) => {
+        // @ts-expect-error TS(2571): Object is of type 'unknown'.
+        // @ts-expect-error TS(2571): Object is of type 'unknown'.
+        {employees.map((employee: any) => {
           return (
             <MenuItem value={employee.id} key={employee.id}>
               {employee.firstName}

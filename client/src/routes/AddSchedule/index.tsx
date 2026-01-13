@@ -1,10 +1,18 @@
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+
+// @ts-expect-error TS(2307): Cannot find module '@/components/DatePickers/DateR... Remove this comment to see the full error message
 import DateRangePicker from '@/components/DatePickers/DateRangePicker.jsx';
 import dayjs from 'dayjs';
+
+// @ts-expect-error TS(2307): Cannot find module '@/features/scheduleSlice' or i... Remove this comment to see the full error message
 import { useAddScheduleMutation } from '@/features/scheduleSlice';
+
+// @ts-expect-error TS(2307): Cannot find module '@/hooks/useNotification' or it... Remove this comment to see the full error message
 import { useNotification } from '@/hooks/useNotification';
+
+// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
 
 export default function AddSchedule() {
@@ -22,11 +30,11 @@ export default function AddSchedule() {
   ]);
   const { handleSuccess, handleError } = useNotification();
   const [addSchedule] = useAddScheduleMutation();
-  const handleDateChange = (newDates) => {
+  const handleDateChange = (newDates: any) => {
     setDates(newDates);
   };
 
-  const handleAddSchedule = async (dates) => {
+  const handleAddSchedule = async (dates: any) => {
     try {
       const newSchedule = await addSchedule({
         dates,
@@ -52,11 +60,15 @@ export default function AddSchedule() {
         <TimePicker
           label="open"
           value={open}
+
+          // @ts-expect-error TS(2345): Argument of type 'Dayjs | null' is not assignable ... Remove this comment to see the full error message
           onChange={(newOpen) => setOpen(newOpen)}
         />
         <TimePicker
           label="close"
           value={close}
+
+          // @ts-expect-error TS(2345): Argument of type 'Dayjs | null' is not assignable ... Remove this comment to see the full error message
           onChange={(newClose) => setClose(newClose)}
         />
         <Button variant="contained" onClick={() => handleAddSchedule(dates)}>

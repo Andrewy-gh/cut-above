@@ -6,6 +6,8 @@ export default function Error() {
     <main className="container-lg">
       <h5>Oops looks like an error happened...</h5>
       <p>
+        // @ts-expect-error TS(2571): Object is of type 'unknown'.
+        // @ts-expect-error TS(2571): Object is of type 'unknown'.
         <i>{error.statusText || error.message}</i>
       </p>
       <p>

@@ -39,6 +39,8 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }).concat(apiSlice.middleware),
+
+  // @ts-expect-error TS(2591): Cannot find name 'process'. Do you need to install... Remove this comment to see the full error message
   // eslint-disable-next-line no-undef
   devTools: process.env.NODE_ENV !== 'production',
 });

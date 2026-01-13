@@ -19,6 +19,5 @@ export const { beginRescheduling, endRescheduling } = appointmentSlice.actions;
 
 export default appointmentSlice.reducer;
 
-export const selectRescheduling = (state) => state.appointment.rescheduling;
-export const selectModifyingApptId = (state) =>
-  state.appointment.modifyingApptId;
+export const selectRescheduling = (state: any) => state.appointment.rescheduling;
+export const selectModifyingApptId = (state: any) => state.appointment.modifyingApptId;

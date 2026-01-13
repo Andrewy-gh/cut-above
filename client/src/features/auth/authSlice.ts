@@ -26,5 +26,5 @@ export const { setCredentials, logoutUser, updateUserDetails } =
 
 export default authSlice.reducer;
 
-export const selectCurrentUser = (state) => state.auth.user;
-export const selectCurrentUserRole = (state) => state.auth.role;
+export const selectCurrentUser = (state: any) => state.auth.user;
+export const selectCurrentUserRole = (state: any) => state.auth.role;

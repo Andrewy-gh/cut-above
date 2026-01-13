@@ -1,12 +1,25 @@
 import { useMediaQuery } from '@mui/material/';
 import Button from '@mui/material/Button';
+
+// @ts-expect-error TS(2307): Cannot find module '@/utils/date' or its correspon... Remove this comment to see the full error message
 import { formatTime } from '@/utils/date';
+
+// @ts-expect-error TS(2307): Cannot find module '@/styles/styles' or its corres... Remove this comment to see the full error message
 import { theme } from '@/styles/styles';
+
+// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
+
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from 'prop-types';
+
+// @ts-expect-error TS(2307): Cannot find module '@/utils/propTypes' or its corr... Remove this comment to see the full error message
 import { selectionPropType, userPropType } from '@/utils/propTypes';
 
-const AvailableTime = ({ children, handleOpen }) => {
+const AvailableTime = ({
+  children,
+  handleOpen
+}: any) => {
   return (
     <Button variant="contained" onClick={handleOpen}>
       {children}
@@ -14,8 +27,12 @@ const AvailableTime = ({ children, handleOpen }) => {
   );
 };
 
-export default function AvailableTimes({ timeSlots, openDialog, employee }) {
-  const handleOpen = (data) => openDialog(data);
+export default function AvailableTimes({
+  timeSlots,
+  openDialog,
+  employee
+}: any) {
+  const handleOpen = (data: any) => openDialog(data);
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const containerClass = isMobile
     ? styles.container_mobile
@@ -34,7 +51,7 @@ export default function AvailableTimes({ timeSlots, openDialog, employee }) {
     title = <h5 className="text-center">{timesAvailable}</h5>;
     availableTimes = (
       <div className={containerClass}>
-        {timeSlots.map((slot) => {
+        {timeSlots.map((slot: any) => {
           const startTime = formatTime(slot.start); // dayjs obj => 10:45am
           const slotsAvailable =
             employee === 'any' ? `${slot.available.length} left` : '';

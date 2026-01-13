@@ -7,6 +7,7 @@ import {
   useChangeUserPasswordMutation,
   useDeleteUserMutation,
   useResetUserPasswordMutation,
+// @ts-expect-error TS(2307): Cannot find module '@/features/auth/authApiSlice' ... Remove this comment to see the full error message
 } from '@/features/auth/authApiSlice';
 import {
   logoutUser,
@@ -14,8 +15,11 @@ import {
   selectCurrentUserRole,
   setCredentials,
   updateUserDetails,
+// @ts-expect-error TS(2307): Cannot find module '@/features/auth/authSlice' or ... Remove this comment to see the full error message
 } from '@/features/auth/authSlice';
 import { useNotification } from './useNotification';
+
+// @ts-expect-error TS(2307): Cannot find module '@/utils/email' or its correspo... Remove this comment to see the full error message
 import { cleanEmail } from '@/utils/email';
 
 export function useAuth() {
@@ -34,7 +38,7 @@ export function useAuth() {
 
   const { handleSuccess, handleError } = useNotification();
 
-  const handleLogin = async (email, password) => {
+  const handleLogin = async (email: any, password: any) => {
     try {
       const loggedInUser = await login({
         email: cleanEmail(email),
@@ -61,11 +65,13 @@ export function useAuth() {
       await logout();
       dispatch(logoutUser());
     } catch (error) {
+
+      // @ts-expect-error TS(2554): Expected 1 arguments, but got 2.
       handleError('Error logging out: ', error);
     }
   };
 
-  const handleUserEmailChange = async (newEmailObj) => {
+  const handleUserEmailChange = async (newEmailObj: any) => {
     try {
       const updatedUser = await changeUserEmail(newEmailObj).unwrap();
       if (updatedUser.success) {
@@ -83,7 +89,7 @@ export function useAuth() {
     }
   };
 
-  const handleUserPasswordChange = async (newPasswordObj) => {
+  const handleUserPasswordChange = async (newPasswordObj: any) => {
     try {
       const updatedUser = await changeUserPassword(newPasswordObj).unwrap();
       if (updatedUser.success) {
@@ -107,7 +113,7 @@ export function useAuth() {
     }
   };
 
-  const handleUserPasswordReset = async (newCredentials) => {
+  const handleUserPasswordReset = async (newCredentials: any) => {
     try {
       const updatedUser = await resetUserPassword(newCredentials).unwrap();
       if (updatedUser.success) {

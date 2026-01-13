@@ -1,11 +1,17 @@
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { formatDateFull, formatDateToTime } from '../../utils/date';
+
+// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
 import { theme } from '../../styles/styles';
+
+// @ts-expect-error TS(2307): Cannot find module '@/utils/propTypes' or its corr... Remove this comment to see the full error message
 import { schedulePropType } from '@/utils/propTypes';
 
-export default function ScheduleCard({ schedule }) {
+export default function ScheduleCard({
+  schedule
+}: any) {
   return (
     <div
       className={styles.card}

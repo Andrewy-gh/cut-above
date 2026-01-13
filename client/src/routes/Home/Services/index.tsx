@@ -5,12 +5,23 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
+
+// @ts-expect-error TS(2307): Cannot find module '@/data/data' or its correspond... Remove this comment to see the full error message
 import { services } from '@/data/data';
+
+// @ts-expect-error TS(2307): Cannot find module '@/hooks/useFilter' or its corr... Remove this comment to see the full error message
 import { useFilter } from '@/hooks/useFilter';
+
+// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
+
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from 'prop-types';
 
-const ServiceCard = ({ service, handleClick }) => {
+const ServiceCard = ({
+  service,
+  handleClick
+}: any) => {
   return (
     <Grid container sx={{ marginInline: 'auto', mt: 4, mb: 4 }}>
       <Card
@@ -60,13 +71,11 @@ export default function Services() {
   return (
     <div className={styles.container}>
       <h3 className={styles.header}>Our Services</h3>
-      {services.map((service) => (
-        <ServiceCard
-          key={service.id}
-          service={service}
-          handleClick={handleServiceChange}
-        />
-      ))}
+      {services.map((service: any) => <ServiceCard
+        key={service.id}
+        service={service}
+        handleClick={handleServiceChange}
+      />)}
     </div>
   );
 }

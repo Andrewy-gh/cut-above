@@ -1,0 +1,1162 @@
+TypeScript version: 5.9.3
+Initialized tsserver project in 354ms.
+Start...
+[strip-ts-ignore] Plugin 1 of 14. Start...
+[strip-ts-ignore] Finished in 182ms.
+[hoist-class-statics] Plugin 2 of 14. Start...
+[hoist-class-statics] Finished in 5ms.
+[react-props] Plugin 3 of 14. Start...
+[react-props] Finished in 78ms.
+[react-class-state] Plugin 4 of 14. Start...
+[react-class-state] Finished in 4ms.
+[react-class-lifecycle-methods] Plugin 5 of 14. Start...
+[react-class-lifecycle-methods] Finished in 4ms.
+[react-default-props] Plugin 6 of 14. Start...
+[react-default-props] Finished in 3ms.
+[react-shape] Plugin 7 of 14. Start...
+[react-shape] Finished in 2ms.
+[declare-missing-class-properties] Plugin 8 of 14. Start...
+[declare-missing-class-properties] Finished in 17.6s.
+[member-accessibility] Plugin 9 of 14. Start...
+[member-accessibility] Finished in 4ms.
+[explicit-any] Plugin 10 of 14. Start...
+[explicit-any] Finished in 1m 6.4s.
+[add-conversions] Plugin 11 of 14. Start...
+Error: [add-conversions][app\store.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][main.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\CustomDialog.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\CustomDialogContent.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\Notification.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\ButtonDialog.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\Employee.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\PasswordInput.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][app\api\apiSlice.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\ApptCard\ApptButton\CancelAppointment.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\ApptCard\ApptButton\ModifyAppointment.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\ApptCard\PastCard\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\ApptCard\ApptTitle\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\DatePickers\DatePicker.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\ApptCard\UpcomingCard\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\DatePickers\DateRangePicker.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\Footer\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\LoadingSpinner\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\Navbar\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\Navbar\NavDesktop\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\Navbar\DrawerMenu\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\Navbar\NavMobile\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][components\Overlay\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][data\data.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][features\employeeSlice.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][features\emailSlice.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][features\filterSlice.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][features\notificationSlice.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][features\appointments\apptApiSlice.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][features\scheduleSlice.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][features\userSlice.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][features\appointments\appointmentSlice.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][features\auth\authApiSlice.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][features\auth\authSlice.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][hooks\useAppointment.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][hooks\useAuth.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][App.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][hooks\useBooking.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][hooks\useDialog.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][hooks\useEmployeesQuery.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][hooks\useFilter.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][hooks\useScheduleQuery.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][hooks\useNotification.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][hooks\useUsersQuery.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Cancellation.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\ErrorPage.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\TokenVaidation.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Account\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Account\LogoutButton.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\AppointmentPage\error.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\AddSchedule\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Appointments\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\AppointmentPage\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\BookingPage\EmployeeRadio.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\BookingPage\error.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\BookingPage\AvailableTimes\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\BookingPage\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\BookingPage\BookingDialog\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\BookingPage\BookingForm\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\BookingPage\EmployeeEdit\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\BookingPage\EmployeeAccordion\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\BookingPage\BookingDialogContent\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\BookingPage\EmployeeSelect\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\DashboardAppointment\UpdateApptStatus.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\BookingPage\ServiceSelect\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\DashboardAppointment\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\DashboardAppointment\StatusTab\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\DashboardAppointment\StatusColumn\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\DashboardSchedule\ScheduleCard.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\DashboardSchedule\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Home\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Home\Hero\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Home\ContactUs\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Home\TeamMembers\MemberCard.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Home\Services\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Home\TeamMembers\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Layout\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Login\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\RequireAuth\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\ResetPw\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Register\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\RequireAuth\Unauthorized.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Settings\ChangeEmail.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Settings\ChangePassword.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Settings\DeleteAccount.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\Settings\index.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][styles\styles.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][utils\apptStatus.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][utils\email.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][utils\navigation.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][utils\date.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][utils\password.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][utils\propTypes.ts] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+Error: [add-conversions][routes\ResetPw\error.tsx] Error:
+ Error: Debug Failure.
+    at visitEachChildOfShorthandPropertyAssignment (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:96329:13)
+    at Object.visitEachChild (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:95332:33)
+    at visit (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:66:41)
+    at C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:57:9
+    at transformation (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120301:14)
+    at transformNodes (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:120309:70)
+    at Object.transform (C:\E\2026\cut-above\client\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:154159:18)
+    at Object.run (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-plugins@0.1.35_@_bd456995792622fdc1324b9768300bff\node_modules\ts-migrate-plugins\build\src\plugins\add-conversions.js:26:30)
+    at migrate (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate-server@0.1.33_typescript@5.9.3\node_modules\ts-migrate-server\build\src\migrate\index.js:63:46)
+    at async Object.handler (C:\E\2026\cut-above\client\node_modules\.pnpm\ts-migrate@0.1.35_@babel+pr_7a01b5cd5e6712bd3905c09e6dbe8d71\node_modules\ts-migrate\build\cli.js:138:26)
+[add-conversions] Finished in 5.6s.
+[eslint-fix] Plugin 12 of 14. Start...
+[eslint-fix] Finished in 1.1s.
+[ts-ignore] Plugin 13 of 14. Start...
+[ts-ignore] Finished in 1m 8.7s.
+[eslint-fix] Plugin 14 of 14. Start...
+[eslint-fix] Finished in 334ms.
+Finished in 2m 40.2s, for 14 plugin(s).
+Writing 91 updated file(s)...
+Wrote 91 updated file(s) in 30ms.

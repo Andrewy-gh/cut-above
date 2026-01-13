@@ -5,10 +5,17 @@ import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Grid from '@mui/material/Grid';
+
+// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
+
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from 'prop-types';
 
-export default function MemberCard({ employee, handleClick }) {
+export default function MemberCard({
+  employee,
+  handleClick
+}: any) {
   return (
     <Grid item xs={12} sm={6} md={4} sx={{ marginInline: 'auto' }}>
       <Card

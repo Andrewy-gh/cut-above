@@ -10,19 +10,19 @@ export default function ChangePassword() {
   const [helperText, setHelperText] = useState('');
   const { handleUserPasswordChange } = useAuth();
 
-  const handleNewPasswordChange = (e) => {
+  const handleNewPasswordChange = (e: any) => {
     setError(false);
     setHelperText('');
     setNewPassword(e.target.value);
   };
 
-  const handleConfirmNewPasswordChange = (e) => {
+  const handleConfirmNewPasswordChange = (e: any) => {
     setError(false);
     setHelperText('');
     setConfirmNewPassword(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (newPassword !== confirmNewPassword) {
       setError(true);

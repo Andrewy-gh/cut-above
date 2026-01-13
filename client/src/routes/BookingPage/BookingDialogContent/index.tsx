@@ -7,15 +7,32 @@ import IconButton from '@mui/material/IconButton';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ContentCutIcon from '@mui/icons-material/ContentCut';
 import CloseIcon from '@mui/icons-material/Close';
+
+// @ts-expect-error TS(2307): Cannot find module '@/hooks/useAuth' or its corres... Remove this comment to see the full error message
 import { useAuth } from '@/hooks/useAuth';
+
+// @ts-expect-error TS(2307): Cannot find module '@/hooks/useFilter' or its corr... Remove this comment to see the full error message
 import { useFilter } from '@/hooks/useFilter';
+
+// @ts-expect-error TS(2307): Cannot find module '@/utils/date' or its correspon... Remove this comment to see the full error message
 import { formatDateFull, formatTime } from '@/utils/date';
+
+// @ts-expect-error TS(2307): Cannot find module '@/styles/styles' or its corres... Remove this comment to see the full error message
 import { theme } from '@/styles/styles';
+
+// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
+
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from 'prop-types';
+
+// @ts-expect-error TS(2307): Cannot find module '@/utils/propTypes' or its corr... Remove this comment to see the full error message
 import { selectionPropType } from '@/utils/propTypes';
 
-const BookingDialogTitle = ({ children, onClose }) => {
+const BookingDialogTitle = ({
+  children,
+  onClose
+}: any) => {
   return (
     <div className={styles.flex_sb}>
       <DialogTitle>{children}</DialogTitle>
@@ -39,8 +56,8 @@ export default function BookingDialogContent({
   children,
   handleAgree,
   handleClose,
-  selection,
-}) {
+  selection
+}: any) {
   const { user } = useAuth();
   const { date, service } = useFilter();
 

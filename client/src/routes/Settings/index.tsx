@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import ChangeEmail from './ChangeEmail';
 import ChangePassword from './ChangePassword';
 // import DeleteAccount from './DeleteAccount';
+
+// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
 
 export default function Settings() {

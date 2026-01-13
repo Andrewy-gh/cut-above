@@ -7,24 +7,25 @@ const appointmentAdapter = createEntityAdapter({});
 const initialState = appointmentAdapter.getInitialState();
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
-  endpoints: (builder) => ({
+  endpoints: (builder: any) => ({
     getAppointment: builder.query({
       query: () => '/api/appointments',
-      transformResponse: (responseData) => {
+      transformResponse: (responseData: any) => {
         const loadedPosts = responseData
-          .sort((a, b) => a.start.localeCompare(b.start))
-          .map((appt) => ({
-            ...appt,
-            date: formatDateFull(appt.date),
-            start: formatDateToTime(appt.start),
-          }));
+          .sort((a: any, b: any) => a.start.localeCompare(b.start))
+          .map((appt: any) => ({
+          ...appt,
+          date: formatDateFull(appt.date),
+          start: formatDateToTime(appt.start)
+        }));
         return appointmentAdapter.setAll(initialState, loadedPosts);
       },
       providesTags: ['Appointment'],
     }),
+
     getSingleAppointment: builder.query({
-      query: (id) => `/api/appointments/${id}`,
-      transformResponse: (responseData) => {
+      query: (id: any) => `/api/appointments/${id}`,
+      transformResponse: (responseData: any) => {
         return {
           ...responseData,
           date: formatDateFull(responseData.date),
@@ -33,39 +34,49 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       },
       providesTags: ['Appointment'],
     }),
+
     addAppointment: builder.mutation({
-      query: (appointment) => ({
+      query: (appointment: any) => ({
         url: '/api/appointments',
         method: 'POST',
-        body: appointment,
+        body: appointment
       }),
       invalidatesTags: ['Appointment', 'Schedule'],
     }),
+
     modifyAppointment: builder.mutation({
       // destructure to separate id from body
-      query: ({ id, ...appointment }) => ({
+      query: ({
+        id,
+        ...appointment
+      }: any) => ({
         url: `/api/appointments/${id}`,
         method: 'PUT',
         body: appointment,
       }),
       invalidatesTags: ['Appointment', 'Schedule'],
     }),
+
     updateAppointmentStatus: builder.mutation({
       // destructure to separate id from body
-      query: ({ id, ...appointment }) => ({
+      query: ({
+        id,
+        ...appointment
+      }: any) => ({
         url: `/api/appointments/status/${id}`,
         method: 'PUT',
         body: appointment,
       }),
       invalidatesTags: ['Appointment', 'Schedule'],
     }),
+
     cancelAppointment: builder.mutation({
-      query: (appointment) => ({
+      query: (appointment: any) => ({
         url: `/api/appointments/${appointment.id}`,
-        method: 'DELETE',
+        method: 'DELETE'
       }),
       invalidatesTags: ['Appointment', 'Schedule'],
-    }),
+    })
   }),
 });
 

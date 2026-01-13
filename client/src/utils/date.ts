@@ -13,11 +13,11 @@ export const initialCurrentDate = dayjs().format('YYYY-MM-DD');
 
 export const oneMonthFromCurrent = dayjs().add(1, 'month');
 
-export const checkIsBefore = (startDate, endDate) => {
+export const checkIsBefore = (startDate: any, endDate: any) => {
   return dayjs(startDate).isBefore(dayjs(endDate));
 };
 
-export const convertUtcToEst = (utcString) => {
+export const convertUtcToEst = (utcString: any) => {
   const utcDate = dayjs.utc(utcString);
   const estDate = utcDate.tz('America/New_York');
   const estString = estDate.format();
@@ -25,24 +25,24 @@ export const convertUtcToEst = (utcString) => {
 };
 
 // server format
-export const formatDate = (date) => dayjs(date).format('YYYY-MM-DD');
+export const formatDate = (date: any) => dayjs(date).format('YYYY-MM-DD');
 
 // client side format
-export const formatDateSlash = (date) => dayjs(date).format('MM/DD/YYYY');
+export const formatDateSlash = (date: any) => dayjs(date).format('MM/DD/YYYY');
 
 // client side format ex: Monday August 21, 2023
-export const formatDateFull = (date) => dayjs(date).format('dddd LL');
+export const formatDateFull = (date: any) => dayjs(date).format('dddd LL');
 
 // ex: 10:00am 6:00pm used in component render
-export const formatDateToTime = (date) => dayjs(date).format('h:mma');
+export const formatDateToTime = (date: any) => dayjs(date).format('h:mma');
 
-export const formatTime = (time) => dayjs(time, 'HH:mm').format('h:mma');
+export const formatTime = (time: any) => dayjs(time, 'HH:mm').format('h:mma');
 
 export const findAvailableTimeSlots = (
-  schedule,
-  duration,
-  employees,
-  employee
+  schedule: any,
+  duration: any,
+  employees: any,
+  employee: any
 ) => {
   const { date, open, close, appointments } = schedule;
   const searchIncrement = 15;
@@ -62,14 +62,13 @@ export const findAvailableTimeSlots = (
     }
 
     const selectedEmployees = employee !== 'any' ? [employee.id] : employees;
-    const availableEmployees = selectedEmployees.filter((employeeId) => {
+    const availableEmployees = selectedEmployees.filter((employeeId: any) => {
       const employeeAppointments = appointments.filter(
-        (appointment) => appointment.employeeId === employeeId
+        (appointment: any) => appointment.employeeId === employeeId
       );
       const employeeBooked = employeeAppointments.some(
-        (appointment) =>
-          dayjs(appointment.start).isBefore(currentSlotEnd) &&
-          dayjs(appointment.end).isAfter(slotStart)
+        (appointment: any) => dayjs(appointment.start).isBefore(currentSlotEnd) &&
+        dayjs(appointment.end).isAfter(slotStart)
       );
       return !employeeBooked;
     });
@@ -98,12 +97,12 @@ export const roundedCurrentDate = () => {
 };
 
 // splits schedules or appointments by upcoming and past
-export const splitByUpcomingAndPast = (dateObj) => {
-  const upcoming = [];
-  const past = [];
+export const splitByUpcomingAndPast = (dateObj: any) => {
+  const upcoming: any = [];
+  const past: any = [];
   const presentDate = new Date();
   if (dateObj.length > 0) {
-    dateObj.forEach((dateItem) => {
+    dateObj.forEach((dateItem: any) => {
       const currItemDate = new Date(dateItem.date);
       if (currItemDate < presentDate) {
         past.push(dateItem);
@@ -115,11 +114,12 @@ export const splitByUpcomingAndPast = (dateObj) => {
   return [upcoming, past];
 };
 
-export const sortAndFormatApptByStartTime = (apptObj) => {
+export const sortAndFormatApptByStartTime = (apptObj: any) => {
   if (apptObj) {
     return apptObj
-      .toSorted((a, b) => new Date(a.start) - new Date(b.start))
-      .map((appt) => {
+      // @ts-expect-error TS(2362): The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
+      .toSorted((a: any, b: any) => new Date(a.start) - new Date(b.start))
+      .map((appt: any) => {
         return {
           ...appt,
           start: formatDateToTime(appt.start),

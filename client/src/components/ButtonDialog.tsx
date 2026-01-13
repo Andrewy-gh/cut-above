@@ -1,13 +1,17 @@
 import Button from '@mui/material/Button';
 import CustomDialog from './CustomDialog';
+
+// @ts-expect-error TS(2307): Cannot find module '@/styles/styles' or its corres... Remove this comment to see the full error message
 import { theme } from '@/styles/styles';
+
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from 'prop-types';
 
 const buttonStyle = {
   color: theme.palette.secondary.dark,
 };
 
-export default function ButtonDialog(props) {
+export default function ButtonDialog(props: any) {
   const {
     children,
     buttonText,
