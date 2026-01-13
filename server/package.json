@@ -5,9 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "NODE_ENV=development tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node build/index.js",
+    "start": "NODE_ENV=production node build/index.js",
     "typecheck": "tsc --noEmit",
     "build:ui": "rm -rf dist && cd ../client && pnpm run build && mv dist ../server",
     "db:seed:dev": "NODE_ENV=development tsx ./src/utils/seeder.ts",
