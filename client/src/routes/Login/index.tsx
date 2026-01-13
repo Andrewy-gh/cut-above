@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ChangeEvent, FormEvent } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -17,9 +17,14 @@ import { emailIsValid } from '@/utils/email';
 
 import styles from './styles.module.css';
 
+interface LocationState {
+  from?: string;
+}
+
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
+  const state = location.state as LocationState;
   const [view, setView] = useState('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,7 +35,7 @@ export default function Login() {
   const { handleSuccess, handleError } = useNotification();
   const [sendPasswordReset] = useSendPasswordResetMutation();
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
       await handleLogin(email, password);
@@ -38,7 +43,7 @@ export default function Login() {
       handleError(err);
     }
   };
-  const handleReset = async (e: any) => {
+  const handleReset = async (e: FormEvent) => {
     e.preventDefault();
     try {
       if (!emailIsValid(email)) {
@@ -56,10 +61,10 @@ export default function Login() {
 
   useEffect(() => {
     if (user) {
-      const { from } = location.state || {};
+      const from = state?.from;
       navigate(from || '/account');
     }
-  });
+  }, [user, navigate, state]);
 
   if (view === 'login') {
     content = (
@@ -71,12 +76,16 @@ export default function Login() {
             required
             fullWidth
             value={email}
-            onChange={({ target }) => setEmail(target.value)}
+            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+              setEmail(target.value)
+            }
           ></TextField>
           <PasswordInput
             error={error}
             value={password}
-            onChange={({ target }: any) => setPassword(target.value)}
+            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+              setPassword(target.value)
+            }
             label="Password *"
           />
           <Button
@@ -103,8 +112,13 @@ export default function Login() {
             required
             fullWidth
             value={email}
+            error={error}
             helperText={helperText}
-            onChange={({ target }) => setEmail(target.value)}
+            onChange={({ target }: ChangeEvent<HTMLInputElement>) => {
+              setEmail(target.value);
+              setError(false);
+              setHelperText('');
+            }}
           ></TextField>
           <Button
             type="submit"

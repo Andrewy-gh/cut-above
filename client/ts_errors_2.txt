@@ -173,13 +173,6 @@ src/routes/Home/TeamMembers/index.tsx(9,1): error TS2578: Unused '@ts-expect-err
 src/routes/Home/TeamMembers/index.tsx(13,1): error TS2578: Unused '@ts-expect-error' directive.
 src/routes/Home/TeamMembers/MemberCard.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.
 src/routes/Home/TeamMembers/MemberCard.tsx(12,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/Register/index.tsx(7,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/Register/index.tsx(10,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/Register/index.tsx(13,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/Register/index.tsx(16,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/Register/index.tsx(19,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/Register/index.tsx(22,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/Register/index.tsx(25,1): error TS2578: Unused '@ts-expect-error' directive.
 src/routes/RequireAuth/index.tsx(4,1): error TS2578: Unused '@ts-expect-error' directive.
 src/routes/RequireAuth/index.tsx(8,1): error TS2578: Unused '@ts-expect-error' directive.
 src/routes/RequireAuth/Unauthorized.tsx(11,19): error TS2339: Property 'statusText' does not exist on type 'unknown'.

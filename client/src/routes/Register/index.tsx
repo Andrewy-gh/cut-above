@@ -1,35 +1,36 @@
-import { useState } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import FormHelperText from '@mui/material/FormHelperText';
 
-// @ts-expect-error TS(2307): Cannot find module '@/features/auth/authApiSlice' ... Remove this comment to see the full error message
-import { useRegisterAccountMutation } from '@/features/auth/authApiSlice';
+import {
+  useRegisterAccountMutation,
+  RegisterData,
+} from '@/features/auth/authApiSlice';
 
-// @ts-expect-error TS(2307): Cannot find module '@/components/PasswordInput' or... Remove this comment to see the full error message
 import PasswordInput from '@/components/PasswordInput';
 
-// @ts-expect-error TS(2307): Cannot find module '@/components/Overlay' or its c... Remove this comment to see the full error message
 import Overlay from '@/components/Overlay';
 
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useNotification' or it... Remove this comment to see the full error message
 import { useNotification } from '@/hooks/useNotification';
 
-// @ts-expect-error TS(2307): Cannot find module '@/utils/email' or its correspo... Remove this comment to see the full error message
 import { cleanEmail, emailIsValid } from '@/utils/email';
 
-// @ts-expect-error TS(2307): Cannot find module '@/utils/password' or its corre... Remove this comment to see the full error message
 import { passwordIsValid, passwordValidationError } from '@/utils/password';
 
-// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
+
+interface UserState extends RegisterData {
+  confirmPwd: string;
+}
 
 export default function Register() {
   const navigate = useNavigate();
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<UserState>({
     firstName: '',
     lastName: '',
+    email: '',
     password: '',
     confirmPwd: '',
   });
@@ -43,33 +44,30 @@ export default function Register() {
 
   const { handleSuccess, handleError } = useNotification();
 
-  const handleEmailChange = (e: any) => {
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmailError({ error: false, helperText: '' });
-
-    // @ts-expect-error TS(2345): Argument of type '{ email: any; firstName: string;... Remove this comment to see the full error message
     setUser({ ...user, email: e.target.value });
   };
 
-  const handlePwdChange = (e: any) => {
+  const handlePwdChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPwdError({ error: false, helperText: '' });
     setUser({ ...user, password: e.target.value });
   };
 
-  const handleConfirmPwdChange = (e: any) => {
+  const handleConfirmPwdChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPwdError({ error: false, helperText: '' });
     setUser({ ...user, confirmPwd: e.target.value });
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent) => {
     try {
       e.preventDefault();
 
-      // @ts-expect-error TS(2339): Property 'email' does not exist on type '{ firstNa... Remove this comment to see the full error message
       if (!emailIsValid(user.email)) {
         setEmailError({ error: true, helperText: 'Invalid email' });
         return;
       }
-      if (!passwordIsValid(user.password)) {
+      if (!passwordIsValid(user.password || '')) {
         setPwdError({
           error: true,
           helperText: passwordValidationError,
@@ -84,8 +82,6 @@ export default function Register() {
         firstName: user.firstName,
         lastName: user.lastName,
         password: user.password,
-
-        // @ts-expect-error TS(2339): Property 'email' does not exist on type '{ firstNa... Remove this comment to see the full error message
         email: cleanEmail(user.email),
       }).unwrap();
       if (newUser.success) {
@@ -128,14 +124,12 @@ export default function Register() {
             label="Email"
             required
             fullWidth
-
-            // @ts-expect-error TS(2339): Property 'email' does not exist on type '{ firstNa... Remove this comment to see the full error message
             value={user.email}
             onChange={handleEmailChange}
           ></TextField>
           <PasswordInput
             error={pwdError.error}
-            value={user.password}
+            value={user.password || ''}
             onChange={handlePwdChange}
             label="Password *"
           />
