@@ -100,14 +100,16 @@ export const update = async (newAppt: UpdateAppointmentData): Promise<Appointmen
     const availbleScheduleId = await checkScheduleAvailability(checkData);
     const result = await sequelize.transaction(async (_t) => {
       const schedule = await appointment.getSchedule();
-      await schedule.removeAppointment(appointment);
+      if (schedule) {
+        await schedule.removeAppointment(appointment);
+      }
 
       const updates: Partial<AppointmentAttributes> = {
         scheduleId: availbleScheduleId,
-        service: newAppt.service,
-        status: newAppt.status,
-        employeeId: newAppt.employeeId,
       };
+      if (newAppt.service) updates.service = newAppt.service;
+      if (newAppt.status) updates.status = newAppt.status;
+      if (newAppt.employeeId) updates.employeeId = newAppt.employeeId;
       if (newAppt.date) updates.date = convertDateAndTime(newAppt.date, '00:00').toDate();
       if (newAppt.start) updates.start = convertDateAndTime(newAppt.date!, newAppt.start).toDate();
       if (newAppt.end) updates.end = convertDateAndTime(newAppt.date!, newAppt.end).toDate();
@@ -118,11 +120,10 @@ export const update = async (newAppt: UpdateAppointmentData): Promise<Appointmen
     });
     return result;
   } else {
-    const updates: Partial<AppointmentAttributes> = {
-      service: newAppt.service,
-      status: newAppt.status,
-      employeeId: newAppt.employeeId,
-    };
+    const updates: Partial<AppointmentAttributes> = {};
+    if (newAppt.service) updates.service = newAppt.service;
+    if (newAppt.status) updates.status = newAppt.status;
+    if (newAppt.employeeId) updates.employeeId = newAppt.employeeId;
     if (newAppt.start) updates.start = convertDateAndTime(newAppt.date || appointment.date.toISOString().split('T')[0], newAppt.start).toDate();
     if (newAppt.end) updates.end = convertDateAndTime(newAppt.date || appointment.date.toISOString().split('T')[0], newAppt.end).toDate();
 
