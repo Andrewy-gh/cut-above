@@ -16,7 +16,7 @@ We have stabilized the infrastructure and resolved the most critical "Cannot fin
 - [x] **Resolve Configuration Conflicts:** Removed redundant `src/tsconfig.json` that was causing module resolution failures.
 - [x] **CSS Module Support:** Created `src/vite-env.d.ts` with global declarations for CSS modules.
 
-### Phase 2: Core Library & Hook Standardization (IN PROGRESS 🏗️)
+### Phase 2: Core Library & Hook Standardization (COMPLETED ✅)
 
 - [x] **`main.tsx` & `App.tsx` Cleanup:**
   - Fixed root element selection with non-null assertion.
@@ -25,19 +25,20 @@ We have stabilized the infrastructure and resolved the most critical "Cannot fin
   - Updated `useNotification` signature to support multi-argument `handleError` calls.
   - Fixed related usage in `useAuth`.
 - [x] **Core Layout fix:** Standardized imports and resolved CSS module type errors in `Layout/index.tsx`.
-- [ ] **Next Step:** Properly type API response structures in `authApiSlice` and `notificationSlice` to replace remaining `any` types.
+- [x] **Standardized `apiSlice`:** Standardized `apiSlice` with proper `tagTypes` and `import.meta.env`.
+- [x] **Type API responses:** Properly typed all core slices (`authApiSlice`, `notificationSlice`, `apptApiSlice`, `userSlice`, `employeeSlice`, `scheduleSlice`) to replace `any` types.
 
-### Phase 3: Incremental Component Cleanup (NOT STARTED 📅)
+### Phase 3: Incremental Component Cleanup (IN PROGRESS 🏗️)
 
-1.  **Shared Components:** Audit `client/src/components/` (e.g., `Navbar`, `Footer`, `Overlay`) and remove suppressions.
+1.  **Shared Components (Next Target):** Audit `client/src/components/` (e.g., `Navbar`, `Footer`, `Overlay`) and remove suppressions.
 2.  **Route-by-Route Migration:** Tackle features iteratively:
-    - **Priority 1:** `Login`, `Register` (Authentication flow).
-    - **Priority 2:** `BookingPage` (Complex state/prop types).
+    - **Priority 1 (High):** `Login`, `Register` (Clean up `any` props and MUI component type mismatches).
+    - **Priority 2:** `BookingPage` (Complex state/prop types involving the now-typed `Schedule` and `Appointment` models).
     - **Priority 3:** `Dashboard` and `Schedule` views.
 3.  **Type Refinement:**
-    - Replace `any` with specific interfaces.
-    - Type React event handlers and hooks.
-    - Eliminate `PropTypes` usage in favor of TypeScript interfaces.
+    - Replace remaining `any` in component props with specific interfaces.
+    - Standardize React event handlers and hooks.
+    - Systematically eliminate `PropTypes` usage (referencing `utils/propTypes.ts`) in favor of TypeScript interfaces.
 
 ## Verification Workflow
 
@@ -48,6 +49,8 @@ Every update should:
 
 ## Handover Notes for Next Agent
 
-- The primary infrastructure blocks are gone. `tsc` now successfully scans the project but reports many component-level type errors.
-- Start with `client/src/routes/Login/index.tsx` – it has several `any` props and MUI component type mismatches that need refining.
-- Use `import.meta.env` for any environment-specific logic.
+- **Progress Update:** All core Redux slices (`auth`, `appointments`, `employees`, `schedules`, `users`) and the global `apiSlice` are now fully typed. This has fixed dozens of module resolution and type mismatch errors across the project.
+- **Immediate Next Step:** Start with `client/src/routes/Login/index.tsx` and `client/src/routes/Register/index.tsx`. They currently use several `any` props and have MUI type mismatches that benefit directly from the new `AuthResponse` and `RegisterData` types.
+- **Cleanup Task:** Many `@ts-expect-error` directives in routes are now "unused" because the underlying types are fixed. Use `npm run typecheck` to identify and remove these redundant suppressions.
+- **Architecture Note:** Use `import.meta.env` for environment logic (already standardized in `apiSlice.ts` and `store.ts`).
+- **Circular Dependencies:** If adding types to selectors causes circular dependency errors, use `(state: any)` in the selector definition as a temporary bridge while maintaining the internal return type safety.

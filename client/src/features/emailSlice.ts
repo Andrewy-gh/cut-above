@@ -1,17 +1,22 @@
 import { apiSlice } from '../app/api/apiSlice';
 
+export interface EmailResponse {
+  success: boolean;
+  message: string;
+}
+
 export const emailSlice = apiSlice.injectEndpoints({
-  endpoints: (builder: any) => ({
-    sendPasswordReset: builder.mutation({
-      query: (email: any) => ({
+  endpoints: (builder) => ({
+    sendPasswordReset: builder.mutation<EmailResponse, { email: string }>({
+      query: (email) => ({
         url: '/api/email/reset-pw',
         method: 'POST',
         body: email
       }),
     }),
 
-    sendMessageResponse: builder.mutation({
-      query: (email: any) => ({
+    sendMessageResponse: builder.mutation<EmailResponse, { contactDetails: any }>({
+      query: (email) => ({
         url: '/api/email/new-message',
         method: 'POST',
         body: email

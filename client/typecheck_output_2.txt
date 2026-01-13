@@ -1,0 +1,8 @@
+
+> cut-above@0.0.0 typecheck
+> tsc --noEmit
+
+src/routes/Home/ContactUs/index.tsx(67,47): error TS1005: '}' expected.
+src/routes/Home/ContactUs/index.tsx(67,57): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/routes/Home/ContactUs/index.tsx(68,47): error TS1005: '}' expected.
+src/routes/Home/ContactUs/index.tsx(68,57): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?

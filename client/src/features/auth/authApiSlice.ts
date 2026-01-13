@@ -1,33 +1,60 @@
 import { apiSlice } from '../../app/api/apiSlice';
 
+export interface AuthResponse {
+  success: boolean;
+  message: string;
+  user: {
+    email: string;
+    role: string;
+  };
+}
+
+export interface LoginCredentials {
+  email: string;
+  password?: string;
+}
+
+export interface RegisterData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password?: string;
+}
+
+export interface ResetPasswordParams {
+  id: string;
+  token: string;
+  password?: string;
+}
+
 export const authApiSlice = apiSlice.injectEndpoints({
-  endpoints: (builder: any) => ({
-    login: builder.mutation({
-      query: (credentials: any) => ({
+  endpoints: (builder) => ({
+    login: builder.mutation<AuthResponse, LoginCredentials>({
+      query: (credentials) => ({
         url: '/api/auth/login',
         method: 'POST',
         body: { ...credentials }
       }),
-      providesTags: ['User'],
+      invalidatesTags: ['User'],
     }),
 
-    logout: builder.mutation({
+    logout: builder.mutation<void, void>({
       query: () => ({
         url: '/api/auth/logout',
       }),
       invalidatesTags: ['User'],
     }),
 
-    registerAccount: builder.mutation({
-      query: (register: any) => ({
+    registerAccount: builder.mutation<AuthResponse, RegisterData>({
+      query: (register) => ({
         url: '/api/auth/signup',
         method: 'POST',
         body: register
       }),
     }),
 
-    changeUserEmail: builder.mutation({
-      query: (email: any) => ({
+    changeUserEmail: builder.mutation<AuthResponse, { email: string }>({
+      query: (email) => ({
         url: '/api/auth/email',
         method: 'PUT',
         body: email
@@ -35,8 +62,8 @@ export const authApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['User'],
     }),
 
-    changeUserPassword: builder.mutation({
-      query: (password: any) => ({
+    changeUserPassword: builder.mutation<AuthResponse, { password?: string }>({
+      query: (password) => ({
         url: '/api/auth/password',
         method: 'PUT',
         body: password
@@ -45,7 +72,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
     }),
 
     // ! TODO
-    deleteUser: builder.mutation({
+    deleteUser: builder.mutation<{ success: boolean; message: string }, void>({
       query: () => ({
         url: '/api/user',
         method: 'DELETE',
@@ -53,19 +80,19 @@ export const authApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['User'],
     }),
 
-    validateToken: builder.query({
-      query: (req: any) => `/api/auth/validation/${req.id}/${req.token}`,
+    validateToken: builder.query<any, { id: string; token: string }>({
+      query: (req) => `/api/auth/validation/${req.id}/${req.token}`,
       transformResponse: (responseData: any) => {
         return responseData;
       },
     }),
 
-    resetUserPassword: builder.mutation({
+    resetUserPassword: builder.mutation<AuthResponse, ResetPasswordParams>({
       query: ({
         id,
         token,
         password
-      }: any) => ({
+      }) => ({
         url: `/api/auth/reset-pw/${id}/${token}`,
         method: 'PUT',
         body: { password },

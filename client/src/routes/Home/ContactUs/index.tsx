@@ -2,16 +2,12 @@ import { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-// @ts-expect-error TS(2307): Cannot find module '@/features/emailSlice' or its ... Remove this comment to see the full error message
 import { useSendMessageResponseMutation } from '@/features/emailSlice';
 
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useNotification' or it... Remove this comment to see the full error message
 import { useNotification } from '@/hooks/useNotification';
 
-// @ts-expect-error TS(2307): Cannot find module '@/utils/email' or its correspo... Remove this comment to see the full error message
 import { emailIsValid } from '@/utils/email';
 
-// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
 
 export default function ContactUs() {
@@ -63,10 +59,7 @@ export default function ContactUs() {
 
   return (
     <div className={styles.flex_container}>
-      // @ts-expect-error TS(2304): Cannot find name 'mb'.
-      // @ts-expect-error TS(2322): Type '{ mb: number; }' is not assignable to type '... Remove this comment to see the full error message
-      // @ts-expect-error TS(2322): Type '{ mb: number; }' is not assignable to type '... Remove this comment to see the full error message
-      <h3 style={{ mb: 2 }}>Contact us</h3>
+      <h3 style={{ marginBottom: '1rem' }}>Contact us</h3>
       <form onSubmit={handleSubmit}>
         <div className={styles.spacing}>
           <TextField

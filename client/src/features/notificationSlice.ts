@@ -1,9 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+interface NotificationState {
+  open: boolean;
+  message: string;
+  severity: 'success' | 'error' | 'warning' | 'info' | '';
+}
+
+const initialState: NotificationState = {
+  open: false,
+  message: "",
+  severity: "",
+};
+
 const notificationSlice = createSlice({
   name: "notification",
-  //   open, setOpen, message, setMessage, severity, setSeverity
-  initialState: { open: false, message: "", severity: "" },
+  initialState,
   reducers: {
     setSuccess: (state, action) => {
       state.open = true;
@@ -23,13 +34,11 @@ const notificationSlice = createSlice({
   },
 });
 
-
-// @ts-expect-error TS(2339): Property 'setSeverity' does not exist on type 'Cas... Remove this comment to see the full error message
-export const { setSuccess, setError, setSeverity, clearMessage } =
+export const { setSuccess, setError, clearMessage } =
   notificationSlice.actions;
 
 export default notificationSlice.reducer;
 
-export const selectOpen = (state: any) => state.notification.open;
-export const selectMessage = (state: any) => state.notification.message;
-export const selectSeverity = (state: any) => state.notification.severity;
+export const selectOpen = (state: { notification: NotificationState }) => state.notification.open;
+export const selectMessage = (state: { notification: NotificationState }) => state.notification.message;
+export const selectSeverity = (state: { notification: NotificationState }) => state.notification.severity;

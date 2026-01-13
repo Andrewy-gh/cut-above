@@ -1,24 +1,36 @@
-import { createSelector, createEntityAdapter } from '@reduxjs/toolkit';
+import { createSelector, createEntityAdapter, EntityState } from '@reduxjs/toolkit';
 import { apiSlice } from '../app/api/apiSlice';
 
-const employeeAdapter = createEntityAdapter({});
+export interface Employee {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  role: string;
+  bio?: string;
+}
+
+const employeeAdapter = createEntityAdapter<Employee>({
+  selectId: (employee) => employee._id,
+});
 
 const initialState = employeeAdapter.getInitialState();
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
-  endpoints: (builder: any) => ({
-    getEmployees: builder.query({
+  endpoints: (builder) => ({
+    getEmployees: builder.query<EntityState<Employee>, void>({
       query: () => '/api/employees',
-      transformResponse: (responseData: any) => {
+      transformResponse: (responseData: Employee[]) => {
         return employeeAdapter.setAll(initialState, responseData);
       },
       keepUnusedDataFor: 5,
       providesTags: ['Employee'],
     }),
 
-    getEmployeesProfiles: builder.query({
+    getEmployeesProfiles: builder.query<Employee[], void>({
       query: () => '/api/employees/profiles',
-      transformResponse: (responseData: any) => responseData,
+      transformResponse: (responseData: Employee[]) => responseData,
     })
   }),
 });
@@ -39,5 +51,5 @@ export const {
   selectById: selectEmployeeById,
   selectIds: selectEmployeeIds,
 } = employeeAdapter.getSelectors(
-  (state) => selectEmployeesData(state) ?? initialState
+  (state: any) => selectEmployeesData(state) ?? initialState
 );

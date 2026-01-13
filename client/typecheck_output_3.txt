@@ -1,0 +1,229 @@
+
+> cut-above@0.0.0 typecheck
+> tsc --noEmit
+
+src/App.tsx(100,9): error TS2578: Unused '@ts-expect-error' directive.
+src/components/ApptCard/ApptButton/CancelAppointment.tsx(2,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/ApptCard/ApptButton/CancelAppointment.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/ApptCard/ApptButton/CancelAppointment.tsx(8,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/ApptCard/ApptButton/CancelAppointment.tsx(11,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/ApptCard/ApptButton/CancelAppointment.tsx(14,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/ApptCard/ApptButton/ModifyAppointment.tsx(4,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/ApptCard/ApptButton/ModifyAppointment.tsx(7,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/ApptCard/ApptButton/ModifyAppointment.tsx(10,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/ApptCard/ApptTitle/index.tsx(2,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/ApptCard/ApptTitle/index.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/ApptCard/PastCard/index.tsx(2,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/ApptCard/PastCard/index.tsx(6,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/ApptCard/UpcomingCard/index.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/ApptCard/UpcomingCard/index.tsx(8,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/ButtonDialog.tsx(4,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/ButtonDialog.tsx(7,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/CustomDialog.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/CustomDialogContent.tsx(7,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/DatePickers/DatePicker.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/DatePickers/DateRangePicker.tsx(4,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Employee.tsx(2,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Employee.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Employee.tsx(13,25): error TS2339: Property 'firstName' does not exist on type 'unknown'.
+src/components/Footer/index.tsx(2,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Footer/index.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Footer/index.tsx(8,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/LoadingSpinner/index.tsx(2,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Navbar/DrawerMenu/index.tsx(8,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Navbar/DrawerMenu/index.tsx(11,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Navbar/DrawerMenu/index.tsx(14,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Navbar/DrawerMenu/index.tsx(17,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Navbar/DrawerMenu/index.tsx(20,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Navbar/DrawerMenu/index.tsx(23,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Navbar/index.tsx(7,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Navbar/NavDesktop/index.tsx(6,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Navbar/NavDesktop/index.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Navbar/NavDesktop/index.tsx(12,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Navbar/NavMobile/index.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Overlay/index.tsx(2,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/Overlay/index.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/components/PasswordInput.tsx(11,1): error TS2578: Unused '@ts-expect-error' directive.
+src/data/data.ts(2,1): error TS2578: Unused '@ts-expect-error' directive.
+src/data/data.ts(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/data/data.ts(8,1): error TS2578: Unused '@ts-expect-error' directive.
+src/features/appointments/apptApiSlice.ts(93,45): error TS2554: Expected 1 arguments, but got 0.
+src/features/appointments/apptApiSlice.ts(104,14): error TS2739: Type '{}' is missing the following properties from type 'EntityState<unknown>': ids, entities
+src/features/auth/authApiSlice.ts(38,7): error TS2322: Type 'string[]' is not assignable to type 'never'.
+src/features/employeeSlice.ts(30,43): error TS2554: Expected 1 arguments, but got 0.
+src/features/employeeSlice.ts(42,14): error TS2739: Type '{}' is missing the following properties from type 'EntityState<unknown>': ids, entities
+src/features/scheduleSlice.ts(69,42): error TS2554: Expected 1 arguments, but got 0.
+src/features/scheduleSlice.ts(78,16): error TS2739: Type '{}' is missing the following properties from type 'EntityState<unknown>': ids, entities
+src/features/scheduleSlice.ts(82,1): error TS2578: Unused '@ts-expect-error' directive.
+src/features/scheduleSlice.ts(108,1): error TS2578: Unused '@ts-expect-error' directive.
+src/features/userSlice.ts(42,57): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'RootState<{ getUsers: QueryDefinition<void, BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>, "Appointment" | "Employee" | "Schedule" | "User", EntityState<...> & object, "api">; }, "Appointment" | ... 2 more ... | "User", "api">'.
+  Property 'api' is missing in type '{}' but required in type 'RootState<{ getUsers: QueryDefinition<void, BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>, "Appointment" | "Employee" | "Schedule" | "User", EntityState<...> & object, "api">; }, "Appointment" | ... 2 more ... | "User", "api">'.
+src/hooks/useAppointment.ts(6,1): error TS2578: Unused '@ts-expect-error' directive.
+src/hooks/useAppointment.ts(12,1): error TS2578: Unused '@ts-expect-error' directive.
+src/hooks/useAppointment.ts(15,1): error TS2578: Unused '@ts-expect-error' directive.
+src/hooks/useAppointment.ts(33,25): error TS2339: Property 'success' does not exist on type 'unknown'.
+src/hooks/useAppointment.ts(34,37): error TS2339: Property 'message' does not exist on type 'unknown'.
+src/hooks/useAppointment.ts(56,24): error TS2339: Property 'success' does not exist on type 'unknown'.
+src/hooks/useAppointment.ts(56,60): error TS2339: Property 'message' does not exist on type 'unknown'.
+src/hooks/useBooking.ts(4,1): error TS2578: Unused '@ts-expect-error' directive.
+src/hooks/useBooking.ts(38,26): error TS2339: Property 'success' does not exist on type 'unknown'.
+src/hooks/useBooking.ts(39,38): error TS2339: Property 'message' does not exist on type 'unknown'.
+src/hooks/useBooking.ts(50,21): error TS2339: Property 'success' does not exist on type 'unknown'.
+src/hooks/useBooking.ts(51,33): error TS2339: Property 'message' does not exist on type 'unknown'.
+src/hooks/useEmployeesQuery.ts(6,1): error TS2578: Unused '@ts-expect-error' directive.
+src/hooks/useEmployeesQuery.ts(10,3): error TS2554: Expected 1-2 arguments, but got 0.
+src/hooks/useFilter.ts(11,1): error TS2578: Unused '@ts-expect-error' directive.
+src/hooks/useFilter.ts(15,1): error TS2578: Unused '@ts-expect-error' directive.
+src/hooks/useFilter.ts(34,5): error TS2578: Unused '@ts-expect-error' directive.
+src/hooks/useScheduleQuery.ts(6,1): error TS2578: Unused '@ts-expect-error' directive.
+src/hooks/useScheduleQuery.ts(9,1): error TS2578: Unused '@ts-expect-error' directive.
+src/hooks/useScheduleQuery.ts(13,20): error TS2554: Expected 1-2 arguments, but got 0.
+src/hooks/useScheduleQuery.ts(18,45): error TS2339: Property 'appointments' does not exist on type 'unknown'.
+src/hooks/useUsersQuery.ts(6,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Account/index.tsx(4,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Account/index.tsx(7,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Account/LogoutButton.tsx(3,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/AddSchedule/index.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/AddSchedule/index.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/AddSchedule/index.tsx(12,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/AddSchedule/index.tsx(15,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/AddSchedule/index.tsx(44,23): error TS2339: Property 'success' does not exist on type 'unknown'.
+src/routes/AddSchedule/index.tsx(44,58): error TS2339: Property 'message' does not exist on type 'unknown'.
+src/routes/AddSchedule/index.tsx(64,11): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/AddSchedule/index.tsx(71,11): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/AppointmentPage/error.tsx(11,19): error TS2339: Property 'statusText' does not exist on type 'unknown'.
+src/routes/AppointmentPage/error.tsx(11,39): error TS2339: Property 'message' does not exist on type 'unknown'.
+src/routes/AppointmentPage/index.tsx(3,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/AppointmentPage/index.tsx(6,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/AppointmentPage/index.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/AppointmentPage/index.tsx(12,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/AppointmentPage/index.tsx(15,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/AppointmentPage/index.tsx(18,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/AppointmentPage/index.tsx(42,35): error TS2339: Property 'employee' does not exist on type 'unknown'.
+src/routes/Appointments/index.tsx(6,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Appointments/index.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Appointments/index.tsx(12,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Appointments/index.tsx(15,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Appointments/index.tsx(18,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Appointments/index.tsx(23,3): error TS2554: Expected 1-2 arguments, but got 0.
+src/routes/Appointments/index.tsx(41,3): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/AvailableTimes/index.tsx(4,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/AvailableTimes/index.tsx(7,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/AvailableTimes/index.tsx(10,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/AvailableTimes/index.tsx(13,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/AvailableTimes/index.tsx(16,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/BookingDialog/index.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/BookingDialog/index.tsx(11,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/BookingDialog/index.tsx(14,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/BookingDialogContent/index.tsx(11,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/BookingDialogContent/index.tsx(14,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/BookingDialogContent/index.tsx(17,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/BookingDialogContent/index.tsx(20,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/BookingDialogContent/index.tsx(23,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/BookingDialogContent/index.tsx(26,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/BookingDialogContent/index.tsx(29,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/BookingForm/index.tsx(3,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/BookingForm/index.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/BookingForm/index.tsx(12,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/BookingForm/index.tsx(15,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/BookingForm/index.tsx(19,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/BookingForm/index.tsx(22,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/EmployeeAccordion/index.tsx(6,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/EmployeeAccordion/index.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/EmployeeEdit/index.tsx(4,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/EmployeeEdit/index.tsx(7,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/EmployeeEdit/index.tsx(10,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/EmployeeRadio.tsx(8,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/EmployeeRadio.tsx(11,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/EmployeeRadio.tsx(22,23): error TS2339: Property 'id' does not exist on type 'unknown'.
+src/routes/BookingPage/EmployeeRadio.tsx(24,23): error TS2339: Property 'firstName' does not exist on type 'unknown'.
+src/routes/BookingPage/EmployeeSelect/index.tsx(7,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/EmployeeSelect/index.tsx(10,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/EmployeeSelect/index.tsx(13,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/error.tsx(3,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/index.tsx(4,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/index.tsx(7,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/index.tsx(10,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/index.tsx(13,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/index.tsx(16,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/index.tsx(19,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/index.tsx(22,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/index.tsx(25,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/index.tsx(28,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/index.tsx(31,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/index.tsx(37,3): error TS2554: Expected 1 arguments, but got 0.
+src/routes/BookingPage/index.tsx(38,3): error TS2554: Expected 1 arguments, but got 0.
+src/routes/BookingPage/index.tsx(52,7): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/BookingPage/index.tsx(74,24): error TS2339: Property 'start' does not exist on type '{}'.
+src/routes/BookingPage/index.tsx(75,22): error TS2339: Property 'end' does not exist on type '{}'.
+src/routes/BookingPage/ServiceSelect/index.tsx(16,9): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Cancellation.tsx(2,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/index.tsx(4,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/index.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/index.tsx(12,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/index.tsx(15,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/StatusColumn/index.tsx(3,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/StatusColumn/index.tsx(6,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/StatusColumn/index.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/StatusColumn/index.tsx(12,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/StatusColumn/index.tsx(15,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/StatusColumn/index.tsx(18,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/StatusColumn/index.tsx(21,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/StatusColumn/index.tsx(34,3): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/StatusTab/index.tsx(3,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/StatusTab/index.tsx(6,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/UpdateApptStatus.tsx(2,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/UpdateApptStatus.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/UpdateApptStatus.tsx(8,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/UpdateApptStatus.tsx(11,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/UpdateApptStatus.tsx(14,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardAppointment/UpdateApptStatus.tsx(17,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardSchedule/index.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardSchedule/ScheduleCard.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/DashboardSchedule/ScheduleCard.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/ErrorPage.tsx(14,19): error TS2339: Property 'statusText' does not exist on type 'unknown'.
+src/routes/ErrorPage.tsx(14,39): error TS2339: Property 'message' does not exist on type 'unknown'.
+src/routes/Home/ContactUs/index.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Home/ContactUs/index.tsx(8,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Home/ContactUs/index.tsx(11,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Home/ContactUs/index.tsx(14,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Home/Hero/index.tsx(4,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Home/Hero/index.tsx(7,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Home/Services/index.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Home/Services/index.tsx(12,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Home/Services/index.tsx(15,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Home/Services/index.tsx(18,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Home/TeamMembers/index.tsx(3,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Home/TeamMembers/index.tsx(6,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Home/TeamMembers/index.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Home/TeamMembers/index.tsx(13,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Home/TeamMembers/index.tsx(24,7): error TS2554: Expected 1-2 arguments, but got 0.
+src/routes/Home/TeamMembers/index.tsx(38,20): error TS2339: Property 'map' does not exist on type 'unknown'.
+src/routes/Home/TeamMembers/MemberCard.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Home/TeamMembers/MemberCard.tsx(12,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Register/index.tsx(7,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Register/index.tsx(10,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Register/index.tsx(13,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Register/index.tsx(16,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Register/index.tsx(19,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Register/index.tsx(22,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Register/index.tsx(25,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/RequireAuth/index.tsx(4,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/RequireAuth/index.tsx(8,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/RequireAuth/Unauthorized.tsx(11,19): error TS2339: Property 'statusText' does not exist on type 'unknown'.
+src/routes/RequireAuth/Unauthorized.tsx(11,39): error TS2339: Property 'message' does not exist on type 'unknown'.
+src/routes/ResetPw/error.tsx(11,19): error TS2339: Property 'statusText' does not exist on type 'unknown'.
+src/routes/ResetPw/error.tsx(11,39): error TS2339: Property 'message' does not exist on type 'unknown'.
+src/routes/ResetPw/index.tsx(6,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/ResetPw/index.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/ResetPw/index.tsx(12,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Settings/ChangeEmail.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Settings/ChangeEmail.tsx(8,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Settings/DeleteAccount.tsx(2,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Settings/DeleteAccount.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Settings/DeleteAccount.tsx(8,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Settings/DeleteAccount.tsx(11,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/Settings/index.tsx(6,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/TokenVaidation.tsx(4,1): error TS2578: Unused '@ts-expect-error' directive.
+src/routes/TokenVaidation.tsx(7,1): error TS2578: Unused '@ts-expect-error' directive.
+src/utils/propTypes.ts(2,1): error TS2578: Unused '@ts-expect-error' directive.

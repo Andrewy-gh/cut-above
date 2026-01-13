@@ -1,4 +1,4 @@
-import { createSelector, createEntityAdapter } from '@reduxjs/toolkit';
+import { createSelector, createEntityAdapter, EntityState } from '@reduxjs/toolkit';
 import { apiSlice } from '../app/api/apiSlice';
 import { selectEmployeeIds } from './employeeSlice';
 import { selectDate, selectEmployee, selectService } from './filterSlice';
@@ -11,19 +11,28 @@ import {
   formatDateFull,
 } from '../utils/date';
 
-const scheduleAdapter = createEntityAdapter({});
+export interface Schedule {
+  _id: string;
+  date: string;
+  open: string;
+  close: string;
+  appointments: any[]; // Use any[] for now as it's complex, or type it if possible
+}
+
+const scheduleAdapter = createEntityAdapter<Schedule>({
+  selectId: (schedule) => schedule._id,
+});
 
 const initialState = scheduleAdapter.getInitialState();
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
-  endpoints: (builder: any) => ({
-    getSchedule: builder.query({
+  endpoints: (builder) => ({
+    getSchedule: builder.query<EntityState<Schedule>, void>({
       query: () => '/api/schedules',
-      transformResponse: (responseData: any) => {
+      transformResponse: (responseData: Schedule[]) => {
         const loadedPosts = responseData
-          // @ts-expect-error TS(2362): The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
-          .sort((a: any, b: any) => new Date(a.date) - new Date(b.date))
-          .map((s: any) => {
+          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+          .map((s) => {
             const appointments = s.appointments.map((appt: any) => ({
               ...appt,
               date: formatDateFull(appt.date)
@@ -35,12 +44,11 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
           });
         return scheduleAdapter.setAll(initialState, loadedPosts);
       },
-      // keepUnusedDataFor: 5,
       providesTags: ['Schedule'],
     }),
 
-    addSchedule: builder.mutation({
-      query: (schedule: any) => ({
+    addSchedule: builder.mutation<Schedule, Partial<Schedule>>({
+      query: (schedule) => ({
         url: '/api/schedules',
         method: 'POST',
         body: schedule
@@ -48,8 +56,8 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['Appointment', 'Schedule'],
     }),
 
-    updateSchedule: builder.mutation({
-      query: (schedule: any) => ({
+    updateSchedule: builder.mutation<Schedule, Partial<Schedule> & { id: string }>({
+      query: (schedule) => ({
         url: `/api/schedules/${schedule.id}`,
         method: 'PUT',
         body: schedule
@@ -75,11 +83,10 @@ const selectScheduleData = createSelector(
 
 export const { selectAll: selectAllSchedule, selectById: selectScheduleById } =
   scheduleAdapter.getSelectors(
-    (state) => selectScheduleData(state) ?? initialState
+    (state: any) => selectScheduleData(state) ?? initialState
   );
 
 
-// @ts-expect-error TS(2742): The inferred type of 'selectScheduleByDate' cannot... Remove this comment to see the full error message
 export const selectScheduleByDate = createSelector(
   selectAllSchedule,
   selectDate,
@@ -93,19 +100,16 @@ export const selectScheduleByDate = createSelector(
       // prevents user from making appointments after closing time if searching for current day appointments
       return schedule.find(
 
-        // @ts-expect-error TS(2571): Object is of type 'unknown'.
         (s) => s.date === date && checkIsBefore(currentDate, s.close) // currentDate holds the hours and minutes, currentDate and s.close are in UTC
       );
     } else {
 
-      // @ts-expect-error TS(2571): Object is of type 'unknown'.
       return schedule.find((s) => s.date === date);
     }
   }
 );
 
 
-// @ts-expect-error TS(2742): The inferred type of 'selectScheduleByFilter' cann... Remove this comment to see the full error message
 export const selectScheduleByFilter = createSelector(
   selectScheduleByDate,
   selectService,

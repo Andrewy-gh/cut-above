@@ -1,81 +1,101 @@
-import { createSelector, createEntityAdapter } from '@reduxjs/toolkit';
+import { createSelector, createEntityAdapter, EntityState } from '@reduxjs/toolkit';
 import { apiSlice } from '../../app/api/apiSlice';
 import { formatDateFull, formatDateToTime } from '../../utils/date';
 
-const appointmentAdapter = createEntityAdapter({});
+export interface Appointment {
+  _id: string;
+  date: string;
+  start: string;
+  end: string;
+  service: string;
+  employee: string;
+  status: string;
+  customerName?: string;
+  customerEmail?: string;
+}
+
+const appointmentAdapter = createEntityAdapter<Appointment>({
+  selectId: (appt) => appt._id,
+});
 
 const initialState = appointmentAdapter.getInitialState();
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
-  endpoints: (builder: any) => ({
-    getAppointment: builder.query({
+  endpoints: (builder) => ({
+    getAppointment: builder.query<EntityState<Appointment>, void>({
       query: () => '/api/appointments',
-      transformResponse: (responseData: any) => {
+      transformResponse: (responseData: Appointment[]) => {
         const loadedPosts = responseData
-          .sort((a: any, b: any) => a.start.localeCompare(b.start))
-          .map((appt: any) => ({
-          ...appt,
-          date: formatDateFull(appt.date),
-          start: formatDateToTime(appt.start)
-        }));
+          .sort((a, b) => a.start.localeCompare(b.start))
+          .map((appt) => ({
+            ...appt,
+            date: formatDateFull(appt.date),
+            start: formatDateToTime(appt.start)
+          }));
         return appointmentAdapter.setAll(initialState, loadedPosts);
       },
-      providesTags: ['Appointment'],
+      providesTags: (result) =>
+        result
+          ? [
+            ...result.ids.map((id) => ({ type: 'Appointment' as const, id })),
+            { type: 'Appointment', id: 'LIST' },
+          ]
+          : [{ type: 'Appointment', id: 'LIST' }],
     }),
 
-    getSingleAppointment: builder.query({
-      query: (id: any) => `/api/appointments/${id}`,
-      transformResponse: (responseData: any) => {
+    getSingleAppointment: builder.query<Appointment, string>({
+      query: (id) => `/api/appointments/${id}`,
+      transformResponse: (responseData: Appointment) => {
         return {
           ...responseData,
           date: formatDateFull(responseData.date),
           start: formatDateToTime(responseData.start),
         };
       },
-      providesTags: ['Appointment'],
+      providesTags: (result, error, id) => [{ type: 'Appointment', id }],
     }),
 
-    addAppointment: builder.mutation({
-      query: (appointment: any) => ({
+    addAppointment: builder.mutation<Appointment, Partial<Appointment>>({
+      query: (appointment) => ({
         url: '/api/appointments',
         method: 'POST',
         body: appointment
       }),
-      invalidatesTags: ['Appointment', 'Schedule'],
+      invalidatesTags: [{ type: 'Appointment', id: 'LIST' }, 'Schedule'],
     }),
 
-    modifyAppointment: builder.mutation({
+    modifyAppointment: builder.mutation<Appointment, Partial<Appointment> & { id: string }>({
       // destructure to separate id from body
       query: ({
         id,
         ...appointment
-      }: any) => ({
+      }) => ({
         url: `/api/appointments/${id}`,
         method: 'PUT',
         body: appointment,
       }),
-      invalidatesTags: ['Appointment', 'Schedule'],
+      invalidatesTags: (result, error, { id }) => [{ type: 'Appointment', id }, 'Schedule'],
     }),
 
-    updateAppointmentStatus: builder.mutation({
+    updateAppointmentStatus: builder.mutation<Appointment, { id: string, status: string }>({
       // destructure to separate id from body
       query: ({
         id,
         ...appointment
-      }: any) => ({
+      }) => ({
         url: `/api/appointments/status/${id}`,
         method: 'PUT',
         body: appointment,
       }),
-      invalidatesTags: ['Appointment', 'Schedule'],
+      invalidatesTags: (result, error, { id }) => [{ type: 'Appointment', id }, 'Schedule'],
     }),
 
-    cancelAppointment: builder.mutation({
-      query: (appointment: any) => ({
+    cancelAppointment: builder.mutation<{ success: boolean; message: string }, { id: string }>({
+      query: (appointment) => ({
         url: `/api/appointments/${appointment.id}`,
         method: 'DELETE'
       }),
-      invalidatesTags: ['Appointment', 'Schedule'],
+      invalidatesTags: (result, error, { id }) => [{ type: 'Appointment', id }, 'Schedule'],
     })
   }),
 });
@@ -101,5 +121,5 @@ export const {
   selectAll: selectAllAppointment,
   selectById: selectAppointmentById,
 } = appointmentAdapter.getSelectors(
-  (state) => selectAppointmentData(state) ?? initialState
+  (state: any) => selectAppointmentData(state) ?? initialState
 );
