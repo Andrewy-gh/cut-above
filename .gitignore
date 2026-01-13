@@ -1,0 +1,5 @@
+.claude
+tasks/
+
+# Claude agent instructions (all directories)
+**/CLAUDE*.md

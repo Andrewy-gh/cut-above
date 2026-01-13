@@ -26,6 +26,7 @@ FROM base AS server-build
 COPY server/package.json server/pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY server/ .
+RUN pnpm run build
 COPY --from=client-build /app/client/dist ./dist
 
 # Production stage
@@ -37,4 +38,4 @@ COPY --from=server-build /app/ .
 
 EXPOSE 3000
 
-CMD ["node", "index.js"]
+CMD ["node", "build/index.js"]

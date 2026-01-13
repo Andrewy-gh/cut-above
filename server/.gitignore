@@ -1,6 +1,8 @@
 node_modules
 .env
 dist
+build
 
 db-data
-utils/data.js
+data.js
+data.ts
