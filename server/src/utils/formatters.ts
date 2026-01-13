@@ -43,13 +43,29 @@ interface FormattedEmail {
   emailLink: string;
 }
 
-export const formatAppt = (appointment: AppointmentInput): FormattedAppointment => ({
-  date: appointment.date,
-  start: appointment.start,
-  end: appointment.end,
-  service: appointment.service,
-  employeeId: appointment.employee.id,
-});
+export const formatAppt = (appointment: AppointmentInput): FormattedAppointment => {
+  // Extract date and time from ISO datetime strings if needed
+  const parseDateTime = (val: string) => {
+    if (val.includes('T')) {
+      // Full ISO datetime: "2026-01-19T16:00:00.000Z"
+      return val.split('T');
+    }
+    // Already in correct format
+    return [val, val];
+  };
+
+  const [date] = parseDateTime(appointment.date);
+  const [, startTime] = parseDateTime(appointment.start);
+  const [, endTime] = parseDateTime(appointment.end);
+
+  return {
+    date: date,
+    start: startTime.substring(0, 5), // "HH:mm"
+    end: endTime.substring(0, 5), // "HH:mm"
+    service: appointment.service,
+    employeeId: appointment.employee.id,
+  };
+};
 
 export const formatEmail = (appointment: EmailAppointmentInput): FormattedEmail => {
   if (appointment.option === 'cancellation') {

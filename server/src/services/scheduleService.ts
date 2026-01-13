@@ -87,7 +87,7 @@ export const getPrivateSchedules = async (): Promise<Schedule[]> => {
   });
 };
 
-export const createSchedules = async (dates: string[], open: string, close: string): Promise<Schedule[]> => {
+export const createSchedules = async (dates: [string, string], open: string, close: string): Promise<Schedule[]> => {
   const dateRangeToSchedule = generateRange(dates, open, close);
   const newSchedules = dateRangeToSchedule.map((s) => {
     return Schedule.create({
