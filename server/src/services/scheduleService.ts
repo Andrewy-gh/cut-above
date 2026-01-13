@@ -1,5 +1,5 @@
 import { Appointment, Schedule, User } from '../models/index.js';
-import { checkAvailability } from '../utils/dateTime.js';
+import { checkAvailability, generateRange } from '../utils/dateTime.js';
 import ApiError from '../utils/ApiError.js';
 import type { AppointmentService } from '../types/index.js';
 
@@ -85,6 +85,18 @@ export const getPrivateSchedules = async (): Promise<Schedule[]> => {
       },
     ],
   });
+};
+
+export const createSchedules = async (dates: string[], open: string, close: string): Promise<Schedule[]> => {
+  const dateRangeToSchedule = generateRange(dates, open, close);
+  const newSchedules = dateRangeToSchedule.map((s) => {
+    return Schedule.create({
+      date: s.date.toDate(),
+      open: s.open.toDate(),
+      close: s.close.toDate(),
+    });
+  });
+  return await Promise.all(newSchedules);
 };
 
 export const checkScheduleAvailability = async (newAppt: NewAppointmentData): Promise<string> => {
