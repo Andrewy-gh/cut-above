@@ -9,11 +9,12 @@ import AvailableTimes from '../AvailableTimes';
 import { useFilter } from '@/hooks/useFilter';
 import { selectScheduleByFilter } from '@/features/scheduleSlice';
 import { currentDate, oneMonthFromCurrent } from '@/utils/date';
+import { Slot } from '@/types';
 
 import styles from './styles.module.css';
 
 interface BookingFormProps {
-  handleOpen: (data: any) => void;
+  handleOpen: (data: Slot | Record<string, never>) => void;
   employee: string | { id: string; firstName: string };
 }
 

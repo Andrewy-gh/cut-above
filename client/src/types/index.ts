@@ -67,3 +67,28 @@ export interface EmployeeProfile {
   image: string;
   profile: string;
 }
+
+export interface Service {
+  id: number;
+  name: string;
+  duration: number;
+  image: string;
+  description: string;
+}
+
+export interface NavLink {
+  id: number;
+  name: string;
+  path: string;
+}
+
+export interface AppointmentStatusGroup {
+  id: number;
+  name: string;
+  data: Appointment[];
+}
+
+export interface ApiError {
+  data?: { error?: string };
+  message?: string;
+}

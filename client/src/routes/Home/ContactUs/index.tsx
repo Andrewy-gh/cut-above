@@ -22,7 +22,7 @@ export default function ContactUs() {
     helperText: '',
   });
 
-  const handleEmailChange = (e: any) => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmailError({
       error: false,
       helperText: '',
@@ -33,7 +33,7 @@ export default function ContactUs() {
   const { handleSuccess, handleError } = useNotification();
   const [sendMessageResponse] = useSendMessageResponseMutation();
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       if (!emailIsValid(contact.email)) {

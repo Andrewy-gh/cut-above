@@ -80,9 +80,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['User'],
     }),
 
-    validateToken: builder.query<any, { id: string; token: string }>({
+    validateToken: builder.query<{ valid: boolean; message: string }, { id: string; token: string }>({
       query: (req) => `/api/auth/validation/${req.id}/${req.token}`,
-      transformResponse: (responseData: any) => {
+      transformResponse: (responseData: { valid: boolean; message: string }) => {
         return responseData;
       },
     }),

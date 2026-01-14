@@ -53,7 +53,7 @@ Every update should:
 
 ## Handover Notes for Next Agent
 
-- **Progress Update:** All `@ts-expect-error` directives removed. Typecheck 0 errors. Build succeeds. Reduced `any` from ~60 to ~35.
+- **Progress Update:** All `@ts-expect-error` directives removed. Typecheck 0 errors. Build succeeds. Reduced `any` from ~60 to ~15.
 - **Completed:**
   - Added `EmployeeProfile` type, updated `employeeSlice`.
   - Cleaned all route suppressions: `RequireAuth`, `ResetPw`, `Settings/*`, `TokenValidation`.
@@ -61,10 +61,13 @@ Every update should:
   - Typed `utils/password.ts`, `utils/email.ts`, `utils/date.ts`.
   - Typed event handlers in `Settings` and `ResetPw` routes.
   - Typed `useAuth` hook parameters.
-- **Remaining `any` (~35):**
-  - Selectors using `(state: any)` - acceptable due to circular dependency.
-  - `utils/apptStatus.ts`, `utils/navigation.ts` - needs typing.
-  - `useNotification`, `useFilter`, hooks with selectors.
-  - Some BookingPage and DashboardAppointment handlers.
+  - **NEW:** Typed `utils/apptStatus.ts`, `utils/navigation.ts`, `hooks/useNotification.ts`, `hooks/useFilter.ts`.
+  - **NEW:** Added types: `Service`, `NavLink`, `AppointmentStatusGroup`, `ApiError`, `ContactDetails`.
+  - **NEW:** Typed handlers in `ContactUs`, `BookingPage`, `DashboardAppointment`, `BookingForm`.
+  - **NEW:** Fixed `emailSlice`, `authApiSlice`, `scheduleSlice`, `data.ts`.
+- **Remaining `any` (~15):**
+  - Selectors using `(state: any)` - acceptable due to circular dependency bridge pattern.
 - **Architecture Note:** Use `import.meta.env` for environment logic.
 - **Circular Dependencies:** Use `(state: any)` in selector definitions as bridge.
+
+

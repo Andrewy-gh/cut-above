@@ -12,7 +12,7 @@ import {
 } from '@/features/filterSlice';
 import { useEmployeesQuery } from './useEmployeesQuery';
 import { services } from '@/data/data';
-import { Slot } from '@/types';
+import { Slot, Employee } from '@/types';
 
 export function useFilter() {
   const dispatch = useDispatch();
@@ -28,7 +28,8 @@ export function useFilter() {
   };
 
   const handleEmployeeChange = (id: string) => {
-    const selectedEmployee = id === 'any' ? 'any' : employees.find((e: any) => e._id === id);
+    const selectedEmployee =
+      id === 'any' ? 'any' : (employees as Employee[]).find((e) => e._id === id);
     dispatch(setEmployee(selectedEmployee));
   };
 
@@ -37,9 +38,9 @@ export function useFilter() {
   };
 
   const handleServiceChange = (serviceId: number) => {
-    const service = services.find((service: any) => service.id === serviceId);
-    if (service) {
-      const { name, duration } = service;
+    const svc = services.find((s) => s.id === serviceId);
+    if (svc) {
+      const { name, duration } = svc;
       dispatch(setService({ id: serviceId, name, duration }));
     }
   };

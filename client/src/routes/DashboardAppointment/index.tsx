@@ -6,7 +6,7 @@ import StatusTab from './StatusTab';
 import { formatDateFull, sortAndFormatApptByStartTime } from '@/utils/date';
 import { filterByApptStatus } from '@/utils/apptStatus';
 import styles from './styles.module.css';
-import { Appointment } from '@/types';
+import { AppointmentStatusGroup } from '@/types';
 
 export default function DashboardAppointment() {
   const { id } = useParams<{ id: string }>();
@@ -15,7 +15,7 @@ export default function DashboardAppointment() {
   const [status, setStatus] = useState('scheduled');
   const statuses = filterByApptStatus(formatTimeAppt);
 
-  const currentStatusData = statuses.find((st: any) => st.name === status);
+  const currentStatusData = statuses.find((st) => st.name === status);
   const filteredAppointments = currentStatusData ? currentStatusData.data : [];
 
   let content;
@@ -26,12 +26,12 @@ export default function DashboardAppointment() {
       <>
         <h5>{formatDateFull(formatTimeAppt[0].date)}</h5>
         <div className={styles.flex}>
-          {statuses.map((status: any) => (
+          {statuses.map((st) => (
             <StatusTab
-              key={status.id}
-              handleClick={() => setStatus(status.name)}
-              name={status.name}
-              total={status.data.length}
+              key={st.id}
+              handleClick={() => setStatus(st.name)}
+              name={st.name}
+              total={st.data.length}
             />
           ))}
         </div>

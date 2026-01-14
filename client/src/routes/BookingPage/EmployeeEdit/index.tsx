@@ -6,7 +6,6 @@ import styles from './styles.module.css';
 interface EmployeeEditProps {
   employee: {
     firstName: string;
-    [key: string]: any;
   };
   handleClick: () => void;
 }

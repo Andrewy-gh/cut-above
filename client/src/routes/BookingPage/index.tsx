@@ -45,8 +45,8 @@ export default function BookingPage() {
     ? 'Please book your new appointment'
     : 'Schedule your appointment';
 
-  const handleSelectAndOpen = (data: any) => {
-    handleSelectionChange(data);
+  const handleSelectAndOpen = (data: typeof selection) => {
+    handleSelectionChange(data as Parameters<typeof handleSelectionChange>[0]);
     handleOpen();
   };
 

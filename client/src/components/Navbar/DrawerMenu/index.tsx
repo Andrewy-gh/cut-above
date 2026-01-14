@@ -48,7 +48,7 @@ export default function DrawerMenu() {
         </div>
         {/* Links conditionally rendered on login status */}
         <ul className={styles.list}>
-          {navigation.map((link: any) =>
+          {navigation.map((link) =>
             renderLink(link, user, role) ? (
               <li
                 key={link.id}

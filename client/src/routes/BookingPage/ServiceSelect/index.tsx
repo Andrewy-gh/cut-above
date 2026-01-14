@@ -17,7 +17,7 @@ export default function ServiceSelect() {
         onChange={(e) => handleServiceChange(e.target.value as number)}
         sx={{ color: theme.palette.secondary.main }}
       >
-        {services.map((svc: any) => {
+        {services.map((svc) => {
           return (
             <MenuItem value={svc.id} key={svc.id}>
               {svc.name} - {svc.duration} minutes

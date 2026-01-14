@@ -26,7 +26,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         const loadedPosts = responseData
           .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
           .map((s) => {
-            const appointments = s.appointments.map((appt: any) => ({
+            const appointments = s.appointments.map((appt) => ({
               ...appt,
               date: formatDateFull(appt.date)
             }));

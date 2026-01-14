@@ -1,8 +1,9 @@
 import haircut from '../assets/images/haircut.webp';
 import beard from '../assets/images/beard.webp';
 import shave from '../assets/images/shave.webp';
+import { NavLink, Service } from '@/types';
 
-export const navigation = [
+export const navigation: NavLink[] = [
   { id: 1, name: 'Home', path: '/' },
   { id: 2, name: 'Booking', path: '/bookings' },
   { id: 3, name: 'Sign Up', path: '/signup' },
@@ -11,7 +12,7 @@ export const navigation = [
   { id: 6, name: 'Dashboard', path: '/dashboard' },
 ];
 
-export const services = [
+export const services: Service[] = [
   {
     id: 1,
     name: 'Haircut',
