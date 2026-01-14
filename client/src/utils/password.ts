@@ -1,4 +1,4 @@
-export const passwordIsValid = (password: any) => {
+export const passwordIsValid = (password: string) => {
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()-_+=]).{8,}$/;
   return passwordRegex.test(password);

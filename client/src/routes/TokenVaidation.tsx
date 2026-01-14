@@ -1,10 +1,7 @@
 import { Suspense } from 'react';
 import { useParams, Outlet } from 'react-router-dom';
 
-// @ts-expect-error TS(2307): Cannot find module '@/features/auth/authApiSlice' ... Remove this comment to see the full error message
 import { useValidateTokenQuery } from '@/features/auth/authApiSlice';
-
-// @ts-expect-error TS(2307): Cannot find module '@/components/LoadingSpinner' o... Remove this comment to see the full error message
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function TokenValidation() {

@@ -1,5 +1,6 @@
 import { createSelector, createEntityAdapter, EntityState } from '@reduxjs/toolkit';
 import { apiSlice } from '../app/api/apiSlice';
+import { EmployeeProfile } from '@/types';
 
 export interface Employee {
   _id: string;
@@ -28,9 +29,9 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       providesTags: ['Employee'],
     }),
 
-    getEmployeesProfiles: builder.query<Employee[], void>({
+    getEmployeesProfiles: builder.query<EmployeeProfile[], void>({
       query: () => '/api/employees/profiles',
-      transformResponse: (responseData: Employee[]) => responseData,
+      transformResponse: (responseData: EmployeeProfile[]) => responseData,
     })
   }),
 });

@@ -1,7 +1,7 @@
-export const emailIsValid = (email: any) => {
+export const emailIsValid = (email: string) => {
   const emailRegex =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return emailRegex.test(email);
 };
 
-export const cleanEmail = (email: any) => email.trim().toLowerCase();
+export const cleanEmail = (email: string) => email.trim().toLowerCase();

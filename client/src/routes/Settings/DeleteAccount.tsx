@@ -1,14 +1,6 @@
-
-// @ts-expect-error TS(2307): Cannot find module '@/components/ButtonDialog' or ... Remove this comment to see the full error message
 import ButtonDialog from '@/components/ButtonDialog';
-
-// @ts-expect-error TS(2307): Cannot find module '@/components/CustomDialogConte... Remove this comment to see the full error message
 import CustomDialogContent from '@/components/CustomDialogContent';
-
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useDialog' or its corr... Remove this comment to see the full error message
 import { useDialog } from '@/hooks/useDialog';
-
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useAuth' or its corres... Remove this comment to see the full error message
 import { useAuth } from '@/hooks/useAuth';
 
 const dialog = {

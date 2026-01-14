@@ -21,7 +21,7 @@ export default defineConfig({
     alias: {
       '@': '/src',
     },
-    extensions: ['.js', '.jsx'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
   optimizeDeps: {
     include: [

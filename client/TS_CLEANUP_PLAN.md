@@ -53,8 +53,18 @@ Every update should:
 
 ## Handover Notes for Next Agent
 
-- **Progress Update:** Core Redux slices, major authentication routes (`Login`, `Register`), `BookingPage`, and now `Dashboard`/`Schedule` routes are fully typed. Standardized `Schedule` and `Appointment` interfaces in `client/src/types/index.ts`.
-- **Immediate Next Step:** Systematically remove the remaining "unused" `@ts-expect-error` directives identified by `npm run typecheck` across the remaining routes (`Account`, `Appointments`, `Home`, `Settings`, etc.).
-- **Further Task:** Address remaining `any` types in `client/src/utils/` and other utility files.
-- **Architecture Note:** Use `import.meta.env` for environment logic (already standardized in `apiSlice.ts` and `store.ts`).
-- **Circular Dependencies:** If adding types to selectors causes circular dependency errors, use `(state: any)` in the selector definition as a temporary bridge while maintaining the internal return type safety.
+- **Progress Update:** All `@ts-expect-error` directives removed. Typecheck 0 errors. Build succeeds. Reduced `any` from ~60 to ~35.
+- **Completed:**
+  - Added `EmployeeProfile` type, updated `employeeSlice`.
+  - Cleaned all route suppressions: `RequireAuth`, `ResetPw`, `Settings/*`, `TokenValidation`.
+  - Fixed `vite.config.js` extensions and `index.html` entry point.
+  - Typed `utils/password.ts`, `utils/email.ts`, `utils/date.ts`.
+  - Typed event handlers in `Settings` and `ResetPw` routes.
+  - Typed `useAuth` hook parameters.
+- **Remaining `any` (~35):**
+  - Selectors using `(state: any)` - acceptable due to circular dependency.
+  - `utils/apptStatus.ts`, `utils/navigation.ts` - needs typing.
+  - `useNotification`, `useFilter`, hooks with selectors.
+  - Some BookingPage and DashboardAppointment handlers.
+- **Architecture Note:** Use `import.meta.env` for environment logic.
+- **Circular Dependencies:** Use `(state: any)` in selector definitions as bridge.

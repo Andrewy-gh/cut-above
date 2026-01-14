@@ -19,6 +19,20 @@ import { useNotification } from './useNotification';
 
 import { cleanEmail } from '@/utils/email';
 
+interface EmailChangePayload {
+  email: string;
+}
+
+interface PasswordChangePayload {
+  password: string;
+}
+
+interface PasswordResetPayload {
+  id: string;
+  token: string;
+  password: string;
+}
+
 export function useAuth() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -35,7 +49,7 @@ export function useAuth() {
 
   const { handleSuccess, handleError } = useNotification();
 
-  const handleLogin = async (email: any, password: any) => {
+  const handleLogin = async (email: string, password: string) => {
     try {
       const loggedInUser = await login({
         email: cleanEmail(email),
@@ -67,7 +81,7 @@ export function useAuth() {
     }
   };
 
-  const handleUserEmailChange = async (newEmailObj: any) => {
+  const handleUserEmailChange = async (newEmailObj: EmailChangePayload) => {
     try {
       const updatedUser = await changeUserEmail(newEmailObj).unwrap();
       if (updatedUser.success) {
@@ -85,7 +99,7 @@ export function useAuth() {
     }
   };
 
-  const handleUserPasswordChange = async (newPasswordObj: any) => {
+  const handleUserPasswordChange = async (newPasswordObj: PasswordChangePayload) => {
     try {
       const updatedUser = await changeUserPassword(newPasswordObj).unwrap();
       if (updatedUser.success) {
@@ -109,7 +123,7 @@ export function useAuth() {
     }
   };
 
-  const handleUserPasswordReset = async (newCredentials: any) => {
+  const handleUserPasswordReset = async (newCredentials: PasswordResetPayload) => {
     try {
       const updatedUser = await resetUserPassword(newCredentials).unwrap();
       if (updatedUser.success) {

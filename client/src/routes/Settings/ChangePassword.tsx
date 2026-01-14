@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { useAuth } from '../../hooks/useAuth';
@@ -10,19 +10,19 @@ export default function ChangePassword() {
   const [helperText, setHelperText] = useState('');
   const { handleUserPasswordChange } = useAuth();
 
-  const handleNewPasswordChange = (e: any) => {
+  const handleNewPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setError(false);
     setHelperText('');
     setNewPassword(e.target.value);
   };
 
-  const handleConfirmNewPasswordChange = (e: any) => {
+  const handleConfirmNewPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setError(false);
     setHelperText('');
     setConfirmNewPassword(e.target.value);
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (newPassword !== confirmNewPassword) {
       setError(true);

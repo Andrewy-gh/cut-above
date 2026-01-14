@@ -60,3 +60,10 @@ export interface Employee {
   image?: string;
   profile?: string;
 }
+
+export interface EmployeeProfile {
+  id: string;
+  firstName: string;
+  image: string;
+  profile: string;
+}
