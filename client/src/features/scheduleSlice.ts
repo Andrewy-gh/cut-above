@@ -10,14 +10,7 @@ import {
   formatDate,
   formatDateFull,
 } from '../utils/date';
-
-export interface Schedule {
-  _id: string;
-  date: string;
-  open: string;
-  close: string;
-  appointments: any[]; // Use any[] for now as it's complex, or type it if possible
-}
+import { Schedule } from '../types';
 
 const scheduleAdapter = createEntityAdapter<Schedule>({
   selectId: (schedule) => schedule._id,
@@ -47,7 +40,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       providesTags: ['Schedule'],
     }),
 
-    addSchedule: builder.mutation<{ success: boolean; message: string; schedule: Schedule }, Partial<Schedule>>({
+    addSchedule: builder.mutation<{ success: boolean; message: string; schedule: Schedule }, Partial<Schedule> & { dates?: string[] }>({
       query: (schedule) => ({
         url: '/api/schedules',
         method: 'POST',
@@ -66,6 +59,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     })
   }),
 });
+
 
 export const {
   useGetScheduleQuery,

@@ -1,20 +1,21 @@
 import { theme } from '../../../styles/styles';
-
-// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
-
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
-import PropTypes from 'prop-types';
 
 const outlineStyle = {
   outline: `solid ${theme.palette.secondary.dark}`,
 };
 
+interface StatusTabProps {
+  handleClick: () => void;
+  name: string;
+  total: number;
+}
+
 export default function StatusTab({
   handleClick,
   name,
-  total
-}: any) {
+  total,
+}: StatusTabProps) {
   return (
     <div
       className={`body1 ${styles.tab}`}
@@ -26,9 +27,3 @@ export default function StatusTab({
     </div>
   );
 }
-
-StatusTab.propTypes = {
-  handleClick: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
-  total: PropTypes.number.isRequired,
-};

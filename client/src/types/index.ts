@@ -19,9 +19,27 @@ export interface User {
 
 export interface Appointment {
   id: string;
+  _id?: string;
   date: string;
-  employee?: User;
-  client?: User;
+  employee?: User | any; // Some APIs return nested, some flat
+  client?: User | any;
   start: string;
-  service: 'Haircut' | 'Beard Trim' | 'Straight Razor Shave' | 'Cut and Shave Package' | 'The Full Package';
+  end?: string;
+  duration?: number;
+  status: 'scheduled' | 'cancelled' | 'attended' | 'not-attended' | 'checked-in' | 'completed' | string;
+  service: string;
+  customerName?: string;
+  customerEmail?: string;
 }
+
+
+
+export interface Schedule {
+  _id: string;
+  id?: string; // Some parts of the app use id instead of _id
+  date: string;
+  open: string;
+  close: string;
+  appointments: Appointment[];
+}
+

@@ -1,17 +1,15 @@
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { formatDateFull, formatDateToTime } from '../../utils/date';
-
-// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
 import { theme } from '../../styles/styles';
+import { Schedule } from '@/types';
 
-// @ts-expect-error TS(2307): Cannot find module '@/utils/propTypes' or its corr... Remove this comment to see the full error message
-import { schedulePropType } from '@/utils/propTypes';
+interface ScheduleCardProps {
+  schedule: Schedule;
+}
 
-export default function ScheduleCard({
-  schedule
-}: any) {
+export default function ScheduleCard({ schedule }: ScheduleCardProps) {
   return (
     <div
       className={styles.card}
@@ -21,13 +19,9 @@ export default function ScheduleCard({
       <div>Open: {formatDateToTime(schedule.open)}</div>
       <div>Close: {formatDateToTime(schedule.close)}</div>
       <div>Total appointments: {schedule.appointments.length}</div>
-      <Link to={`${schedule.id}`}>
+      <Link to={`${schedule._id}`}>
         <Button>View Details</Button>
       </Link>
     </div>
   );
 }
-
-ScheduleCard.propTypes = {
-  schedule: schedulePropType,
-};

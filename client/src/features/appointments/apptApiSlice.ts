@@ -2,17 +2,8 @@ import { createSelector, createEntityAdapter, EntityState } from '@reduxjs/toolk
 import { apiSlice } from '../../app/api/apiSlice';
 import { formatDateFull, formatDateToTime } from '../../utils/date';
 
-export interface Appointment {
-  _id: string;
-  date: string;
-  start: string;
-  end: string;
-  service: string;
-  employee: string;
-  status: string;
-  customerName?: string;
-  customerEmail?: string;
-}
+import { Appointment } from '../../types';
+
 
 const appointmentAdapter = createEntityAdapter<Appointment>({
   selectId: (appt) => appt._id,

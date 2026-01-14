@@ -1,36 +1,25 @@
 import { useParams } from 'react-router-dom';
-
-// @ts-expect-error TS(2307): Cannot find module '@/features/appointments/apptAp... Remove this comment to see the full error message
 import { useGetSingleAppointmentQuery } from '@/features/appointments/apptApiSlice';
-
-// @ts-expect-error TS(2307): Cannot find module '@/components/ApptCard/ApptButt... Remove this comment to see the full error message
 import CancelAppointment from '@/components/ApptCard/ApptButton/CancelAppointment';
-
-// @ts-expect-error TS(2307): Cannot find module '@/components/ApptCard/ApptButt... Remove this comment to see the full error message
 import ModifyAppointment from '@/components/ApptCard/ApptButton/ModifyAppointment';
-
-// @ts-expect-error TS(2307): Cannot find module '@/components/ApptCard/ApptTitl... Remove this comment to see the full error message
 import ApptTitle from '@/components/ApptCard/ApptTitle';
-
-// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
-
-// @ts-expect-error TS(2307): Cannot find module '@/components/LoadingSpinner' o... Remove this comment to see the full error message
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 // This is the single Appontment page shown when accessing through email
 export default function AppointmentPage() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const {
     data: appointment,
     isLoading,
     isSuccess,
     isError,
-  } = useGetSingleAppointmentQuery(id);
+  } = useGetSingleAppointmentQuery(id!);
+
   let content;
   if (isLoading) {
     return <LoadingSpinner />;
-  } else if (isSuccess) {
+  } else if (isSuccess && appointment) {
     content = (
       <>
         <h4 className="text-center">Your Upcoming Appointment</h4>
@@ -39,7 +28,10 @@ export default function AppointmentPage() {
             <div className={styles.flex_col}>
               <div>
                 <ApptTitle appointment={appointment} />
-                <div>{appointment.employee.firstName}</div>
+                {appointment.employee &&
+                  typeof appointment.employee !== 'string' && (
+                    <div>{appointment.employee.firstName}</div>
+                  )}
               </div>
             </div>
             <div className={styles.gap_4}>
@@ -57,5 +49,6 @@ export default function AppointmentPage() {
   } else if (isError) {
     throw new Error('Appointment id is not valid.');
   }
+
   return <div className="container-lg">{content}</div>;
 }
