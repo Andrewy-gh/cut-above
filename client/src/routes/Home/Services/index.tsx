@@ -6,22 +6,24 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 
-// @ts-expect-error TS(2307): Cannot find module '@/data/data' or its correspond... Remove this comment to see the full error message
 import { services } from '@/data/data';
-
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useFilter' or its corr... Remove this comment to see the full error message
 import { useFilter } from '@/hooks/useFilter';
-
-// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
 
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
-import PropTypes from 'prop-types';
+interface Service {
+  id: number;
+  name: string;
+  duration: number;
+  image: string;
+  description: string;
+}
 
-const ServiceCard = ({
-  service,
-  handleClick
-}: any) => {
+interface ServiceCardProps {
+  service: Service;
+  handleClick: (id: number) => void;
+}
+
+const ServiceCard = ({ service, handleClick }: ServiceCardProps) => {
   return (
     <Grid container sx={{ marginInline: 'auto', mt: 4, mb: 4 }}>
       <Card
@@ -53,9 +55,6 @@ const ServiceCard = ({
         <Grid item md={6} lg={5}>
           <CardMedia
             component="img"
-            // sx={{
-            //   aspectRatio: '16 / 9',
-            // }}
             sx={{ height: '100%', width: '100%' }}
             image={service.image}
             alt={service.name}
@@ -71,22 +70,13 @@ export default function Services() {
   return (
     <div className={styles.container}>
       <h3 className={styles.header}>Our Services</h3>
-      {services.map((service: any) => <ServiceCard
-        key={service.id}
-        service={service}
-        handleClick={handleServiceChange}
-      />)}
+      {services.map((service: Service) => (
+        <ServiceCard
+          key={service.id}
+          service={service}
+          handleClick={handleServiceChange}
+        />
+      ))}
     </div>
   );
 }
-
-ServiceCard.propTypes = {
-  service: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    duration: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-  }).isRequired,
-  handleClick: PropTypes.func.isRequired,
-};

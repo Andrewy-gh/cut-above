@@ -1,4 +1,5 @@
 import { Link, useRouteError } from 'react-router-dom';
+import { RouteError } from '@/types';
 
 export default function Unauthorized() {
   const error = useRouteError();
@@ -6,9 +7,9 @@ export default function Unauthorized() {
     <main className="container-lg">
       <h5>Oops Looks like you took a wrong turn.</h5>
       <p>
-        // @ts-expect-error TS(2571): Object is of type 'unknown'.
-        // @ts-expect-error TS(2571): Object is of type 'unknown'.
-        <i>{error.statusText || error.message}</i>
+        <i>
+          {(error as RouteError).statusText || (error as RouteError).message}
+        </i>
       </p>
       <p>
         Click{' '}

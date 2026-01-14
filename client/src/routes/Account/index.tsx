@@ -1,10 +1,7 @@
 import { Link } from 'react-router-dom';
 import LogoutButton from './LogoutButton';
 
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useAuth' or its corres... Remove this comment to see the full error message
 import { useAuth } from '@/hooks/useAuth';
-
-// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
 
 export default function Account() {

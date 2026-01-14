@@ -43,3 +43,20 @@ export interface Schedule {
   appointments: Appointment[];
 }
 
+export interface RouteError {
+  statusText?: string;
+  message?: string;
+}
+
+export interface Employee {
+  _id: string;
+  id?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  role: string;
+  bio?: string;
+  image?: string;
+  profile?: string;
+}

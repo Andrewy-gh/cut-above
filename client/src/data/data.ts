@@ -1,11 +1,5 @@
-
-// @ts-expect-error TS(2307): Cannot find module '../assets/images/haircut.webp'... Remove this comment to see the full error message
 import haircut from '../assets/images/haircut.webp';
-
-// @ts-expect-error TS(2307): Cannot find module '../assets/images/beard.webp' o... Remove this comment to see the full error message
 import beard from '../assets/images/beard.webp';
-
-// @ts-expect-error TS(2307): Cannot find module '../assets/images/shave.webp' o... Remove this comment to see the full error message
 import shave from '../assets/images/shave.webp';
 
 export const navigation = [

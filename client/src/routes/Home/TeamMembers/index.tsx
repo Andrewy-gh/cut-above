@@ -1,17 +1,10 @@
 import Grid from '@mui/material/Grid';
-
-// @ts-expect-error TS(2307): Cannot find module '@/features/employeeSlice' or i... Remove this comment to see the full error message
 import { useGetEmployeesProfilesQuery } from '@/features/employeeSlice';
-
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useFilter' or its corr... Remove this comment to see the full error message
 import { useFilter } from '@/hooks/useFilter';
-
-// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
 import MemberCard from './MemberCard';
-
-// @ts-expect-error TS(2307): Cannot find module '@/components/LoadingSpinner' o... Remove this comment to see the full error message
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { EmployeeProfile } from '@/types';
 
 export default function TeamMember() {
   const { handleEmployeeChange } = useFilter();
@@ -35,11 +28,13 @@ export default function TeamMember() {
   if (isSuccess) {
     content = (
       <>
-        {employees.map((employee: any) => <MemberCard
-          key={employee.id}
-          employee={employee}
-          handleClick={handleEmployeeChange}
-        />)}
+        {employees.map((employee: EmployeeProfile) => (
+          <MemberCard
+            key={employee.id}
+            employee={employee}
+            handleClick={handleEmployeeChange}
+          />
+        ))}
       </>
     );
   }

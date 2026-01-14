@@ -97,7 +97,6 @@ const router = createBrowserRouter([
         ],
       },
       {
-        // @ts-expect-error TS(2786): 'TokenValidation' cannot be used as a JSX componen... Remove this comment to see the full error message
         element: <TokenValidation />,
         errorElement: (
           <Suspense fallback={<LoadingSpinner />}>

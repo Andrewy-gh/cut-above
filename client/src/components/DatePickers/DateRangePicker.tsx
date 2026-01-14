@@ -1,15 +1,19 @@
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import dayjs from 'dayjs';
 
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
-import PropTypes from 'prop-types';
+interface DateRangerPickerProps {
+  dates: [dayjs.Dayjs | null, dayjs.Dayjs | null];
+  handleDateChange: (value: [dayjs.Dayjs | null, dayjs.Dayjs | null]) => void;
+  minDate: dayjs.Dayjs;
+  maxDate: dayjs.Dayjs;
+}
 
 export default function DateRangerPicker({
   dates,
   handleDateChange,
   minDate,
-  maxDate
-}: any) {
+  maxDate,
+}: DateRangerPickerProps) {
   return (
     <div>
       <MobileDateRangePicker
@@ -17,17 +21,7 @@ export default function DateRangerPicker({
         onChange={handleDateChange}
         minDate={minDate}
         maxDate={maxDate}
-        // sx={{
-        //   display: { xs: 'block', md: 'none' },
-        // }}
       />
     </div>
   );
 }
-
-DateRangerPicker.propTypes = {
-  dates: PropTypes.array.isRequired,
-  handleDateChange: PropTypes.func.isRequired,
-  minDate: PropTypes.instanceOf(dayjs).isRequired,
-  maxDate: PropTypes.instanceOf(dayjs).isRequired,
-};

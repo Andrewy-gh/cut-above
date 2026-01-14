@@ -1,5 +1,3 @@
-
-// @ts-expect-error TS(2307): Cannot find module '@/components/Overlay' or its c... Remove this comment to see the full error message
 import Overlay from '@/components/Overlay';
 import { Link } from 'react-router-dom';
 
