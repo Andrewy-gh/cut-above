@@ -9,11 +9,6 @@ src/components/LoadingSpinner/index.tsx(2,1): error TS2578: Unused '@ts-expect-e
 src/data/data.ts(2,1): error TS2578: Unused '@ts-expect-error' directive.
 src/data/data.ts(5,1): error TS2578: Unused '@ts-expect-error' directive.
 src/data/data.ts(8,1): error TS2578: Unused '@ts-expect-error' directive.
-src/hooks/useAppointment.ts(6,1): error TS2578: Unused '@ts-expect-error' directive.
-src/hooks/useAppointment.ts(12,1): error TS2578: Unused '@ts-expect-error' directive.
-src/hooks/useAppointment.ts(15,1): error TS2578: Unused '@ts-expect-error' directive.
-src/hooks/useAppointment.ts(56,24): error TS2339: Property 'success' does not exist on type 'Appointment'.
-src/hooks/useAppointment.ts(56,60): error TS2339: Property 'message' does not exist on type 'Appointment'.
 src/hooks/useBooking.ts(4,1): error TS2578: Unused '@ts-expect-error' directive.
 src/hooks/useBooking.ts(38,26): error TS2339: Property 'success' does not exist on type 'Appointment'.
 src/hooks/useBooking.ts(39,38): error TS2339: Property 'message' does not exist on type 'Appointment'.
@@ -120,12 +115,6 @@ src/routes/DashboardAppointment/StatusColumn/index.tsx(21,1): error TS2578: Unus
 src/routes/DashboardAppointment/StatusColumn/index.tsx(34,3): error TS2578: Unused '@ts-expect-error' directive.
 src/routes/DashboardAppointment/StatusTab/index.tsx(3,1): error TS2578: Unused '@ts-expect-error' directive.
 src/routes/DashboardAppointment/StatusTab/index.tsx(6,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/DashboardAppointment/UpdateApptStatus.tsx(2,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/DashboardAppointment/UpdateApptStatus.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/DashboardAppointment/UpdateApptStatus.tsx(8,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/DashboardAppointment/UpdateApptStatus.tsx(11,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/DashboardAppointment/UpdateApptStatus.tsx(14,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/DashboardAppointment/UpdateApptStatus.tsx(17,1): error TS2578: Unused '@ts-expect-error' directive.
 src/routes/DashboardSchedule/index.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
 src/routes/DashboardSchedule/ScheduleCard.tsx(5,1): error TS2578: Unused '@ts-expect-error' directive.
 src/routes/DashboardSchedule/ScheduleCard.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.

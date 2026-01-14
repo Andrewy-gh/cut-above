@@ -3,15 +3,15 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
 
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
-import PropTypes from 'prop-types';
+interface EmployeeAccordionProps {
+  children: React.ReactNode;
+}
 
 export default function EmployeeAccordion({
-  children
-}: any) {
+  children,
+}: EmployeeAccordionProps) {
   return (
     <Accordion style={{ backgroundColor: '#393939' }}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -21,7 +21,3 @@ export default function EmployeeAccordion({
     </Accordion>
   );
 }
-
-EmployeeAccordion.propTypes = {
-  children: PropTypes.object,
-};

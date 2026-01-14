@@ -4,35 +4,31 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 
-// @ts-expect-error TS(2307): Cannot find module '@/features/employeeSlice' or i... Remove this comment to see the full error message
 import { selectAllEmployees } from '@/features/employeeSlice';
-
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useFilter' or its corr... Remove this comment to see the full error message
 import { useFilter } from '@/hooks/useFilter';
-
-// @ts-expect-error TS(2307): Cannot find module '@/styles/styles' or its corres... Remove this comment to see the full error message
 import { theme } from '@/styles/styles';
 
 export default function EmployeeSelect() {
   const employees = useSelector(selectAllEmployees);
   const { employee, handleEmployeeChange } = useFilter();
+
+  const employeeId = typeof employee === 'string' ? employee : employee?._id;
+
   return (
     <FormControl fullWidth>
       <InputLabel>Choose a barber</InputLabel>
       <Select
         label="Barber"
-        value={employee?.id || 'any'}
+        value={employeeId || 'any'}
         fullWidth
         onChange={(e) => handleEmployeeChange(e.target.value)}
         sx={{ color: theme.palette.secondary.main }}
       >
         <MenuItem value="any">No preference</MenuItem>
-        // @ts-expect-error TS(2571): Object is of type 'unknown'.
-        // @ts-expect-error TS(2571): Object is of type 'unknown'.
-        {employees.map((employee: any) => {
+        {employees.map((emp) => {
           return (
-            <MenuItem value={employee.id} key={employee.id}>
-              {employee.firstName}
+            <MenuItem value={emp._id} key={emp._id}>
+              {emp.firstName}
             </MenuItem>
           );
         })}

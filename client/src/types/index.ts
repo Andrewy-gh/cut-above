@@ -1,3 +1,17 @@
+import { Dayjs } from 'dayjs';
+
+export interface GenericResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface Slot {
+  id: string;
+  start: Dayjs;
+  end: Dayjs;
+  available: string[];
+}
+
 export interface User {
   id: string;
   firstName: string;

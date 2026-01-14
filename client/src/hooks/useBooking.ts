@@ -1,11 +1,19 @@
 import {
   useAddAppointmentMutation,
   useModifyAppointmentMutation,
-// @ts-expect-error TS(2307): Cannot find module '@/features/appointments/apptAp... Remove this comment to see the full error message
 } from '@/features/appointments/apptApiSlice';
 import { useAppointment } from './useAppointment';
 import { useFilter } from './useFilter';
 import { useNotification } from './useNotification';
+
+interface BookingParams {
+  id?: string;
+  date: string;
+  start: string;
+  end: string;
+  service: string;
+  employee: string;
+}
 
 export function useBooking() {
   const [addAppointment] = useAddAppointmentMutation();
@@ -20,10 +28,8 @@ export function useBooking() {
     start,
     end,
     service,
-
-    // emailToken,
     employee
-  }: any) => {
+  }: BookingParams) => {
     try {
       if (id) {
         const modifiedAppt = await modifyAppointment({
@@ -33,7 +39,6 @@ export function useBooking() {
           end,
           service,
           employee,
-          // emailToken,
         }).unwrap();
         if (modifiedAppt.success) {
           handleSuccess(modifiedAppt.message);

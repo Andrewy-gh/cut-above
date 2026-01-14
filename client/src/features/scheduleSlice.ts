@@ -47,7 +47,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       providesTags: ['Schedule'],
     }),
 
-    addSchedule: builder.mutation<Schedule, Partial<Schedule>>({
+    addSchedule: builder.mutation<{ success: boolean; message: string; schedule: Schedule }, Partial<Schedule>>({
       query: (schedule) => ({
         url: '/api/schedules',
         method: 'POST',
@@ -56,7 +56,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['Appointment', 'Schedule'],
     }),
 
-    updateSchedule: builder.mutation<Schedule, Partial<Schedule> & { id: string }>({
+    updateSchedule: builder.mutation<{ success: boolean; message: string; schedule: Schedule }, Partial<Schedule> & { id: string }>({
       query: (schedule) => ({
         url: `/api/schedules/${schedule.id}`,
         method: 'PUT',

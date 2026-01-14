@@ -8,31 +8,19 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ContentCutIcon from '@mui/icons-material/ContentCut';
 import CloseIcon from '@mui/icons-material/Close';
 
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useAuth' or its corres... Remove this comment to see the full error message
 import { useAuth } from '@/hooks/useAuth';
-
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useFilter' or its corr... Remove this comment to see the full error message
 import { useFilter } from '@/hooks/useFilter';
-
-// @ts-expect-error TS(2307): Cannot find module '@/utils/date' or its correspon... Remove this comment to see the full error message
 import { formatDateFull, formatTime } from '@/utils/date';
-
-// @ts-expect-error TS(2307): Cannot find module '@/styles/styles' or its corres... Remove this comment to see the full error message
 import { theme } from '@/styles/styles';
-
-// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
+import { Slot } from '@/types';
 import styles from './styles.module.css';
 
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
-import PropTypes from 'prop-types';
+interface BookingDialogTitleProps {
+  children: React.ReactNode;
+  onClose: () => void;
+}
 
-// @ts-expect-error TS(2307): Cannot find module '@/utils/propTypes' or its corr... Remove this comment to see the full error message
-import { selectionPropType } from '@/utils/propTypes';
-
-const BookingDialogTitle = ({
-  children,
-  onClose
-}: any) => {
+const BookingDialogTitle = ({ children, onClose }: BookingDialogTitleProps) => {
   return (
     <div className={styles.flex_sb}>
       <DialogTitle>{children}</DialogTitle>
@@ -52,12 +40,19 @@ const BookingDialogTitle = ({
   );
 };
 
+interface BookingDialogContentProps {
+  children?: React.ReactNode;
+  handleAgree: () => void;
+  handleClose: () => void;
+  selection: Slot | Record<string, never>;
+}
+
 export default function BookingDialogContent({
   children,
   handleAgree,
   handleClose,
-  selection
-}: any) {
+  selection,
+}: BookingDialogContentProps) {
   const { user } = useAuth();
   const { date, service } = useFilter();
 
@@ -69,6 +64,9 @@ export default function BookingDialogContent({
       </Link>
     );
   }
+
+  const startTime = 'start' in selection ? formatTime(selection.start) : '';
+
   return (
     <>
       <BookingDialogTitle onClose={handleClose}>
@@ -83,7 +81,7 @@ export default function BookingDialogContent({
         <div className={styles.flex}>
           <CalendarMonthIcon />
           <div>{formatDateFull(date)}</div>
-          <div>{formatTime(selection.start)}</div>
+          <div>{startTime}</div>
         </div>
       </DialogContent>
       {children}
@@ -96,15 +94,3 @@ export default function BookingDialogContent({
     </>
   );
 }
-
-BookingDialogTitle.propTypes = {
-  children: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
-};
-
-BookingDialogContent.propTypes = {
-  children: PropTypes.object,
-  handleAgree: PropTypes.func.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  selection: selectionPropType,
-};

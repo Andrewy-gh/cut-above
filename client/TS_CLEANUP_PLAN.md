@@ -37,7 +37,7 @@ We have stabilized the infrastructure and resolved the most critical "Cannot fin
 
 2.  **Route-by-Route Migration:** Tackle features iteratively:
     - [x] **Priority 1 (High):** `Login`, `Register` (Cleaned up `any` props, fixed state initialization, and removed redundant suppressions).
-    - **Priority 2:** `BookingPage` (Complex state/prop types involving the now-typed `Schedule` and `Appointment` models).
+    - [x] **Priority 2:** `BookingPage` (Fully typed. Standardized component props, centralized `Slot` and `GenericResponse` types, and removed all redundant suppressions).
     - **Priority 3:** `Dashboard` and `Schedule` views.
 3.  **Type Refinement:**
     - Replace remaining `any` in component props with specific interfaces.
@@ -53,8 +53,8 @@ Every update should:
 
 ## Handover Notes for Next Agent
 
-- **Progress Update:** Core Redux slices, major authentication routes (`Login`, `Register`), and all shared components in `client/src/components/` are now fully typed. Replaced legacy `PropTypes` with TS interfaces.
-- **Immediate Next Step:** Address remaining type errors in `BookingPage` and `Dashboard` routes.
-- **Cleanup Task:** Systematically remove the remaining "unused" `@ts-expect-error` directives identified by `npm run typecheck` across all routes.
+- **Progress Update:** Core Redux slices, major authentication routes (`Login`, `Register`), `BookingPage` route, and all shared components in `client/src/components/` are now fully typed. Standardized API return types with `GenericResponse`.
+- **Immediate Next Step:** Address remaining type errors in `Dashboard` and `Schedule` routes (specifically `AddSchedule` and `DashboardAppointment`).
+- **Cleanup Task:** Systematically remove the remaining "unused" `@ts-expect-error` directives identified by `npm run typecheck` across the remaining routes.
 - **Architecture Note:** Use `import.meta.env` for environment logic (already standardized in `apiSlice.ts` and `store.ts`).
 - **Circular Dependencies:** If adding types to selectors causes circular dependency errors, use `(state: any)` in the selector definition as a temporary bridge while maintaining the internal return type safety.

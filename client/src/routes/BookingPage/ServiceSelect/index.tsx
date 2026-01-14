@@ -2,8 +2,8 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import { useFilter } from '../../../hooks/useFilter';
-import { theme } from '../../../styles/styles';
+import { useFilter } from '@/hooks/useFilter';
+import { theme } from '@/styles/styles';
 
 export default function ServiceSelect() {
   const { services, service, handleServiceChange } = useFilter();
@@ -12,23 +12,15 @@ export default function ServiceSelect() {
       <InputLabel>Choose a service</InputLabel>
       <Select
         label="Service"
-
-        // @ts-expect-error TS(2571): Object is of type 'unknown'.
         value={service.id}
         fullWidth
-        onChange={(e) => handleServiceChange(e.target.value)}
+        onChange={(e) => handleServiceChange(e.target.value as number)}
         sx={{ color: theme.palette.secondary.main }}
       >
-        {services.map((service: any) => {
+        {services.map((svc: any) => {
           return (
-
-            // @ts-expect-error TS(2769): No overload matches this call.
-            <MenuItem
-              value={service.id}
-              duration={service.duration}
-              key={service.id}
-            >
-              {service.name} - {service.duration} minutes
+            <MenuItem value={svc.id} key={svc.id}>
+              {svc.name} - {svc.duration} minutes
             </MenuItem>
           );
         })}

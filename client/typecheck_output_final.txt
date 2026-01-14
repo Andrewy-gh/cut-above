@@ -38,16 +38,6 @@ src/routes/Appointments/index.tsx(12,1): error TS2578: Unused '@ts-expect-error'
 src/routes/Appointments/index.tsx(15,1): error TS2578: Unused '@ts-expect-error' directive.
 src/routes/Appointments/index.tsx(18,1): error TS2578: Unused '@ts-expect-error' directive.
 src/routes/Appointments/index.tsx(41,3): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/BookingPage/EmployeeAccordion/index.tsx(6,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/BookingPage/EmployeeAccordion/index.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/BookingPage/EmployeeEdit/index.tsx(4,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/BookingPage/EmployeeEdit/index.tsx(7,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/BookingPage/EmployeeEdit/index.tsx(10,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/BookingPage/EmployeeSelect/index.tsx(7,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/BookingPage/EmployeeSelect/index.tsx(10,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/BookingPage/EmployeeSelect/index.tsx(13,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/BookingPage/error.tsx(3,1): error TS2578: Unused '@ts-expect-error' directive.
-src/routes/BookingPage/ServiceSelect/index.tsx(16,9): error TS2578: Unused '@ts-expect-error' directive.
 src/routes/Cancellation.tsx(2,1): error TS2578: Unused '@ts-expect-error' directive.
 src/routes/DashboardAppointment/index.tsx(4,1): error TS2578: Unused '@ts-expect-error' directive.
 src/routes/DashboardAppointment/index.tsx(9,1): error TS2578: Unused '@ts-expect-error' directive.

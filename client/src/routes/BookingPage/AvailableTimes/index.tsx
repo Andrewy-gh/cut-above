@@ -1,25 +1,24 @@
 import { useMediaQuery } from '@mui/material/';
 import Button from '@mui/material/Button';
+import { Dayjs } from 'dayjs';
 
-// @ts-expect-error TS(2307): Cannot find module '@/utils/date' or its correspon... Remove this comment to see the full error message
 import { formatTime } from '@/utils/date';
-
-// @ts-expect-error TS(2307): Cannot find module '@/styles/styles' or its corres... Remove this comment to see the full error message
 import { theme } from '@/styles/styles';
-
-// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
 
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
-import PropTypes from 'prop-types';
+interface Slot {
+  id: string;
+  start: Dayjs;
+  end: Dayjs;
+  available: string[];
+}
 
-// @ts-expect-error TS(2307): Cannot find module '@/utils/propTypes' or its corr... Remove this comment to see the full error message
-import { selectionPropType, userPropType } from '@/utils/propTypes';
+interface AvailableTimeProps {
+  children: React.ReactNode;
+  handleOpen: () => void;
+}
 
-const AvailableTime = ({
-  children,
-  handleOpen
-}: any) => {
+const AvailableTime = ({ children, handleOpen }: AvailableTimeProps) => {
   return (
     <Button variant="contained" onClick={handleOpen}>
       {children}
@@ -27,12 +26,18 @@ const AvailableTime = ({
   );
 };
 
+interface AvailableTimesProps {
+  timeSlots: Slot[];
+  openDialog: (slot: Slot) => void;
+  employee: string | { id: string; firstName: string };
+}
+
 export default function AvailableTimes({
   timeSlots,
   openDialog,
-  employee
-}: any) {
-  const handleOpen = (data: any) => openDialog(data);
+  employee,
+}: AvailableTimesProps) {
+  const handleOpen = (data: Slot) => openDialog(data);
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const containerClass = isMobile
     ? styles.container_mobile
@@ -51,7 +56,7 @@ export default function AvailableTimes({
     title = <h5 className="text-center">{timesAvailable}</h5>;
     availableTimes = (
       <div className={containerClass}>
-        {timeSlots.map((slot: any) => {
+        {timeSlots.map((slot: Slot) => {
           const startTime = formatTime(slot.start); // dayjs obj => 10:45am
           const slotsAvailable =
             employee === 'any' ? `${slot.available.length} left` : '';
@@ -76,15 +81,3 @@ export default function AvailableTimes({
     </div>
   );
 }
-
-AvailableTimes.propTypes = {
-  timeSlots: PropTypes.arrayOf(selectionPropType),
-  openDialog: PropTypes.func.isRequired,
-  employee: PropTypes.oneOfType([PropTypes.string.isRequired, userPropType])
-    .isRequired,
-};
-
-AvailableTime.propTypes = {
-  children: PropTypes.string.isRequired,
-  handleOpen: PropTypes.func.isRequired,
-};
