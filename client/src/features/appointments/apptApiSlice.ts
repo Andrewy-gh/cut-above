@@ -29,6 +29,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
           .sort((a, b) => a.start.localeCompare(b.start))
           .map((appt) => ({
             ...appt,
+            id: appt._id,
             date: formatDateFull(appt.date),
             start: formatDateToTime(appt.start)
           }));
@@ -77,7 +78,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: (result, error, { id }) => [{ type: 'Appointment', id }, 'Schedule'],
     }),
 
-    updateAppointmentStatus: builder.mutation<Appointment, { id: string, status: string }>({
+    updateAppointmentStatus: builder.mutation<{ success: boolean; message: string }, { id: string, status: string }>({
       // destructure to separate id from body
       query: ({
         id,

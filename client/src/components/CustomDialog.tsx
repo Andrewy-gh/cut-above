@@ -1,15 +1,19 @@
+import { ReactNode } from 'react';
 import Dialog from '@mui/material/Dialog';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { theme } from '../styles/styles';
 
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
-import PropTypes from 'prop-types';
+interface CustomDialogProps {
+  children?: ReactNode;
+  open: boolean;
+  handleClose?: () => void;
+}
 
 export default function CustomDialog({
   children,
   open,
-  handleClose
-}: any) {
+  handleClose,
+}: CustomDialogProps) {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
@@ -24,9 +28,3 @@ export default function CustomDialog({
     </Dialog>
   );
 }
-
-CustomDialog.propTypes = {
-  children: PropTypes.object,
-  open: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func,
-};

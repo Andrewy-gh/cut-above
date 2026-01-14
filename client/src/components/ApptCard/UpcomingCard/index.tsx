@@ -1,16 +1,14 @@
 import AppTitle from '../ApptTitle';
 import ModifyAppointment from '../ApptButton/ModifyAppointment';
 import CancelAppointment from '../ApptButton/CancelAppointment';
-
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useAuth' or its corres... Remove this comment to see the full error message
 import { useAuth } from '@/hooks/useAuth';
+import { Appointment } from '@/types';
 
-// @ts-expect-error TS(2307): Cannot find module '@/utils/propTypes' or its corr... Remove this comment to see the full error message
-import { appointmentPropType } from '@/utils/propTypes';
+interface UpcomingCardProps {
+  appointment: Appointment;
+}
 
-export default function UpcomingCard({
-  appointment
-}: any) {
+export default function UpcomingCard({ appointment }: UpcomingCardProps) {
   const { role } = useAuth();
   return (
     <div
@@ -27,8 +25,8 @@ export default function UpcomingCard({
           <AppTitle appointment={appointment} />
           <div>
             {role === 'client'
-              ? appointment.employee.firstName
-              : appointment.client.firstName}
+              ? appointment.employee?.firstName
+              : appointment.client?.firstName}
           </div>
         </div>
       </div>
@@ -48,7 +46,3 @@ export default function UpcomingCard({
     </div>
   );
 }
-
-UpcomingCard.propTypes = {
-  appointment: appointmentPropType,
-};

@@ -1,13 +1,11 @@
-
-// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
+import { Appointment } from '@/types';
 
-// @ts-expect-error TS(2307): Cannot find module '@/utils/propTypes' or its corr... Remove this comment to see the full error message
-import { appointmentPropType } from '@/utils/propTypes';
+interface AppTitleProps {
+  appointment: Appointment;
+}
 
-export default function AppTitle({
-  appointment
-}: any) {
+export default function AppTitle({ appointment }: AppTitleProps) {
   return (
     <>
       <div className={styles.date_time}>
@@ -20,7 +18,3 @@ export default function AppTitle({
     </>
   );
 }
-
-AppTitle.propTypes = {
-  appointment: appointmentPropType,
-};

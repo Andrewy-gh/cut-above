@@ -1,23 +1,10 @@
-
-// @ts-expect-error TS(2307): Cannot find module '@/components/ButtonDialog' or ... Remove this comment to see the full error message
 import ButtonDialog from '@/components/ButtonDialog';
-
-// @ts-expect-error TS(2307): Cannot find module '@/components/CustomDialogConte... Remove this comment to see the full error message
 import CustomDialogContent from '@/components/CustomDialogContent';
-
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useAppointment' or its... Remove this comment to see the full error message
 import { useAppointment } from '@/hooks/useAppointment';
-
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useDialog' or its corr... Remove this comment to see the full error message
 import { useDialog } from '@/hooks/useDialog';
+import { Appointment } from '@/types';
 
-// @ts-expect-error TS(2307): Cannot find module '@/utils/propTypes' or its corr... Remove this comment to see the full error message
-import { appointmentPropType } from '@/utils/propTypes';
-
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
-import PropTypes from 'prop-types';
-
-const dialog = (newStatus: any) => {
+const dialog = (newStatus: string) => {
   let content;
 
   if (newStatus === 'checked-in') {
@@ -31,26 +18,27 @@ const dialog = (newStatus: any) => {
     content = 'Unknown status';
   }
   return {
-    // button: client ? client.email : 'Loading',
     button: 'update status',
-    // title: employee
-    //   ? `${appointment.service} with ${employee.email}`
-    //   : 'Loading',
     title: 'Update Status',
     content,
   };
 };
 
+interface UpdateApptStatusProps {
+  appointment: Appointment;
+  newStatus: string;
+}
+
 export default function UpdateApptStatus({
   appointment,
-  newStatus
-}: any) {
+  newStatus,
+}: UpdateApptStatusProps) {
   const { open, handleOpen, handleClose } = useDialog();
   const { handleStatusUpdate } = useAppointment();
 
   const dialogProps = dialog(newStatus);
-  const handleAgree = (appointment: any, newStatus: any) => {
-    handleStatusUpdate(appointment, newStatus);
+  const handleAgree = (id: string, newStatus: string) => {
+    handleStatusUpdate(id, newStatus);
     handleClose();
   };
 
@@ -63,14 +51,9 @@ export default function UpdateApptStatus({
     >
       <CustomDialogContent
         dialog={dialogProps}
-        handleAgree={() => handleAgree(appointment, newStatus)}
+        handleAgree={() => handleAgree(appointment.id, newStatus)}
         handleClose={handleClose}
       />
     </ButtonDialog>
   );
 }
-
-UpdateApptStatus.propTypes = {
-  appointment: appointmentPropType,
-  newStatus: PropTypes.string.isRequired,
-};

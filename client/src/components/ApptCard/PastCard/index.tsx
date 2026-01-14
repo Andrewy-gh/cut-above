@@ -1,14 +1,12 @@
-
-// @ts-expect-error TS(2307): Cannot find module '@/utils/propTypes' or its corr... Remove this comment to see the full error message
-import { appointmentPropType } from '@/utils/propTypes';
 import AppTitle from '../ApptTitle';
-
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useAuth' or its corres... Remove this comment to see the full error message
 import { useAuth } from '@/hooks/useAuth';
+import { Appointment } from '@/types';
 
-export default function PastCard({
-  appointment
-}: any) {
+interface PastCardProps {
+  appointment: Appointment;
+}
+
+export default function PastCard({ appointment }: PastCardProps) {
   const { role } = useAuth();
 
   return (
@@ -16,13 +14,9 @@ export default function PastCard({
       <AppTitle key={appointment.id} appointment={appointment} />
       <div>
         {role === 'client'
-          ? appointment.employee.firstName
-          : appointment.client.firstName}
+          ? appointment.employee?.firstName
+          : appointment.client?.firstName}
       </div>
     </div>
   );
 }
-
-PastCard.propTypes = {
-  appointment: appointmentPropType,
-};

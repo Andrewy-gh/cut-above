@@ -1,22 +1,22 @@
-import { useState } from 'react';
+import { useState, MouseEvent } from 'react';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import OutlinedInput from '@mui/material/OutlinedInput';
+import OutlinedInput, { OutlinedInputProps } from '@mui/material/OutlinedInput';
 
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
-import PropTypes from 'prop-types';
+interface PasswordInputProps extends OutlinedInputProps {
+  label: string;
+}
 
-export default function PasswordInput(props: any) {
+export default function PasswordInput(props: PasswordInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const handleMouseDownPassword = (event: any) => {
+  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
   const { label, ...inputProps } = props;
@@ -44,7 +44,3 @@ export default function PasswordInput(props: any) {
     </FormControl>
   );
 }
-
-PasswordInput.propTypes = {
-  label: PropTypes.string.isRequired,
-};

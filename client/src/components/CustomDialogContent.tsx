@@ -4,14 +4,21 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
-import PropTypes from 'prop-types';
+interface CustomDialogContentProps {
+  dialog: {
+    button: string;
+    title: string;
+    content: string;
+  };
+  handleAgree: () => void;
+  handleClose: () => void;
+}
 
 export default function CustomDialogContent({
   dialog,
   handleClose,
-  handleAgree
-}: any) {
+  handleAgree,
+}: CustomDialogContentProps) {
   return (
     <>
       <DialogTitle>{dialog.title}</DialogTitle>
@@ -27,13 +34,3 @@ export default function CustomDialogContent({
     </>
   );
 }
-
-CustomDialogContent.propTypes = {
-  dialog: PropTypes.shape({
-    button: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    content: PropTypes.string.isRequired,
-  }).isRequired,
-  handleAgree: PropTypes.func.isRequired,
-  handleClose: PropTypes.func.isRequired,
-};

@@ -5,22 +5,16 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useAuth' or its corres... Remove this comment to see the full error message
 import { useAuth } from '@/hooks/useAuth';
 
-// @ts-expect-error TS(2307): Cannot find module '@/data/data' or its correspond... Remove this comment to see the full error message
 import { navigation } from '@/data/data';
 
-// @ts-expect-error TS(2307): Cannot find module '@/utils/navigation' or its cor... Remove this comment to see the full error message
 import { renderLink } from '@/utils/navigation';
 
-// @ts-expect-error TS(2307): Cannot find module '@/styles/styles' or its corres... Remove this comment to see the full error message
 import { theme } from '@/styles/styles';
 
-// @ts-expect-error TS(2307): Cannot find module '@/assets/cover-logo-top-small.... Remove this comment to see the full error message
 import logoTop from '@/assets/cover-logo-top-small.webp';
 
-// @ts-expect-error TS(2307): Cannot find module './styles.module.css' or its co... Remove this comment to see the full error message
 import styles from './styles.module.css';
 
 export default function DrawerMenu() {
@@ -54,15 +48,16 @@ export default function DrawerMenu() {
         </div>
         {/* Links conditionally rendered on login status */}
         <ul className={styles.list}>
-          {navigation.map((link: any) => renderLink(link, user, role) ? (
-            <li
-              key={link.id}
-              className={styles.list_item}
-              style={{ color: theme.palette.secondary.main }}
-            >
-              <Link to={link.path}>{link.name}</Link>
-            </li>
-          ) : null
+          {navigation.map((link: any) =>
+            renderLink(link, user, role) ? (
+              <li
+                key={link.id}
+                className={styles.list_item}
+                style={{ color: theme.palette.secondary.main }}
+              >
+                <Link to={link.path}>{link.name}</Link>
+              </li>
+            ) : null
           )}
           {/* Logout Button */}
           {user && (

@@ -1,9 +1,12 @@
 import { forwardRef } from 'react';
 import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { useNotification } from '../hooks/useNotification';
 
-const Alert = forwardRef<HTMLDivElement, any>(function Alert(props, ref) {
+const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref
+) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 

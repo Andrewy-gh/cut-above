@@ -30,7 +30,11 @@ We have stabilized the infrastructure and resolved the most critical "Cannot fin
 
 ### Phase 3: Incremental Component Cleanup (IN PROGRESS 🏗️)
 
-1.  **Shared Components (Next Target):** Audit `client/src/components/` (e.g., `Navbar`, `Footer`, `Overlay`) and remove suppressions.
+- [x] **Shared Components:** Audited and cleaned up `client/src/components/` (e.g., `Navbar`, `Footer`, `Overlay`, `ApptCard`, `CustomDialog`, `PasswordInput`).
+  - Replaced `PropTypes` with TypeScript interfaces.
+  - Removed redundant `@ts-expect-error` suppressions.
+  - Centralized core types in `client/src/types/index.ts`.
+
 2.  **Route-by-Route Migration:** Tackle features iteratively:
     - [x] **Priority 1 (High):** `Login`, `Register` (Cleaned up `any` props, fixed state initialization, and removed redundant suppressions).
     - **Priority 2:** `BookingPage` (Complex state/prop types involving the now-typed `Schedule` and `Appointment` models).
@@ -49,8 +53,8 @@ Every update should:
 
 ## Handover Notes for Next Agent
 
-- **Progress Update:** Core Redux slices and the major authentication routes (`Login`, `Register`) are now fully typed. This has fixed dozens of module resolution and type mismatch errors.
-- **Immediate Next Step:** Audit `client/src/components/` (e.g., `Navbar`, `Footer`, `Overlay`) to remove suppressions and standardize types.
-- **Cleanup Task:** Continue removing "unused" `@ts-expect-error` directives identified by `npm run typecheck`.
+- **Progress Update:** Core Redux slices, major authentication routes (`Login`, `Register`), and all shared components in `client/src/components/` are now fully typed. Replaced legacy `PropTypes` with TS interfaces.
+- **Immediate Next Step:** Address remaining type errors in `BookingPage` and `Dashboard` routes.
+- **Cleanup Task:** Systematically remove the remaining "unused" `@ts-expect-error` directives identified by `npm run typecheck` across all routes.
 - **Architecture Note:** Use `import.meta.env` for environment logic (already standardized in `apiSlice.ts` and `store.ts`).
 - **Circular Dependencies:** If adding types to selectors causes circular dependency errors, use `(state: any)` in the selector definition as a temporary bridge while maintaining the internal return type safety.

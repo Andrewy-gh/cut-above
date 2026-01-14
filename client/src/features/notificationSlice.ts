@@ -3,13 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 interface NotificationState {
   open: boolean;
   message: string;
-  severity: 'success' | 'error' | 'warning' | 'info' | '';
+  severity: 'success' | 'error' | 'warning' | 'info';
 }
 
 const initialState: NotificationState = {
   open: false,
   message: "",
-  severity: "",
+  severity: "success",
 };
 
 const notificationSlice = createSlice({

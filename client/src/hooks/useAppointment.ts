@@ -3,16 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
   useCancelAppointmentMutation,
   useUpdateAppointmentStatusMutation,
-// @ts-expect-error TS(2307): Cannot find module '@/features/appointments/apptAp... Remove this comment to see the full error message
 } from '@/features/appointments/apptApiSlice';
 import {
   endRescheduling,
   selectModifyingApptId,
   selectRescheduling,
-// @ts-expect-error TS(2307): Cannot find module '@/features/appointments/appoin... Remove this comment to see the full error message
 } from '@/features/appointments/appointmentSlice';
 
-// @ts-expect-error TS(2307): Cannot find module '@/hooks/useNotification' or it... Remove this comment to see the full error message
 import { useNotification } from '@/hooks/useNotification';
 
 export function useAppointment() {
@@ -25,7 +22,7 @@ export function useAppointment() {
   const [updateAppointmentStatus] = useUpdateAppointmentStatusMutation();
   const { handleSuccess, handleError } = useNotification();
 
-  const handleCancel = async (id: any) => {
+  const handleCancel = async (id: string) => {
     try {
       const cancelledAppt = await cancelAppointment({
         id,
@@ -41,16 +38,16 @@ export function useAppointment() {
     }
   };
 
-  const handleBeginRescheduling = (id: any) => {
+  const handleBeginRescheduling = (id: string) => {
     navigate(`/bookings/${id}`);
   };
 
   const handleEndRescheduling = () => dispatch(endRescheduling());
 
-  const handleStatusUpdate = async (appointment: any, newStatus: any) => {
+  const handleStatusUpdate = async (id: string, newStatus: string) => {
     try {
       const statusUpdate = await updateAppointmentStatus({
-        id: appointment.id,
+        id,
         status: newStatus,
       }).unwrap();
       if (statusUpdate.success) handleSuccess(statusUpdate.message);
