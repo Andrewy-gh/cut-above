@@ -1,19 +1,35 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { initialCurrentDate } from '../utils/date';
+import type { RootState } from '../app/store';
+import type { Employee } from './employeeSlice';
+
+interface FilterState {
+  date: string;
+  dateDisabled: boolean;
+  employee: 'any' | Employee | undefined;
+  holdStatus: boolean;
+  service: { id: number; name: string; duration: number };
+  savedSelections: {
+    slot: null;
+    employee: null;
+  };
+}
+
+const initialState: FilterState = {
+  date: initialCurrentDate,
+  dateDisabled: false,
+  employee: 'any',
+  holdStatus: false,
+  service: { id: 1, name: 'Haircut', duration: 30 },
+  savedSelections: {
+    slot: null,
+    employee: null,
+  },
+};
 
 const filterSlice = createSlice({
   name: 'filter',
-  initialState: {
-    date: initialCurrentDate,
-    dateDisabled: false,
-    employee: 'any',
-    holdStatus: false,
-    service: { id: 1, name: 'Haircut', duration: 30 },
-    savedSelections: {
-      slot: null,
-      employee: null,
-    },
-  },
+  initialState,
   reducers: {
     setDate: (state, action) => {
       state.date = action.payload;
@@ -48,18 +64,15 @@ const filterSlice = createSlice({
   },
 });
 
-export const selectDate = (state: any) => state.filter.date;
-export const selectDateDisabled = (state: any) => state.filter.dateDisabled;
-export const selectEmployee = (state: any) => state.filter.employee;
-export const selectService = (state: any) => state.filter.service;
-export const seklectHoldStatus = (state: any) => state.filter.holdStatus;
-export const selectSavedSelections = (state: any) => state.filter.savedSelections;
+export const selectDate = (state: RootState) => state.filter.date;
+export const selectDateDisabled = (state: RootState) => state.filter.dateDisabled;
+export const selectEmployee = (state: RootState) => state.filter.employee;
+export const selectService = (state: RootState) => state.filter.service;
+export const seklectHoldStatus = (state: RootState) => state.filter.holdStatus;
+export const selectSavedSelections = (state: RootState) => state.filter.savedSelections;
 export const {
   setDate,
   setEmployee,
-
-  // @ts-expect-error TS(2339): Property 'chooseEmployeePref' does not exist on ty... Remove this comment to see the full error message
-  chooseEmployeePref,
   setDateDisabled,
   setService,
   setSavedSelections,

@@ -10,12 +10,13 @@ import { useFilter } from '@/hooks/useFilter';
 import { selectScheduleByFilter } from '@/features/scheduleSlice';
 import { currentDate, oneMonthFromCurrent } from '@/utils/date';
 import { Slot } from '@/types';
+import type { Employee } from '@/features/employeeSlice';
 
 import styles from './styles.module.css';
 
 interface BookingFormProps {
   handleOpen: (data: Slot | Record<string, never>) => void;
-  employee: string | { id: string; firstName: string };
+  employee: 'any' | Employee | undefined;
 }
 
 export default function BookingForm({

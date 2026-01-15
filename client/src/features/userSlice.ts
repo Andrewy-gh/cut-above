@@ -1,5 +1,6 @@
 import { createSelector, createEntityAdapter } from '@reduxjs/toolkit';
 import { apiSlice } from '../app/api/apiSlice';
+import type { RootState } from '../app/store';
 
 export interface User {
   _id: string;
@@ -39,4 +40,4 @@ export const {
   selectAll: selectAllUsers,
   selectById: selectUserById,
   selectIds: selectUserIds,
-} = userAdapter.getSelectors((state: any) => selectUsersData(state) ?? initialState);
+} = userAdapter.getSelectors((state: RootState) => selectUsersData(state) ?? initialState);

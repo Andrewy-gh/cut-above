@@ -3,6 +3,7 @@ import { apiSlice } from '../../app/api/apiSlice';
 import { formatDateFull, formatDateToTime } from '../../utils/date';
 
 import { Appointment } from '../../types';
+import type { RootState } from '../../app/store';
 
 
 const appointmentAdapter = createEntityAdapter<Appointment>({
@@ -113,5 +114,5 @@ export const {
   selectAll: selectAllAppointment,
   selectById: selectAppointmentById,
 } = appointmentAdapter.getSelectors(
-  (state: any) => selectAppointmentData(state) ?? initialState
+  (state: RootState) => selectAppointmentData(state) ?? initialState
 );

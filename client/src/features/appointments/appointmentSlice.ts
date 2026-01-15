@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import type { RootState } from '../../app/store';
 
 const appointmentSlice = createSlice({
   name: 'appointment',
@@ -19,5 +20,5 @@ export const { beginRescheduling, endRescheduling } = appointmentSlice.actions;
 
 export default appointmentSlice.reducer;
 
-export const selectRescheduling = (state: any) => state.appointment.rescheduling;
-export const selectModifyingApptId = (state: any) => state.appointment.modifyingApptId;
+export const selectRescheduling = (state: RootState) => state.appointment.rescheduling;
+export const selectModifyingApptId = (state: RootState) => state.appointment.modifyingApptId;

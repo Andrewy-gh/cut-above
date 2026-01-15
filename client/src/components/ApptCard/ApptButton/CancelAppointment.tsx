@@ -5,12 +5,20 @@ import { useDialog } from '@/hooks/useDialog';
 import { Appointment } from '@/types';
 
 const dialog = (appointment: Appointment) => {
+  const getName = () => {
+    if (appointment.employee && typeof appointment.employee === 'object') {
+      return appointment.employee.firstName;
+    }
+    if (appointment.client && typeof appointment.client === 'object') {
+      return appointment.client.firstName;
+    }
+    return '';
+  };
+
   return {
     button: 'Cancel',
     title: `Are you sure you want to cancel your ${appointment.service}?`,
-    content: `With ${
-      appointment?.employee?.firstName || appointment?.client?.firstName
-    } on ${appointment.date} at ${appointment.start}?`,
+    content: `With ${getName()} on ${appointment.date} at ${appointment.start}?`,
   };
 };
 

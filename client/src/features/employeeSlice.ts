@@ -1,6 +1,7 @@
 import { createSelector, createEntityAdapter, EntityState } from '@reduxjs/toolkit';
 import { apiSlice } from '../app/api/apiSlice';
 import { EmployeeProfile } from '@/types';
+import type { RootState } from '../app/store';
 
 export interface Employee {
   _id: string;
@@ -52,5 +53,5 @@ export const {
   selectById: selectEmployeeById,
   selectIds: selectEmployeeIds,
 } = employeeAdapter.getSelectors(
-  (state: any) => selectEmployeesData(state) ?? initialState
+  (state: RootState) => selectEmployeesData(state) ?? initialState
 );

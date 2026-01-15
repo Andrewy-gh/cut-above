@@ -7,13 +7,14 @@ import FormLabel from '@mui/material/FormLabel';
 
 import { selectEmployeeById } from '@/features/employeeSlice';
 import { useFilter } from '@/hooks/useFilter';
+import type { RootState } from '@/app/store';
 
 interface EmployeeRadioOptionProps {
   employeeId: string;
 }
 
 const EmployeeRadioOption = ({ employeeId }: EmployeeRadioOptionProps) => {
-  const employee = useSelector((state: any) =>
+  const employee = useSelector((state: RootState) =>
     selectEmployeeById(state, employeeId)
   );
 

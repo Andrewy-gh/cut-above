@@ -2,6 +2,7 @@ import { createSelector, createEntityAdapter, EntityState } from '@reduxjs/toolk
 import { apiSlice } from '../app/api/apiSlice';
 import { selectEmployeeIds } from './employeeSlice';
 import { selectDate, selectEmployee, selectService } from './filterSlice';
+import type { RootState } from '../app/store';
 import {
   checkIsBefore,
   convertUtcToEst,
@@ -77,7 +78,7 @@ const selectScheduleData = createSelector(
 
 export const { selectAll: selectAllSchedule, selectById: selectScheduleById } =
   scheduleAdapter.getSelectors(
-    (state: any) => selectScheduleData(state) ?? initialState
+    (state: RootState) => selectScheduleData(state) ?? initialState
   );
 
 

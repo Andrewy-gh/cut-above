@@ -4,6 +4,7 @@ import { Dayjs } from 'dayjs';
 
 import { formatTime } from '@/utils/date';
 import { theme } from '@/styles/styles';
+import type { Employee } from '@/features/employeeSlice';
 import styles from './styles.module.css';
 
 interface Slot {
@@ -29,7 +30,7 @@ const AvailableTime = ({ children, handleOpen }: AvailableTimeProps) => {
 interface AvailableTimesProps {
   timeSlots: Slot[];
   openDialog: (slot: Slot) => void;
-  employee: string | { id: string; firstName: string };
+  employee: 'any' | Employee | undefined;
 }
 
 export default function AvailableTimes({

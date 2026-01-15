@@ -12,7 +12,7 @@ export default function EmployeeSelect() {
   const employees = useSelector(selectAllEmployees);
   const { employee, handleEmployeeChange } = useFilter();
 
-  const employeeId = typeof employee === 'string' ? employee : employee?._id;
+  const employeeId = employee === 'any' ? 'any' : (typeof employee === 'object' ? employee?._id : undefined);
 
   return (
     <FormControl fullWidth>

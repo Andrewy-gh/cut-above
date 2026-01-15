@@ -6,11 +6,12 @@ import {
 } from '@/features/scheduleSlice';
 
 import { splitByUpcomingAndPast } from '@/utils/date';
+import type { RootState } from '@/app/store';
 
 export function useScheduleQuery(scheduleId?: string) {
   const { data } = useGetScheduleQuery();
   const schedules = useSelector(selectAllSchedule);
-  const schedule = useSelector((state: any) =>
+  const schedule = useSelector((state: RootState) =>
     scheduleId ? selectScheduleById(state, scheduleId) : null
   );
   const appointments = schedule && schedule.appointments;

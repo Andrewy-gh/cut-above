@@ -2,6 +2,10 @@ import { createApi, fetchBaseQuery, BaseQueryFn, FetchArgs, FetchBaseQueryError 
 import { logoutUser } from '@/features/auth/authSlice';
 import { clearMessage, setError } from '@/features/notificationSlice';
 
+interface ErrorResponse {
+  error: string;
+}
+
 const baseUrl = import.meta.env.PROD
   ? 'https://cutaboveshop.fly.dev'
   : '';
@@ -17,9 +21,9 @@ const baseQueryWithReauth: BaseQueryFn<
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
-  if (result?.error?.data && (result.error.data as any).error === 'Session expired, please log in') {
+  if (result?.error?.data && (result.error.data as ErrorResponse).error === 'Session expired, please log in') {
     api.dispatch(logoutUser());
-    api.dispatch(setError((result.error.data as any).error));
+    api.dispatch(setError((result.error.data as ErrorResponse).error));
     api.dispatch(clearMessage());
   }
   return result;

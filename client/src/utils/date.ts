@@ -2,6 +2,8 @@ import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { User } from '@/types';
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(customParseFormat);
@@ -42,7 +44,7 @@ export const formatTime = (time: DateInput) => dayjs(time).format('h:mma');
 
 interface ScheduleAppointment {
   employeeId?: string;
-  employee?: { _id: string };
+  employee?: User | string;
   start: string;
   end?: string;
 }
@@ -55,7 +57,7 @@ interface ScheduleInput {
 }
 
 interface SelectedEmployee {
-  id: string;
+  _id: string;
 }
 
 export const findAvailableTimeSlots = (
@@ -81,11 +83,13 @@ export const findAvailableTimeSlots = (
       break;
     }
 
-    const selectedEmployees = employee !== 'any' ? [employee.id] : employees;
+    const selectedEmployees = employee !== 'any' ? [employee._id] : employees;
     const availableEmployees = selectedEmployees.filter((employeeId) => {
-      const employeeAppointments = appointments.filter(
-        (appointment) => (appointment.employeeId || appointment.employee?._id) === employeeId
-      );
+      const employeeAppointments = appointments.filter((appointment) => {
+        const apptEmpId = appointment.employeeId ||
+          (appointment.employee && typeof appointment.employee === 'object' ? appointment.employee._id : appointment.employee);
+        return apptEmpId === employeeId;
+      });
       const employeeBooked = employeeAppointments.some(
         (appointment) => dayjs(appointment.start).isBefore(currentSlotEnd) &&
         (appointment.end ? dayjs(appointment.end).isAfter(slotStart) : false)

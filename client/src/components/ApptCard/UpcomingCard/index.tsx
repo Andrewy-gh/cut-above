@@ -10,6 +10,18 @@ interface UpcomingCardProps {
 
 export default function UpcomingCard({ appointment }: UpcomingCardProps) {
   const { role } = useAuth();
+
+  const getName = () => {
+    if (role === 'client') {
+      return appointment.employee && typeof appointment.employee === 'object'
+        ? appointment.employee.firstName
+        : '';
+    }
+    return appointment.client && typeof appointment.client === 'object'
+      ? appointment.client.firstName
+      : '';
+  };
+
   return (
     <div
       className="appointment-card"
@@ -23,11 +35,7 @@ export default function UpcomingCard({ appointment }: UpcomingCardProps) {
       >
         <div>
           <AppTitle appointment={appointment} />
-          <div>
-            {role === 'client'
-              ? appointment.employee?.firstName
-              : appointment.client?.firstName}
-          </div>
+          <div>{getName()}</div>
         </div>
       </div>
       <div

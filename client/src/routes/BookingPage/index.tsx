@@ -19,6 +19,8 @@ import { useAuth } from '@/hooks/useAuth';
 
 import { useNotification } from '@/hooks/useNotification';
 
+import { Slot } from '@/types';
+
 import styles from './styles.module.css';
 
 export default function BookingPage() {
@@ -56,14 +58,18 @@ export default function BookingPage() {
       navigate('/login', { state: { from: location }, replace: true });
       return;
     }
-    handleBooking({
-      id,
-      date,
-      start: (selection as any).start,
-      end: (selection as any).end,
-      service: service.name,
-      employee,
-    });
+    // Type guard to ensure selection is a Slot
+    if ('start' in selection && 'end' in selection) {
+      const employeeId = employee === 'any' ? 'any' : (employee?._id || '');
+      handleBooking({
+        id,
+        date,
+        start: (selection as Slot).start.toISOString(),
+        end: (selection as Slot).end.toISOString(),
+        service: service.name,
+        employee: employeeId,
+      });
+    }
     handleClose();
   };
 

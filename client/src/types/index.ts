@@ -14,6 +14,7 @@ export interface Slot {
 
 export interface User {
   id: string;
+  _id?: string; // API returns _id, some code uses id
   firstName: string;
 }
 
@@ -21,8 +22,8 @@ export interface Appointment {
   id: string;
   _id?: string;
   date: string;
-  employee?: User | any; // Some APIs return nested, some flat
-  client?: User | any;
+  employee?: User | string; // Can be User object (populated) or string ID
+  client?: User | string; // Can be User object (populated) or string ID
   start: string;
   end?: string;
   duration?: number;

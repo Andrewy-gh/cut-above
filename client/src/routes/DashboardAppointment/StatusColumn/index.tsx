@@ -29,14 +29,19 @@ export default function StatusColumn({
 
   return (
     <div className={styles.column}>
-      {appointments.map((appt) => (
-        <div key={appt.id} className={styles.appointment_card}>
-          <div className={styles.flex_col}>
-            <div>
-              <ApptTitle appointment={appt} />
-              {appt.employee && <Employee employeeId={appt.employee.id} />}
+      {appointments.map((appt) => {
+        const employeeId = appt.employee && typeof appt.employee === 'object'
+          ? appt.employee.id
+          : (typeof appt.employee === 'string' ? appt.employee : undefined);
+
+        return (
+          <div key={appt.id} className={styles.appointment_card}>
+            <div className={styles.flex_col}>
+              <div>
+                <ApptTitle appointment={appt} />
+                {employeeId && <Employee employeeId={employeeId} />}
+              </div>
             </div>
-          </div>
           <div className={styles.buttons_wrap}>
             <div className="grow-0">
               <UpdateApptStatus appointment={appt} newStatus={newStatus} />
@@ -49,7 +54,8 @@ export default function StatusColumn({
             </div>
           </div>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
