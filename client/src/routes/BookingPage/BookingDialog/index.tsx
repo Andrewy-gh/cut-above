@@ -24,7 +24,7 @@ export default function BookingDialog({
 }: BookingDialogProps) {
   const { employee, handleEmployeeChange } = useFilter();
   let employeeOptions;
-  if (employee === 'any') {
+  if (!employee) {
     employeeOptions = (
       <EmployeeAccordion>
         {'available' in selection && (
@@ -36,7 +36,7 @@ export default function BookingDialog({
     employeeOptions = (
       <EmployeeEdit
         employee={employee}
-        handleClick={() => handleEmployeeChange('any')}
+        handleClick={() => handleEmployeeChange(undefined)}
       />
     );
   }

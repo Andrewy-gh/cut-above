@@ -12,22 +12,22 @@ export default function EmployeeSelect() {
   const employees = useSelector(selectAllEmployees);
   const { employee, handleEmployeeChange } = useFilter();
 
-  const employeeId = employee === 'any' ? 'any' : (typeof employee === 'object' ? employee?._id : undefined);
+  const employeeId = employee?.id;
 
   return (
     <FormControl fullWidth>
       <InputLabel>Choose a barber</InputLabel>
       <Select
         label="Barber"
-        value={employeeId || 'any'}
+        value={employeeId || ''}
         fullWidth
-        onChange={(e) => handleEmployeeChange(e.target.value)}
+        onChange={(e) => handleEmployeeChange(e.target.value || undefined)}
         sx={{ color: theme.palette.secondary.main }}
       >
-        <MenuItem value="any">No preference</MenuItem>
+        <MenuItem value="">No preference</MenuItem>
         {employees.map((emp) => {
           return (
-            <MenuItem value={emp._id} key={emp._id}>
+            <MenuItem value={emp.id} key={emp.id}>
               {emp.firstName}
             </MenuItem>
           );

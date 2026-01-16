@@ -57,14 +57,14 @@ interface ScheduleInput {
 }
 
 interface SelectedEmployee {
-  _id: string;
+  id: string;
 }
 
 export const findAvailableTimeSlots = (
   schedule: ScheduleInput,
   duration: number,
   employees: (string | number)[],
-  employee: SelectedEmployee | 'any'
+  employee: SelectedEmployee | undefined
 ) => {
   const { date, open, close, appointments } = schedule;
   const searchIncrement = 15;
@@ -83,11 +83,11 @@ export const findAvailableTimeSlots = (
       break;
     }
 
-    const selectedEmployees = employee !== 'any' ? [employee._id] : employees;
+    const selectedEmployees = employee ? [employee.id] : employees;
     const availableEmployees = selectedEmployees.filter((employeeId) => {
       const employeeAppointments = appointments.filter((appointment) => {
         const apptEmpId = appointment.employeeId ||
-          (appointment.employee && typeof appointment.employee === 'object' ? appointment.employee._id : appointment.employee);
+          (appointment.employee && typeof appointment.employee === 'object' ? appointment.employee.id : appointment.employee);
         return apptEmpId === employeeId;
       });
       const employeeBooked = employeeAppointments.some(

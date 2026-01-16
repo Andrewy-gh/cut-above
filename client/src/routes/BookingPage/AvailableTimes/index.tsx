@@ -30,7 +30,7 @@ const AvailableTime = ({ children, handleOpen }: AvailableTimeProps) => {
 interface AvailableTimesProps {
   timeSlots: Slot[];
   openDialog: (slot: Slot) => void;
-  employee: 'any' | Employee | undefined;
+  employee: Employee | undefined;
 }
 
 export default function AvailableTimes({
@@ -60,7 +60,7 @@ export default function AvailableTimes({
         {timeSlots.map((slot: Slot) => {
           const startTime = formatTime(slot.start); // dayjs obj => 10:45am
           const slotsAvailable =
-            employee === 'any' ? `${slot.available.length} left` : '';
+            !employee ? `${slot.available.length} left` : '';
           return (
             <div key={slot.id} className={itemClass}>
               <AvailableTime

@@ -6,7 +6,7 @@ import type { Employee } from './employeeSlice';
 interface FilterState {
   date: string;
   dateDisabled: boolean;
-  employee: 'any' | Employee | undefined;
+  employee: Employee | undefined;
   holdStatus: boolean;
   service: { id: number; name: string; duration: number };
   savedSelections: {
@@ -18,7 +18,7 @@ interface FilterState {
 const initialState: FilterState = {
   date: initialCurrentDate,
   dateDisabled: false,
-  employee: 'any',
+  employee: undefined,
   holdStatus: false,
   service: { id: 1, name: 'Haircut', duration: 30 },
   savedSelections: {
@@ -58,7 +58,7 @@ const filterSlice = createSlice({
     },
     resetFilter: (state) => {
       state.date = initialCurrentDate;
-      state.employee = 'any';
+      state.employee = undefined;
       state.service = { id: 1, name: 'Haircut', duration: 30 };
     },
   },

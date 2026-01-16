@@ -6,7 +6,7 @@ import styles from './styles.module.css';
 interface EmployeeEditProps {
   employee: {
     firstName: string;
-  } | 'any';
+  } | undefined;
   handleClick: () => void;
 }
 
@@ -14,7 +14,7 @@ export default function EmployeeEdit({
   employee,
   handleClick,
 }: EmployeeEditProps) {
-  if (employee === 'any') return null;
+  if (!employee) return null;
 
   return (
     <div className={styles.flex_sb}>

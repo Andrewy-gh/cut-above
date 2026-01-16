@@ -14,7 +14,7 @@ import {
 import { Schedule } from '../types';
 
 const scheduleAdapter = createEntityAdapter<Schedule>({
-  selectId: (schedule) => schedule._id,
+  selectId: (schedule) => schedule.id,
 });
 
 const initialState = scheduleAdapter.getInitialState();

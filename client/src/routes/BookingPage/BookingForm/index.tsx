@@ -16,7 +16,7 @@ import styles from './styles.module.css';
 
 interface BookingFormProps {
   handleOpen: (data: Slot | Record<string, never>) => void;
-  employee: 'any' | Employee | undefined;
+  employee: Employee | undefined;
 }
 
 export default function BookingForm({

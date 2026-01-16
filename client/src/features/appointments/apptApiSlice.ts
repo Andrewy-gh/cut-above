@@ -7,7 +7,7 @@ import type { RootState } from '../../app/store';
 
 
 const appointmentAdapter = createEntityAdapter<Appointment>({
-  selectId: (appt) => appt._id,
+  selectId: (appt) => appt.id,
 });
 
 const initialState = appointmentAdapter.getInitialState();
@@ -21,7 +21,6 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
           .sort((a, b) => a.start.localeCompare(b.start))
           .map((appt) => ({
             ...appt,
-            id: appt._id,
             date: formatDateFull(appt.date),
             start: formatDateToTime(appt.start)
           }));

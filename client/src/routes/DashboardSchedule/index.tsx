@@ -17,13 +17,13 @@ export default function DashboardSchedule() {
         <h5 className={styles.header}>Upcoming schedules</h5>
         <div className={styles.container}>
           {upcomingSchedules.map((schedule: Schedule) => (
-            <ScheduleCard key={schedule._id} schedule={schedule} />
+            <ScheduleCard key={schedule.id} schedule={schedule} />
           ))}
         </div>
         <h5 className={styles.header}>Past schedules</h5>
         <div className={styles.container}>
           {pastSchedules.map((schedule: Schedule) => (
-            <ScheduleCard key={schedule._id} schedule={schedule} />
+            <ScheduleCard key={schedule.id} schedule={schedule} />
           ))}
         </div>
       </>

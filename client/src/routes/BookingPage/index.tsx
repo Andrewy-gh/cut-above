@@ -60,7 +60,7 @@ export default function BookingPage() {
     }
     // Type guard to ensure selection is a Slot
     if ('start' in selection && 'end' in selection) {
-      const employeeId = employee === 'any' ? 'any' : (employee?._id || '');
+      const employeeId = employee?.id || '';
       handleBooking({
         id,
         date,

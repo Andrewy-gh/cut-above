@@ -15,7 +15,6 @@ import LoadingSpinner from './components/LoadingSpinner';
 
 import { disableReactDevTools } from '@fvilers/disable-react-devtools';
 
-// @ts-expect-error disableReactDevTools may not match import.meta.env types
 if (import.meta.env?.PROD) disableReactDevTools();
 
 // Lazy-loaded components

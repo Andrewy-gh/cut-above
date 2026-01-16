@@ -22,7 +22,7 @@ const EmployeeRadioOption = ({ employeeId }: EmployeeRadioOptionProps) => {
 
   return (
     <FormControlLabel
-      value={employee._id}
+      value={employee.id}
       control={<Radio />}
       label={employee.firstName}
     />

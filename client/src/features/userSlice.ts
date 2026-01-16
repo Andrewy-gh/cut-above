@@ -3,7 +3,7 @@ import { apiSlice } from '../app/api/apiSlice';
 import type { RootState } from '../app/store';
 
 export interface User {
-  _id: string;
+  id: string;
   email: string;
   firstName?: string;
   lastName?: string;
@@ -11,7 +11,7 @@ export interface User {
 }
 
 const userAdapter = createEntityAdapter<User>({
-  selectId: (user) => user._id,
+  selectId: (user) => user.id,
 });
 
 const initialState = userAdapter.getInitialState();

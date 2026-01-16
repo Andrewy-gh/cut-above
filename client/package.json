@@ -48,14 +48,3 @@
     "vitest": "^1.2.0"
   }
 }
-
-- Migrated client codebase from JS/JSX to TS/TSX (120 files)
-- Replaced all Redux selector any types with RootState
-- Typed API response structures and stabilized core slices
-- Typed utils, hooks, and event handlers
-- Standardized component types, eliminated PropTypes
-- Type refinement across routes (Login, Register, BookingPage, Dashboard, Schedule)
-- Resolved TS migration infrastructure and module errors
-- Added route rendering tests
-- Configured TypeScript, Vitest, ESLint for TS
-

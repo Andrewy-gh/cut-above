@@ -19,7 +19,7 @@ export default function ScheduleCard({ schedule }: ScheduleCardProps) {
       <div>Open: {formatDateToTime(schedule.open)}</div>
       <div>Close: {formatDateToTime(schedule.close)}</div>
       <div>Total appointments: {schedule.appointments.length}</div>
-      <Link to={`${schedule._id}`}>
+      <Link to={`${schedule.id}`}>
         <Button>View Details</Button>
       </Link>
     </div>

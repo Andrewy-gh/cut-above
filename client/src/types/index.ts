@@ -1,4 +1,4 @@
-import { Dayjs } from 'dayjs';
+import { Dayjs } from "dayjs";
 
 export interface GenericResponse {
   success: boolean;
@@ -14,30 +14,32 @@ export interface Slot {
 
 export interface User {
   id: string;
-  _id?: string; // API returns _id, some code uses id
   firstName: string;
 }
 
 export interface Appointment {
   id: string;
-  _id?: string;
   date: string;
   employee?: User | string; // Can be User object (populated) or string ID
   client?: User | string; // Can be User object (populated) or string ID
   start: string;
   end?: string;
   duration?: number;
-  status: 'scheduled' | 'cancelled' | 'attended' | 'not-attended' | 'checked-in' | 'completed' | string;
+  status:
+    | "scheduled"
+    | "cancelled"
+    | "attended"
+    | "not-attended"
+    | "checked-in"
+    | "completed"
+    | string;
   service: string;
   customerName?: string;
   customerEmail?: string;
 }
 
-
-
 export interface Schedule {
-  _id: string;
-  id?: string; // Some parts of the app use id instead of _id
+  id: string;
   date: string;
   open: string;
   close: string;
@@ -50,8 +52,7 @@ export interface RouteError {
 }
 
 export interface Employee {
-  _id: string;
-  id?: string;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;

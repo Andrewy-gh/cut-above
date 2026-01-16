@@ -27,9 +27,8 @@ export function useFilter() {
     dispatch(setDate(newDate.toISOString()));
   };
 
-  const handleEmployeeChange = (id: string) => {
-    const selectedEmployee =
-      id === 'any' ? 'any' : (employees as Employee[]).find((e) => e._id === id);
+  const handleEmployeeChange = (id: string | undefined) => {
+    const selectedEmployee = id ? (employees as Employee[]).find((e) => e.id === id) : undefined;
     dispatch(setEmployee(selectedEmployee));
   };
 

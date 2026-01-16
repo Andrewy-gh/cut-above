@@ -4,7 +4,7 @@ import { EmployeeProfile } from '@/types';
 import type { RootState } from '../app/store';
 
 export interface Employee {
-  _id: string;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -14,7 +14,7 @@ export interface Employee {
 }
 
 const employeeAdapter = createEntityAdapter<Employee>({
-  selectId: (employee) => employee._id,
+  selectId: (employee) => employee.id,
 });
 
 const initialState = employeeAdapter.getInitialState();
