@@ -36,6 +36,7 @@ export function createTestStore(preloadedState: Record<string, unknown> = {}) {
   });
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function AllProviders({
   children,
   store,
@@ -79,5 +80,6 @@ export function renderWithProviders(
   return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export * from '@testing-library/react';
 export { renderWithProviders as render };

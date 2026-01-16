@@ -1,14 +1,13 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
-import { render, createTestStore } from '@/test/test-utils';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { screen } from '@testing-library/react';
+import { render } from '@/test/test-utils';
+import { Routes, Route } from 'react-router-dom';
 
 // Public route components
 import Home from '@/routes/Home';
 import Login from '@/routes/Login';
 import Register from '@/routes/Register';
 import BookingPage from '@/routes/BookingPage';
-import Layout from '@/routes/Layout';
 
 // Protected route components
 import RequireAuth from '@/routes/RequireAuth';

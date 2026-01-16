@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { initialCurrentDate } from '../utils/date';
 import type { RootState } from '../app/store';
 import type { Employee } from './employeeSlice';

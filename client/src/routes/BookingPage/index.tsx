@@ -43,7 +43,7 @@ export default function BookingPage() {
       setRescheduling(true);
     }
   }, [id]);
-  let message = rescheduling
+  const message = rescheduling
     ? 'Please book your new appointment'
     : 'Schedule your appointment';
 

@@ -6,7 +6,6 @@ import StatusTab from './StatusTab';
 import { formatDateFull, sortAndFormatApptByStartTime } from '@/utils/date';
 import { filterByApptStatus } from '@/utils/apptStatus';
 import styles from './styles.module.css';
-import { AppointmentStatusGroup } from '@/types';
 
 export default function DashboardAppointment() {
   const { id } = useParams<{ id: string }>();

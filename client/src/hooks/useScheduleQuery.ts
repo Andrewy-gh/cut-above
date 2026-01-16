@@ -9,7 +9,7 @@ import { splitByUpcomingAndPast } from '@/utils/date';
 import type { RootState } from '@/app/store';
 
 export function useScheduleQuery(scheduleId?: string) {
-  const { data } = useGetScheduleQuery();
+  useGetScheduleQuery();
   const schedules = useSelector(selectAllSchedule);
   const schedule = useSelector((state: RootState) =>
     scheduleId ? selectScheduleById(state, scheduleId) : null
