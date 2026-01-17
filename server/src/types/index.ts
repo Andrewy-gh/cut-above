@@ -13,6 +13,25 @@ export type AppointmentService =
 
 export type AppointmentStatus = 'scheduled' | 'checked-in' | 'completed' | 'no show';
 
+export interface NewAppointmentData {
+  date: string;
+  start: string;
+  end: string;
+  service: AppointmentService;
+  clientId: string;
+  employeeId: string;
+}
+
+export interface UpdateAppointmentData {
+  id: string;
+  date?: string;
+  start?: string;
+  end?: string;
+  service?: AppointmentService;
+  status?: AppointmentStatus;
+  employeeId?: string;
+}
+
 // Generic types
 export interface PaginationParams {
   page?: number;

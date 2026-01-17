@@ -1,21 +1,10 @@
 import { Appointment, User } from '../models/index.js';
 import { checkScheduleAvailability } from './scheduleService.js';
-import type { NewAppointmentData } from './scheduleService.js';
 import ApiError from '../utils/ApiError.js';
 import { sequelize } from '../utils/db.js';
-import type { AppointmentService, AppointmentStatus } from '../types/index.js';
+import type { NewAppointmentData, UpdateAppointmentData } from '../types/index.js';
 import type { AppointmentAttributes } from '../types/models.js';
 import { convertDateAndTime } from '../utils/dateTime.js';
-
-export interface UpdateAppointmentData {
-  id: string;
-  date?: string;
-  start?: string;
-  end?: string;
-  service?: AppointmentService;
-  status?: AppointmentStatus;
-  employeeId?: string;
-}
 
 export const getAppointmentsByRole = async (user: User): Promise<Appointment[]> => {
   if (user.role === 'client') {
