@@ -60,14 +60,16 @@ export default function BookingPage() {
     }
     // Type guard to ensure selection is a Slot
     if ('start' in selection && 'end' in selection) {
-      const employeeId = employee?.id || '';
       handleBooking({
         id,
         date,
         start: (selection as Slot).start.toISOString(),
         end: (selection as Slot).end.toISOString(),
         service: service.name,
-        employee: employeeId,
+        employee: {
+          id: employee?.id || '',
+          firstName: employee?.firstName || '',
+        },
       });
     }
     handleClose();
