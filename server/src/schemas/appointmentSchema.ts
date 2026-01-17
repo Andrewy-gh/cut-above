@@ -1,23 +1,21 @@
 import * as v from 'valibot';
 
-const isoDateOrDatetime = v.pipe(
+const isoDatetime = v.pipe(
   v.string(),
   v.check(
     (val) => {
-      // Accept ISO date (YYYY-MM-DD) or ISO datetime (YYYY-MM-DDTHH:mm:ss.sssZ)
-      const isoDateRegex = /^\d{4}-\d{2}-\d{2}$/;
-      const isoDateTimeRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z?$/;
-      return isoDateRegex.test(val) || isoDateTimeRegex.test(val);
+      // Only accept full ISO 8601 datetime format
+      const isoDateTimeRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?(Z|[+-]\d{2}:\d{2})?$/;
+      return isoDateTimeRegex.test(val);
     },
-    'Must be valid ISO date or datetime'
+    'Must be valid ISO 8601 datetime'
   )
 );
 
 export const bookingSchema = v.pipe(
   v.object({
-    date: isoDateOrDatetime,
-    start: isoDateOrDatetime,
-    end: isoDateOrDatetime,
+    start: isoDatetime,
+    end: isoDatetime,
     employee: v.object({
       id: v.pipe(v.string(), v.uuid()),
       firstName: v.string(),
