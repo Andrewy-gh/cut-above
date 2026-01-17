@@ -4,7 +4,8 @@ import ApiError from '../utils/ApiError.js';
 import { sequelize } from '../utils/db.js';
 import type { NewAppointmentData, UpdateAppointmentData } from '../types/index.js';
 import type { AppointmentAttributes } from '../types/models.js';
-import { convertDateAndTime } from '../utils/dateTime.js';
+import { convertISOToDate, extractDateFromISO } from '../utils/dateTime.js';
+import dayjs from 'dayjs';
 
 export const getAppointmentsByRole = async (user: User): Promise<Appointment[]> => {
   if (user.role === 'client') {
@@ -58,9 +59,9 @@ export const getAppointmentsByRole = async (user: User): Promise<Appointment[]> 
 export const createNew = async (newAppt: NewAppointmentData): Promise<Appointment> => {
   const availbleScheduleId = await checkScheduleAvailability(newAppt);
   const appointment = await Appointment.create({
-    date: convertDateAndTime(newAppt.date, '00:00').toDate(),
-    start: convertDateAndTime(newAppt.date, newAppt.start).toDate(),
-    end: convertDateAndTime(newAppt.date, newAppt.end).toDate(),
+    date: convertISOToDate(newAppt.start),
+    start: convertISOToDate(newAppt.start),
+    end: convertISOToDate(newAppt.end),
     service: newAppt.service,
     clientId: newAppt.clientId,
     employeeId: newAppt.employeeId,
@@ -75,51 +76,61 @@ export const update = async (newAppt: UpdateAppointmentData): Promise<Appointmen
   if (!appointment) {
     throw new ApiError(404, 'appointment not found');
   }
-  // newAppt date is a string, appointment date is a date object
-  if (newAppt.date && newAppt.date !== appointment.date.toISOString().split('T')[0]) {
-    // Build a NewAppointmentData object for availability check
-    const checkData: NewAppointmentData = {
-      date: newAppt.date,
-      start: newAppt.start || appointment.start.toISOString().split('T')[1].substring(0, 5),
-      end: newAppt.end || appointment.end.toISOString().split('T')[1].substring(0, 5),
-      service: newAppt.service || appointment.service,
-      clientId: appointment.clientId,
-      employeeId: newAppt.employeeId || appointment.employeeId,
-    };
-    const availbleScheduleId = await checkScheduleAvailability(checkData);
-    const result = await sequelize.transaction(async (_t) => {
-      const schedule = await appointment.getSchedule();
-      if (schedule) {
-        await schedule.removeAppointment(appointment);
-      }
 
-      const updates: Partial<AppointmentAttributes> = {
-        scheduleId: availbleScheduleId,
+  // Check if date changed (extract from start ISO)
+  if (newAppt.start) {
+    const newDate = extractDateFromISO(newAppt.start);
+    const currentDate = dayjs(appointment.date).format('YYYY-MM-DD');
+
+    if (newDate !== currentDate) {
+      // Build a NewAppointmentData object for availability check
+      const checkData: NewAppointmentData = {
+        start: newAppt.start,
+        end: newAppt.end || appointment.end.toISOString(),
+        service: newAppt.service || appointment.service,
+        clientId: appointment.clientId,
+        employeeId: newAppt.employeeId || appointment.employeeId,
       };
-      if (newAppt.service) updates.service = newAppt.service;
-      if (newAppt.status) updates.status = newAppt.status;
-      if (newAppt.employeeId) updates.employeeId = newAppt.employeeId;
-      if (newAppt.date) updates.date = convertDateAndTime(newAppt.date, '00:00').toDate();
-      if (newAppt.start) updates.start = convertDateAndTime(newAppt.date!, newAppt.start).toDate();
-      if (newAppt.end) updates.end = convertDateAndTime(newAppt.date!, newAppt.end).toDate();
 
-      appointment.set(updates);
-      await appointment.save();
-      return appointment;
-    });
-    return result;
-  } else {
-    const updates: Partial<AppointmentAttributes> = {};
-    if (newAppt.service) updates.service = newAppt.service;
-    if (newAppt.status) updates.status = newAppt.status;
-    if (newAppt.employeeId) updates.employeeId = newAppt.employeeId;
-    if (newAppt.start) updates.start = convertDateAndTime(newAppt.date || appointment.date.toISOString().split('T')[0], newAppt.start).toDate();
-    if (newAppt.end) updates.end = convertDateAndTime(newAppt.date || appointment.date.toISOString().split('T')[0], newAppt.end).toDate();
+      const availbleScheduleId = await checkScheduleAvailability(checkData);
 
-    appointment.set(updates);
-    await appointment.save();
-    return appointment;
+      return await sequelize.transaction(async (_t) => {
+        const schedule = await appointment.getSchedule();
+        if (schedule) {
+          await schedule.removeAppointment(appointment);
+        }
+
+        const updates: Partial<AppointmentAttributes> = { scheduleId: availbleScheduleId };
+        if (newAppt.service) updates.service = newAppt.service;
+        if (newAppt.status) updates.status = newAppt.status;
+        if (newAppt.employeeId) updates.employeeId = newAppt.employeeId;
+        if (newAppt.start) {
+          updates.date = convertISOToDate(newAppt.start);
+          updates.start = convertISOToDate(newAppt.start);
+        }
+        if (newAppt.end) updates.end = convertISOToDate(newAppt.end);
+
+        appointment.set(updates);
+        await appointment.save();
+        return appointment;
+      });
+    }
   }
+
+  // Simple update without schedule change
+  const updates: Partial<AppointmentAttributes> = {};
+  if (newAppt.service) updates.service = newAppt.service;
+  if (newAppt.status) updates.status = newAppt.status;
+  if (newAppt.employeeId) updates.employeeId = newAppt.employeeId;
+  if (newAppt.start) {
+    updates.date = convertISOToDate(newAppt.start);
+    updates.start = convertISOToDate(newAppt.start);
+  }
+  if (newAppt.end) updates.end = convertISOToDate(newAppt.end);
+
+  appointment.set(updates);
+  await appointment.save();
+  return appointment;
 };
 
 export const getClientAppointmentById = async (id: string): Promise<Appointment | null> => {
