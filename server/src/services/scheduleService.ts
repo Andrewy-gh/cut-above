@@ -1,5 +1,5 @@
 import { Appointment, Schedule, User } from '../models/index.js';
-import { checkAvailability, generateRange } from '../utils/dateTime.js';
+import { checkAvailabilityISO, extractDateFromISO, generateRange } from '../utils/dateTime.js';
 import type { NewAppointmentData } from '../types/index.js';
 import ApiError from '../utils/ApiError.js';
 
@@ -91,23 +91,25 @@ export const createSchedules = async (dates: [string, string], open: string, clo
 };
 
 export const checkScheduleAvailability = async (newAppt: NewAppointmentData): Promise<string> => {
-  const schedule = await Schedule.findOne({ where: { date: newAppt.date } });
+  const appointmentDate = extractDateFromISO(newAppt.start);
+
+  const schedule = await Schedule.findOne({ where: { date: appointmentDate } });
   if (!schedule) {
     throw new ApiError(410, 'Schedule not available');
   }
-  // TODO: Eager load appointments
+
   const appointments = await schedule.getAppointments();
-  // Convert appointments to the format expected by checkAvailability
+
   const appointmentsCheck = appointments.map(a => ({
-    date: a.date.toISOString().split('T')[0],
-    start: a.start.toISOString().split('T')[1].substring(0, 5),
-    end: a.end.toISOString().split('T')[1].substring(0, 5),
+    start: a.start.toISOString(),
+    end: a.end.toISOString(),
     employeeId: a.employeeId,
   }));
-  // TODO: check before open or check after close too
-  const available = checkAvailability(appointmentsCheck, newAppt);
+
+  const available = checkAvailabilityISO(appointmentsCheck, newAppt);
   if (!available) {
-    throw new ApiError(410, 'Appointment not available'); // Gone
+    throw new ApiError(410, 'Appointment not available');
   }
+
   return schedule.id;
 };
