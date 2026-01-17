@@ -12,7 +12,10 @@ interface BookingParams {
   start: string;
   end: string;
   service: string;
-  employee: string;
+  employee: {
+    id: string;
+    firstName: string;
+  };
 }
 
 export function useBooking() {

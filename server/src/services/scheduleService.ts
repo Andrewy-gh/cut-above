@@ -1,16 +1,7 @@
 import { Appointment, Schedule, User } from '../models/index.js';
 import { checkAvailability, generateRange } from '../utils/dateTime.js';
+import type { NewAppointmentData } from '../types/index.js';
 import ApiError from '../utils/ApiError.js';
-import type { AppointmentService } from '../types/index.js';
-
-export interface NewAppointmentData {
-  date: string;
-  start: string;
-  end: string;
-  service: AppointmentService;
-  clientId: string;
-  employeeId: string;
-}
 
 export const getPublicSchedules = async (): Promise<Schedule[]> => {
   return await Schedule.findAll({
