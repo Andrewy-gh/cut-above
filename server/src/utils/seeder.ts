@@ -8,7 +8,7 @@ import {
 } from '../models/index.js';
 import logger from './logger/index.js';
 import { sequelize } from './db.js';
-import { convertDateAndTime, convertDate } from './dateTime.js';
+import { convertISOToDate, extractDateFromISO } from './dateTime.js';
 
 export const seedUsers = async (): Promise<User[]> => {
   const newUsers = await User.bulkCreate(users, { returning: true });
@@ -23,10 +23,9 @@ export const seedUsers = async (): Promise<User[]> => {
 
 export const seedSchedules = async (): Promise<Schedule[]> => {
   const schedulesWithFormattedDates = schedules.map((schedule) => ({
-    ...schedule,
-    date: convertDate(schedule.date).toDate(),
-    open: convertDateAndTime(schedule.date, schedule.open).toDate(),
-    close: convertDateAndTime(schedule.date, schedule.close).toDate(),
+    date: schedule.date,
+    open: convertISOToDate(schedule.open),
+    close: convertISOToDate(schedule.close),
   }));
 
   const newSchedules = await Schedule.bulkCreate(schedulesWithFormattedDates, {
@@ -53,13 +52,14 @@ export const seedAppointments = async (
       schedules.length > 0 ? schedules[index % schedules.length] : null;
 
     return {
-      ...appointment,
+      service: appointment.service,
+      status: appointment.status,
       clientId: client.id,
       employeeId: employee.id,
       scheduleId: schedule!.id,
-      date: convertDate(appointment.date).toDate(),
-      start: convertDateAndTime(appointment.date, appointment.start).toDate(),
-      end: convertDateAndTime(appointment.date, appointment.end).toDate(),
+      date: convertISOToDate(appointment.start),
+      start: convertISOToDate(appointment.start),
+      end: convertISOToDate(appointment.end),
     };
   });
 
