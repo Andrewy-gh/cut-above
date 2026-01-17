@@ -105,3 +105,51 @@ export const formatDateAndTimes = (appointment: { date: string }): { date: Dayjs
     // end: convertDateAndTime(appointment.date, appointment.end),
   };
 };
+
+// ============================================================================
+// ISO DateTime Utilities
+// ============================================================================
+
+// Parse ISO datetime string to Dayjs object with America/New_York timezone
+export const parseISOToLocalTime = (iso: string): Dayjs =>
+  dayjs.tz(iso, selectedTimeZone);
+
+// Convert ISO datetime string to JavaScript Date object for DB storage
+export const convertISOToDate = (iso: string): Date =>
+  parseISOToLocalTime(iso).toDate();
+
+// Extract YYYY-MM-DD date string from ISO datetime for schedule lookups
+export const extractDateFromISO = (iso: string): string =>
+  parseISOToLocalTime(iso).format('YYYY-MM-DD');
+
+// Check appointment availability using ISO datetime strings
+export const checkAvailabilityISO = (
+  appointments: { start: string; end: string; employeeId: string }[],
+  newAppt: { start: string; end: string; employeeId: string }
+): boolean => {
+  const newStart = parseISOToLocalTime(newAppt.start);
+  const newEnd = parseISOToLocalTime(newAppt.end);
+
+  for (let appt of appointments) {
+    const start = parseISOToLocalTime(appt.start);
+    const end = parseISOToLocalTime(appt.end);
+
+    if (appt.employeeId === newAppt.employeeId) {
+      if (
+        newStart.isBetween(start, end, 'minute', '[)') ||
+        newEnd.isBetween(start, end, 'minute', '(]')
+      ) {
+        return false; // overlap found
+      }
+    }
+  }
+  return true; // no conflict
+};
+
+// Format ISO datetime to MM/DD/YYYY for email display
+export const formatDateSlashISO = (isoDatetime: string): string =>
+  parseISOToLocalTime(isoDatetime).format('MM/DD/YYYY');
+
+// Format ISO datetime to h:mma (e.g., "2:30pm") for email display
+export const formatTimeISO = (isoDatetime: string): string =>
+  parseISOToLocalTime(isoDatetime).format('h:mma');
