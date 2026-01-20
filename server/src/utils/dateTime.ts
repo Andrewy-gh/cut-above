@@ -135,10 +135,9 @@ export const checkAvailabilityISO = (
     const end = parseISOToLocalTime(appt.end);
 
     if (appt.employeeId === newAppt.employeeId) {
-      if (
-        newStart.isBetween(start, end, 'minute', '[)') ||
-        newEnd.isBetween(start, end, 'minute', '(]')
-      ) {
+      // Two appointments overlap if: newStart < existingEnd AND newEnd > existingStart
+      // Back-to-back appointments (newStart == existingEnd or newEnd == existingStart) are allowed
+      if (newStart.isBefore(end, 'minute') && newEnd.isAfter(start, 'minute')) {
         return false; // overlap found
       }
     }
