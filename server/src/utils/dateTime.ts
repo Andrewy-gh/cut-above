@@ -98,14 +98,6 @@ export const generateRange = (
   return datesToSchedule;
 };
 
-export const formatDateAndTimes = (appointment: { date: string }): { date: Dayjs } => {
-  return {
-    date: convertDate(appointment.date),
-    // start: convertDateAndTime(appointment.date, appointment.start),
-    // end: convertDateAndTime(appointment.date, appointment.end),
-  };
-};
-
 // ============================================================================
 // ISO DateTime Utilities
 // ============================================================================
