@@ -111,8 +111,9 @@ export const formatDateAndTimes = (appointment: { date: string }): { date: Dayjs
 // ============================================================================
 
 // Parse ISO datetime string to Dayjs object with America/New_York timezone
+// Uses UTC parsing first to prevent double-conversion with timezone offsets
 export const parseISOToLocalTime = (iso: string): Dayjs =>
-  dayjs.tz(iso, selectedTimeZone);
+  dayjs.utc(iso).tz(selectedTimeZone);
 
 // Convert ISO datetime string to JavaScript Date object for DB storage
 export const convertISOToDate = (iso: string): Date =>

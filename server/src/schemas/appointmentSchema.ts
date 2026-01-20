@@ -2,13 +2,10 @@ import * as v from 'valibot';
 
 const isoDatetime = v.pipe(
   v.string(),
+  v.isoTimestamp(),
   v.check(
-    (val) => {
-      // Only accept full ISO 8601 datetime format
-      const isoDateTimeRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?(Z|[+-]\d{2}:\d{2})?$/;
-      return isoDateTimeRegex.test(val);
-    },
-    'Must be valid ISO 8601 datetime'
+    (val) => val.endsWith('Z'),
+    'Must be UTC ISO 8601 timestamp (Z suffix required, timezone offsets not allowed)'
   )
 );
 

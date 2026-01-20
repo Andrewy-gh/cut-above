@@ -31,7 +31,8 @@ const id = v.pipe(
 
 const token = v.pipe(
   v.string(),
-  v.regex(/^[0-9a-fA-F]{64}$/, 'Token must be a 64-character hexadecimal string')
+  v.length(64, 'Token must be exactly 64 characters'),
+  v.hexadecimal('Token must be a hexadecimal string')
 );
 
 export const loginSchema = v.object({
