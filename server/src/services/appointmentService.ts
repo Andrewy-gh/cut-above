@@ -94,10 +94,10 @@ export const update = async (newAppt: UpdateAppointmentData): Promise<Appointmen
 
       const availbleScheduleId = await checkScheduleAvailability(checkData);
 
-      return await sequelize.transaction(async (_t) => {
-        const schedule = await appointment.getSchedule();
+      return await sequelize.transaction(async (t) => {
+        const schedule = await appointment.getSchedule({ transaction: t });
         if (schedule) {
-          await schedule.removeAppointment(appointment);
+          await schedule.removeAppointment(appointment, { transaction: t });
         }
 
         const updates: Partial<AppointmentAttributes> = { scheduleId: availbleScheduleId };
@@ -111,7 +111,7 @@ export const update = async (newAppt: UpdateAppointmentData): Promise<Appointmen
         if (newAppt.end) updates.end = convertISOToDate(newAppt.end);
 
         appointment.set(updates);
-        await appointment.save();
+        await appointment.save({ transaction: t });
         return appointment;
       });
     }
