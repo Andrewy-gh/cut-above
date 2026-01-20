@@ -1,18 +1,18 @@
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import {
   selectAllSchedule,
   selectScheduleById,
   useGetScheduleQuery,
-} from '@/features/scheduleSlice';
+} from "@/features/scheduleSlice";
 
-import { splitByUpcomingAndPast } from '@/utils/date';
-import type { RootState } from '@/app/store';
+import { splitByUpcomingAndPast } from "@/utils/date";
+import type { RootState } from "@/app/store";
 
 export function useScheduleQuery(scheduleId?: string) {
   useGetScheduleQuery();
   const schedules = useSelector(selectAllSchedule);
   const schedule = useSelector((state: RootState) =>
-    scheduleId ? selectScheduleById(state, scheduleId) : null
+    scheduleId ? selectScheduleById(state, scheduleId) : null,
   );
   const appointments = schedule && schedule.appointments;
   const [upcomingSchedules, pastSchedules] = splitByUpcomingAndPast(schedules);

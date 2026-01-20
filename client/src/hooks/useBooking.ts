@@ -8,7 +8,6 @@ import { useNotification } from './useNotification';
 
 interface BookingParams {
   id?: string;
-  date: string;
   start: string;
   end: string;
   service: string;
@@ -27,7 +26,6 @@ export function useBooking() {
 
   const handleBooking = async ({
     id,
-    date,
     start,
     end,
     service,
@@ -37,7 +35,6 @@ export function useBooking() {
       if (id) {
         const modifiedAppt = await modifyAppointment({
           id,
-          date,
           start,
           end,
           service,
@@ -49,7 +46,6 @@ export function useBooking() {
         }
       } else {
         const newAppt = await addAppointment({
-          date,
           start,
           end,
           service,

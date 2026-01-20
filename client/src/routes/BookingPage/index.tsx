@@ -62,7 +62,6 @@ export default function BookingPage() {
     if ('start' in selection && 'end' in selection) {
       handleBooking({
         id,
-        date,
         start: (selection as Slot).start.toISOString(),
         end: (selection as Slot).end.toISOString(),
         service: service.name,
