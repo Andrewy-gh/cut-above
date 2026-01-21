@@ -15,7 +15,7 @@ const email = v.pipe(
 const password = v.pipe(
   v.string(),
   v.regex(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()-_+=]).{8,}$/,
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_+=]).{8,}$/,
     'Password must be at least 8 characters and contain at least one lowercase letter, one uppercase letter, one digit, and one special character'
   )
 );
@@ -32,7 +32,10 @@ const id = v.pipe(
 const token = v.pipe(
   v.string(),
   v.length(64, 'Token must be exactly 64 characters'),
-  v.hexadecimal('Token must be a hexadecimal string')
+  v.check(
+    (value) => /^[0-9a-fA-F]+$/.test(value),
+    'Token must be a hexadecimal string'
+  )
 );
 
 export const loginSchema = v.object({

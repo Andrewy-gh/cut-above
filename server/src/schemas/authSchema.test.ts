@@ -97,7 +97,7 @@ describe('authSchema - validation', () => {
     it('accepts valid 64-character hexadecimal token', () => {
       const validTokens = [
         'a'.repeat(64),
-        '0123456789abcdefABCDEF'.repeat(2) + '01234567890123456789ab',
+        '0123456789abcdef'.repeat(4), // 16 * 4 = 64
         'F'.repeat(64),
         '0'.repeat(64),
       ];

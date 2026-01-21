@@ -7,14 +7,14 @@ describe('parseISOToLocalTime - Timezone Handling', () => {
       // 17:00 UTC = 12:00 EST (UTC-5) in January
       const result = parseISOToLocalTime('2024-01-22T17:00:00.000Z');
       expect(result.format('YYYY-MM-DD HH:mm:ss')).toBe('2024-01-22 12:00:00');
-      expect(result.format('z')).toBe('EST');
+      expect(result.utcOffset()).toBe(-300); // EST is UTC-5 (-300 minutes)
     });
 
     it('handles EDT correctly in summer', () => {
       // 17:00 UTC = 13:00 EDT (UTC-4) in July
       const result = parseISOToLocalTime('2024-07-22T17:00:00.000Z');
       expect(result.format('YYYY-MM-DD HH:mm:ss')).toBe('2024-07-22 13:00:00');
-      expect(result.format('z')).toBe('EDT');
+      expect(result.utcOffset()).toBe(-240); // EDT is UTC-4 (-240 minutes)
     });
   });
 
@@ -46,7 +46,7 @@ describe('parseISOToLocalTime - Timezone Handling', () => {
       // Input: 9:00 PST (UTC-8) = 12:00 EST (UTC-5)
       const pstTime = parseISOToLocalTime('2024-01-22T09:00:00-08:00');
       expect(pstTime.format('YYYY-MM-DD HH:mm:ss')).toBe('2024-01-22 12:00:00');
-      expect(pstTime.format('z')).toBe('EST');
+      expect(pstTime.utcOffset()).toBe(-300); // Result is in EST (UTC-5)
     });
 
     // NOTE: Schema now rejects non-UTC input, but parseISOToLocalTime handles it defensively
