@@ -93,7 +93,7 @@ export const update = async (newAppt: UpdateAppointmentData): Promise<Appointmen
 
       const availbleScheduleId = await checkScheduleAvailability(checkData);
 
-      return await sequelize.transaction(async (t) => {
+      const result = await sequelize.transaction(async (t) => {
         const schedule = await appointment.getSchedule({ transaction: t });
         if (schedule) {
           await schedule.removeAppointment(appointment, { transaction: t });
@@ -110,6 +110,7 @@ export const update = async (newAppt: UpdateAppointmentData): Promise<Appointmen
         await appointment.save({ transaction: t });
         return appointment;
       });
+      return result;
     }
   }
 
