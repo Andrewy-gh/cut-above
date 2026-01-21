@@ -1,7 +1,8 @@
 import { Appointment, Schedule, User } from '../models/index.js';
-import { checkAvailabilityISO, extractDateFromISO, generateRange } from '../utils/dateTime.js';
+import { checkAvailabilityISO, generateRange } from '../utils/dateTime.js';
 import type { NewAppointmentData } from '../types/index.js';
 import ApiError from '../utils/ApiError.js';
+import { sequelize } from '../utils/db.js';
 
 export const getPublicSchedules = async (): Promise<Schedule[]> => {
   return await Schedule.findAll({
@@ -82,7 +83,6 @@ export const createSchedules = async (dates: [string, string], open: string, clo
   const dateRangeToSchedule = generateRange(dates, open, close);
   const newSchedules = dateRangeToSchedule.map((s) => {
     return Schedule.create({
-      date: s.date.toDate(),
       open: s.open.toDate(),
       close: s.close.toDate(),
     });
@@ -91,9 +91,17 @@ export const createSchedules = async (dates: [string, string], open: string, clo
 };
 
 export const checkScheduleAvailability = async (newAppt: NewAppointmentData): Promise<string> => {
-  const appointmentDate = extractDateFromISO(newAppt.start);
+  const appointmentStart = new Date(newAppt.start);
+  const appointmentEnd = new Date(newAppt.end);
 
-  const schedule = await Schedule.findOne({ where: { date: appointmentDate } });
+  // Find schedule where appointment start/end falls within open/close times on the same day
+  const schedule = await Schedule.findOne({
+    where: sequelize.where(
+      sequelize.fn('DATE', sequelize.col('open')),
+      sequelize.fn('DATE', appointmentStart)
+    ),
+  });
+
   if (!schedule) {
     throw new ApiError(410, 'Schedule not available');
   }

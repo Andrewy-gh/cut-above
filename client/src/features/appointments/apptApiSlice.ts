@@ -21,7 +21,6 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
           .sort((a, b) => a.start.localeCompare(b.start))
           .map((appt) => ({
             ...appt,
-            date: formatDateFull(appt.date),
             start: formatDateToTime(appt.start)
           }));
         return appointmentAdapter.setAll(initialState, loadedPosts);
@@ -40,7 +39,6 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       transformResponse: (responseData: Appointment) => {
         return {
           ...responseData,
-          date: formatDateFull(responseData.date),
           start: formatDateToTime(responseData.start),
         };
       },

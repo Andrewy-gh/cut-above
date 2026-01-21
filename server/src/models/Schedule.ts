@@ -15,7 +15,6 @@ class Schedule extends Model<
   InferCreationAttributes<Schedule>
 > {
   declare id: CreationOptional<string>;
-  declare date: Date;
   declare open: Date;
   declare close: Date;
 
@@ -31,10 +30,6 @@ Schedule.init(
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
-    },
-    date: {
-      type: DataTypes.DATE,
-      allowNull: false,
     },
     open: {
       type: DataTypes.DATE,

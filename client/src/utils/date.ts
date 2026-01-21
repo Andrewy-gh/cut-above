@@ -50,7 +50,6 @@ interface ScheduleAppointment {
 }
 
 interface ScheduleInput {
-  date: string;
   open: string;
   close: string;
   appointments: ScheduleAppointment[];
@@ -66,13 +65,14 @@ export const findAvailableTimeSlots = (
   employees: (string | number)[],
   employee: SelectedEmployee | undefined
 ) => {
-  const { date, open, close, appointments } = schedule;
+  const { open, close, appointments } = schedule;
   const searchIncrement = 15;
   const slots = [];
   const currentEstTime = convertUtcToEst(currentDate);
   const formattedCurrentDate = formatDate(currentEstTime);
+  const scheduleDate = formatDate(open); // Extract date from open timestamp
   let slotStart =
-    formatDate(date) === formattedCurrentDate
+    scheduleDate === formattedCurrentDate
       ? roundedCurrentDate()
       : dayjs(open);
   const slotEnd = dayjs(close);

@@ -8,7 +8,7 @@ import {
 } from '../models/index.js';
 import logger from './logger/index.js';
 import { sequelize } from './db.js';
-import { convertISOToDate, extractDateFromISO } from './dateTime.js';
+import { convertISOToDate } from './dateTime.js';
 
 export const seedUsers = async (): Promise<User[]> => {
   const newUsers = await User.bulkCreate(users, { returning: true });
@@ -23,7 +23,6 @@ export const seedUsers = async (): Promise<User[]> => {
 
 export const seedSchedules = async (): Promise<Schedule[]> => {
   const schedulesWithFormattedDates = schedules.map((schedule) => ({
-    date: schedule.date,
     open: convertISOToDate(schedule.open),
     close: convertISOToDate(schedule.close),
   }));
@@ -33,7 +32,7 @@ export const seedSchedules = async (): Promise<Schedule[]> => {
   });
   logger.info('new schedules created');
   logger.info(
-    JSON.stringify(newSchedules.map((s) => ({ id: s.id, date: s.date })))
+    JSON.stringify(newSchedules.map((s) => ({ id: s.id, open: s.open, close: s.close })))
   );
   return newSchedules;
 };
@@ -57,7 +56,6 @@ export const seedAppointments = async (
       clientId: client.id,
       employeeId: employee.id,
       scheduleId: schedule!.id,
-      date: convertISOToDate(appointment.start),
       start: convertISOToDate(appointment.start),
       end: convertISOToDate(appointment.end),
     };
@@ -71,7 +69,7 @@ export const seedAppointments = async (
     JSON.stringify(
       newAppointments.map((a) => ({
         id: a.id,
-        date: a.date,
+        start: a.start,
         service: a.service,
         status: a.status,
       }))

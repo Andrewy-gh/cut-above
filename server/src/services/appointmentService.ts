@@ -59,7 +59,6 @@ export const getAppointmentsByRole = async (user: User): Promise<Appointment[]> 
 export const createNew = async (newAppt: NewAppointmentData): Promise<Appointment> => {
   const availbleScheduleId = await checkScheduleAvailability(newAppt);
   const appointment = await Appointment.create({
-    date: convertISOToDate(newAppt.start),
     start: convertISOToDate(newAppt.start),
     end: convertISOToDate(newAppt.end),
     service: newAppt.service,
@@ -80,7 +79,7 @@ export const update = async (newAppt: UpdateAppointmentData): Promise<Appointmen
   // Check if date changed (extract from start ISO)
   if (newAppt.start) {
     const newDate = extractDateFromISO(newAppt.start);
-    const currentDate = dayjs(appointment.date).format('YYYY-MM-DD');
+    const currentDate = dayjs(appointment.start).format('YYYY-MM-DD');
 
     if (newDate !== currentDate) {
       // Build a NewAppointmentData object for availability check
@@ -104,10 +103,7 @@ export const update = async (newAppt: UpdateAppointmentData): Promise<Appointmen
         if (newAppt.service) updates.service = newAppt.service;
         if (newAppt.status) updates.status = newAppt.status;
         if (newAppt.employeeId) updates.employeeId = newAppt.employeeId;
-        if (newAppt.start) {
-          updates.date = convertISOToDate(newAppt.start);
-          updates.start = convertISOToDate(newAppt.start);
-        }
+        if (newAppt.start) updates.start = convertISOToDate(newAppt.start);
         if (newAppt.end) updates.end = convertISOToDate(newAppt.end);
 
         appointment.set(updates);
@@ -122,10 +118,7 @@ export const update = async (newAppt: UpdateAppointmentData): Promise<Appointmen
   if (newAppt.service) updates.service = newAppt.service;
   if (newAppt.status) updates.status = newAppt.status;
   if (newAppt.employeeId) updates.employeeId = newAppt.employeeId;
-  if (newAppt.start) {
-    updates.date = convertISOToDate(newAppt.start);
-    updates.start = convertISOToDate(newAppt.start);
-  }
+  if (newAppt.start) updates.start = convertISOToDate(newAppt.start);
   if (newAppt.end) updates.end = convertISOToDate(newAppt.end);
 
   appointment.set(updates);

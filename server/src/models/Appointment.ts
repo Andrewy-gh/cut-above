@@ -16,7 +16,6 @@ class Appointment extends Model<
   InferCreationAttributes<Appointment>
 > {
   declare id: CreationOptional<string>;
-  declare date: Date;
   declare start: Date;
   declare end: Date;
   declare service: AppointmentService;
@@ -36,10 +35,6 @@ Appointment.init(
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
-    },
-    date: {
-      type: DataTypes.DATE,
-      allowNull: false,
     },
     start: {
       type: DataTypes.DATE,

@@ -11,42 +11,10 @@ dayjs.extend(isSameOrBefore);
 
 const selectedTimeZone = 'America/New_York';
 
-interface AppointmentCheck {
-  date: string;
-  start: string;
-  end: string;
-  employeeId: string;
-}
-
 interface ScheduleEntry {
-  date: Dayjs;
   open: Dayjs;
   close: Dayjs;
 }
-
-// This function checks for availability of an appointment within a schedule
-// isBetween usage: https://day.js.org/docs/en/plugin/is-between
-export const checkAvailability = (
-  appointments: AppointmentCheck[],
-  newAppt: AppointmentCheck
-): boolean => {
-  const newStart = dayjs(`${newAppt.date}T${newAppt.start}`);
-  const newEnd = dayjs(`${newAppt.date}T${newAppt.end}`);
-  for (let appt of appointments) {
-    const start = dayjs(`${appt.date}T${appt.start}`);
-    const end = dayjs(`${appt.date}T${appt.end}`);
-    if (appt.employeeId === newAppt.employeeId) {
-      if (
-        newStart.isBetween(start, end, 'minute', '[)') ||
-        newEnd.isBetween(start, end, 'minute', '(]')
-      ) {
-        return false; // overlap found
-      }
-    }
-  }
-  // No conflict found
-  return true;
-};
 
 // takes a local date: '2023-12-24' format and local time: '10:00' and converts it into dayjs obj with correct corresponding UTC time
 // used to send correct format to database
@@ -87,7 +55,6 @@ export const generateRange = (
     const dateObj = dayjs.tz(currentDay, 'America/New_York');
 
     datesToSchedule.push({
-      date: dateObj,
       open: dateObj.hour(Number(openHour)).minute(Number(openMinute)),
       close: dateObj.hour(Number(closeHour)).minute(Number(closeMinute)),
     });

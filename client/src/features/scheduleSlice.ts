@@ -25,15 +25,10 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       query: () => '/api/schedules',
       transformResponse: (responseData: Schedule[]) => {
         const loadedPosts = responseData
-          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+          .sort((a, b) => new Date(a.open).getTime() - new Date(b.open).getTime())
           .map((s) => {
-            const appointments = s.appointments.map((appt) => ({
-              ...appt,
-              date: formatDateFull(appt.date)
-            }));
             return {
               ...s,
-              appointments,
             };
           });
         return scheduleAdapter.setAll(initialState, loadedPosts);
@@ -94,12 +89,10 @@ export const selectScheduleByDate = createSelector(
     if (inputDate === formattedCurrentDate) {
       // prevents user from making appointments after closing time if searching for current day appointments
       return schedule.find(
-
-        (s) => s.date === date && checkIsBefore(currentDate, s.close) // currentDate holds the hours and minutes, currentDate and s.close are in UTC
+        (s) => formatDate(s.open) === date && checkIsBefore(currentDate, s.close) // currentDate holds the hours and minutes, currentDate and s.close are in UTC
       );
     } else {
-
-      return schedule.find((s) => s.date === date);
+      return schedule.find((s) => formatDate(s.open) === date);
     }
   }
 );
