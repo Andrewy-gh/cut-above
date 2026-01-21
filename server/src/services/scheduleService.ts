@@ -103,7 +103,7 @@ export const checkScheduleAvailability = async (newAppt: NewAppointmentData): Pr
   });
 
   if (!schedule) {
-    throw new ApiError(410, 'Schedule not available');
+    throw new ApiError(410, 'No schedule found for selected date');
   }
 
   const appointments = await schedule.getAppointments();
@@ -116,7 +116,7 @@ export const checkScheduleAvailability = async (newAppt: NewAppointmentData): Pr
 
   const available = checkAvailabilityISO(appointmentsCheck, newAppt);
   if (!available) {
-    throw new ApiError(410, 'Appointment not available');
+    throw new ApiError(409, 'Time slot conflicts with existing appointment');
   }
 
   return schedule.id;
