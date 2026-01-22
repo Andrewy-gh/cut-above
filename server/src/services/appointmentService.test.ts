@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { sequelize } from '../utils/db.js';
 import { update } from './appointmentService.js';
 import { Appointment, User, Schedule } from '../models/index.js';

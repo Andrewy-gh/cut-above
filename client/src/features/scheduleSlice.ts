@@ -9,7 +9,6 @@ import {
   currentDate,
   findAvailableTimeSlots,
   formatDate,
-  formatDateFull,
 } from '../utils/date';
 import { Schedule } from '../types';
 

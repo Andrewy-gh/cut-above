@@ -1,6 +1,6 @@
 import { createSelector, createEntityAdapter, EntityState } from '@reduxjs/toolkit';
 import { apiSlice } from '../../app/api/apiSlice';
-import { formatDateFull, formatDateToTime } from '../../utils/date';
+import { formatDateToTime } from '../../utils/date';
 
 import { Appointment } from '../../types';
 import type { RootState } from '../../app/store';

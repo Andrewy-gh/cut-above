@@ -7,13 +7,12 @@ import { User, Schedule, Appointment } from "../models/index.js";
 describe("Appointment Controller - API Integration", () => {
   let sessionCookie: string;
   let employeeId: string;
-  let scheduleId: string;
 
   beforeAll(async () => {
     await sequelize.sync({ force: true });
 
     // Create test user
-    const client = await User.create({
+    await User.create({
       firstName: "Test",
       lastName: "Client",
       email: "test@test.com",
@@ -32,11 +31,10 @@ describe("Appointment Controller - API Integration", () => {
     employeeId = employee.id;
 
     // Create schedule
-    const schedule = await Schedule.create({
+    await Schedule.create({
       open: new Date("2024-01-22T14:00:00.000Z"),
       close: new Date("2024-01-22T22:00:00.000Z"),
     });
-    scheduleId = schedule.id;
 
     // Login to get session
     const loginRes = await request(app)
@@ -207,7 +205,7 @@ describe("Appointment Controller - API Integration", () => {
   describe("DELETE /api/appointments/:id", () => {
     it("deletes appointment and sends cancellation email", async () => {
       // Create appointment first
-      const createRes = await request(app)
+      await request(app)
         .post("/api/appointments")
         .set("Cookie", sessionCookie)
         .send({
@@ -247,7 +245,7 @@ describe("Appointment Controller - API Integration", () => {
   describe("PUT /api/appointments/:id", () => {
     it("updates appointment with new ISO datetimes", async () => {
       // Create appointment
-      const createRes = await request(app)
+      await request(app)
         .post("/api/appointments")
         .set("Cookie", sessionCookie)
         .send({

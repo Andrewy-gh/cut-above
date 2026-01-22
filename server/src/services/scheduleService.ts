@@ -92,7 +92,6 @@ export const createSchedules = async (dates: [string, string], open: string, clo
 
 export const checkScheduleAvailability = async (newAppt: NewAppointmentData): Promise<string> => {
   const appointmentStart = new Date(newAppt.start);
-  const appointmentEnd = new Date(newAppt.end);
 
   // Find schedule where appointment start/end falls within open/close times on the same day
   const schedule = await Schedule.findOne({

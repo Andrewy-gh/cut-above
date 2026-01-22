@@ -90,7 +90,7 @@ export const checkAvailabilityISO = (
   const newStart = parseISOToLocalTime(newAppt.start);
   const newEnd = parseISOToLocalTime(newAppt.end);
 
-  for (let appt of appointments) {
+  for (const appt of appointments) {
     const start = parseISOToLocalTime(appt.start);
     const end = parseISOToLocalTime(appt.end);
 

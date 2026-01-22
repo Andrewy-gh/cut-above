@@ -28,8 +28,7 @@ export default function BookingPage() {
   const location = useLocation();
   useEmployeesQuery();
   useScheduleQuery();
-  const { date, employee, selection, service, handleSelectionChange } =
-    useFilter();
+  const { employee, selection, service, handleSelectionChange } = useFilter();
   const { open, handleClose, handleOpen } = useDialog();
   const { handleBooking } = useBooking();
   const { user } = useAuth();
