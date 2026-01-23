@@ -15,7 +15,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    setupFiles: [],
+    setupFiles: ['./src/test/setup.ts'],
     // Run tests serially to avoid database conflicts
     fileParallelism: false,
     pool: 'forks',

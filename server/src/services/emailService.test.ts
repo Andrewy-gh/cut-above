@@ -1,7 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import nodemailer from 'nodemailer';
-
-const envBackup = { ...process.env };
 
 vi.mock('nodemailer', () => ({
   default: {
@@ -26,23 +24,8 @@ vi.mock('../utils/redis.js', () => ({
 }));
 
 describe('emailService', () => {
-  beforeEach(() => {
-    process.env = {
-      ...envBackup,
-      NODE_ENV: 'production',
-      EMAIL_SERVICE: 'smtp',
-      EMAIL_USER: 'sender@example.com',
-      EMAIL_PASSWORD: 'password',
-      PROD_CLIENT_URL: 'http://localhost:3000',
-    };
-    vi.resetModules();
-  });
-
-  afterEach(() => {
-    process.env = { ...envBackup };
-  });
-
   it('sends email with expected payload', async () => {
+    // nodemailer is mocked; no real SMTP credentials needed.
     const sendMail = vi.fn().mockResolvedValue({
       accepted: ['test@example.com'],
       rejected: [],

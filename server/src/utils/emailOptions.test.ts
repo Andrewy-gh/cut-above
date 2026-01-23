@@ -1,22 +1,6 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-
-const envBackup = { ...process.env };
+import { describe, it, expect } from 'vitest';
 
 describe('emailOptions', () => {
-  beforeEach(() => {
-    process.env = {
-      ...envBackup,
-      NODE_ENV: 'production',
-      PROD_CLIENT_URL: 'http://localhost:3000',
-      EMAIL_USER: 'sender@example.com',
-    };
-    vi.resetModules();
-  });
-
-  afterEach(() => {
-    process.env = { ...envBackup };
-  });
-
   it('returns confirmation template with date and time', async () => {
     const { options } = await import('./emailOptions.js');
 

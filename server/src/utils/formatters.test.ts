@@ -1,21 +1,6 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-
-const envBackup = { ...process.env };
+import { describe, it, expect } from 'vitest';
 
 describe('formatEmail', () => {
-  beforeEach(() => {
-    process.env = {
-      ...envBackup,
-      NODE_ENV: 'production',
-      PROD_CLIENT_URL: 'http://localhost:3000',
-    };
-    vi.resetModules();
-  });
-
-  afterEach(() => {
-    process.env = { ...envBackup };
-  });
-
   it('formats date, time, employee, and link from ISO start', async () => {
     const { formatEmail } = await import('./formatters.js');
 
