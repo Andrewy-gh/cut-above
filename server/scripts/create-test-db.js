@@ -6,6 +6,8 @@ const execAsync = promisify(exec);
 const containerName = process.env.DB_CONTAINER ?? 'cutabove-db';
 const dbName = process.env.DB_NAME ?? 'cutabove_test';
 const dbUser = process.env.DB_USER ?? 'postgres';
+const dbNameLiteral = dbName.replace(/'/g, "''");
+const dbNameIdentifier = dbName.replace(/"/g, '""');
 
 const wait = (ms) =>
   new Promise((resolve) => {
@@ -28,7 +30,7 @@ const waitForPostgres = async () => {
 
 const databaseExists = async () => {
   const { stdout } = await execAsync(
-    `docker exec -i ${containerName} psql -U ${dbUser} -tAc "SELECT 1 FROM pg_database WHERE datname='${dbName}'"`
+    `docker exec -i ${containerName} psql -U ${dbUser} -tAc "SELECT 1 FROM pg_database WHERE datname='${dbNameLiteral}'"`
   );
   return stdout.trim() === '1';
 };
@@ -41,7 +43,7 @@ try {
   }
 
   await execAsync(
-    `docker exec -i ${containerName} psql -U ${dbUser} -c "CREATE DATABASE ${dbName}"`
+    `docker exec -i ${containerName} psql -U ${dbUser} -c "CREATE DATABASE \\"${dbNameIdentifier}\\""`
   );
 } catch (error) {
   const stderr = error?.stderr ? String(error.stderr) : '';

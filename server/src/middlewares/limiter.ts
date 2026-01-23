@@ -12,8 +12,9 @@ if (process.env.NODE_ENV === 'test') {
   const redisClientWithCall = redisClient as unknown as {
     call: (...args: string[]) => unknown;
   };
-  const sendCommand = (...args: string[]) =>
-    redisClientWithCall.call(...args) as Promise<never>;
+  type SendCommand = NonNullable<ConstructorParameters<typeof RedisStore>[0]['sendCommand']>;
+  const sendCommand: SendCommand = (...args) =>
+    redisClientWithCall.call(...args) as ReturnType<SendCommand>;
 
   limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes

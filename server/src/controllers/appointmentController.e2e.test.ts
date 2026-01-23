@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
 import request from "supertest";
 import app from "../app.js";
 import { sequelize } from "../utils/db.js";
@@ -8,9 +8,25 @@ import { User, Schedule, Appointment } from "../models/index.js";
 describe("Appointment Booking - E2E Flow", () => {
   const testPassword = "Password123!";
   const testEmail = "client-e2e@test.com";
-  let sessionCookie: string;
   let employeeId: string;
+  const employeeName = "Sarah";
   let appointmentId: string;
+  const loginAsClient = () =>
+    request(app)
+      .post("/api/auth/login")
+      .send({ email: testEmail, password: testPassword })
+      .expect(200);
+
+  const getSessionCookie = (loginRes: { headers: Record<string, string | string[] | undefined> }) => {
+    const cookies = loginRes.headers["set-cookie"];
+    const cookieList = Array.isArray(cookies)
+      ? cookies
+      : cookies
+        ? [cookies]
+        : undefined;
+    expect(cookieList).toBeDefined();
+    return cookieList![0];
+  };
 
   beforeAll(async () => {
     await sequelize.sync({ force: true });
@@ -18,7 +34,7 @@ describe("Appointment Booking - E2E Flow", () => {
 
     // Create employee
     const employee = await User.create({
-      firstName: "Sarah",
+      firstName: employeeName,
       lastName: "Johnson",
       email: "employee-e2e@test.com",
       passwordHash,
@@ -46,20 +62,19 @@ describe("Appointment Booking - E2E Flow", () => {
     await sequelize.close();
   });
 
+  beforeEach(async () => {
+    await Appointment.destroy({ where: {} });
+  });
+
   describe("Complete booking flow", () => {
     it("registers new client, fetches schedules/employees, books appointment, verifies", async () => {
       // Step 1: Login as client
-      const loginRes = await request(app)
-        .post("/api/auth/login")
-        .send({ email: testEmail, password: testPassword })
-        .expect(200);
+      const loginRes = await loginAsClient();
 
       expect(loginRes.body.success).toBe(true);
       expect(loginRes.body.user.firstName).toBe("Mike");
 
-      const cookies = loginRes.headers["set-cookie"];
-      expect(cookies).toBeDefined();
-      sessionCookie = cookies![0];
+      const sessionCookie = getSessionCookie(loginRes);
 
       // Step 2: Fetch available schedules
       const schedulesRes = await request(app)
@@ -83,7 +98,7 @@ describe("Appointment Booking - E2E Flow", () => {
 
       const employee = employeesRes.body[0];
       expect(employee.id).toBeDefined();
-      expect(employee.firstName).toBe("Sarah");
+      expect(employee.firstName).toBe(employeeName);
 
       // Step 4: Book appointment within available schedule
       const bookingRes = await request(app)
@@ -125,6 +140,7 @@ describe("Appointment Booking - E2E Flow", () => {
     });
 
     it("prevents booking on date without schedule", async () => {
+      const sessionCookie = getSessionCookie(await loginAsClient());
       const response = await request(app)
         .post("/api/appointments")
         .set("Cookie", sessionCookie)
@@ -160,6 +176,30 @@ describe("Appointment Booking - E2E Flow", () => {
     });
 
     it("allows client to cancel their own appointment", async () => {
+      const sessionCookie = getSessionCookie(await loginAsClient());
+      await request(app)
+        .post("/api/appointments")
+        .set("Cookie", sessionCookie)
+        .send({
+          start: "2024-01-22T17:00:00.000Z",
+          end: "2024-01-22T17:30:00.000Z",
+          service: "Haircut",
+          employee: {
+            id: employeeId,
+            firstName: employeeName,
+          },
+        })
+        .expect(200);
+
+      const appointmentsRes = await request(app)
+        .get("/api/appointments")
+        .set("Cookie", sessionCookie)
+        .expect(200);
+
+      expect(Array.isArray(appointmentsRes.body)).toBe(true);
+      expect(appointmentsRes.body.length).toBe(1);
+      appointmentId = appointmentsRes.body[0].id;
+
       const cancelRes = await request(app)
         .delete(`/api/appointments/${appointmentId}`)
         .set("Cookie", sessionCookie)
