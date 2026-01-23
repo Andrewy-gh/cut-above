@@ -8,7 +8,7 @@ import {
 } from '../models/index.js';
 import logger from './logger/index.js';
 import { sequelize } from './db.js';
-import { convertDateAndTime, convertDate } from './dateTime.js';
+import { convertISOToDate } from './dateTime.js';
 
 export const seedUsers = async (): Promise<User[]> => {
   const newUsers = await User.bulkCreate(users, { returning: true });
@@ -23,10 +23,8 @@ export const seedUsers = async (): Promise<User[]> => {
 
 export const seedSchedules = async (): Promise<Schedule[]> => {
   const schedulesWithFormattedDates = schedules.map((schedule) => ({
-    ...schedule,
-    date: convertDate(schedule.date).toDate(),
-    open: convertDateAndTime(schedule.date, schedule.open).toDate(),
-    close: convertDateAndTime(schedule.date, schedule.close).toDate(),
+    open: convertISOToDate(schedule.open),
+    close: convertISOToDate(schedule.close),
   }));
 
   const newSchedules = await Schedule.bulkCreate(schedulesWithFormattedDates, {
@@ -34,7 +32,7 @@ export const seedSchedules = async (): Promise<Schedule[]> => {
   });
   logger.info('new schedules created');
   logger.info(
-    JSON.stringify(newSchedules.map((s) => ({ id: s.id, date: s.date })))
+    JSON.stringify(newSchedules.map((s) => ({ id: s.id, open: s.open, close: s.close })))
   );
   return newSchedules;
 };
@@ -53,13 +51,13 @@ export const seedAppointments = async (
       schedules.length > 0 ? schedules[index % schedules.length] : null;
 
     return {
-      ...appointment,
+      service: appointment.service,
+      status: appointment.status,
       clientId: client.id,
       employeeId: employee.id,
       scheduleId: schedule!.id,
-      date: convertDate(appointment.date).toDate(),
-      start: convertDateAndTime(appointment.date, appointment.start).toDate(),
-      end: convertDateAndTime(appointment.date, appointment.end).toDate(),
+      start: convertISOToDate(appointment.start),
+      end: convertISOToDate(appointment.end),
     };
   });
 
@@ -71,7 +69,7 @@ export const seedAppointments = async (
     JSON.stringify(
       newAppointments.map((a) => ({
         id: a.id,
-        date: a.date,
+        start: a.start,
         service: a.service,
         status: a.status,
       }))

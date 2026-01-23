@@ -32,8 +32,13 @@ export const validate = (config: ValidationConfig) => {
           };
         });
 
+        // Include first error message in error field for clarity
+        const errorMessage = errors.length > 0
+          ? errors[0].message
+          : 'Validation Error';
+
         res.status(400).json({
-          error: 'Validation Error',
+          error: errorMessage,
           details: errors,
         });
         return;

@@ -11,42 +11,10 @@ dayjs.extend(isSameOrBefore);
 
 const selectedTimeZone = 'America/New_York';
 
-interface AppointmentCheck {
-  date: string;
-  start: string;
-  end: string;
-  employeeId: string;
-}
-
 interface ScheduleEntry {
-  date: Dayjs;
   open: Dayjs;
   close: Dayjs;
 }
-
-// This function checks for availability of an appointment within a schedule
-// isBetween usage: https://day.js.org/docs/en/plugin/is-between
-export const checkAvailability = (
-  appointments: AppointmentCheck[],
-  newAppt: AppointmentCheck
-): boolean => {
-  const newStart = dayjs(`${newAppt.date}T${newAppt.start}`);
-  const newEnd = dayjs(`${newAppt.date}T${newAppt.end}`);
-  for (let appt of appointments) {
-    const start = dayjs(`${appt.date}T${appt.start}`);
-    const end = dayjs(`${appt.date}T${appt.end}`);
-    if (appt.employeeId === newAppt.employeeId) {
-      if (
-        newStart.isBetween(start, end, 'minute', '[)') ||
-        newEnd.isBetween(start, end, 'minute', '(]')
-      ) {
-        return false; // overlap found
-      }
-    }
-  }
-  // No conflict found
-  return true;
-};
 
 // takes a local date: '2023-12-24' format and local time: '10:00' and converts it into dayjs obj with correct corresponding UTC time
 // used to send correct format to database
@@ -87,7 +55,6 @@ export const generateRange = (
     const dateObj = dayjs.tz(currentDay, 'America/New_York');
 
     datesToSchedule.push({
-      date: dateObj,
       open: dateObj.hour(Number(openHour)).minute(Number(openMinute)),
       close: dateObj.hour(Number(closeHour)).minute(Number(closeMinute)),
     });
@@ -98,10 +65,50 @@ export const generateRange = (
   return datesToSchedule;
 };
 
-export const formatDateAndTimes = (appointment: { date: string }): { date: Dayjs } => {
-  return {
-    date: convertDate(appointment.date),
-    // start: convertDateAndTime(appointment.date, appointment.start),
-    // end: convertDateAndTime(appointment.date, appointment.end),
-  };
+// ============================================================================
+// ISO DateTime Utilities
+// ============================================================================
+
+// Parse ISO datetime string to Dayjs object with America/New_York timezone
+// Uses UTC parsing first to prevent double-conversion with timezone offsets
+export const parseISOToLocalTime = (iso: string): Dayjs =>
+  dayjs.utc(iso).tz(selectedTimeZone);
+
+// Convert ISO datetime string to JavaScript Date object for DB storage
+export const convertISOToDate = (iso: string): Date =>
+  parseISOToLocalTime(iso).toDate();
+
+// Extract YYYY-MM-DD date string from ISO datetime for schedule lookups
+export const extractDateFromISO = (iso: string): string =>
+  parseISOToLocalTime(iso).format('YYYY-MM-DD');
+
+// Check appointment availability using ISO datetime strings
+export const checkAvailabilityISO = (
+  appointments: { start: string; end: string; employeeId: string }[],
+  newAppt: { start: string; end: string; employeeId: string }
+): boolean => {
+  const newStart = parseISOToLocalTime(newAppt.start);
+  const newEnd = parseISOToLocalTime(newAppt.end);
+
+  for (const appt of appointments) {
+    const start = parseISOToLocalTime(appt.start);
+    const end = parseISOToLocalTime(appt.end);
+
+    if (appt.employeeId === newAppt.employeeId) {
+      // Two appointments overlap if: newStart < existingEnd AND newEnd > existingStart
+      // Back-to-back appointments (newStart == existingEnd or newEnd == existingStart) are allowed
+      if (newStart.isBefore(end, 'minute') && newEnd.isAfter(start, 'minute')) {
+        return false; // overlap found
+      }
+    }
+  }
+  return true; // no conflict
 };
+
+// Format ISO datetime to MM/DD/YYYY for email display
+export const formatDateSlashISO = (isoDatetime: string): string =>
+  parseISOToLocalTime(isoDatetime).format('MM/DD/YYYY');
+
+// Format ISO datetime to h:mma (e.g., "2:30pm") for email display
+export const formatTimeISO = (isoDatetime: string): string =>
+  parseISOToLocalTime(isoDatetime).format('h:mma');

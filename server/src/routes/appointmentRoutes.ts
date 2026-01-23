@@ -1,4 +1,4 @@
-import { Router, type Router as IRouter } from 'express';
+import { Router, type Router as IRouter } from "express";
 import {
   getAllAppointments,
   getSingleAppointment,
@@ -6,52 +6,46 @@ import {
   modifyAppointment,
   updateAppointmentStatus,
   deleteAppointmentById,
-} from '../controllers/appointmentController.js';
+} from "../controllers/appointmentController.js";
 import {
   bookingSchema,
   idSchema,
   statusSchema,
-} from '../schemas/appointmentSchema.js';
+} from "../schemas/appointmentSchema.js";
 import {
   authenticateUser,
   authenticateRole,
-} from '../middlewares/authenticateUser.js';
-import { validate } from '../middlewares/validate.js';
+} from "../middlewares/authenticateUser.js";
+import { validate } from "../middlewares/validate.js";
 
 const router: IRouter = Router();
 
 router
-  .route('/')
+  .route("/")
   .get(authenticateUser, getAllAppointments)
-  .post(
-    validate({ body: bookingSchema }),
-    authenticateUser,
-    bookAppointment
-  );
-
-router.route('/status/:id').put(
-  validate({ params: idSchema, body: statusSchema }),
-  authenticateUser,
-  authenticateRole,
-  updateAppointmentStatus
-);
+  .post(validate({ body: bookingSchema }), authenticateUser, bookAppointment);
 
 router
-  .route('/:id')
-  .get(
-    validate({ params: idSchema }),
+  .route("/status/:id")
+  .put(
+    validate({ params: idSchema, body: statusSchema }),
     authenticateUser,
-    getSingleAppointment
-  )
+    authenticateRole,
+    updateAppointmentStatus,
+  );
+
+router
+  .route("/:id")
+  .get(validate({ params: idSchema }), authenticateUser, getSingleAppointment)
   .put(
     validate({ params: idSchema, body: bookingSchema }),
     authenticateUser,
-    modifyAppointment
+    modifyAppointment,
   )
   .delete(
     validate({ params: idSchema }),
     authenticateUser,
-    deleteAppointmentById
+    deleteAppointmentById,
   );
 
 export default router;

@@ -8,12 +8,22 @@
     "dev": "NODE_ENV=development tsx watch src/index.ts",
     "build": "tsc",
     "start": "NODE_ENV=production node build/index.js",
+    "test": "DOTENV_CONFIG_PATH=.env.test NODE_ENV=test vitest",
+    "test:run": "DOTENV_CONFIG_PATH=.env.test NODE_ENV=test vitest run",
+    "test:ui": "vitest --ui",
+    "test:local": "DOTENV_CONFIG_PATH=.env.test NODE_ENV=test vitest",
+    "test:local:run": "DOTENV_CONFIG_PATH=.env.test NODE_ENV=test vitest run",
+    "test:services": "DB_PORT=5433 DB_NAME=cutabove_test DB_USER=postgres DB_PASSWORD=postgres docker-compose up -d db redis && pnpm test:db:create",
+    "test:db:create": "node ./scripts/create-test-db.js",
+    "test:services:down": "docker-compose down",
     "typecheck": "tsc --noEmit",
     "build:ui": "rm -rf dist && cd ../client && pnpm run build && mv dist ../server",
     "db:seed:dev": "NODE_ENV=development tsx ./src/utils/seeder.ts",
     "db:reset:dev": "NODE_ENV=development tsx ./src/utils/dbReset.ts",
     "docker:dev": "docker-compose up -d db redis",
-    "docker:down": "docker-compose down"
+    "docker:down": "docker-compose down",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix"
   },
   "keywords": [],
   "author": "",
@@ -42,6 +52,7 @@
     "winston": "^3.11.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@flydotio/dockerfile": "^0.5.2",
     "@types/bcrypt": "^6.0.0",
     "@types/body-parser": "^1.19.6",
@@ -52,8 +63,16 @@
     "@types/node": "^25.0.3",
     "@types/node-cron": "^3.0.11",
     "@types/nodemailer": "^7.0.4",
+    "@types/supertest": "^6.0.2",
+    "@typescript-eslint/eslint-plugin": "^8.53.1",
+    "@typescript-eslint/parser": "^8.53.1",
+    "@vitest/ui": "^1.2.0",
+    "eslint": "^9.39.2",
     "nodemon": "^3.0.3",
+    "supertest": "^6.3.4",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.53.1",
+    "vitest": "^1.2.0"
   }
 }

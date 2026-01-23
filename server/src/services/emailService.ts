@@ -83,7 +83,7 @@ export const listenForMessage = async (lastId: string = '$'): Promise<void> => {
     lastId
   );
   if (!results) return;
-  const [_key, messages] = results[0]; // `key` equals to "user-stream"
+  const [, messages] = results[0]; // `key` equals to "user-stream"
 
   messages.forEach(async (message) => {
     logger.info(`Id: ${message[0]}. Data: ${message[1]}`);

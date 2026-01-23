@@ -8,7 +8,6 @@ export const userPropType = PropTypes.shape({
 
 export const appointmentPropType = PropTypes.shape({
   id: PropTypes.string.isRequired,
-  date: PropTypes.string.isRequired,
   employee: userPropType,
   client: userPropType,
   start: PropTypes.string.isRequired,
@@ -30,7 +29,6 @@ export const selectionPropType = PropTypes.shape({
 
 export const schedulePropType = PropTypes.shape({
   id: PropTypes.string.isRequired,
-  date: PropTypes.string.isRequired,
   open: PropTypes.string.isRequired,
   close: PropTypes.string.isRequired,
   appointment: PropTypes.arrayOf(appointmentPropType),

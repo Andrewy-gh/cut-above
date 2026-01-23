@@ -28,8 +28,7 @@ export default function BookingPage() {
   const location = useLocation();
   useEmployeesQuery();
   useScheduleQuery();
-  const { date, employee, selection, service, handleSelectionChange } =
-    useFilter();
+  const { employee, selection, service, handleSelectionChange } = useFilter();
   const { open, handleClose, handleOpen } = useDialog();
   const { handleBooking } = useBooking();
   const { user } = useAuth();
@@ -62,7 +61,6 @@ export default function BookingPage() {
     if ('start' in selection && 'end' in selection) {
       handleBooking({
         id,
-        date,
         start: (selection as Slot).start.toISOString(),
         end: (selection as Slot).end.toISOString(),
         service: service.name,

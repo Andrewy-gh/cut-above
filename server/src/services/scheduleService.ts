@@ -1,7 +1,8 @@
 import { Appointment, Schedule, User } from '../models/index.js';
-import { checkAvailability, generateRange } from '../utils/dateTime.js';
+import { checkAvailabilityISO, generateRange } from '../utils/dateTime.js';
 import type { NewAppointmentData } from '../types/index.js';
 import ApiError from '../utils/ApiError.js';
+import { sequelize } from '../utils/db.js';
 
 export const getPublicSchedules = async (): Promise<Schedule[]> => {
   return await Schedule.findAll({
@@ -82,7 +83,6 @@ export const createSchedules = async (dates: [string, string], open: string, clo
   const dateRangeToSchedule = generateRange(dates, open, close);
   const newSchedules = dateRangeToSchedule.map((s) => {
     return Schedule.create({
-      date: s.date.toDate(),
       open: s.open.toDate(),
       close: s.close.toDate(),
     });
@@ -91,23 +91,32 @@ export const createSchedules = async (dates: [string, string], open: string, clo
 };
 
 export const checkScheduleAvailability = async (newAppt: NewAppointmentData): Promise<string> => {
-  const schedule = await Schedule.findOne({ where: { date: newAppt.date } });
+  const appointmentStart = new Date(newAppt.start);
+
+  // Find schedule where appointment start/end falls within open/close times on the same day
+  const schedule = await Schedule.findOne({
+    where: sequelize.where(
+      sequelize.fn('DATE', sequelize.col('open')),
+      sequelize.fn('DATE', appointmentStart)
+    ),
+  });
+
   if (!schedule) {
-    throw new ApiError(410, 'Schedule not available');
+    throw new ApiError(410, 'No schedule found for selected date');
   }
-  // TODO: Eager load appointments
+
   const appointments = await schedule.getAppointments();
-  // Convert appointments to the format expected by checkAvailability
+
   const appointmentsCheck = appointments.map(a => ({
-    date: a.date.toISOString().split('T')[0],
-    start: a.start.toISOString().split('T')[1].substring(0, 5),
-    end: a.end.toISOString().split('T')[1].substring(0, 5),
+    start: a.start.toISOString(),
+    end: a.end.toISOString(),
     employeeId: a.employeeId,
   }));
-  // TODO: check before open or check after close too
-  const available = checkAvailability(appointmentsCheck, newAppt);
+
+  const available = checkAvailabilityISO(appointmentsCheck, newAppt);
   if (!available) {
-    throw new ApiError(410, 'Appointment not available'); // Gone
+    throw new ApiError(409, 'Time slot conflicts with existing appointment');
   }
+
   return schedule.id;
 };

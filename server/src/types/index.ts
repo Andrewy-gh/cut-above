@@ -14,9 +14,8 @@ export type AppointmentService =
 export type AppointmentStatus = 'scheduled' | 'checked-in' | 'completed' | 'no show';
 
 export interface NewAppointmentData {
-  date: string;
-  start: string;
-  end: string;
+  start: string; // ISO datetime (e.g., "2024-01-22T17:00:00.000Z")
+  end: string; // ISO datetime (e.g., "2024-01-22T17:30:00.000Z")
   service: AppointmentService;
   clientId: string;
   employeeId: string;
@@ -24,9 +23,8 @@ export interface NewAppointmentData {
 
 export interface UpdateAppointmentData {
   id: string;
-  date?: string;
-  start?: string;
-  end?: string;
+  start?: string; // ISO datetime (e.g., "2024-01-22T17:00:00.000Z")
+  end?: string; // ISO datetime (e.g., "2024-01-22T17:30:00.000Z")
   service?: AppointmentService;
   status?: AppointmentStatus;
   employeeId?: string;

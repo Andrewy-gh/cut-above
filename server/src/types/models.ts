@@ -25,7 +25,6 @@ export interface UserCreationAttributes {
 // Appointment model interfaces
 export interface AppointmentAttributes {
   id: string;
-  date: Date;
   start: Date;
   end: Date;
   service: AppointmentService;
@@ -36,7 +35,6 @@ export interface AppointmentAttributes {
 }
 
 export interface AppointmentCreationAttributes {
-  date: Date;
   start: Date;
   end: Date;
   service: AppointmentService;
@@ -49,13 +47,11 @@ export interface AppointmentCreationAttributes {
 // Schedule model interfaces
 export interface ScheduleAttributes {
   id: string;
-  date: Date;
   open: Date;
   close: Date;
 }
 
 export interface ScheduleCreationAttributes {
-  date: Date;
   open: Date;
   close: Date;
 }

@@ -33,4 +33,11 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Mock scrollTo
-window.scrollTo = vi.fn() as any;
+const scrollToMock = vi.fn<
+  Parameters<typeof window.scrollTo>,
+  ReturnType<typeof window.scrollTo>
+>();
+Object.defineProperty(window, 'scrollTo', {
+  writable: true,
+  value: scrollToMock,
+});
