@@ -10,10 +10,10 @@ const isoDatetime = v.pipe(
 );
 
 export const bookingSchema = v.pipe(
-  v.object({
+  v.strictObject({
     start: isoDatetime,
     end: isoDatetime,
-    employee: v.object({
+    employee: v.strictObject({
       id: v.pipe(v.string(), v.uuid()),
       firstName: v.string(),
     }),

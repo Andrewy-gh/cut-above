@@ -2,21 +2,24 @@ import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
 import request from "supertest";
 import app from "../app.js";
 import { sequelize } from "../utils/db.js";
+import bcrypt from "bcrypt";
 import { User, Schedule, Appointment } from "../models/index.js";
 
 describe("Appointment Controller - API Integration", () => {
   let sessionCookie: string;
   let employeeId: string;
+  const testPassword = "Password123!";
 
   beforeAll(async () => {
     await sequelize.sync({ force: true });
+    const passwordHash = await bcrypt.hash(testPassword, 10);
 
     // Create test user
     await User.create({
       firstName: "Test",
       lastName: "Client",
       email: "test@test.com",
-      passwordHash: "$2b$10$KixH1h4P3qp/VKH3VKH3Ve", // mock hash
+      passwordHash,
       role: "client",
     });
 
@@ -25,7 +28,7 @@ describe("Appointment Controller - API Integration", () => {
       firstName: "John",
       lastName: "Barber",
       email: "employee@test.com",
-      passwordHash: "$2b$10$KixH1h4P3qp/VKH3VKH3Ve",
+      passwordHash,
       role: "employee",
     });
     employeeId = employee.id;
@@ -39,13 +42,16 @@ describe("Appointment Controller - API Integration", () => {
     // Login to get session
     const loginRes = await request(app)
       .post("/api/auth/login")
-      .send({ email: "test@test.com", password: "password" });
+      .send({ email: "test@test.com", password: testPassword });
 
-    // Extract session cookie
+    // Extract session cookie with error handling
     const cookies = loginRes.headers["set-cookie"];
-    if (cookies && cookies.length > 0) {
-      sessionCookie = cookies[0];
+    if (!cookies || cookies.length === 0) {
+      throw new Error(
+        `Login failed: status=${loginRes.status}, body=${JSON.stringify(loginRes.body)}, headers=${JSON.stringify(loginRes.headers)}`
+      );
     }
+    sessionCookie = cookies[0];
   });
 
   beforeEach(async () => {
@@ -84,7 +90,7 @@ describe("Appointment Controller - API Integration", () => {
         .post("/api/appointments")
         .set("Cookie", sessionCookie)
         .send({
-          date: "2024-01-22", // ❌ Should be rejected
+          date: "2024-01-22", // Should be rejected
           start: "2024-01-22T17:00:00.000Z",
           end: "2024-01-22T17:30:00.000Z",
           service: "Haircut",

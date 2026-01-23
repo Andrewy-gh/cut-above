@@ -33,6 +33,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   const user = await authenticateUser(req.body);
   req.session.userId = user.id;
   req.session.isAdmin = user.role === 'admin';
+
+  // Explicitly save session (required for tests and some configurations)
+  await new Promise<void>((resolve, reject) => {
+    req.session.save((err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+
   res
     .status(200)
     .json({ success: true, message: 'Successfully logged in', user: user });

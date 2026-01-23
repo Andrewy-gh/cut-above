@@ -47,7 +47,10 @@ export const bookAppointment = async (req: Request, res: Response): Promise<void
   const user = await getUserFromSession(req);
 
   const newAppointment = await createNew({
-    ...req.body,
+    start: req.body.start,
+    end: req.body.end,
+    service: req.body.service,
+    employeeId: req.body.employee.id,
     clientId: req.session.userId!,
   });
 
@@ -68,8 +71,12 @@ export const modifyAppointment = async (req: Request, res: Response): Promise<vo
   const user = await getUserFromSession(req);
 
   const modifiedAppointment = await update({
-    ...req.body,
     id: req.params.id,
+    start: req.body.start,
+    end: req.body.end,
+    service: req.body.service,
+    employeeId: req.body.employee?.id,
+    status: req.body.status,
   });
 
   await publishMessage({
