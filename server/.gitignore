@@ -5,5 +5,4 @@ dist
 build
 
 db-data
-data.js
 data.ts

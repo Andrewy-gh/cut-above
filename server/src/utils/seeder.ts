@@ -1,5 +1,7 @@
 import crypto from 'crypto';
-import { users, appointments, schedules } from './data.js';
+import { existsSync } from 'fs';
+import path from 'path';
+import { fileURLToPath, pathToFileURL } from 'url';
 import {
   Appointment,
   PasswordResetToken,
@@ -9,8 +11,55 @@ import {
 import logger from './logger/index.js';
 import { sequelize } from './db.js';
 import { convertISOToDate } from './dateTime.js';
+import type {
+  AppointmentService,
+  AppointmentStatus,
+  UserRole,
+} from '../types/index.js';
 
-export const seedUsers = async (): Promise<User[]> => {
+interface SeedUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  passwordHash: string;
+  role: UserRole;
+  image?: string;
+  profile?: string;
+}
+
+interface SeedAppointment {
+  start: string;
+  end: string;
+  service: AppointmentService;
+  status: AppointmentStatus;
+}
+
+interface SeedSchedule {
+  date?: string;
+  open: string;
+  close: string;
+}
+
+interface SeedData {
+  users: SeedUser[];
+  appointments: SeedAppointment[];
+  schedules: SeedSchedule[];
+}
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const loadSeedData = async (): Promise<SeedData> => {
+  const dataPath = path.join(__dirname, 'data.js');
+  const dataExamplePath = path.join(__dirname, 'data.example.js');
+  const selectedPath = existsSync(dataPath) ? dataPath : dataExamplePath;
+  const moduleUrl = pathToFileURL(selectedPath).href;
+  const dataModule = (await import(moduleUrl)) as SeedData;
+
+  return dataModule;
+};
+
+export const seedUsers = async (users: SeedUser[]): Promise<User[]> => {
   const newUsers = await User.bulkCreate(users, { returning: true });
   logger.info('new users created');
   logger.info(
@@ -21,7 +70,9 @@ export const seedUsers = async (): Promise<User[]> => {
   return newUsers;
 };
 
-export const seedSchedules = async (): Promise<Schedule[]> => {
+export const seedSchedules = async (
+  schedules: SeedSchedule[]
+): Promise<Schedule[]> => {
   const schedulesWithFormattedDates = schedules.map((schedule) => ({
     open: convertISOToDate(schedule.open),
     close: convertISOToDate(schedule.close),
@@ -39,7 +90,8 @@ export const seedSchedules = async (): Promise<Schedule[]> => {
 
 export const seedAppointments = async (
   users: User[],
-  schedules: Schedule[]
+  schedules: Schedule[],
+  appointments: SeedAppointment[]
 ): Promise<Appointment[]> => {
   const clients = users.filter((u) => u.role === 'client');
   const employees = users.filter((u) => u.role === 'employee');
@@ -111,19 +163,21 @@ async function main(): Promise<void> {
     await sequelize.authenticate();
     logger.info('Connected to the database');
 
+    const { users, appointments, schedules } = await loadSeedData();
+
     logger.info('Creating tables...');
     await createTables();
 
     logger.info('Starting to seed users');
-    const _seededUsers = await seedUsers();
+    const _seededUsers = await seedUsers(users);
     logger.info('Users seeded successfully');
 
     logger.info('Starting to seed schedules');
-    const _seededSchedules = await seedSchedules();
+    const _seededSchedules = await seedSchedules(schedules);
     logger.info('Schedules seeded successfully');
 
     logger.info('Starting to seed appointments');
-    await seedAppointments(_seededUsers, _seededSchedules);
+    await seedAppointments(_seededUsers, _seededSchedules, appointments);
     logger.info('Appointments seeded successfully');
 
     logger.info('Starting to seed password reset tokens');

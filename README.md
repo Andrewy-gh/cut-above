@@ -38,6 +38,8 @@ Cookie based session storage through Redis. Pub/Sub through redis to handle emai
 
 3. Change `.env.example` to `.env` and fill in all the appropiate information.
 
-4. Run `pnpm run build:ui`. This creates the build process for the client side code.
+4. If you want to seed a local database, copy the example seed data: from `server/src/utils`, run `cp data.example.ts data.ts`.
 
-5. After the build process is done, you are ready to use. Just run `pnpm run start` while still inside the `server` directory, and navigate to `http://localhost:3000` in your browser.
+5. Run `pnpm run build:ui`. This creates the build process for the client side code.
+
+6. After the build process is done, you are ready to use. Just run `pnpm run start` while still inside the `server` directory, and navigate to `http://localhost:3000` in your browser.

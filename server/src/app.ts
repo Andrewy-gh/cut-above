@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { type Express } from 'express';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import helmet from 'helmet';
@@ -14,7 +14,7 @@ import setCSPHeader from './middlewares/contentSecurity.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const app = express();
+const app: Express = express();
 
 app.use(helmet());
 app.use(setCSPHeader);
