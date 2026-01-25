@@ -1,6 +1,6 @@
 import { createSelector, createEntityAdapter, EntityState } from '@reduxjs/toolkit';
 import { apiSlice } from '../../app/api/apiSlice';
-import { formatDateToTime } from '../../utils/date';
+import { normalizeAppointment } from '../../utils/date';
 
 import { Appointment } from '../../types';
 import type { RootState } from '../../app/store';
@@ -19,10 +19,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       transformResponse: (responseData: Appointment[]) => {
         const loadedPosts = responseData
           .sort((a, b) => a.start.localeCompare(b.start))
-          .map((appt) => ({
-            ...appt,
-            start: formatDateToTime(appt.start)
-          }));
+          .map((appt) => normalizeAppointment(appt));
         return appointmentAdapter.setAll(initialState, loadedPosts);
       },
       providesTags: (result) =>
@@ -37,10 +34,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     getSingleAppointment: builder.query<Appointment, string>({
       query: (id) => `/api/appointments/${id}`,
       transformResponse: (responseData: Appointment) => {
-        return {
-          ...responseData,
-          start: formatDateToTime(responseData.start),
-        };
+        return normalizeAppointment(responseData);
       },
       providesTags: (result, error, id) => [{ type: 'Appointment', id }],
     }),

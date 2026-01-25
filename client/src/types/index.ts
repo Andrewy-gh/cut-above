@@ -19,6 +19,7 @@ export interface User {
 
 export interface Appointment {
   id: string;
+  date?: string;
   employee?: User | string; // Can be User object (populated) or string ID
   client?: User | string; // Can be User object (populated) or string ID
   start: string;
@@ -39,6 +40,7 @@ export interface Appointment {
 
 export interface Schedule {
   id: string;
+  date?: string;
   open: string;
   close: string;
   appointments: Appointment[];

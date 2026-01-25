@@ -9,6 +9,7 @@ import {
   currentDate,
   findAvailableTimeSlots,
   formatDate,
+  normalizeSchedule,
 } from '../utils/date';
 import { Schedule } from '../types';
 
@@ -26,9 +27,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         const loadedPosts = responseData
           .sort((a, b) => new Date(a.open).getTime() - new Date(b.open).getTime())
           .map((s) => {
-            return {
-              ...s,
-            };
+            return normalizeSchedule(s);
           });
         return scheduleAdapter.setAll(initialState, loadedPosts);
       },

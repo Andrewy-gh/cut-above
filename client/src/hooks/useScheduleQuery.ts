@@ -5,7 +5,7 @@ import {
   useGetScheduleQuery,
 } from "@/features/scheduleSlice";
 
-import { splitByUpcomingAndPast } from "@/utils/date";
+import { normalizeAppointments, splitByUpcomingAndPast } from "@/utils/date";
 import type { RootState } from "@/app/store";
 
 export function useScheduleQuery(scheduleId?: string) {
@@ -14,7 +14,9 @@ export function useScheduleQuery(scheduleId?: string) {
   const schedule = useSelector((state: RootState) =>
     scheduleId ? selectScheduleById(state, scheduleId) : null,
   );
-  const appointments = schedule && schedule.appointments;
+  const appointments = schedule
+    ? normalizeAppointments(schedule.appointments)
+    : null;
   const [upcomingSchedules, pastSchedules] = splitByUpcomingAndPast(schedules);
 
   return {

@@ -2,7 +2,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { User } from '@/types';
+import type { Schedule, User } from '@/types';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -41,6 +41,32 @@ export const formatDateFull = (date: DateInput) => dayjs(date).format('dddd LL')
 export const formatDateToTime = (date: DateInput) => dayjs(date).format('h:mma');
 
 export const formatTime = (time: DateInput) => dayjs(time).format('h:mma');
+
+type AppointmentLike = {
+  start: string;
+  date?: string;
+};
+
+export const normalizeAppointment = <T extends AppointmentLike>(appointment: T): T => {
+  const start = appointment.start;
+  const hasIsoStart = typeof start === 'string' && start.includes('T');
+  return {
+    ...appointment,
+    date: appointment.date ?? (hasIsoStart ? formatDateSlash(start) : appointment.date),
+    start: hasIsoStart ? formatDateToTime(start) : start,
+  } as T;
+};
+
+export const normalizeAppointments = <T extends AppointmentLike>(appointments: T[]): T[] =>
+  appointments.map(normalizeAppointment);
+
+export const normalizeSchedule = (schedule: Schedule): Schedule => ({
+  ...schedule,
+  date: schedule.date ?? formatDate(schedule.open),
+});
+
+export const normalizeSchedules = (schedules: Schedule[]): Schedule[] =>
+  schedules.map(normalizeSchedule);
 
 interface ScheduleAppointment {
   employeeId?: string;
@@ -121,7 +147,9 @@ export const roundedCurrentDate = () => {
 };
 
 interface DateItem {
-  date: string;
+  date?: string;
+  start?: string;
+  open?: string;
 }
 
 // splits schedules or appointments by upcoming and past
@@ -131,7 +159,11 @@ export const splitByUpcomingAndPast = <T extends DateItem>(dateObj: T[]): [T[], 
   const presentDate = new Date();
   if (dateObj.length > 0) {
     dateObj.forEach((dateItem) => {
-      const currItemDate = new Date(dateItem.date);
+      const itemDate = dateItem.date ?? dateItem.start ?? dateItem.open;
+      if (!itemDate) {
+        return;
+      }
+      const currItemDate = new Date(itemDate);
       if (currItemDate < presentDate) {
         past.push(dateItem);
       } else {
@@ -142,18 +174,11 @@ export const splitByUpcomingAndPast = <T extends DateItem>(dateObj: T[]): [T[], 
   return [upcoming, past];
 };
 
-interface ApptWithStart {
-  start: string;
-}
-
-export const sortAndFormatApptByStartTime = <T extends ApptWithStart>(apptObj: T[] | null | undefined) => {
+export const sortAndFormatApptByStartTime = <T extends AppointmentLike>(apptObj: T[] | null | undefined) => {
   if (apptObj) {
     return [...apptObj]
       .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
-      .map((appt) => ({
-        ...appt,
-        start: formatDateToTime(appt.start),
-      }));
+      .map((appt) => normalizeAppointment(appt));
   } else {
     return [];
   }
