@@ -1,7 +1,7 @@
 import { PasswordResetToken } from '../models/index.js';
 import { Op } from 'sequelize';
 
-export const deleteExpiredTokens = async (): Promise<void> => {
+export const deleteExpiredTokens = async () => {
   await PasswordResetToken.destroy({
     where: {
       expiresAt: {

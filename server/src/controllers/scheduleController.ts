@@ -10,7 +10,7 @@ import {
  * @route /api/schedules
  * @method GET
  */
-export const getAllSchedulesPublic = async (_: Request, res: Response): Promise<void> => {
+export const getAllSchedulesPublic = async (_: Request, res: Response) => {
   const schedules = await getPublicSchedules();
   res.json(schedules);
 };
@@ -20,7 +20,7 @@ export const getAllSchedulesPublic = async (_: Request, res: Response): Promise<
  * @route /api/schedules/dashboard
  * @method GET
  */
-export const getAllSchedulesPrivate = async (_: Request, res: Response): Promise<void> => {
+export const getAllSchedulesPrivate = async (_: Request, res: Response) => {
   const schedules = await getPrivateSchedules();
   res.json(schedules);
 };
@@ -30,7 +30,7 @@ export const getAllSchedulesPrivate = async (_: Request, res: Response): Promise
  * @route /api/schedules
  * @method POST
  */
-export const createNewSchedule = async (req: Request, res: Response): Promise<void> => {
+export const createNewSchedule = async (req: Request, res: Response) => {
   const { dates, open, close } = req.body;
   const savedSchedules = await createSchedules(dates, open, close);
   res.status(201).json({

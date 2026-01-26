@@ -7,7 +7,7 @@ import { listenForMessage } from './services/emailService.js';
 // pub/sub message listener
 listenForMessage();
 
-const start = async (): Promise<void> => {
+const start = async () => {
   if (!PORT) {
     throw new Error('PORT must be defined in environment variables');
   }

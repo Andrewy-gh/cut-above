@@ -17,7 +17,7 @@ import ApiError from '../utils/ApiError.js';
  * @route /signup
  * @method POST
  */
-export const register = async (req: Request, res: Response): Promise<void> => {
+export const register = async (req: Request, res: Response) => {
   await registerUser(req.body);
   res
     .status(200)
@@ -29,7 +29,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
  * @route /login
  * @method POST
  */
-export const login = async (req: Request, res: Response): Promise<void> => {
+export const login = async (req: Request, res: Response) => {
   const user = await authenticateUser(req.body);
   req.session.userId = user.id;
   req.session.isAdmin = user.role === 'admin';
@@ -52,7 +52,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
  * @route /logout
  * @method POST
  */
-export const logout = async (req: Request, res: Response): Promise<void> => {
+export const logout = async (req: Request, res: Response) => {
   const userId = req.session.userId;
   let user: User | null = null;
   if (userId) {
@@ -81,7 +81,7 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
  * @route /email
  * @method PUT
  */
-export const changeEmail = async (req: Request, res: Response): Promise<void> => {
+export const changeEmail = async (req: Request, res: Response) => {
   const user = await updateEmail({
     email: req.body.email,
     id: req.session.userId!,
@@ -98,7 +98,7 @@ export const changeEmail = async (req: Request, res: Response): Promise<void> =>
  * @route /password
  * @method PUT
  */
-export const changePassword = async (req: Request, res: Response): Promise<void> => {
+export const changePassword = async (req: Request, res: Response) => {
   await updatePassword({
     password: req.body.password,
     id: req.session.userId!,
@@ -113,7 +113,7 @@ export const changePassword = async (req: Request, res: Response): Promise<void>
  * @route /validation/:id/:token
  * @method GET
  */
-export const handleTokenValidation = async (req: Request, res: Response): Promise<void> => {
+export const handleTokenValidation = async (req: Request, res: Response) => {
   await validateToken(req.params as { id: string; token: string });
   res.json({ success: true, message: 'Token is valid' });
 };
@@ -123,7 +123,7 @@ export const handleTokenValidation = async (req: Request, res: Response): Promis
  * @route /reset-pw/:id/:token
  * @method PUT
  */
-export const handlePasswordReset = async (req: Request, res: Response): Promise<void> => {
+export const handlePasswordReset = async (req: Request, res: Response) => {
   const user = await User.findByPk(req.params.id);
   if (!user) {
     throw new ApiError(400, 'Bad Request');

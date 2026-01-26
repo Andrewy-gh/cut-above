@@ -1,6 +1,6 @@
 import { QueryInterface, DataTypes } from 'sequelize';
 
-export async function up(queryInterface: QueryInterface): Promise<void> {
+export async function up(queryInterface: QueryInterface) {
   // Create users table
   await queryInterface.createTable('users', {
     id: {
@@ -166,7 +166,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
   await queryInterface.addIndex('password_reset_tokens', ['user_id']);
 }
 
-export async function down(queryInterface: QueryInterface): Promise<void> {
+export async function down(queryInterface: QueryInterface) {
   // Drop tables in reverse order (respect foreign key constraints)
   await queryInterface.dropTable('password_reset_tokens');
   await queryInterface.dropTable('appointments');

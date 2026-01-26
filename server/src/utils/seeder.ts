@@ -49,7 +49,7 @@ interface SeedData {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const loadSeedData = async (): Promise<SeedData> => {
+const loadSeedData = async () => {
   const dataPath = path.join(__dirname, 'data.js');
   const dataExamplePath = path.join(__dirname, 'data.example.js');
   const selectedPath = existsSync(dataPath) ? dataPath : dataExamplePath;
@@ -59,7 +59,7 @@ const loadSeedData = async (): Promise<SeedData> => {
   return dataModule;
 };
 
-export const seedUsers = async (users: SeedUser[]): Promise<User[]> => {
+export const seedUsers = async (users: SeedUser[]) => {
   const newUsers = await User.bulkCreate(users, { returning: true });
   logger.info('new users created');
   logger.info(
@@ -72,7 +72,7 @@ export const seedUsers = async (users: SeedUser[]): Promise<User[]> => {
 
 export const seedSchedules = async (
   schedules: SeedSchedule[]
-): Promise<Schedule[]> => {
+) => {
   const schedulesWithFormattedDates = schedules.map((schedule) => ({
     open: convertISOToDate(schedule.open),
     close: convertISOToDate(schedule.close),
@@ -92,7 +92,7 @@ export const seedAppointments = async (
   users: User[],
   schedules: Schedule[],
   appointments: SeedAppointment[]
-): Promise<Appointment[]> => {
+) => {
   const clients = users.filter((u) => u.role === 'client');
   const employees = users.filter((u) => u.role === 'employee');
 
@@ -130,7 +130,7 @@ export const seedAppointments = async (
   return newAppointments;
 };
 
-export const seedTokens = async (users: User[]): Promise<PasswordResetToken[]> => {
+export const seedTokens = async (users: User[]) => {
   const clients = users.filter((u) => u.role === 'client');
 
   const tokens = clients.map((client) => ({
@@ -148,7 +148,7 @@ export const seedTokens = async (users: User[]): Promise<PasswordResetToken[]> =
   return newTokens;
 };
 
-export const createTables = async (): Promise<void> => {
+export const createTables = async () => {
   try {
     await sequelize.sync({ force: true });
     logger.info('All tables created successfully');
@@ -158,7 +158,7 @@ export const createTables = async (): Promise<void> => {
   }
 };
 
-async function main(): Promise<void> {
+async function main() {
   try {
     await sequelize.authenticate();
     logger.info('Connected to the database');

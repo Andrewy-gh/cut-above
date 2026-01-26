@@ -1,7 +1,7 @@
 import { format, createLogger, transports, Logger } from 'winston';
 const { timestamp, combine, printf, errors } = format;
 
-export default function buildDevLogger(): Logger {
+export default function buildDevLogger() {
   const logFormat = printf(({ level, message, timestamp, stack }) => {
     return `${timestamp} ${level}: ${stack || message}`;
   });

@@ -31,7 +31,7 @@ interface FormattedEmail {
   emailLink: string;
 }
 
-export const formatEmail = (appointment: EmailAppointmentInput): FormattedEmail => {
+export const formatEmail = (appointment: EmailAppointmentInput) => {
   return {
     date: formatDateSlashISO(appointment.start),
     time: formatTimeISO(appointment.start),

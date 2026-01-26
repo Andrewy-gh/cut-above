@@ -6,7 +6,7 @@ import { User } from '../models/index.js';
  * @route /api/users/
  * @method GET
  */
-export const getAllUsers = async (_: Request, res: Response): Promise<void> => {
+export const getAllUsers = async (_: Request, res: Response) => {
   const users = await User.findAll();
   res.json(users);
 };

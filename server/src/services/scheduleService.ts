@@ -4,7 +4,7 @@ import type { NewAppointmentData } from '../types/index.js';
 import ApiError from '../utils/ApiError.js';
 import { sequelize } from '../utils/db.js';
 
-export const getPublicSchedules = async (): Promise<Schedule[]> => {
+export const getPublicSchedules = async () => {
   return await Schedule.findAll({
     include: [
       {
@@ -34,7 +34,7 @@ export const getPublicSchedules = async (): Promise<Schedule[]> => {
   });
 };
 
-export const getPrivateSchedules = async (): Promise<Schedule[]> => {
+export const getPrivateSchedules = async () => {
   return await Schedule.findAll({
     include: [
       {
@@ -79,7 +79,7 @@ export const getPrivateSchedules = async (): Promise<Schedule[]> => {
   });
 };
 
-export const createSchedules = async (dates: [string, string], open: string, close: string): Promise<Schedule[]> => {
+export const createSchedules = async (dates: [string, string], open: string, close: string) => {
   const dateRangeToSchedule = generateRange(dates, open, close);
   const newSchedules = dateRangeToSchedule.map((s) => {
     return Schedule.create({
@@ -90,7 +90,7 @@ export const createSchedules = async (dates: [string, string], open: string, clo
   return await Promise.all(newSchedules);
 };
 
-export const checkScheduleAvailability = async (newAppt: NewAppointmentData): Promise<string> => {
+export const checkScheduleAvailability = async (newAppt: NewAppointmentData) => {
   const appointmentStart = new Date(newAppt.start);
 
   // Find schedule where appointment start/end falls within open/close times on the same day

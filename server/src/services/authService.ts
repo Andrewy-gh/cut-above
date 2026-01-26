@@ -45,13 +45,13 @@ export interface UserResponse {
   profile: string | null;
 }
 
-export const registerUser = async (credentials: RegisterCredentials): Promise<User> => {
+export const registerUser = async (credentials: RegisterCredentials) => {
   const { firstName, lastName, email, password, role = 'client' } = credentials;
   const passwordHash = await bcrypt.hash(password, 10);
   return await User.create({ firstName, lastName, email, passwordHash, role });
 };
 
-export const authenticateUser = async (credentials: LoginCredentials): Promise<UserResponse> => {
+export const authenticateUser = async (credentials: LoginCredentials) => {
   const user = await User.scope('withPassword').findOne({
     where: { email: credentials.email },
   });
@@ -73,7 +73,7 @@ export const authenticateUser = async (credentials: LoginCredentials): Promise<U
   };
 };
 
-export const updateEmail = async (user: UpdateEmailData): Promise<UserResponse> => {
+export const updateEmail = async (user: UpdateEmailData) => {
   const currentUser = await User.findByPk(user.id);
   if (!currentUser) {
     throw new ApiError(404, 'User not found');
@@ -91,24 +91,24 @@ export const updateEmail = async (user: UpdateEmailData): Promise<UserResponse> 
   };
 };
 
-export const updatePassword = async (user: UpdatePasswordData): Promise<void> => {
+export const updatePassword = async (user: UpdatePasswordData) => {
   const passwordHash = await bcrypt.hash(user.password, 10);
   await User.update({ passwordHash }, { where: { id: user.id } });
 };
 
-const storeToken = async (userId: string, token: string): Promise<PasswordResetToken> => {
+const storeToken = async (userId: string, token: string) => {
   const tokenHash = await bcrypt.hash(token, 10);
   return await PasswordResetToken.create({ userId, tokenHash });
 };
 
-const checkForExistingToken = async (userId: string): Promise<void> => {
+const checkForExistingToken = async (userId: string) => {
   const existingToken = await PasswordResetToken.findOne({ where: { userId } });
   if (existingToken) {
     await existingToken.destroy();
   }
 };
 
-export const generateTokenLink = async (email: string): Promise<string | undefined> => {
+export const generateTokenLink = async (email: string) => {
   const user = await User.findOne({ where: { email } });
   if (!user) {
     return;
@@ -120,7 +120,7 @@ export const generateTokenLink = async (email: string): Promise<string | undefin
   return resetUrl;
 };
 
-export const validateToken = async (user: ValidateTokenData): Promise<PasswordResetToken> => {
+export const validateToken = async (user: ValidateTokenData) => {
   const resetToken = await PasswordResetToken.findOne({
     where: { userId: user.id },
   });
@@ -146,14 +146,14 @@ export const validateToken = async (user: ValidateTokenData): Promise<PasswordRe
   return resetToken;
 };
 
-export const resetPassword = async (user: User, password: string): Promise<void> => {
+export const resetPassword = async (user: User, password: string) => {
   const passwordHash = await bcrypt.hash(password, 10);
   user.passwordHash = passwordHash;
   await user.save();
   await deleteResetTokenById(user.id);
 };
 
-const deleteResetTokenById = async (id: string): Promise<void> => {
+const deleteResetTokenById = async (id: string) => {
   const token = await PasswordResetToken.findOne({ where: { userId: id } });
   if (token) {
     await token.destroy();

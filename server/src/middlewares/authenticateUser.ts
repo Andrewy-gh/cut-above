@@ -5,7 +5,7 @@ export const authenticateUser = async (
   req: Request,
   _res: Response,
   next: NextFunction
-): Promise<void> => {
+) => {
   if (!req.session) {
     throw new ApiError(403, 'Forbidden: not authenticated');
   }
@@ -19,7 +19,7 @@ export const authenticateRole = async (
   req: Request,
   _res: Response,
   next: NextFunction
-): Promise<void> => {
+) => {
   if (!req.session.isAdmin) {
     throw new ApiError(403, 'Forbidden: not authorized to access this page');
   }

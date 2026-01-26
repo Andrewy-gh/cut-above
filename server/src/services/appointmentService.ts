@@ -26,7 +26,7 @@ const CLIENT_APPOINTMENT_EXCLUDE: string[] = [
 
 const EMPLOYEE_APPOINTMENT_EXCLUDE: string[] = ['clientId', 'employeeId'];
 
-const getClientAppointments = async (user: User): Promise<Appointment[]> =>
+const getClientAppointments = async (user: User) =>
   user.getAppointments({
     attributes: {
       exclude: CLIENT_APPOINTMENT_EXCLUDE,
@@ -42,7 +42,7 @@ const getClientAppointments = async (user: User): Promise<Appointment[]> =>
     ],
   });
 
-const getEmployeeAppointments = async (user: User): Promise<Appointment[]> =>
+const getEmployeeAppointments = async (user: User) =>
   user.getEmployeeAppointments({
     attributes: {
       exclude: EMPLOYEE_APPOINTMENT_EXCLUDE,
@@ -58,7 +58,7 @@ const getEmployeeAppointments = async (user: User): Promise<Appointment[]> =>
     ],
   });
 
-export const getAppointmentsByRole = async (user: User): Promise<Appointment[]> => {
+export const getAppointmentsByRole = async (user: User) => {
   switch (user.role) {
     case 'client':
       return getClientAppointments(user);
@@ -69,7 +69,7 @@ export const getAppointmentsByRole = async (user: User): Promise<Appointment[]> 
   }
 };
 
-export const createNew = async (newAppt: NewAppointmentData): Promise<Appointment> => {
+export const createNew = async (newAppt: NewAppointmentData) => {
   const availbleScheduleId = await checkScheduleAvailability(newAppt);
   const appointment = await Appointment.create({
     start: convertISOToDate(newAppt.start),
@@ -83,7 +83,7 @@ export const createNew = async (newAppt: NewAppointmentData): Promise<Appointmen
   return appointment;
 };
 
-export const update = async (newAppt: UpdateAppointmentData): Promise<Appointment> => {
+export const update = async (newAppt: UpdateAppointmentData) => {
   const appointment = await Appointment.findByPk(newAppt.id);
   if (!appointment) {
     throw new ApiError(404, 'appointment not found');
@@ -140,7 +140,7 @@ export const update = async (newAppt: UpdateAppointmentData): Promise<Appointmen
   return appointment;
 };
 
-export const getClientAppointmentById = async (id: string): Promise<Appointment | null> => {
+export const getClientAppointmentById = async (id: string) => {
   return await Appointment.findByPk(id, {
     include: [
       {

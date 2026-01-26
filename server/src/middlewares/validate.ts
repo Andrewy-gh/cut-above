@@ -10,7 +10,7 @@ interface ValidationConfig {
 }
 
 export const validate = (config: ValidationConfig) => {
-  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const targets: ValidationTarget[] = ['body', 'params', 'query'];
 

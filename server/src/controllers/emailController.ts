@@ -9,7 +9,7 @@ import { generateTokenLink } from '../services/authService.js';
  * @method POST
  * @returns {Response}
  */
-export const handleNewMessage = async (req: Request, res: Response): Promise<void> => {
+export const handleNewMessage = async (req: Request, res: Response) => {
   const { contactDetails } = req.body;
   await publishMessage({
     receiver: contactDetails.email,
@@ -33,7 +33,7 @@ export const handleNewMessage = async (req: Request, res: Response): Promise<voi
   });
 };
 
-export const sendPasswordReset = async (req: Request, res: Response): Promise<void> => {
+export const sendPasswordReset = async (req: Request, res: Response) => {
   const emailLink = await generateTokenLink(req.body.email);
   await publishMessage({
     receiver: req.body.email,

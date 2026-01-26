@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { User } from '../models/index.js';
 
-export const getAllEmployees = async (_req: Request, res: Response): Promise<void> => {
+export const getAllEmployees = async (_req: Request, res: Response) => {
   const employees = await User.findAll({
     where: { role: 'employee' },
     attributes: {
@@ -11,7 +11,7 @@ export const getAllEmployees = async (_req: Request, res: Response): Promise<voi
   res.json(employees);
 };
 
-export const getEmployeeProfiles = async (_req: Request, res: Response): Promise<void> => {
+export const getEmployeeProfiles = async (_req: Request, res: Response) => {
   const employees = await User.findAll({
     where: { role: 'employee' },
     attributes: {

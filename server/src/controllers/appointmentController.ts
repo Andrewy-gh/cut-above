@@ -11,14 +11,14 @@ import { formatEmail } from '../utils/formatters.js';
 import ApiError from '../utils/ApiError.js';
 import type { UserRole } from '../types/index.js';
 
-async function getUserFromSession(req: Request): Promise<User> {
+async function getUserFromSession(req: Request) {
   if (!req.session.userId) throw new ApiError(401, 'Session expired');
   const user = await User.findByPk(req.session.userId);
   if (!user) throw new ApiError(404, 'User not found');
   return user;
 }
 
-const assertRoleAllowed = (user: User, roles: UserRole[]): void => {
+const assertRoleAllowed = (user: User, roles: UserRole[]) => {
   if (!roles.includes(user.role)) {
     throw new ApiError(403, 'Forbidden: role not allowed');
   }
@@ -28,7 +28,7 @@ const assertAppointmentAccess = (
   user: User,
   appointment: Appointment,
   options: { allowAdmin?: boolean } = {}
-): void => {
+) => {
   if (options.allowAdmin && user.role === 'admin') return;
 
   const isClientOwner = user.role === 'client' && appointment.clientId === user.id;
@@ -41,7 +41,7 @@ const assertAppointmentAccess = (
 const assertValidEmployeeSelection = async (
   employeeId: string,
   clientId: string
-): Promise<void> => {
+) => {
   if (employeeId === clientId) {
     throw new ApiError(400, 'Client and employee must be different');
   }
@@ -56,7 +56,7 @@ const assertValidEmployeeSelection = async (
  * @route /api/appointments
  * @method GET
  */
-export const getAllAppointments = async (req: Request, res: Response): Promise<void> => {
+export const getAllAppointments = async (req: Request, res: Response) => {
   const user = await getUserFromSession(req);
   assertRoleAllowed(user, ['client', 'employee']);
   const appointments = await getAppointmentsByRole(user);
@@ -68,7 +68,7 @@ export const getAllAppointments = async (req: Request, res: Response): Promise<v
  * @route /api/appointments/:id
  * @method GET
  */
-export const getSingleAppointment = async (req: Request, res: Response): Promise<void> => {
+export const getSingleAppointment = async (req: Request, res: Response) => {
   const user = await getUserFromSession(req);
   assertRoleAllowed(user, ['client', 'employee']);
 
@@ -85,7 +85,7 @@ export const getSingleAppointment = async (req: Request, res: Response): Promise
  * @route /api/appointments
  * @method POST
  */
-export const bookAppointment = async (req: Request, res: Response): Promise<void> => {
+export const bookAppointment = async (req: Request, res: Response) => {
   const user = await getUserFromSession(req);
   assertRoleAllowed(user, ['client']);
   await assertValidEmployeeSelection(req.body.employee.id, user.id);
@@ -111,7 +111,7 @@ export const bookAppointment = async (req: Request, res: Response): Promise<void
  * @route /api/appointments/:id
  * @method PUT
  */
-export const modifyAppointment = async (req: Request, res: Response): Promise<void> => {
+export const modifyAppointment = async (req: Request, res: Response) => {
   const user = await getUserFromSession(req);
   assertRoleAllowed(user, ['client', 'employee', 'admin']);
 
@@ -157,7 +157,7 @@ export const modifyAppointment = async (req: Request, res: Response): Promise<vo
  * @route /api/appointments/status/:id
  * @method PUT
  */
-export const updateAppointmentStatus = async (req: Request, res: Response): Promise<void> => {
+export const updateAppointmentStatus = async (req: Request, res: Response) => {
   await Appointment.update(
     { status: req.body.status },
     { where: { id: req.params.id } }
@@ -172,7 +172,7 @@ export const updateAppointmentStatus = async (req: Request, res: Response): Prom
  * @route /api/appointments/:id
  * @method DELETE
  */
-export const deleteAppointmentById = async (req: Request, res: Response): Promise<void> => {
+export const deleteAppointmentById = async (req: Request, res: Response) => {
   const user = await getUserFromSession(req);
   const appointment = await Appointment.findByPk(req.params.id, {
     include: [

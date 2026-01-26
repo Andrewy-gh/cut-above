@@ -1,4 +1,4 @@
-const setDefaultEnv = (key: string, value: string): void => {
+const setDefaultEnv = (key: string, value: string) => {
   if (!process.env[key]) {
     process.env[key] = value;
   }

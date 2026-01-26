@@ -8,7 +8,7 @@ const errorHandler = async (
   _req: Request,
   res: Response,
   _next: NextFunction
-): Promise<Response | void> => {
+) => {
   logger.error('====================================');
   logger.error(err);
   logger.error('====================================');

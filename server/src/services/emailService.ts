@@ -35,7 +35,7 @@ export const sendEmail = async ({
   option,
   emailLink,
   contactDetails,
-}: EmailData): Promise<void> => {
+}: EmailData) => {
   const transporter = nodemailer.createTransport({
     service: EMAIL_SERVICE,
     auth: {
@@ -71,7 +71,7 @@ export const sendEmail = async ({
   }
 };
 
-export const listenForMessage = async (lastId: string = '$'): Promise<void> => {
+export const listenForMessage = async (lastId: string = '$') => {
   // `results` is an array, each element of which corresponds to a key.
   // Because we only listen to one key (mystream) here, `results` only contains
   // a single element. See more: https://redis.io/commands/xread#return-value
@@ -94,7 +94,7 @@ export const listenForMessage = async (lastId: string = '$'): Promise<void> => {
   await listenForMessage(messages[messages.length - 1][0]);
 };
 
-export const publishMessage = async (obj: EmailData): Promise<void> => {
+export const publishMessage = async (obj: EmailData) => {
   await pub.xadd(
     'email-stream',
     'MAXLEN',
