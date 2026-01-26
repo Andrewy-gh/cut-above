@@ -7,53 +7,66 @@ import type { AppointmentAttributes } from '../types/models.js';
 import { convertISOToDate, extractDateFromISO } from '../utils/dateTime.js';
 import dayjs from 'dayjs';
 
+const USER_PUBLIC_EXCLUDE: string[] = [
+  'passwordHash',
+  'image',
+  'profile',
+  'lastName',
+  'role',
+  'email',
+];
+
+const CLIENT_APPOINTMENT_EXCLUDE: string[] = [
+  'clientId',
+  'employeeId',
+  'scheduleId',
+  'end',
+  'status',
+];
+
+const EMPLOYEE_APPOINTMENT_EXCLUDE: string[] = ['clientId', 'employeeId'];
+
+const getClientAppointments = async (user: User): Promise<Appointment[]> =>
+  user.getAppointments({
+    attributes: {
+      exclude: CLIENT_APPOINTMENT_EXCLUDE,
+    },
+    include: [
+      {
+        model: User.scope('withoutPassword'),
+        as: 'employee',
+        attributes: {
+          exclude: USER_PUBLIC_EXCLUDE,
+        },
+      },
+    ],
+  });
+
+const getEmployeeAppointments = async (user: User): Promise<Appointment[]> =>
+  user.getEmployeeAppointments({
+    attributes: {
+      exclude: EMPLOYEE_APPOINTMENT_EXCLUDE,
+    },
+    include: [
+      {
+        model: User.scope('withoutPassword'),
+        as: 'client',
+        attributes: {
+          exclude: USER_PUBLIC_EXCLUDE,
+        },
+      },
+    ],
+  });
+
 export const getAppointmentsByRole = async (user: User): Promise<Appointment[]> => {
-  if (user.role === 'client') {
-    return await user.getAppointments({
-      attributes: {
-        exclude: ['clientId', 'employeeId', 'scheduleId', 'end', 'status'],
-      },
-      include: [
-        {
-          model: User,
-          as: 'employee',
-          attributes: {
-            exclude: [
-              'passwordHash',
-              'image',
-              'profile',
-              'lastName',
-              'role',
-              'email',
-            ],
-          },
-        },
-      ],
-    });
-  } else if (user.role === 'employee') {
-    return await user.getEmployeeAppointments({
-      attributes: {
-        exclude: ['clientId', 'employeeId'],
-      },
-      include: [
-        {
-          model: User.scope('withoutPassword'),
-          as: 'client',
-          attributes: {
-            exclude: [
-              'passwordHash',
-              'image',
-              'profile',
-              'lastName',
-              'role',
-              'email',
-            ],
-          },
-        },
-      ],
-    });
+  switch (user.role) {
+    case 'client':
+      return getClientAppointments(user);
+    case 'employee':
+      return getEmployeeAppointments(user);
+    default:
+      return [];
   }
-  return [];
 };
 
 export const createNew = async (newAppt: NewAppointmentData): Promise<Appointment> => {

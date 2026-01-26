@@ -9,6 +9,7 @@ import {
 import { publishMessage } from '../services/emailService.js';
 import { formatEmail } from '../utils/formatters.js';
 import ApiError from '../utils/ApiError.js';
+import type { UserRole } from '../types/index.js';
 
 async function getUserFromSession(req: Request): Promise<User> {
   if (!req.session.userId) throw new ApiError(401, 'Session expired');
@@ -17,6 +18,39 @@ async function getUserFromSession(req: Request): Promise<User> {
   return user;
 }
 
+const assertRoleAllowed = (user: User, roles: UserRole[]): void => {
+  if (!roles.includes(user.role)) {
+    throw new ApiError(403, 'Forbidden: role not allowed');
+  }
+};
+
+const assertAppointmentAccess = (
+  user: User,
+  appointment: Appointment,
+  options: { allowAdmin?: boolean } = {}
+): void => {
+  if (options.allowAdmin && user.role === 'admin') return;
+
+  const isClientOwner = user.role === 'client' && appointment.clientId === user.id;
+  const isEmployeeOwner = user.role === 'employee' && appointment.employeeId === user.id;
+  if (isClientOwner || isEmployeeOwner) return;
+
+  throw new ApiError(403, 'Forbidden: not authorized to access this appointment');
+};
+
+const assertValidEmployeeSelection = async (
+  employeeId: string,
+  clientId: string
+): Promise<void> => {
+  if (employeeId === clientId) {
+    throw new ApiError(400, 'Client and employee must be different');
+  }
+  const employee = await User.findByPk(employeeId);
+  if (!employee || employee.role !== 'employee') {
+    throw new ApiError(400, 'Invalid employee');
+  }
+};
+
 /**
  * @description retrieve all appointments
  * @route /api/appointments
@@ -24,6 +58,7 @@ async function getUserFromSession(req: Request): Promise<User> {
  */
 export const getAllAppointments = async (req: Request, res: Response): Promise<void> => {
   const user = await getUserFromSession(req);
+  assertRoleAllowed(user, ['client', 'employee']);
   const appointments = await getAppointmentsByRole(user);
   res.json(appointments);
 };
@@ -34,7 +69,14 @@ export const getAllAppointments = async (req: Request, res: Response): Promise<v
  * @method GET
  */
 export const getSingleAppointment = async (req: Request, res: Response): Promise<void> => {
+  const user = await getUserFromSession(req);
+  assertRoleAllowed(user, ['client', 'employee']);
+
   const appointment = await getClientAppointmentById(req.params.id);
+  if (!appointment) {
+    throw new ApiError(404, 'Appointment not found');
+  }
+  assertAppointmentAccess(user, appointment);
   res.json(appointment);
 };
 
@@ -45,6 +87,8 @@ export const getSingleAppointment = async (req: Request, res: Response): Promise
  */
 export const bookAppointment = async (req: Request, res: Response): Promise<void> => {
   const user = await getUserFromSession(req);
+  assertRoleAllowed(user, ['client']);
+  await assertValidEmployeeSelection(req.body.employee.id, user.id);
 
   const newAppointment = await createNew({
     start: req.body.start,
@@ -69,6 +113,22 @@ export const bookAppointment = async (req: Request, res: Response): Promise<void
  */
 export const modifyAppointment = async (req: Request, res: Response): Promise<void> => {
   const user = await getUserFromSession(req);
+  assertRoleAllowed(user, ['client', 'employee']);
+
+  const appointment = await Appointment.findByPk(req.params.id);
+  if (!appointment) {
+    throw new ApiError(404, 'Appointment not found');
+  }
+  assertAppointmentAccess(user, appointment);
+
+  const requestedEmployeeId = req.body.employee?.id;
+  if (user.role === 'employee') {
+    if (requestedEmployeeId && requestedEmployeeId !== appointment.employeeId) {
+      throw new ApiError(403, 'Forbidden: cannot change employee');
+    }
+  } else if (requestedEmployeeId) {
+    await assertValidEmployeeSelection(requestedEmployeeId, user.id);
+  }
 
   const modifiedAppointment = await update({
     id: req.params.id,
@@ -114,6 +174,7 @@ export const deleteAppointmentById = async (req: Request, res: Response): Promis
   }) as (Appointment & { employee: User }) | null;
 
   if (!appointment) throw new ApiError(404, 'Appointment not found');
+  assertAppointmentAccess(user, appointment, { allowAdmin: true });
 
   await appointment.destroy();
 

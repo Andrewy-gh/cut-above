@@ -1,12 +1,120 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { sequelize } from '../utils/db.js';
-import { update } from './appointmentService.js';
+import { getAppointmentsByRole, update } from './appointmentService.js';
 import { Appointment, User, Schedule } from '../models/index.js';
 
-describe('appointmentService - Transaction Rollback', () => {
+describe('appointmentService', () => {
   beforeEach(async () => {
     // Clean up database before each test
     await sequelize.sync({ force: true });
+  });
+
+  describe('getAppointmentsByRole', () => {
+    it('dispatches to client appointments with expected query shape', async () => {
+      const getAppointments = vi.fn().mockResolvedValue(['client-result']);
+      const user = { role: 'client', getAppointments } as unknown as User;
+
+      const result = await getAppointmentsByRole(user);
+
+      expect(result).toEqual(['client-result']);
+      expect(getAppointments).toHaveBeenCalledTimes(1);
+
+      const [options] = getAppointments.mock.calls[0];
+      expect(options.attributes.exclude).toEqual([
+        'clientId',
+        'employeeId',
+        'scheduleId',
+        'end',
+        'status',
+      ]);
+      expect(options.include).toHaveLength(1);
+      expect(options.include[0].as).toBe('employee');
+      expect(options.include[0].attributes.exclude).toEqual([
+        'passwordHash',
+        'image',
+        'profile',
+        'lastName',
+        'role',
+        'email',
+      ]);
+    });
+
+    it('dispatches to employee appointments with expected query shape', async () => {
+      const getEmployeeAppointments = vi.fn().mockResolvedValue(['employee-result']);
+      const user = {
+        role: 'employee',
+        getEmployeeAppointments,
+      } as unknown as User;
+
+      const result = await getAppointmentsByRole(user);
+
+      expect(result).toEqual(['employee-result']);
+      expect(getEmployeeAppointments).toHaveBeenCalledTimes(1);
+
+      const [options] = getEmployeeAppointments.mock.calls[0];
+      expect(options.attributes.exclude).toEqual(['clientId', 'employeeId']);
+      expect(options.include).toHaveLength(1);
+      expect(options.include[0].as).toBe('client');
+      expect(options.include[0].attributes.exclude).toEqual([
+        'passwordHash',
+        'image',
+        'profile',
+        'lastName',
+        'role',
+        'email',
+      ]);
+    });
+
+    it('returns empty list for unsupported roles', async () => {
+      const user = { role: 'admin' } as unknown as User;
+
+      await expect(getAppointmentsByRole(user)).resolves.toEqual([]);
+    });
+
+    it('omits passwordHash from included users', async () => {
+      const client = await User.create({
+        firstName: 'Test',
+        lastName: 'Client',
+        email: 'client3@test.com',
+        passwordHash: 'hash',
+        role: 'client',
+      });
+
+      const employee = await User.create({
+        firstName: 'Test',
+        lastName: 'Employee',
+        email: 'employee3@test.com',
+        passwordHash: 'hash',
+        role: 'employee',
+      });
+
+      const schedule = await Schedule.create({
+        open: new Date('2024-01-22T14:00:00.000Z'),
+        close: new Date('2024-01-22T22:00:00.000Z'),
+      });
+
+      await Appointment.create({
+        start: new Date('2024-01-22T17:00:00.000Z'),
+        end: new Date('2024-01-22T17:30:00.000Z'),
+        service: 'Haircut',
+        status: 'scheduled',
+        clientId: client.id,
+        employeeId: employee.id,
+        scheduleId: schedule.id,
+      });
+
+      const [clientView] = await getAppointmentsByRole(client);
+      const clientEmployee = (clientView as Appointment & { employee?: User }).employee;
+      expect(clientEmployee).toBeTruthy();
+      expect(clientEmployee?.passwordHash).toBeUndefined();
+      expect(clientEmployee?.dataValues).not.toHaveProperty('passwordHash');
+
+      const [employeeView] = await getAppointmentsByRole(employee);
+      const employeeClient = (employeeView as Appointment & { client?: User }).client;
+      expect(employeeClient).toBeTruthy();
+      expect(employeeClient?.passwordHash).toBeUndefined();
+      expect(employeeClient?.dataValues).not.toHaveProperty('passwordHash');
+    });
   });
 
   describe('update - Must-Fix #4: Transaction Rollback Guarantee', () => {
