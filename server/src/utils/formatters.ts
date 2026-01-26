@@ -1,15 +1,15 @@
-import { formatDateSlashISO, formatTimeISO } from './dateTime.js';
-import { generateAppointmentLink } from './emailOptions.js';
-import type { AppointmentService } from '../types/index.js';
+import { formatDateSlashISO, formatTimeISO } from "./dateTime.js";
+import { generateAppointmentLink } from "./emailOptions.js";
+import type { AppointmentService } from "../types/index.js";
 
 type EmailOption =
-  | 'confirmation'
-  | 'modification'
-  | 'cancellation'
-  | 'reset password'
-  | 'reset password success'
-  | 'message auto reply'
-  | 'message submission';
+  | "confirmation"
+  | "modification"
+  | "cancellation"
+  | "reset password"
+  | "reset password success"
+  | "message auto reply"
+  | "message submission";
 
 interface EmailAppointmentInput {
   start: string; // ISO datetime
@@ -21,14 +21,6 @@ interface EmailAppointmentInput {
   };
   id: string;
   option: EmailOption;
-}
-
-interface FormattedEmail {
-  date: string;
-  time: string;
-  employee: string;
-  option: EmailOption;
-  emailLink: string;
 }
 
 export const formatEmail = (appointment: EmailAppointmentInput) => {

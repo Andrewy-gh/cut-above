@@ -1,4 +1,4 @@
-import { format, createLogger, transports, Logger } from 'winston';
+import { format, createLogger, transports } from "winston";
 const { timestamp, combine, printf, errors } = format;
 
 export default function buildDevLogger() {
@@ -7,12 +7,12 @@ export default function buildDevLogger() {
   });
 
   return createLogger({
-    level: 'debug',
+    level: "debug",
     format: combine(
       format.colorize(),
-      timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+      timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
       errors({ stack: true }),
-      logFormat
+      logFormat,
     ),
     transports: [new transports.Console()],
   });
