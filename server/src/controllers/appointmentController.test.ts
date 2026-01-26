@@ -447,7 +447,7 @@ describe("Appointment Controller - API Integration", () => {
         .expect(403);
     });
 
-    it("rejects admin modifying appointments", async () => {
+    it("allows admin to modify appointments", async () => {
       await request(app)
         .post("/api/appointments")
         .set("Cookie", sessionCookie)
@@ -462,16 +462,23 @@ describe("Appointment Controller - API Integration", () => {
         where: { start: new Date("2024-01-22T18:00:00.000Z") },
       });
 
-      await request(app)
+      const response = await request(app)
         .put(`/api/appointments/${appointment!.id}`)
         .set("Cookie", adminSessionCookie)
         .send({
           start: "2024-01-22T19:00:00.000Z",
           end: "2024-01-22T19:30:00.000Z",
           service: "Beard Trim",
-          employee: { id: employeeId, firstName: "John" },
+          employee: { id: otherEmployeeId, firstName: "Jane" },
         })
-        .expect(403);
+        .expect(200);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.message).toBe("Appointment successfully updated");
+
+      const updated = await Appointment.findByPk(appointment!.id);
+      expect(updated?.service).toBe("Beard Trim");
+      expect(updated?.employeeId).toBe(otherEmployeeId);
     });
   });
 

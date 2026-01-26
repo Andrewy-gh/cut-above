@@ -113,13 +113,15 @@ export const bookAppointment = async (req: Request, res: Response): Promise<void
  */
 export const modifyAppointment = async (req: Request, res: Response): Promise<void> => {
   const user = await getUserFromSession(req);
-  assertRoleAllowed(user, ['client', 'employee']);
+  assertRoleAllowed(user, ['client', 'employee', 'admin']);
 
-  const appointment = await Appointment.findByPk(req.params.id);
+  const appointment = await Appointment.findByPk(req.params.id, {
+    include: [{ model: User, as: 'client' }],
+  }) as (Appointment & { client?: User }) | null;
   if (!appointment) {
     throw new ApiError(404, 'Appointment not found');
   }
-  assertAppointmentAccess(user, appointment);
+  assertAppointmentAccess(user, appointment, { allowAdmin: true });
 
   const requestedEmployeeId = req.body.employee?.id;
   if (user.role === 'employee') {
@@ -127,7 +129,8 @@ export const modifyAppointment = async (req: Request, res: Response): Promise<vo
       throw new ApiError(403, 'Forbidden: cannot change employee');
     }
   } else if (requestedEmployeeId) {
-    await assertValidEmployeeSelection(requestedEmployeeId, user.id);
+    const clientId = appointment.clientId;
+    await assertValidEmployeeSelection(requestedEmployeeId, clientId);
   }
 
   const modifiedAppointment = await update({
@@ -139,9 +142,11 @@ export const modifyAppointment = async (req: Request, res: Response): Promise<vo
     status: req.body.status,
   });
 
+  const receiverEmail = appointment.client?.email ?? user.email;
+
   await publishMessage({
     ...formatEmail({ ...req.body, id: modifiedAppointment.id, option: 'modification' }),
-    receiver: user.email,
+    receiver: receiverEmail,
   });
 
   res.status(200).json({ success: true, message: 'Appointment successfully updated' });
@@ -170,13 +175,18 @@ export const updateAppointmentStatus = async (req: Request, res: Response): Prom
 export const deleteAppointmentById = async (req: Request, res: Response): Promise<void> => {
   const user = await getUserFromSession(req);
   const appointment = await Appointment.findByPk(req.params.id, {
-    include: [{ model: User, as: 'employee' }],
-  }) as (Appointment & { employee: User }) | null;
+    include: [
+      { model: User, as: 'employee' },
+      { model: User, as: 'client' },
+    ],
+  }) as (Appointment & { employee: User; client: User }) | null;
 
   if (!appointment) throw new ApiError(404, 'Appointment not found');
   assertAppointmentAccess(user, appointment, { allowAdmin: true });
 
   await appointment.destroy();
+
+  const receiverEmail = appointment.client?.email ?? user.email;
 
   await publishMessage({
     ...formatEmail({
@@ -187,7 +197,7 @@ export const deleteAppointmentById = async (req: Request, res: Response): Promis
       employee: appointment.employee,
       option: 'cancellation',
     }),
-    receiver: user.email,
+    receiver: receiverEmail,
   });
 
   res.status(200).json({ success: true, message: 'Appointment successfully cancelled' });
