@@ -9,7 +9,7 @@ import {
   updatePassword,
 } from '../services/authService.js';
 import { User } from '../models/index.js';
-import { publishMessage } from '../services/emailService.js';
+import { enqueueEmail } from '../services/emailOutboxService.js';
 import ApiError from '../utils/ApiError.js';
 
 /**
@@ -129,9 +129,12 @@ export const handlePasswordReset = async (req: Request, res: Response) => {
     throw new ApiError(400, 'Bad Request');
   }
   await resetPassword(user, req.body.password);
-  await publishMessage({
-    receiver: user.email,
-    option: 'reset password success',
+  await enqueueEmail({
+    payload: {
+      receiver: user.email,
+      option: 'reset password success',
+    },
+    eventType: 'auth.reset_password_success',
   });
   res.status(200).json({ success: true, message: 'Password updated' });
 };

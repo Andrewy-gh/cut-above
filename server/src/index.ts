@@ -2,10 +2,6 @@ import app from './app.js';
 import { PORT } from './utils/config.js';
 import { connectToDatabase } from './utils/db.js';
 import logger from './utils/logger/index.js';
-import { listenForMessage } from './services/emailService.js';
-
-// pub/sub message listener
-listenForMessage();
 
 const start = async () => {
   if (!PORT) {

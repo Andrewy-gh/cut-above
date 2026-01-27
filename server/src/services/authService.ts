@@ -62,7 +62,7 @@ export const authenticateUser = async (credentials: LoginCredentials) => {
   if (!match) {
     throw new ApiError(401, 'Unauthorized');
   }
-  return {
+  const payload: UserResponse = {
     id: user.id,
     email: user.email,
     firstName: user.firstName,
@@ -71,6 +71,7 @@ export const authenticateUser = async (credentials: LoginCredentials) => {
     image: user.image,
     profile: user.profile,
   };
+  return payload;
 };
 
 export const updateEmail = async (user: UpdateEmailData) => {
@@ -80,7 +81,7 @@ export const updateEmail = async (user: UpdateEmailData) => {
   }
   currentUser.email = user.email;
   await currentUser.save();
-  return {
+  const payload: UserResponse = {
     id: currentUser.id,
     email: currentUser.email,
     firstName: currentUser.firstName,
@@ -89,6 +90,7 @@ export const updateEmail = async (user: UpdateEmailData) => {
     image: currentUser.image,
     profile: currentUser.profile,
   };
+  return payload;
 };
 
 export const updatePassword = async (user: UpdatePasswordData) => {

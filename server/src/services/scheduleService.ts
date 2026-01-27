@@ -3,6 +3,7 @@ import { checkAvailabilityISO, generateRange } from '../utils/dateTime.js';
 import type { NewAppointmentData } from '../types/index.js';
 import ApiError from '../utils/ApiError.js';
 import { sequelize } from '../utils/db.js';
+import type { Transaction } from 'sequelize';
 
 export const getPublicSchedules = async () => {
   return await Schedule.findAll({
@@ -90,7 +91,10 @@ export const createSchedules = async (dates: [string, string], open: string, clo
   return await Promise.all(newSchedules);
 };
 
-export const checkScheduleAvailability = async (newAppt: NewAppointmentData) => {
+export const checkScheduleAvailability = async (
+  newAppt: NewAppointmentData,
+  transaction?: Transaction
+) => {
   const appointmentStart = new Date(newAppt.start);
 
   // Find schedule where appointment start/end falls within open/close times on the same day
@@ -99,13 +103,14 @@ export const checkScheduleAvailability = async (newAppt: NewAppointmentData) => 
       sequelize.fn('DATE', sequelize.col('open')),
       sequelize.fn('DATE', appointmentStart)
     ),
+    transaction,
   });
 
   if (!schedule) {
     throw new ApiError(410, 'No schedule found for selected date');
   }
 
-  const appointments = await schedule.getAppointments();
+  const appointments = await schedule.getAppointments({ transaction });
 
   const appointmentsCheck = appointments.map(a => ({
     start: a.start.toISOString(),
@@ -118,5 +123,5 @@ export const checkScheduleAvailability = async (newAppt: NewAppointmentData) => 
     throw new ApiError(409, 'Time slot conflicts with existing appointment');
   }
 
-  return schedule.id;
+  return String(schedule.id);
 };

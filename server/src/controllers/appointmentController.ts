@@ -6,13 +6,12 @@ import {
   update,
   getClientAppointmentById,
 } from "../services/appointmentService.js";
-import { publishMessage, type EmailData } from "../services/emailService.js";
-import { formatEmail } from "../utils/formatters.js";
 import ApiError from "../utils/ApiError.js";
 import type { UserRole } from "../types/index.js";
 import { Result } from "better-result";
 import { findByIdOrNotFound } from "../services/userService.js";
-import logger from "../utils/logger/index.js";
+import { enqueueAppointmentEmail } from "../services/emailOutboxService.js";
+import { sequelize } from "../utils/db.js";
 import {
   AuthorizationError,
   DatabaseError,
@@ -80,23 +79,6 @@ const toHttpError = (cause: unknown, fallbackMessage: string): HttpError => {
     statusCode: 500,
     message: cause instanceof Error ? cause.message : fallbackMessage,
   });
-};
-
-const publishEmailNotification = async (
-  payload: EmailData,
-  warningMessage: string,
-) => {
-  try {
-    await publishMessage(payload);
-    return { queued: true as const };
-  } catch (cause) {
-    const errorMessage =
-      cause instanceof Error ? cause.message : "Unknown error";
-    logger.error(
-      `Failed to publish email notification: ${errorMessage}`,
-    );
-    return { queued: false as const, warning: warningMessage };
-  }
 };
 
 const assertRoleAllowed = (user: User, roles: UserRole[]) =>
@@ -227,32 +209,48 @@ export const bookAppointment = async (req: Request, res: Response) => {
       assertValidEmployeeSelection(req.body.employee.id, user.id),
     );
 
-    const newAppointment = yield* Result.await(
-      createNew({
-        start: req.body.start,
-        end: req.body.end,
-        service: req.body.service,
-        employeeId: req.body.employee.id,
-        clientId: req.session.userId!,
-      }),
-    );
+    yield* Result.await(
+      Result.tryPromise({
+        try: async () =>
+          sequelize.transaction(async (transaction) => {
+            const appointmentResult = await createNew(
+              {
+                start: req.body.start,
+                end: req.body.end,
+                service: req.body.service,
+                employeeId: req.body.employee.id,
+                clientId: req.session.userId!,
+              },
+              { transaction },
+            );
 
-    const notification = await publishEmailNotification(
-      {
-        ...formatEmail({
-          ...req.body,
-          id: newAppointment.id,
-          option: "confirmation",
-        }),
-        receiver: user.email,
-      },
-      "Appointment booked, but confirmation email could not be queued. We'll retry.",
+            if (appointmentResult.isErr()) {
+              throw appointmentResult.error;
+            }
+
+            const appointment = appointmentResult.value;
+            const employeeFirstName =
+              req.body.employee?.firstName ?? "Staff";
+            await enqueueAppointmentEmail({
+              appointmentId: appointment.id,
+              start: appointment.start.toISOString(),
+              end: appointment.end.toISOString(),
+              service: appointment.service,
+              employeeId: req.body.employee.id,
+              employeeFirstName,
+              receiver: user.email,
+              option: "confirmation",
+              transaction,
+            });
+          }),
+        catch: (cause) =>
+          toHttpError(cause, "Failed to create appointment"),
+      }),
     );
 
     return Result.ok({
       success: true,
       message: "Appointment successfully created",
-      notification,
     });
   });
 
@@ -276,11 +274,14 @@ export const modifyAppointment = async (req: Request, res: Response) => {
       Result.tryPromise({
         try: () =>
           Appointment.findByPk(req.params.id, {
-            include: [{ model: User, as: "client" }],
+            include: [
+              { model: User, as: "client" },
+              { model: User, as: "employee" },
+            ],
           }),
         catch: (cause) => toHttpError(cause, "Failed to fetch appointment"),
       }),
-    )) as (Appointment & { client?: User }) | null;
+    )) as (Appointment & { client?: User; employee?: User }) | null;
 
     if (!appointment) {
       return Result.err(
@@ -313,35 +314,54 @@ export const modifyAppointment = async (req: Request, res: Response) => {
       );
     }
 
-    const modifiedAppointment = yield* Result.await(
-      update({
-        id: req.params.id,
-        start: req.body.start,
-        end: req.body.end,
-        service: req.body.service,
-        employeeId: req.body.employee?.id,
-        status: req.body.status,
-      }),
-    );
-
     const receiverEmail = appointment.client?.email ?? user.email;
+    const employeeFirstName =
+      req.body.employee?.firstName ??
+      appointment.employee?.firstName ??
+      "Staff";
 
-    const notification = await publishEmailNotification(
-      {
-        ...formatEmail({
-          ...req.body,
-          id: modifiedAppointment.id,
-          option: "modification",
-        }),
-        receiver: receiverEmail,
-      },
-      "Appointment updated, but modification email could not be queued. We'll retry.",
+    yield* Result.await(
+      Result.tryPromise({
+        try: async () =>
+          sequelize.transaction(async (transaction) => {
+            const updateResult = await update(
+              {
+                id: req.params.id,
+                start: req.body.start,
+                end: req.body.end,
+                service: req.body.service,
+                employeeId: req.body.employee?.id,
+                status: req.body.status,
+              },
+              { transaction },
+            );
+
+            if (updateResult.isErr()) {
+              throw updateResult.error;
+            }
+
+            const modifiedAppointment = updateResult.value;
+            await enqueueAppointmentEmail({
+              appointmentId: modifiedAppointment.id,
+              start: modifiedAppointment.start.toISOString(),
+              end: modifiedAppointment.end.toISOString(),
+              service: modifiedAppointment.service,
+              employeeId:
+                req.body.employee?.id ?? modifiedAppointment.employeeId,
+              employeeFirstName,
+              receiver: receiverEmail,
+              option: "modification",
+              transaction,
+            });
+          }),
+        catch: (cause) =>
+          toHttpError(cause, "Failed to update appointment"),
+      }),
     );
 
     return Result.ok({
       success: true,
       message: "Appointment successfully updated",
-      notification,
     });
   });
 
@@ -408,34 +428,33 @@ export const deleteAppointmentById = async (req: Request, res: Response) => {
 
     yield* assertAppointmentAccess(user, appointment, { allowAdmin: true });
 
+    const receiverEmail = appointment.client?.email ?? user.email;
+    const employeeFirstName = appointment.employee?.firstName ?? "Staff";
+
     yield* Result.await(
       Result.tryPromise({
-        try: () => appointment.destroy(),
+        try: async () =>
+          sequelize.transaction(async (transaction) => {
+            await appointment.destroy({ transaction });
+            await enqueueAppointmentEmail({
+              appointmentId: appointment.id,
+              start: appointment.start.toISOString(),
+              end: appointment.end.toISOString(),
+              service: appointment.service,
+              employeeId: appointment.employeeId,
+              employeeFirstName,
+              receiver: receiverEmail,
+              option: "cancellation",
+              transaction,
+            });
+          }),
         catch: (cause) => toHttpError(cause, "Failed to cancel appointment"),
       }),
-    );
-
-    const receiverEmail = appointment.client?.email ?? user.email;
-
-    const notification = await publishEmailNotification(
-      {
-        ...formatEmail({
-          id: appointment.id,
-          start: appointment.start.toISOString(),
-          end: appointment.end.toISOString(),
-          service: appointment.service,
-          employee: appointment.employee,
-          option: "cancellation",
-        }),
-        receiver: receiverEmail,
-      },
-      "Appointment cancelled, but cancellation email could not be queued. We'll retry.",
     );
 
     return Result.ok({
       success: true,
       message: "Appointment successfully cancelled",
-      notification,
     });
   });
 

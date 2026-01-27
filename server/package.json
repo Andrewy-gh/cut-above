@@ -8,6 +8,8 @@
     "dev": "NODE_ENV=development tsx watch src/index.ts",
     "build": "tsc",
     "start": "NODE_ENV=production node build/index.js",
+    "worker:email:dev": "NODE_ENV=development tsx watch src/workers/emailOutboxWorker.ts",
+    "worker:email": "NODE_ENV=production node build/workers/emailOutboxWorker.js",
     "test": "DOTENV_CONFIG_PATH=.env.test NODE_ENV=test vitest",
     "test:run": "DOTENV_CONFIG_PATH=.env.test NODE_ENV=test vitest run",
     "test:ui": "vitest --ui",

@@ -15,15 +15,6 @@ vi.mock('../utils/logger/index.js', () => ({
   },
 }));
 
-vi.mock('../utils/redis.js', () => ({
-  pub: {
-    xadd: vi.fn(),
-  },
-  sub: {
-    xread: vi.fn(),
-  },
-}));
-
 describe('emailService', () => {
   it('sends email with expected payload', async () => {
     // nodemailer is mocked; no real SMTP credentials needed.
@@ -38,7 +29,7 @@ describe('emailService', () => {
 
     const { sendEmail } = await import('./emailService.js');
 
-    await sendEmail({
+    const info = await sendEmail({
       receiver: 'test@example.com',
       employee: 'John',
       date: '01/22/2024',
@@ -54,6 +45,11 @@ describe('emailService', () => {
         to: 'test@example.com',
         subject: expect.stringContaining('Cut Above'),
         text: expect.stringContaining('01/22/2024'),
+      })
+    );
+    expect(info).toEqual(
+      expect.objectContaining({
+        accepted: ['test@example.com'],
       })
     );
   });
@@ -80,75 +76,4 @@ describe('emailService', () => {
     expect(logger.error).toHaveBeenCalled();
   });
 
-  it('publishes formatted payload to redis stream', async () => {
-    const redis = await import('../utils/redis.js');
-    const { publishMessage } = await import('./emailService.js');
-
-    const payload = {
-      receiver: 'test@example.com',
-      employee: 'John',
-      date: '01/22/2024',
-      time: '12:00pm',
-      option: 'confirmation' as const,
-      emailLink: 'http://localhost:3000/appointment/appt-123',
-    };
-
-    await publishMessage(payload);
-
-    expect(redis.pub.xadd).toHaveBeenCalledWith(
-      'email-stream',
-      'MAXLEN',
-      '100',
-      '*',
-      'data',
-      JSON.stringify(payload)
-    );
-  });
-
-  it('requeues failed emails with incremented attempt', async () => {
-    const sendMail = vi.fn().mockRejectedValue(new Error('SMTP down'));
-    (nodemailer as unknown as { createTransport: (opts: unknown) => unknown }).createTransport =
-      vi.fn(() => ({ sendMail }));
-
-    const redis = await import('../utils/redis.js');
-    const setTimeoutSpy = vi
-      .spyOn(global, 'setTimeout')
-      .mockImplementation((handler) => {
-        if (typeof handler === 'function') {
-          handler();
-        }
-        return 0 as unknown as NodeJS.Timeout;
-      });
-
-    const { listenForMessage } = await import('./emailService.js');
-
-    const payload = {
-      receiver: 'test@example.com',
-      employee: 'John',
-      date: '01/22/2024',
-      time: '12:00pm',
-      option: 'confirmation' as const,
-      emailLink: 'http://localhost:3000/appointment/appt-123',
-      attempt: 0,
-    };
-
-    (redis.sub.xread as unknown as ReturnType<typeof vi.fn>)
-      .mockResolvedValueOnce([
-        ['email-stream', [['1-0', ['data', JSON.stringify(payload)]]]],
-      ])
-      .mockResolvedValueOnce(null);
-
-    await listenForMessage('0');
-
-    expect(redis.pub.xadd).toHaveBeenCalledWith(
-      'email-stream',
-      'MAXLEN',
-      '100',
-      '*',
-      'data',
-      JSON.stringify({ ...payload, attempt: 1 })
-    );
-
-    setTimeoutSpy.mockRestore();
-  });
 });

@@ -4,6 +4,7 @@ import { checkScheduleAvailability } from './scheduleService.js';
 import ApiError from '../utils/ApiError.js';
 import { DatabaseError } from '../errors.js';
 import { sequelize } from '../utils/db.js';
+import type { Transaction } from 'sequelize';
 import type { NewAppointmentData, UpdateAppointmentData } from '../types/index.js';
 import type { AppointmentAttributes } from '../types/models.js';
 import { convertISOToDate, extractDateFromISO } from '../utils/dateTime.js';
@@ -79,10 +80,16 @@ export const getAppointmentsByRole = async (user: User) =>
       }),
   });
 
-export const createNew = async (newAppt: NewAppointmentData) =>
+export const createNew = async (
+  newAppt: NewAppointmentData,
+  options: { transaction?: Transaction } = {}
+) =>
   Result.tryPromise({
     try: async () => {
-      const availbleScheduleId = await checkScheduleAvailability(newAppt);
+      const availbleScheduleId = await checkScheduleAvailability(
+        newAppt,
+        options.transaction
+      );
       const appointment = await Appointment.create({
         start: convertISOToDate(newAppt.start),
         end: convertISOToDate(newAppt.end),
@@ -91,7 +98,7 @@ export const createNew = async (newAppt: NewAppointmentData) =>
         employeeId: newAppt.employeeId,
         scheduleId: availbleScheduleId,
         status: 'scheduled',
-      });
+      }, { transaction: options.transaction });
       return appointment;
     },
     catch: () =>
@@ -101,10 +108,15 @@ export const createNew = async (newAppt: NewAppointmentData) =>
       }),
   });
 
-export const update = async (newAppt: UpdateAppointmentData) =>
+export const update = async (
+  newAppt: UpdateAppointmentData,
+  options: { transaction?: Transaction } = {}
+) =>
   Result.tryPromise({
     try: async () => {
-      const appointment = await Appointment.findByPk(newAppt.id);
+      const appointment = await Appointment.findByPk(newAppt.id, {
+        transaction: options.transaction,
+      });
       if (!appointment) {
         throw new ApiError(404, 'appointment not found');
       }
@@ -124,12 +136,19 @@ export const update = async (newAppt: UpdateAppointmentData) =>
             employeeId: newAppt.employeeId || appointment.employeeId,
           };
 
-          const availbleScheduleId = await checkScheduleAvailability(checkData);
+          const availbleScheduleId = await checkScheduleAvailability(
+            checkData,
+            options.transaction
+          );
 
-          const result = await sequelize.transaction(async (t) => {
-            const schedule = await appointment.getSchedule({ transaction: t });
+          const applyScheduleChange = async (transaction: Transaction) => {
+            const schedule = await appointment.getSchedule({
+              transaction,
+            });
             if (schedule) {
-              await schedule.removeAppointment(appointment, { transaction: t });
+              await schedule.removeAppointment(appointment, {
+                transaction,
+              });
             }
 
             const updates: Partial<AppointmentAttributes> = { scheduleId: availbleScheduleId };
@@ -140,10 +159,17 @@ export const update = async (newAppt: UpdateAppointmentData) =>
             if (newAppt.end) updates.end = convertISOToDate(newAppt.end);
 
             appointment.set(updates);
-            await appointment.save({ transaction: t });
+            await appointment.save({ transaction });
             return appointment;
-          });
-          return result;
+          };
+
+          if (options.transaction) {
+            return await applyScheduleChange(options.transaction);
+          }
+
+          return await sequelize.transaction(async (transaction) =>
+            applyScheduleChange(transaction),
+          );
         }
       }
 
@@ -156,7 +182,7 @@ export const update = async (newAppt: UpdateAppointmentData) =>
       if (newAppt.end) updates.end = convertISOToDate(newAppt.end);
 
       appointment.set(updates);
-      await appointment.save();
+      await appointment.save({ transaction: options.transaction });
       return appointment;
     },
     catch: (cause) => {
