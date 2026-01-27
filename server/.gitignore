@@ -6,3 +6,6 @@ build
 
 db-data
 data.ts
+
+# opensrc - source code for packages
+opensrc/

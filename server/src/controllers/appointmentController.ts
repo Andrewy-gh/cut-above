@@ -1,54 +1,165 @@
-import { Request, Response } from 'express';
-import { Appointment, User } from '../models/index.js';
+import { Request, Response } from "express";
+import { Appointment, User } from "../models/index.js";
 import {
   createNew,
   getAppointmentsByRole,
   update,
   getClientAppointmentById,
-} from '../services/appointmentService.js';
-import { publishMessage } from '../services/emailService.js';
-import { formatEmail } from '../utils/formatters.js';
-import ApiError from '../utils/ApiError.js';
-import type { UserRole } from '../types/index.js';
+} from "../services/appointmentService.js";
+import { publishMessage, type EmailData } from "../services/emailService.js";
+import { formatEmail } from "../utils/formatters.js";
+import ApiError from "../utils/ApiError.js";
+import type { UserRole } from "../types/index.js";
+import { Result } from "better-result";
+import { findByIdOrNotFound } from "../services/userService.js";
+import logger from "../utils/logger/index.js";
+import {
+  AuthorizationError,
+  DatabaseError,
+  NotFoundError,
+  SessionError,
+  ValidationError,
+} from "../errors.js";
 
 async function getUserFromSession(req: Request) {
-  if (!req.session.userId) throw new ApiError(401, 'Session expired');
-  const user = await User.findByPk(req.session.userId);
-  if (!user) throw new ApiError(404, 'User not found');
-  return user;
+  return Result.gen(async function* () {
+    const userId = yield* Result.ok(req.session.userId).andThen(userId => userId ? Result.ok(userId) : Result.err(new SessionError({ statusCode: 401, message: "Session expired" })));
+    const user = yield* Result.await(findByIdOrNotFound(userId));
+    return Result.ok(user);
+  });
 }
 
-const assertRoleAllowed = (user: User, roles: UserRole[]) => {
-  if (!roles.includes(user.role)) {
-    throw new ApiError(403, 'Forbidden: role not allowed');
+type HttpError =
+  | SessionError
+  | AuthorizationError
+  | ValidationError
+  | NotFoundError
+  | DatabaseError;
+
+const isHttpError = (error: unknown): error is HttpError =>
+  SessionError.is(error) ||
+  AuthorizationError.is(error) ||
+  ValidationError.is(error) ||
+  NotFoundError.is(error) ||
+  DatabaseError.is(error);
+
+const fromApiError = (error: ApiError): HttpError => {
+  switch (error.statusCode) {
+    case 400:
+      return new ValidationError({
+        statusCode: 400,
+        message: error.message,
+      });
+    case 401:
+      return new SessionError({
+        statusCode: 401,
+        message: error.message,
+      });
+    case 403:
+      return new AuthorizationError({
+        statusCode: 403,
+        message: error.message,
+      });
+    case 404:
+      return new NotFoundError({
+        statusCode: 404,
+        message: error.message,
+      });
+    default:
+      return new DatabaseError({
+        statusCode: error.statusCode,
+        message: error.message,
+      });
   }
 };
+
+const toHttpError = (cause: unknown, fallbackMessage: string): HttpError => {
+  if (isHttpError(cause)) return cause;
+  if (cause instanceof ApiError) return fromApiError(cause);
+  return new DatabaseError({
+    statusCode: 500,
+    message: cause instanceof Error ? cause.message : fallbackMessage,
+  });
+};
+
+const publishEmailNotification = async (
+  payload: EmailData,
+  warningMessage: string,
+) => {
+  try {
+    await publishMessage(payload);
+    return { queued: true as const };
+  } catch (cause) {
+    const errorMessage =
+      cause instanceof Error ? cause.message : "Unknown error";
+    logger.error(
+      `Failed to publish email notification: ${errorMessage}`,
+    );
+    return { queued: false as const, warning: warningMessage };
+  }
+};
+
+const assertRoleAllowed = (user: User, roles: UserRole[]) =>
+  roles.includes(user.role)
+    ? Result.ok()
+    : Result.err(
+      new AuthorizationError({
+        statusCode: 403,
+        message: "Forbidden: role not allowed",
+      }),
+    );
 
 const assertAppointmentAccess = (
   user: User,
   appointment: Appointment,
-  options: { allowAdmin?: boolean } = {}
+  options: { allowAdmin?: boolean } = {},
 ) => {
-  if (options.allowAdmin && user.role === 'admin') return;
+  if (options.allowAdmin && user.role === "admin") return Result.ok();
 
-  const isClientOwner = user.role === 'client' && appointment.clientId === user.id;
-  const isEmployeeOwner = user.role === 'employee' && appointment.employeeId === user.id;
-  if (isClientOwner || isEmployeeOwner) return;
+  const isClientOwner =
+    user.role === "client" && appointment.clientId === user.id;
+  const isEmployeeOwner =
+    user.role === "employee" && appointment.employeeId === user.id;
+  if (isClientOwner || isEmployeeOwner) return Result.ok();
 
-  throw new ApiError(403, 'Forbidden: not authorized to access this appointment');
+  return Result.err(
+    new AuthorizationError({
+      statusCode: 403,
+      message: "Forbidden: not authorized to access this appointment",
+    }),
+  );
 };
 
 const assertValidEmployeeSelection = async (
   employeeId: string,
-  clientId: string
+  clientId: string,
 ) => {
   if (employeeId === clientId) {
-    throw new ApiError(400, 'Client and employee must be different');
+    return Result.err(
+      new ValidationError({
+        statusCode: 400,
+        message: "Client and employee must be different",
+      }),
+    );
   }
-  const employee = await User.findByPk(employeeId);
-  if (!employee || employee.role !== 'employee') {
-    throw new ApiError(400, 'Invalid employee');
-  }
+
+  const employeeResult = await findByIdOrNotFound(employeeId);
+  return employeeResult
+    .mapError((error) =>
+      NotFoundError.is(error)
+        ? new ValidationError({ statusCode: 400, message: "Invalid employee" })
+        : error,
+    )
+    .andThen((employee) =>
+      employee.role === "employee"
+        ? Result.ok()
+        : Result.err(
+          new ValidationError({
+            statusCode: 400,
+            message: "Invalid employee",
+          }),
+        ),
+    );
 };
 
 /**
@@ -57,10 +168,17 @@ const assertValidEmployeeSelection = async (
  * @method GET
  */
 export const getAllAppointments = async (req: Request, res: Response) => {
-  const user = await getUserFromSession(req);
-  assertRoleAllowed(user, ['client', 'employee']);
-  const appointments = await getAppointmentsByRole(user);
-  res.json(appointments);
+  const result = await Result.gen(async function* () {
+    const user = yield* Result.await(getUserFromSession(req));
+    yield* assertRoleAllowed(user, ["client", "employee"]);
+    const appointments = yield* Result.await(getAppointmentsByRole(user));
+    return Result.ok(appointments);
+  });
+
+  return result.match({
+    ok: (appointments) => res.json(appointments),
+    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+  });
 };
 
 /**
@@ -69,15 +187,31 @@ export const getAllAppointments = async (req: Request, res: Response) => {
  * @method GET
  */
 export const getSingleAppointment = async (req: Request, res: Response) => {
-  const user = await getUserFromSession(req);
-  assertRoleAllowed(user, ['client', 'employee']);
+  const result = await Result.gen(async function* () {
+    const user = yield* Result.await(getUserFromSession(req));
+    yield* assertRoleAllowed(user, ["client", "employee"]);
 
-  const appointment = await getClientAppointmentById(req.params.id);
-  if (!appointment) {
-    throw new ApiError(404, 'Appointment not found');
-  }
-  assertAppointmentAccess(user, appointment);
-  res.json(appointment);
+    const appointment = yield* Result.await(
+      getClientAppointmentById(req.params.id),
+    );
+
+    if (!appointment) {
+      return Result.err(
+        new NotFoundError({
+          statusCode: 404,
+          message: "Appointment not found",
+        }),
+      );
+    }
+
+    yield* assertAppointmentAccess(user, appointment);
+    return Result.ok(appointment);
+  });
+
+  return result.match({
+    ok: (appointment) => res.json(appointment),
+    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+  });
 };
 
 /**
@@ -86,24 +220,46 @@ export const getSingleAppointment = async (req: Request, res: Response) => {
  * @method POST
  */
 export const bookAppointment = async (req: Request, res: Response) => {
-  const user = await getUserFromSession(req);
-  assertRoleAllowed(user, ['client']);
-  await assertValidEmployeeSelection(req.body.employee.id, user.id);
+  const result = await Result.gen(async function* () {
+    const user = yield* Result.await(getUserFromSession(req));
+    yield* assertRoleAllowed(user, ["client"]);
+    yield* Result.await(
+      assertValidEmployeeSelection(req.body.employee.id, user.id),
+    );
 
-  const newAppointment = await createNew({
-    start: req.body.start,
-    end: req.body.end,
-    service: req.body.service,
-    employeeId: req.body.employee.id,
-    clientId: req.session.userId!,
+    const newAppointment = yield* Result.await(
+      createNew({
+        start: req.body.start,
+        end: req.body.end,
+        service: req.body.service,
+        employeeId: req.body.employee.id,
+        clientId: req.session.userId!,
+      }),
+    );
+
+    const notification = await publishEmailNotification(
+      {
+        ...formatEmail({
+          ...req.body,
+          id: newAppointment.id,
+          option: "confirmation",
+        }),
+        receiver: user.email,
+      },
+      "Appointment booked, but confirmation email could not be queued. We'll retry.",
+    );
+
+    return Result.ok({
+      success: true,
+      message: "Appointment successfully created",
+      notification,
+    });
   });
 
-  await publishMessage({
-    ...formatEmail({ ...req.body, id: newAppointment.id, option: 'confirmation' }),
-    receiver: user.email,
+  return result.match({
+    ok: (payload) => res.status(200).json(payload),
+    err: (error) => res.status(error.statusCode).json({ error: error.message }),
   });
-
-  res.status(200).json({ success: true, message: 'Appointment successfully created' });
 };
 
 /**
@@ -112,44 +268,87 @@ export const bookAppointment = async (req: Request, res: Response) => {
  * @method PUT
  */
 export const modifyAppointment = async (req: Request, res: Response) => {
-  const user = await getUserFromSession(req);
-  assertRoleAllowed(user, ['client', 'employee', 'admin']);
+  const result = await Result.gen(async function* () {
+    const user = yield* Result.await(getUserFromSession(req));
+    yield* assertRoleAllowed(user, ["client", "employee", "admin"]);
 
-  const appointment = await Appointment.findByPk(req.params.id, {
-    include: [{ model: User, as: 'client' }],
-  }) as (Appointment & { client?: User }) | null;
-  if (!appointment) {
-    throw new ApiError(404, 'Appointment not found');
-  }
-  assertAppointmentAccess(user, appointment, { allowAdmin: true });
+    const appointment = (yield* Result.await(
+      Result.tryPromise({
+        try: () =>
+          Appointment.findByPk(req.params.id, {
+            include: [{ model: User, as: "client" }],
+          }),
+        catch: (cause) => toHttpError(cause, "Failed to fetch appointment"),
+      }),
+    )) as (Appointment & { client?: User }) | null;
 
-  const requestedEmployeeId = req.body.employee?.id;
-  if (user.role === 'employee') {
-    if (requestedEmployeeId && requestedEmployeeId !== appointment.employeeId) {
-      throw new ApiError(403, 'Forbidden: cannot change employee');
+    if (!appointment) {
+      return Result.err(
+        new NotFoundError({
+          statusCode: 404,
+          message: "Appointment not found",
+        }),
+      );
     }
-  } else if (requestedEmployeeId) {
-    const clientId = appointment.clientId;
-    await assertValidEmployeeSelection(requestedEmployeeId, clientId);
-  }
 
-  const modifiedAppointment = await update({
-    id: req.params.id,
-    start: req.body.start,
-    end: req.body.end,
-    service: req.body.service,
-    employeeId: req.body.employee?.id,
-    status: req.body.status,
+    yield* assertAppointmentAccess(user, appointment, { allowAdmin: true });
+
+    const requestedEmployeeId = req.body.employee?.id;
+    if (user.role === "employee") {
+      if (
+        requestedEmployeeId &&
+        requestedEmployeeId !== appointment.employeeId
+      ) {
+        return Result.err(
+          new AuthorizationError({
+            statusCode: 403,
+            message: "Forbidden: cannot change employee",
+          }),
+        );
+      }
+    } else if (requestedEmployeeId) {
+      const clientId = appointment.clientId;
+      yield* Result.await(
+        assertValidEmployeeSelection(requestedEmployeeId, clientId),
+      );
+    }
+
+    const modifiedAppointment = yield* Result.await(
+      update({
+        id: req.params.id,
+        start: req.body.start,
+        end: req.body.end,
+        service: req.body.service,
+        employeeId: req.body.employee?.id,
+        status: req.body.status,
+      }),
+    );
+
+    const receiverEmail = appointment.client?.email ?? user.email;
+
+    const notification = await publishEmailNotification(
+      {
+        ...formatEmail({
+          ...req.body,
+          id: modifiedAppointment.id,
+          option: "modification",
+        }),
+        receiver: receiverEmail,
+      },
+      "Appointment updated, but modification email could not be queued. We'll retry.",
+    );
+
+    return Result.ok({
+      success: true,
+      message: "Appointment successfully updated",
+      notification,
+    });
   });
 
-  const receiverEmail = appointment.client?.email ?? user.email;
-
-  await publishMessage({
-    ...formatEmail({ ...req.body, id: modifiedAppointment.id, option: 'modification' }),
-    receiver: receiverEmail,
+  return result.match({
+    ok: (payload) => res.status(200).json(payload),
+    err: (error) => res.status(error.statusCode).json({ error: error.message }),
   });
-
-  res.status(200).json({ success: true, message: 'Appointment successfully updated' });
 };
 
 /**
@@ -158,13 +357,22 @@ export const modifyAppointment = async (req: Request, res: Response) => {
  * @method PUT
  */
 export const updateAppointmentStatus = async (req: Request, res: Response) => {
-  await Appointment.update(
-    { status: req.body.status },
-    { where: { id: req.params.id } }
-  );
-  res
-    .status(200)
-    .json({ success: true, message: 'Appointment status updated' });
+  const result = await Result.tryPromise({
+    try: () =>
+      Appointment.update(
+        { status: req.body.status },
+        { where: { id: req.params.id } },
+      ),
+    catch: (cause) => toHttpError(cause, "Failed to update appointment status"),
+  });
+
+  return result.match({
+    ok: () =>
+      res
+        .status(200)
+        .json({ success: true, message: "Appointment status updated" }),
+    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+  });
 };
 
 /**
@@ -173,32 +381,66 @@ export const updateAppointmentStatus = async (req: Request, res: Response) => {
  * @method DELETE
  */
 export const deleteAppointmentById = async (req: Request, res: Response) => {
-  const user = await getUserFromSession(req);
-  const appointment = await Appointment.findByPk(req.params.id, {
-    include: [
-      { model: User, as: 'employee' },
-      { model: User, as: 'client' },
-    ],
-  }) as (Appointment & { employee: User; client: User }) | null;
+  const result = await Result.gen(async function* () {
+    const user = yield* Result.await(getUserFromSession(req));
 
-  if (!appointment) throw new ApiError(404, 'Appointment not found');
-  assertAppointmentAccess(user, appointment, { allowAdmin: true });
+    const appointment = (yield* Result.await(
+      Result.tryPromise({
+        try: () =>
+          Appointment.findByPk(req.params.id, {
+            include: [
+              { model: User, as: "employee" },
+              { model: User, as: "client" },
+            ],
+          }),
+        catch: (cause) => toHttpError(cause, "Failed to fetch appointment"),
+      }),
+    )) as (Appointment & { employee: User; client: User }) | null;
 
-  await appointment.destroy();
+    if (!appointment) {
+      return Result.err(
+        new NotFoundError({
+          statusCode: 404,
+          message: "Appointment not found",
+        }),
+      );
+    }
 
-  const receiverEmail = appointment.client?.email ?? user.email;
+    yield* assertAppointmentAccess(user, appointment, { allowAdmin: true });
 
-  await publishMessage({
-    ...formatEmail({
-      id: appointment.id,
-      start: appointment.start.toISOString(),
-      end: appointment.end.toISOString(),
-      service: appointment.service,
-      employee: appointment.employee,
-      option: 'cancellation',
-    }),
-    receiver: receiverEmail,
+    yield* Result.await(
+      Result.tryPromise({
+        try: () => appointment.destroy(),
+        catch: (cause) => toHttpError(cause, "Failed to cancel appointment"),
+      }),
+    );
+
+    const receiverEmail = appointment.client?.email ?? user.email;
+
+    const notification = await publishEmailNotification(
+      {
+        ...formatEmail({
+          id: appointment.id,
+          start: appointment.start.toISOString(),
+          end: appointment.end.toISOString(),
+          service: appointment.service,
+          employee: appointment.employee,
+          option: "cancellation",
+        }),
+        receiver: receiverEmail,
+      },
+      "Appointment cancelled, but cancellation email could not be queued. We'll retry.",
+    );
+
+    return Result.ok({
+      success: true,
+      message: "Appointment successfully cancelled",
+      notification,
+    });
   });
 
-  res.status(200).json({ success: true, message: 'Appointment successfully cancelled' });
+  return result.match({
+    ok: (payload) => res.status(200).json(payload),
+    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+  });
 };

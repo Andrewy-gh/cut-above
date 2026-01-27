@@ -11,6 +11,7 @@ vi.mock('../utils/logger/index.js', () => ({
   default: {
     info: vi.fn(),
     error: vi.fn(),
+    warn: vi.fn(),
   },
 }));
 
@@ -57,7 +58,7 @@ describe('emailService', () => {
     );
   });
 
-  it('logs and does not throw on transport error', async () => {
+  it('logs and throws on transport error', async () => {
     const sendMail = vi.fn().mockRejectedValue(new Error('SMTP down'));
     (nodemailer as unknown as { createTransport: (opts: unknown) => unknown }).createTransport =
       vi.fn(() => ({ sendMail }));
@@ -74,7 +75,7 @@ describe('emailService', () => {
         option: 'confirmation',
         emailLink: 'http://localhost:3000/appointment/appt-123',
       })
-    ).resolves.toBeUndefined();
+    ).rejects.toThrow('SMTP down');
 
     expect(logger.error).toHaveBeenCalled();
   });
@@ -102,5 +103,52 @@ describe('emailService', () => {
       'data',
       JSON.stringify(payload)
     );
+  });
+
+  it('requeues failed emails with incremented attempt', async () => {
+    const sendMail = vi.fn().mockRejectedValue(new Error('SMTP down'));
+    (nodemailer as unknown as { createTransport: (opts: unknown) => unknown }).createTransport =
+      vi.fn(() => ({ sendMail }));
+
+    const redis = await import('../utils/redis.js');
+    const setTimeoutSpy = vi
+      .spyOn(global, 'setTimeout')
+      .mockImplementation((handler) => {
+        if (typeof handler === 'function') {
+          handler();
+        }
+        return 0 as unknown as NodeJS.Timeout;
+      });
+
+    const { listenForMessage } = await import('./emailService.js');
+
+    const payload = {
+      receiver: 'test@example.com',
+      employee: 'John',
+      date: '01/22/2024',
+      time: '12:00pm',
+      option: 'confirmation' as const,
+      emailLink: 'http://localhost:3000/appointment/appt-123',
+      attempt: 0,
+    };
+
+    (redis.sub.xread as unknown as ReturnType<typeof vi.fn>)
+      .mockResolvedValueOnce([
+        ['email-stream', [['1-0', ['data', JSON.stringify(payload)]]]],
+      ])
+      .mockResolvedValueOnce(null);
+
+    await listenForMessage('0');
+
+    expect(redis.pub.xadd).toHaveBeenCalledWith(
+      'email-stream',
+      'MAXLEN',
+      '100',
+      '*',
+      'data',
+      JSON.stringify({ ...payload, attempt: 1 })
+    );
+
+    setTimeoutSpy.mockRestore();
   });
 });

@@ -16,7 +16,9 @@ describe('appointmentService', () => {
 
       const result = await getAppointmentsByRole(user);
 
-      expect(result).toEqual(['client-result']);
+      expect(result.status).toBe('ok');
+      if (result.status !== 'ok') throw new Error('Expected Ok result');
+      expect(result.value).toEqual(['client-result']);
       expect(getAppointments).toHaveBeenCalledTimes(1);
 
       const [options] = getAppointments.mock.calls[0];
@@ -48,7 +50,9 @@ describe('appointmentService', () => {
 
       const result = await getAppointmentsByRole(user);
 
-      expect(result).toEqual(['employee-result']);
+      expect(result.status).toBe('ok');
+      if (result.status !== 'ok') throw new Error('Expected Ok result');
+      expect(result.value).toEqual(['employee-result']);
       expect(getEmployeeAppointments).toHaveBeenCalledTimes(1);
 
       const [options] = getEmployeeAppointments.mock.calls[0];
@@ -68,7 +72,10 @@ describe('appointmentService', () => {
     it('returns empty list for unsupported roles', async () => {
       const user = { role: 'admin' } as unknown as User;
 
-      await expect(getAppointmentsByRole(user)).resolves.toEqual([]);
+      const result = await getAppointmentsByRole(user);
+      expect(result.status).toBe('ok');
+      if (result.status !== 'ok') throw new Error('Expected Ok result');
+      expect(result.value).toEqual([]);
     });
 
     it('omits passwordHash from included users', async () => {
@@ -103,13 +110,17 @@ describe('appointmentService', () => {
         scheduleId: schedule.id,
       });
 
-      const [clientView] = await getAppointmentsByRole(client);
+      const clientResult = await getAppointmentsByRole(client);
+      if (clientResult.status !== 'ok') throw new Error('Expected Ok result');
+      const [clientView] = clientResult.value;
       const clientEmployee = (clientView as Appointment & { employee?: User }).employee;
       expect(clientEmployee).toBeTruthy();
       expect(clientEmployee?.passwordHash).toBeUndefined();
       expect(clientEmployee?.dataValues).not.toHaveProperty('passwordHash');
 
-      const [employeeView] = await getAppointmentsByRole(employee);
+      const employeeResult = await getAppointmentsByRole(employee);
+      if (employeeResult.status !== 'ok') throw new Error('Expected Ok result');
+      const [employeeView] = employeeResult.value;
       const employeeClient = (employeeView as Appointment & { client?: User }).client;
       expect(employeeClient).toBeTruthy();
       expect(employeeClient?.passwordHash).toBeUndefined();
@@ -164,20 +175,18 @@ describe('appointmentService', () => {
       );
 
       // Attempt update that changes date (triggers transaction)
-      try {
-        await update({
-          id: appointment.id,
-          start: '2024-01-23T17:00:00.000Z', // Different date
-          end: '2024-01-23T17:30:00.000Z',
-          service: 'Haircut',
-          employeeId: employee.id,
-        });
-        // Should not reach here
-        expect.fail('Expected error to be thrown');
-      } catch (error) {
-        // Expected error
-        expect((error as Error).message).toBe('Simulated save failure');
-      }
+      const updateResult = await update({
+        id: appointment.id,
+        start: '2024-01-23T17:00:00.000Z', // Different date
+        end: '2024-01-23T17:30:00.000Z',
+        service: 'Haircut',
+        employeeId: employee.id,
+      });
+
+      // Should return an error Result
+      expect(updateResult.status).toBe('error');
+      if (updateResult.status !== 'error') throw new Error('Expected Error result');
+      expect(updateResult.error.message).toBe('Failed to update appointment');
 
       // Verify rollback: appointment should still have original scheduleId
       const unchangedAppt = await Appointment.findByPk(appointment.id);
@@ -236,13 +245,17 @@ describe('appointmentService', () => {
       });
 
       // Update to different date (should succeed)
-      const updated = await update({
+      const updateResult = await update({
         id: appointment.id,
         start: '2024-01-23T17:00:00.000Z',
         end: '2024-01-23T17:30:00.000Z',
         service: 'Haircut',
         employeeId: employee.id,
       });
+
+      expect(updateResult.status).toBe('ok');
+      if (updateResult.status !== 'ok') throw new Error('Expected Ok result');
+      const updated = updateResult.value;
 
       // Verify commit: appointment has new scheduleId
       expect(updated.scheduleId).toBe(schedule2.id);
