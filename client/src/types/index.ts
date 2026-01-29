@@ -90,7 +90,25 @@ export interface AppointmentStatusGroup {
   data: Appointment[];
 }
 
-export interface ApiError {
-  data?: { error?: string };
-  message?: string;
+export interface InvalidParam {
+  name: string;
+  reason?: string;
 }
+
+export interface ProblemDetails {
+  type: string;
+  title: string;
+  status: number;
+  detail?: string;
+  code?: string;
+  invalidParams?: InvalidParam[];
+}
+
+export type ApiError =
+  | ProblemDetails
+  | {
+      data?: unknown;
+      status?: number | string;
+      error?: string;
+      message?: string;
+    };

@@ -7,10 +7,7 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { logoutUser } from "@/features/auth/authSlice";
 import { clearMessage, setError } from "@/features/notificationSlice";
-
-interface ErrorResponse {
-  error: string;
-}
+import { getErrorMessage, isUnauthorized } from "@/utils/apiError";
 
 const baseUrl = import.meta.env.PROD ? "https://cutaboveshop.fly.dev" : "";
 
@@ -25,13 +22,9 @@ const baseQueryWithReauth: BaseQueryFn<
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
   const result = await baseQuery(args, api, extraOptions);
-  if (
-    result?.error?.data &&
-    (result.error.data as ErrorResponse).error ===
-      "Session expired, please log in"
-  ) {
+  if (result?.error && isUnauthorized(result.error)) {
     api.dispatch(logoutUser());
-    api.dispatch(setError((result.error.data as ErrorResponse).error));
+    api.dispatch(setError(getErrorMessage(result.error)));
     api.dispatch(clearMessage());
   }
   return result;
