@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
-import { Result } from 'better-result';
 import { User } from '../models/index.js';
-import { DatabaseError } from '../errors.js';
-import { sendProblem } from '../utils/problemDetails.js';
+import { tryDb } from '../utils/dbResult.js';
+import { errorResponse } from '../utils/errorDetails.js';
 
 /**
  * @description retrieves all Users
@@ -10,21 +9,13 @@ import { sendProblem } from '../utils/problemDetails.js';
  * @method GET
  */
 export const getAllUsers = async (req: Request, res: Response) => {
-  const result = await Result.tryPromise({
+  const result = await tryDb({
     try: () => User.findAll(),
-    catch: (cause) =>
-      new DatabaseError({
-        statusCode: 500,
-        message:
-          cause instanceof Error
-            ? cause.message
-            : 'Failed to fetch users',
-        cause,
-      }),
+    message: 'Failed to fetch users',
   });
 
   return result.match({
     ok: (users) => res.json(users),
-    err: (error) => sendProblem(res, req, error),
+    err: (error) => errorResponse(res, req, error),
   });
 };

@@ -5,7 +5,7 @@ import { enqueueEmail } from '../services/emailOutboxService.js';
 import { EMAIL_USER } from '../utils/config.js';
 import { generateTokenLink } from '../services/authService.js';
 import { AppError } from '../errors.js';
-import { sendProblem } from '../utils/problemDetails.js';
+import { errorResponse } from '../utils/errorDetails.js';
 
 const hashDedupeKey = (value: string) =>
   createHash('sha256').update(value).digest('hex');
@@ -66,7 +66,7 @@ export const handleNewMessage = async (req: Request, res: Response) => {
         message:
           'Message has been received. You can expect a response in a timely manner.',
       }),
-    err: (error) => sendProblem(res, req, error),
+    err: (error) => errorResponse(res, req, error),
   });
 };
 
@@ -97,6 +97,6 @@ export const sendPasswordReset = async (req: Request, res: Response) => {
         message:
           'If an user exists with this email, an email with reset instructions has been sent.',
       }),
-    err: (error) => sendProblem(res, req, error),
+    err: (error) => errorResponse(res, req, error),
   });
 };

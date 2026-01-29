@@ -1,17 +1,13 @@
 // import { DatabaseError } from "sequelize";
-import { DatabaseError, NotFoundError } from "../errors.js";
+import { NotFoundError } from "../errors.js";
 import { User } from "../models/index.js";
 import { Result } from "better-result";
+import { tryDb } from "../utils/dbResult.js";
 
 export const findById = async (id: string) =>
-  await Result.tryPromise({
+  await tryDb({
     try: () => User.findByPk(id),
-    catch: (cause) =>
-      new DatabaseError({
-        statusCode: 500,
-        message: "Failed to fetch user from database",
-        cause,
-      }),
+    message: "Failed to fetch user from database",
   });
 
 export const findByIdOrNotFound = async (id: string) => {

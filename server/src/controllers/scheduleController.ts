@@ -4,7 +4,7 @@ import {
   getPrivateSchedules,
   createSchedules,
 } from '../services/scheduleService.js';
-import { sendProblem } from '../utils/problemDetails.js';
+import { errorResponse } from '../utils/errorDetails.js';
 
 /**
  * @description retrieve all public schedules for booking page includes only employee id
@@ -15,7 +15,7 @@ export const getAllSchedulesPublic = async (req: Request, res: Response) => {
   const result = await getPublicSchedules();
   return result.match({
     ok: (schedules) => res.json(schedules),
-    err: (error) => sendProblem(res, req, error),
+    err: (error) => errorResponse(res, req, error),
   });
 };
 
@@ -28,7 +28,7 @@ export const getAllSchedulesPrivate = async (req: Request, res: Response) => {
   const result = await getPrivateSchedules();
   return result.match({
     ok: (schedules) => res.json(schedules),
-    err: (error) => sendProblem(res, req, error),
+    err: (error) => errorResponse(res, req, error),
   });
 };
 
@@ -47,6 +47,6 @@ export const createNewSchedule = async (req: Request, res: Response) => {
         message: 'New schedule added',
         data: savedSchedules,
       }),
-    err: (error) => sendProblem(res, req, error),
+    err: (error) => errorResponse(res, req, error),
   });
 };

@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
-import { Result } from 'better-result';
 import { User } from '../models/index.js';
-import { DatabaseError } from '../errors.js';
-import { sendProblem } from '../utils/problemDetails.js';
+import { tryDb } from '../utils/dbResult.js';
+import { errorResponse } from '../utils/errorDetails.js';
 
 export const getAllEmployees = async (_req: Request, res: Response) => {
-  const result = await Result.tryPromise({
+  const result = await tryDb({
     try: () =>
       User.findAll({
         where: { role: 'employee' },
@@ -13,25 +12,17 @@ export const getAllEmployees = async (_req: Request, res: Response) => {
           exclude: ['lastName', 'email', 'role', 'image', 'profile'],
         },
       }),
-    catch: (cause) =>
-      new DatabaseError({
-        statusCode: 500,
-        message:
-          cause instanceof Error
-            ? cause.message
-            : 'Failed to fetch employees',
-        cause,
-      }),
+    message: 'Failed to fetch employees',
   });
 
   return result.match({
     ok: (employees) => res.json(employees),
-    err: (error) => sendProblem(res, _req, error),
+    err: (error) => errorResponse(res, _req, error),
   });
 };
 
 export const getEmployeeProfiles = async (_req: Request, res: Response) => {
-  const result = await Result.tryPromise({
+  const result = await tryDb({
     try: () =>
       User.findAll({
         where: { role: 'employee' },
@@ -39,19 +30,11 @@ export const getEmployeeProfiles = async (_req: Request, res: Response) => {
           exclude: ['lastName', 'email', 'role'],
         },
       }),
-    catch: (cause) =>
-      new DatabaseError({
-        statusCode: 500,
-        message:
-          cause instanceof Error
-            ? cause.message
-            : 'Failed to fetch employees',
-        cause,
-      }),
+    message: 'Failed to fetch employees',
   });
 
   return result.match({
     ok: (employees) => res.json(employees),
-    err: (error) => sendProblem(res, _req, error),
+    err: (error) => errorResponse(res, _req, error),
   });
 };

@@ -1,10 +1,9 @@
 import { PasswordResetToken } from '../models/index.js';
 import { Op } from 'sequelize';
-import { Result } from 'better-result';
-import { DatabaseError } from '../errors.js';
+import { tryDb } from '../utils/dbResult.js';
 
 export const deleteExpiredTokens = async () =>
-  Result.tryPromise({
+  tryDb({
     try: () =>
       PasswordResetToken.destroy({
         where: {
@@ -13,13 +12,5 @@ export const deleteExpiredTokens = async () =>
           },
         },
       }).then(() => undefined),
-    catch: (cause) =>
-      new DatabaseError({
-        statusCode: 500,
-        message:
-          cause instanceof Error
-            ? cause.message
-            : 'Failed to delete expired tokens',
-        cause,
-      }),
+    message: 'Failed to delete expired tokens',
   });

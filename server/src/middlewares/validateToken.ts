@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { validateToken } from '../services/authService.js';
-import { sendProblem } from '../utils/problemDetails.js';
+import { errorResponse } from '../utils/errorDetails.js';
 
 const tokenValidationMiddleware = async (
   req: Request,
@@ -12,7 +12,7 @@ const tokenValidationMiddleware = async (
     ok: () => {
       next();
     },
-    err: (error) => sendProblem(res, req, error),
+    err: (error) => errorResponse(res, req, error),
   });
 };
 

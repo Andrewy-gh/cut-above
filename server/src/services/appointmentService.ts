@@ -1,13 +1,14 @@
 import { Appointment, User } from '../models/index.js';
 import { Result } from 'better-result';
 import { checkScheduleAvailability } from './scheduleService.js';
-import { DatabaseError, NotFoundError } from '../errors.js';
+import { NotFoundError } from '../errors.js';
 import { sequelize } from '../utils/db.js';
 import type { Transaction } from 'sequelize';
 import type { NewAppointmentData, UpdateAppointmentData } from '../types/index.js';
 import type { AppointmentAttributes } from '../types/models.js';
 import { convertISOToDate, extractDateFromISO } from '../utils/dateTime.js';
 import dayjs from 'dayjs';
+import { tryDb } from '../utils/dbResult.js';
 
 const USER_PUBLIC_EXCLUDE: string[] = [
   'passwordHash',
@@ -61,7 +62,7 @@ const getEmployeeAppointments = async (user: User) =>
   });
 
 export const getAppointmentsByRole = async (user: User) =>
-  Result.tryPromise({
+  tryDb({
     try: async () => {
       switch (user.role) {
         case 'client':
@@ -72,12 +73,7 @@ export const getAppointmentsByRole = async (user: User) =>
           return [];
       }
     },
-    catch: (cause) =>
-      new DatabaseError({
-        statusCode: 500,
-        message: 'Failed to fetch appointments',
-        cause,
-      }),
+    message: 'Failed to fetch appointments',
   });
 
 export const createNew = async (
@@ -89,7 +85,7 @@ export const createNew = async (
       checkScheduleAvailability(newAppt, options.transaction),
     );
     const appointment = yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () =>
           Appointment.create(
             {
@@ -103,12 +99,7 @@ export const createNew = async (
             },
             { transaction: options.transaction },
           ),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message: 'Failed to create appointment',
-            cause,
-          }),
+        message: 'Failed to create appointment',
       }),
     );
     return Result.ok(appointment);
@@ -120,17 +111,12 @@ export const update = async (
 ) =>
   Result.gen(async function* () {
     const appointment = yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () =>
           Appointment.findByPk(newAppt.id, {
             transaction: options.transaction,
           }),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message: 'Failed to update appointment',
-            cause,
-          }),
+        message: 'Failed to update appointment',
       }),
     );
     if (!appointment) {
@@ -188,31 +174,21 @@ export const update = async (
         if (options.transaction) {
           const transaction = options.transaction;
           const updated = yield* Result.await(
-            Result.tryPromise({
+            tryDb({
               try: () => applyScheduleChange(transaction),
-              catch: (cause) =>
-                new DatabaseError({
-                  statusCode: 500,
-                  message: 'Failed to update appointment',
-                  cause,
-                }),
+              message: 'Failed to update appointment',
             }),
           );
           return Result.ok(updated);
         }
 
         const updated = yield* Result.await(
-          Result.tryPromise({
+          tryDb({
             try: () =>
               sequelize.transaction(async (transaction) =>
                 applyScheduleChange(transaction),
               ),
-            catch: (cause) =>
-              new DatabaseError({
-                statusCode: 500,
-                message: 'Failed to update appointment',
-                cause,
-              }),
+            message: 'Failed to update appointment',
           }),
         );
         return Result.ok(updated);
@@ -229,21 +205,16 @@ export const update = async (
 
     appointment.set(updates);
     const updated = yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () => appointment.save({ transaction: options.transaction }),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message: 'Failed to update appointment',
-            cause,
-          }),
+        message: 'Failed to update appointment',
       }),
     );
     return Result.ok(updated);
   });
 
 export const getClientAppointmentById = async (id: string) =>
-  Result.tryPromise({
+  tryDb({
     try: () =>
       Appointment.findByPk(id, {
         include: [
@@ -263,10 +234,5 @@ export const getClientAppointmentById = async (id: string) =>
           },
         ],
       }),
-    catch: (cause) =>
-      new DatabaseError({
-        statusCode: 500,
-        message: 'Failed to fetch appointment',
-        cause,
-      }),
+    message: 'Failed to fetch appointment',
   });

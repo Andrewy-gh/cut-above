@@ -4,11 +4,8 @@ import { Result } from 'better-result';
 import { User, PasswordResetToken } from '../models/index.js';
 import { generateResetLink } from '../utils/emailOptions.js';
 import type { UserRole } from '../types/index.js';
-import {
-  AuthorizationError,
-  DatabaseError,
-  NotFoundError,
-} from '../errors.js';
+import { AuthorizationError, NotFoundError } from '../errors.js';
+import { tryDb } from '../utils/dbResult.js';
 
 // Input types
 export interface RegisterCredentials {
@@ -51,38 +48,25 @@ export interface UserResponse {
 }
 
 export const registerUser = async (credentials: RegisterCredentials) =>
-  Result.tryPromise({
+  tryDb({
     try: async () => {
       const { firstName, lastName, email, password, role = 'client' } =
         credentials;
       const passwordHash = await bcrypt.hash(password, 10);
       return User.create({ firstName, lastName, email, passwordHash, role });
     },
-    catch: (cause) =>
-      new DatabaseError({
-        statusCode: 500,
-        message: cause instanceof Error ? cause.message : 'Failed to register',
-        cause,
-      }),
+    message: 'Failed to register',
   });
 
 export const authenticateUser = async (credentials: LoginCredentials) =>
   Result.gen(async function* () {
     const user = yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () =>
           User.scope('withPassword').findOne({
             where: { email: credentials.email },
           }),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message:
-              cause instanceof Error
-                ? cause.message
-                : 'Failed to authenticate',
-            cause,
-          }),
+        message: 'Failed to authenticate',
       }),
     );
 
@@ -93,17 +77,9 @@ export const authenticateUser = async (credentials: LoginCredentials) =>
     }
 
     const match = yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () => bcrypt.compare(credentials.password, user.passwordHash),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message:
-              cause instanceof Error
-                ? cause.message
-                : 'Failed to authenticate',
-            cause,
-          }),
+        message: 'Failed to authenticate',
       }),
     );
 
@@ -128,17 +104,9 @@ export const authenticateUser = async (credentials: LoginCredentials) =>
 export const updateEmail = async (user: UpdateEmailData) =>
   Result.gen(async function* () {
     const currentUser = yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () => User.findByPk(user.id),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message:
-              cause instanceof Error
-                ? cause.message
-                : 'Failed to update email',
-            cause,
-          }),
+        message: 'Failed to update email',
       }),
     );
     if (!currentUser) {
@@ -148,17 +116,9 @@ export const updateEmail = async (user: UpdateEmailData) =>
     }
     currentUser.email = user.email;
     yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () => currentUser.save(),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message:
-              cause instanceof Error
-                ? cause.message
-                : 'Failed to update email',
-            cause,
-          }),
+        message: 'Failed to update email',
       }),
     );
     const payload: UserResponse = {
@@ -176,53 +136,31 @@ export const updateEmail = async (user: UpdateEmailData) =>
 export const updatePassword = async (user: UpdatePasswordData) =>
   Result.gen(async function* () {
     const passwordHash = yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () => bcrypt.hash(user.password, 10),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message:
-              cause instanceof Error
-                ? cause.message
-                : 'Failed to update password',
-            cause,
-          }),
+        message: 'Failed to update password',
       }),
     );
     yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () => User.update({ passwordHash }, { where: { id: user.id } }),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message:
-              cause instanceof Error
-                ? cause.message
-                : 'Failed to update password',
-            cause,
-          }),
+        message: 'Failed to update password',
       }),
     );
     return Result.ok();
   });
 
 const storeToken = async (userId: string, token: string) =>
-  Result.tryPromise({
+  tryDb({
     try: async () => {
       const tokenHash = await bcrypt.hash(token, 10);
       return PasswordResetToken.create({ userId, tokenHash });
     },
-    catch: (cause) =>
-      new DatabaseError({
-        statusCode: 500,
-        message:
-          cause instanceof Error ? cause.message : 'Failed to store token',
-        cause,
-      }),
+    message: 'Failed to store token',
   });
 
 const checkForExistingToken = async (userId: string) =>
-  Result.tryPromise({
+  tryDb({
     try: async () => {
       const existingToken = await PasswordResetToken.findOne({
         where: { userId },
@@ -231,31 +169,15 @@ const checkForExistingToken = async (userId: string) =>
         await existingToken.destroy();
       }
     },
-    catch: (cause) =>
-      new DatabaseError({
-        statusCode: 500,
-        message:
-          cause instanceof Error
-            ? cause.message
-            : 'Failed to rotate token',
-        cause,
-      }),
+    message: 'Failed to rotate token',
   });
 
 export const generateTokenLink = async (email: string) =>
   Result.gen(async function* () {
     const user = yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () => User.findOne({ where: { email } }),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message:
-              cause instanceof Error
-                ? cause.message
-                : 'Failed to generate reset link',
-            cause,
-          }),
+        message: 'Failed to generate reset link',
       }),
     );
     if (!user) {
@@ -271,18 +193,10 @@ export const generateTokenLink = async (email: string) =>
 export const validateToken = async (user: ValidateTokenData) =>
   Result.gen(async function* () {
     const resetToken = yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () =>
           PasswordResetToken.findOne({ where: { userId: user.id } }),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message:
-              cause instanceof Error
-                ? cause.message
-                : 'Failed to validate token',
-            cause,
-          }),
+        message: 'Failed to validate token',
       }),
     );
     if (!resetToken) {
@@ -304,17 +218,9 @@ export const validateToken = async (user: ValidateTokenData) =>
       );
     }
     const isValid = yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () => bcrypt.compare(user.token, resetToken.tokenHash),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message:
-              cause instanceof Error
-                ? cause.message
-                : 'Failed to validate token',
-            cause,
-          }),
+        message: 'Failed to validate token',
       }),
     );
     if (!isValid) {
@@ -325,17 +231,9 @@ export const validateToken = async (user: ValidateTokenData) =>
     }
     resetToken.timesUsed++;
     yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () => resetToken.save(),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message:
-              cause instanceof Error
-                ? cause.message
-                : 'Failed to validate token',
-            cause,
-          }),
+        message: 'Failed to validate token',
       }),
     );
     return Result.ok(resetToken);
@@ -344,32 +242,16 @@ export const validateToken = async (user: ValidateTokenData) =>
 export const resetPassword = async (user: User, password: string) =>
   Result.gen(async function* () {
     const passwordHash = yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () => bcrypt.hash(password, 10),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message:
-              cause instanceof Error
-                ? cause.message
-                : 'Failed to reset password',
-            cause,
-          }),
+        message: 'Failed to reset password',
       }),
     );
     user.passwordHash = passwordHash;
     yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () => user.save(),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message:
-              cause instanceof Error
-                ? cause.message
-                : 'Failed to reset password',
-            cause,
-          }),
+        message: 'Failed to reset password',
       }),
     );
     yield* Result.await(deleteResetTokenById(user.id));
@@ -377,20 +259,12 @@ export const resetPassword = async (user: User, password: string) =>
   });
 
 const deleteResetTokenById = async (id: string) =>
-  Result.tryPromise({
+  tryDb({
     try: async () => {
       const token = await PasswordResetToken.findOne({ where: { userId: id } });
       if (token) {
         await token.destroy();
       }
     },
-    catch: (cause) =>
-      new DatabaseError({
-        statusCode: 500,
-        message:
-          cause instanceof Error
-            ? cause.message
-            : 'Failed to clear reset token',
-        cause,
-      }),
+    message: 'Failed to clear reset token',
   });

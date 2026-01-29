@@ -14,11 +14,11 @@ import { User } from '../models/index.js';
 import { enqueueEmail } from '../services/emailOutboxService.js';
 import {
   AppError,
-  DatabaseError,
   SessionError,
   ValidationError,
 } from '../errors.js';
-import { sendProblem } from '../utils/problemDetails.js';
+import { tryDb } from '../utils/dbResult.js';
+import { errorResponse } from '../utils/errorDetails.js';
 
 const hashDedupeKey = (value: string) =>
   createHash('sha256').update(value).digest('hex');
@@ -35,7 +35,7 @@ export const register = async (req: Request, res: Response) => {
       res
         .status(200)
         .json({ success: true, message: 'Successfully registered account' }),
-    err: (error) => sendProblem(res, req, error),
+    err: (error) => errorResponse(res, req, error),
   });
 };
 
@@ -80,7 +80,7 @@ export const login = async (req: Request, res: Response) => {
       res
         .status(200)
         .json({ success: true, message: 'Successfully logged in', user }),
-    err: (error) => sendProblem(res, req, error),
+    err: (error) => errorResponse(res, req, error),
   });
 };
 
@@ -93,17 +93,9 @@ export const logout = async (req: Request, res: Response) => {
   const userId = req.session.userId;
   let user: User | null = null;
   if (userId) {
-    const userResult = await Result.tryPromise({
+    const userResult = await tryDb({
       try: () => User.findByPk(userId),
-      catch: (cause) =>
-        new DatabaseError({
-          statusCode: 500,
-          message:
-            cause instanceof Error
-              ? cause.message
-              : 'Failed to lookup user',
-          cause,
-        }),
+      message: 'Failed to lookup user',
     });
     if (userResult.status === 'ok') {
       user = userResult.value;
@@ -154,7 +146,7 @@ export const logout = async (req: Request, res: Response) => {
 export const changeEmail = async (req: Request, res: Response) => {
   const userId = req.session.userId;
   if (!userId) {
-    return sendProblem(
+    return errorResponse(
       res,
       req,
       new SessionError({
@@ -175,7 +167,7 @@ export const changeEmail = async (req: Request, res: Response) => {
         message: 'User email successfully changed',
         user,
       }),
-    err: (error) => sendProblem(res, req, error),
+    err: (error) => errorResponse(res, req, error),
   });
 };
 
@@ -187,7 +179,7 @@ export const changeEmail = async (req: Request, res: Response) => {
 export const changePassword = async (req: Request, res: Response) => {
   const userId = req.session.userId;
   if (!userId) {
-    return sendProblem(
+    return errorResponse(
       res,
       req,
       new SessionError({
@@ -207,7 +199,7 @@ export const changePassword = async (req: Request, res: Response) => {
       res
         .status(200)
         .json({ success: true, message: 'User password successfully changed' }),
-    err: (error) => sendProblem(res, req, error),
+    err: (error) => errorResponse(res, req, error),
   });
 };
 
@@ -220,7 +212,7 @@ export const handleTokenValidation = async (req: Request, res: Response) => {
   const result = await validateToken(req.params as { id: string; token: string });
   return result.match({
     ok: () => res.json({ success: true, message: 'Token is valid' }),
-    err: (error) => sendProblem(res, req, error),
+    err: (error) => errorResponse(res, req, error),
   });
 };
 
@@ -232,17 +224,9 @@ export const handleTokenValidation = async (req: Request, res: Response) => {
 export const handlePasswordReset = async (req: Request, res: Response) => {
   const result = await Result.gen(async function* () {
     const user = yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () => User.findByPk(req.params.id),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message:
-              cause instanceof Error
-                ? cause.message
-                : 'Failed to reset password',
-            cause,
-          }),
+        message: 'Failed to reset password',
       }),
     );
     if (!user) {
@@ -268,6 +252,6 @@ export const handlePasswordReset = async (req: Request, res: Response) => {
 
   return result.match({
     ok: () => res.status(200).json({ success: true, message: 'Password updated' }),
-    err: (error) => sendProblem(res, req, error),
+    err: (error) => errorResponse(res, req, error),
   });
 };

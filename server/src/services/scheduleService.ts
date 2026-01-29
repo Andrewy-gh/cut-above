@@ -4,10 +4,11 @@ import type { NewAppointmentData } from '../types/index.js';
 import { sequelize } from '../utils/db.js';
 import type { Transaction } from 'sequelize';
 import { Result } from 'better-result';
-import { DatabaseError, ValidationError } from '../errors.js';
+import { ValidationError } from '../errors.js';
+import { tryDb } from '../utils/dbResult.js';
 
 export const getPublicSchedules = async () =>
-  Result.tryPromise({
+  tryDb({
     try: () =>
       Schedule.findAll({
         include: [
@@ -36,19 +37,11 @@ export const getPublicSchedules = async () =>
           },
         ],
       }),
-    catch: (cause) =>
-      new DatabaseError({
-        statusCode: 500,
-        message:
-          cause instanceof Error
-            ? cause.message
-            : 'Failed to fetch schedules',
-        cause,
-      }),
+    message: 'Failed to fetch schedules',
   });
 
 export const getPrivateSchedules = async () =>
-  Result.tryPromise({
+  tryDb({
     try: () =>
       Schedule.findAll({
         include: [
@@ -91,15 +84,7 @@ export const getPrivateSchedules = async () =>
           },
         ],
       }),
-    catch: (cause) =>
-      new DatabaseError({
-        statusCode: 500,
-        message:
-          cause instanceof Error
-            ? cause.message
-            : 'Failed to fetch schedules',
-        cause,
-      }),
+    message: 'Failed to fetch schedules',
   });
 
 export const createSchedules = async (
@@ -107,7 +92,7 @@ export const createSchedules = async (
   open: string,
   close: string,
 ) =>
-  Result.tryPromise({
+  tryDb({
     try: async () => {
       const dateRangeToSchedule = generateRange(dates, open, close);
       const newSchedules = dateRangeToSchedule.map((s) => {
@@ -118,15 +103,7 @@ export const createSchedules = async (
       });
       return Promise.all(newSchedules);
     },
-    catch: (cause) =>
-      new DatabaseError({
-        statusCode: 500,
-        message:
-          cause instanceof Error
-            ? cause.message
-            : 'Failed to create schedules',
-        cause,
-      }),
+    message: 'Failed to create schedules',
   });
 
 export const checkScheduleAvailability = async (
@@ -137,7 +114,7 @@ export const checkScheduleAvailability = async (
     const appointmentStart = new Date(newAppt.start);
 
     const schedule = yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () =>
           Schedule.findOne({
             where: sequelize.where(
@@ -146,15 +123,7 @@ export const checkScheduleAvailability = async (
             ),
             transaction,
           }),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message:
-              cause instanceof Error
-                ? cause.message
-                : 'Failed to fetch schedule',
-            cause,
-          }),
+        message: 'Failed to fetch schedule',
       }),
     );
 
@@ -168,17 +137,9 @@ export const checkScheduleAvailability = async (
     }
 
     const appointments = yield* Result.await(
-      Result.tryPromise({
+      tryDb({
         try: () => schedule.getAppointments({ transaction }),
-        catch: (cause) =>
-          new DatabaseError({
-            statusCode: 500,
-            message:
-              cause instanceof Error
-                ? cause.message
-                : 'Failed to fetch appointments',
-            cause,
-          }),
+        message: 'Failed to fetch appointments',
       }),
     );
 

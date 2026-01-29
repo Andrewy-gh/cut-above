@@ -1,11 +1,10 @@
 import { randomUUID } from 'crypto';
 import type { Transaction } from 'sequelize';
-import { Result } from 'better-result';
 import EmailOutbox from '../models/EmailOutbox.js';
 import { formatEmail } from '../utils/formatters.js';
 import type { AppointmentService } from '../types/index.js';
 import type { EmailData, EmailOption } from './emailService.js';
-import { DatabaseError } from '../errors.js';
+import { tryDb } from '../utils/dbResult.js';
 
 interface EnqueueEmailOptions {
   payload: EmailData;
@@ -55,7 +54,7 @@ export const enqueueEmail = async ({
   transaction,
 }: EnqueueEmailOptions) => {
   if (dedupeKey) {
-    return Result.tryPromise({
+    return tryDb({
       try: async () => {
         const [record] = await EmailOutbox.findOrCreate({
           where: { dedupeKey },
@@ -71,19 +70,11 @@ export const enqueueEmail = async ({
         });
         return record;
       },
-      catch: (cause) =>
-        new DatabaseError({
-          statusCode: 500,
-          message:
-            cause instanceof Error
-              ? cause.message
-              : 'Failed to enqueue email',
-          cause,
-        }),
+      message: 'Failed to enqueue email',
     });
   }
 
-  return Result.tryPromise({
+  return tryDb({
     try: () =>
       EmailOutbox.create(
         {
@@ -96,15 +87,7 @@ export const enqueueEmail = async ({
         },
         { transaction },
       ),
-    catch: (cause) =>
-      new DatabaseError({
-        statusCode: 500,
-        message:
-          cause instanceof Error
-            ? cause.message
-            : 'Failed to enqueue email',
-        cause,
-      }),
+    message: 'Failed to enqueue email',
   });
 };
 
