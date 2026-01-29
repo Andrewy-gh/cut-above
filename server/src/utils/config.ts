@@ -5,10 +5,12 @@ export const DATABASE_URL: string | undefined =
     ? process.env.DEV_DATABASE_URL
     : process.env.DATABASE_URL;
 
-export const PORT: string | undefined =
-  process.env.NODE_ENV === 'development'
+const DEFAULT_PORT = '3000';
+
+export const PORT: string =
+  (process.env.NODE_ENV === 'development'
     ? process.env.DEV_PORT
-    : process.env.PROD_PORT;
+    : process.env.PROD_PORT) || DEFAULT_PORT;
 
 export const REDIS_URL: string | undefined = process.env.REDIS_URL;
 
