@@ -22,7 +22,13 @@ import {
 
 async function getUserFromSession(req: Request) {
   return Result.gen(async function* () {
-    const userId = yield* Result.ok(req.session.userId).andThen(userId => userId ? Result.ok(userId) : Result.err(new SessionError({ statusCode: 401, message: "Session expired" })));
+    const userId = yield* Result.ok(req.session.userId).andThen((userId) =>
+      userId
+        ? Result.ok(userId)
+        : Result.err(
+            new SessionError({ statusCode: 401, message: "Session expired" }),
+          ),
+    );
     const user = yield* Result.await(findByIdOrNotFound(userId));
     return Result.ok(user);
   });
@@ -85,11 +91,11 @@ const assertRoleAllowed = (user: User, roles: UserRole[]) =>
   roles.includes(user.role)
     ? Result.ok()
     : Result.err(
-      new AuthorizationError({
-        statusCode: 403,
-        message: "Forbidden: role not allowed",
-      }),
-    );
+        new AuthorizationError({
+          statusCode: 403,
+          message: "Forbidden: role not allowed",
+        }),
+      );
 
 const assertAppointmentAccess = (
   user: User,
@@ -136,11 +142,11 @@ const assertValidEmployeeSelection = async (
       employee.role === "employee"
         ? Result.ok()
         : Result.err(
-          new ValidationError({
-            statusCode: 400,
-            message: "Invalid employee",
-          }),
-        ),
+            new ValidationError({
+              statusCode: 400,
+              message: "Invalid employee",
+            }),
+          ),
     );
 };
 
@@ -229,9 +235,8 @@ export const bookAppointment = async (req: Request, res: Response) => {
             }
 
             const appointment = appointmentResult.value;
-            const employeeFirstName =
-              req.body.employee?.firstName ?? "Staff";
-            await enqueueAppointmentEmail({
+            const employeeFirstName = req.body.employee?.firstName ?? "Staff";
+            const enqueueResult = await enqueueAppointmentEmail({
               appointmentId: appointment.id,
               start: appointment.start.toISOString(),
               end: appointment.end.toISOString(),
@@ -242,9 +247,11 @@ export const bookAppointment = async (req: Request, res: Response) => {
               option: "confirmation",
               transaction,
             });
+            if (enqueueResult.status === "error") {
+              throw enqueueResult.error;
+            }
           }),
-        catch: (cause) =>
-          toHttpError(cause, "Failed to create appointment"),
+        catch: (cause) => toHttpError(cause, "Failed to create appointment"),
       }),
     );
 
@@ -341,7 +348,7 @@ export const modifyAppointment = async (req: Request, res: Response) => {
             }
 
             const modifiedAppointment = updateResult.value;
-            await enqueueAppointmentEmail({
+            const enqueueResult = await enqueueAppointmentEmail({
               appointmentId: modifiedAppointment.id,
               start: modifiedAppointment.start.toISOString(),
               end: modifiedAppointment.end.toISOString(),
@@ -353,9 +360,11 @@ export const modifyAppointment = async (req: Request, res: Response) => {
               option: "modification",
               transaction,
             });
+            if (enqueueResult.status === "error") {
+              throw enqueueResult.error;
+            }
           }),
-        catch: (cause) =>
-          toHttpError(cause, "Failed to update appointment"),
+        catch: (cause) => toHttpError(cause, "Failed to update appointment"),
       }),
     );
 
@@ -436,7 +445,7 @@ export const deleteAppointmentById = async (req: Request, res: Response) => {
         try: async () =>
           sequelize.transaction(async (transaction) => {
             await appointment.destroy({ transaction });
-            await enqueueAppointmentEmail({
+            const enqueueResult = await enqueueAppointmentEmail({
               appointmentId: appointment.id,
               start: appointment.start.toISOString(),
               end: appointment.end.toISOString(),
@@ -447,6 +456,9 @@ export const deleteAppointmentById = async (req: Request, res: Response) => {
               option: "cancellation",
               transaction,
             });
+            if (enqueueResult.status === "error") {
+              throw enqueueResult.error;
+            }
           }),
         catch: (cause) => toHttpError(cause, "Failed to cancel appointment"),
       }),

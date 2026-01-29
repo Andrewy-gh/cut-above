@@ -11,8 +11,11 @@ import {
  * @method GET
  */
 export const getAllSchedulesPublic = async (_: Request, res: Response) => {
-  const schedules = await getPublicSchedules();
-  res.json(schedules);
+  const result = await getPublicSchedules();
+  return result.match({
+    ok: (schedules) => res.json(schedules),
+    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+  });
 };
 
 /**
@@ -21,8 +24,11 @@ export const getAllSchedulesPublic = async (_: Request, res: Response) => {
  * @method GET
  */
 export const getAllSchedulesPrivate = async (_: Request, res: Response) => {
-  const schedules = await getPrivateSchedules();
-  res.json(schedules);
+  const result = await getPrivateSchedules();
+  return result.match({
+    ok: (schedules) => res.json(schedules),
+    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+  });
 };
 
 /**
@@ -32,10 +38,14 @@ export const getAllSchedulesPrivate = async (_: Request, res: Response) => {
  */
 export const createNewSchedule = async (req: Request, res: Response) => {
   const { dates, open, close } = req.body;
-  const savedSchedules = await createSchedules(dates, open, close);
-  res.status(201).json({
-    success: true,
-    message: 'New schedule added',
-    data: savedSchedules,
+  const result = await createSchedules(dates, open, close);
+  return result.match({
+    ok: (savedSchedules) =>
+      res.status(201).json({
+        success: true,
+        message: 'New schedule added',
+        data: savedSchedules,
+      }),
+    err: (error) => res.status(error.statusCode).json({ error: error.message }),
   });
 };

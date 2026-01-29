@@ -36,22 +36,6 @@ export async function up(queryInterface: QueryInterface) {
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
-    locked_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    locked_by: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    last_error: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    sent_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -83,14 +67,6 @@ export async function up(queryInterface: QueryInterface) {
     },
     provider_message_id: {
       type: DataTypes.STRING,
-      allowNull: true,
-    },
-    last_error: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    sent_at: {
-      type: DataTypes.DATE,
       allowNull: true,
     },
     created_at: {

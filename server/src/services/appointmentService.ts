@@ -1,8 +1,7 @@
 import { Appointment, User } from '../models/index.js';
 import { Result } from 'better-result';
 import { checkScheduleAvailability } from './scheduleService.js';
-import ApiError from '../utils/ApiError.js';
-import { DatabaseError } from '../errors.js';
+import { DatabaseError, NotFoundError } from '../errors.js';
 import { sequelize } from '../utils/db.js';
 import type { Transaction } from 'sequelize';
 import type { NewAppointmentData, UpdateAppointmentData } from '../types/index.js';
@@ -82,121 +81,159 @@ export const getAppointmentsByRole = async (user: User) =>
 
 export const createNew = async (
   newAppt: NewAppointmentData,
-  options: { transaction?: Transaction } = {}
+  options: { transaction?: Transaction } = {},
 ) =>
-  Result.tryPromise({
-    try: async () => {
-      const availbleScheduleId = await checkScheduleAvailability(
-        newAppt,
-        options.transaction
-      );
-      const appointment = await Appointment.create({
-        start: convertISOToDate(newAppt.start),
-        end: convertISOToDate(newAppt.end),
-        service: newAppt.service,
-        clientId: newAppt.clientId,
-        employeeId: newAppt.employeeId,
-        scheduleId: availbleScheduleId,
-        status: 'scheduled',
-      }, { transaction: options.transaction });
-      return appointment;
-    },
-    catch: () =>
-      new DatabaseError({
-        statusCode: 500,
-        message: 'Failed to create appointment',
+  Result.gen(async function* () {
+    const availbleScheduleId = yield* Result.await(
+      checkScheduleAvailability(newAppt, options.transaction),
+    );
+    const appointment = yield* Result.await(
+      Result.tryPromise({
+        try: () =>
+          Appointment.create(
+            {
+              start: convertISOToDate(newAppt.start),
+              end: convertISOToDate(newAppt.end),
+              service: newAppt.service,
+              clientId: newAppt.clientId,
+              employeeId: newAppt.employeeId,
+              scheduleId: availbleScheduleId,
+              status: 'scheduled',
+            },
+            { transaction: options.transaction },
+          ),
+        catch: () =>
+          new DatabaseError({
+            statusCode: 500,
+            message: 'Failed to create appointment',
+          }),
       }),
+    );
+    return Result.ok(appointment);
   });
 
 export const update = async (
   newAppt: UpdateAppointmentData,
-  options: { transaction?: Transaction } = {}
+  options: { transaction?: Transaction } = {},
 ) =>
-  Result.tryPromise({
-    try: async () => {
-      const appointment = await Appointment.findByPk(newAppt.id, {
-        transaction: options.transaction,
-      });
-      if (!appointment) {
-        throw new ApiError(404, 'appointment not found');
-      }
+  Result.gen(async function* () {
+    const appointment = yield* Result.await(
+      Result.tryPromise({
+        try: () =>
+          Appointment.findByPk(newAppt.id, {
+            transaction: options.transaction,
+          }),
+        catch: () =>
+          new DatabaseError({
+            statusCode: 500,
+            message: 'Failed to update appointment',
+          }),
+      }),
+    );
+    if (!appointment) {
+      return Result.err(
+        new NotFoundError({
+          statusCode: 404,
+          message: 'appointment not found',
+        }),
+      );
+    }
 
-      // Check if date changed (extract from start ISO)
-      if (newAppt.start) {
-        const newDate = extractDateFromISO(newAppt.start);
-        const currentDate = dayjs(appointment.start).format('YYYY-MM-DD');
+    // Check if date changed (extract from start ISO)
+    if (newAppt.start) {
+      const newDate = extractDateFromISO(newAppt.start);
+      const currentDate = dayjs(appointment.start).format('YYYY-MM-DD');
 
-        if (newDate !== currentDate) {
-          // Build a NewAppointmentData object for availability check
-          const checkData: NewAppointmentData = {
-            start: newAppt.start,
-            end: newAppt.end || appointment.end.toISOString(),
-            service: newAppt.service || appointment.service,
-            clientId: appointment.clientId,
-            employeeId: newAppt.employeeId || appointment.employeeId,
-          };
+      if (newDate !== currentDate) {
+        // Build a NewAppointmentData object for availability check
+        const checkData: NewAppointmentData = {
+          start: newAppt.start,
+          end: newAppt.end || appointment.end.toISOString(),
+          service: newAppt.service || appointment.service,
+          clientId: appointment.clientId,
+          employeeId: newAppt.employeeId || appointment.employeeId,
+        };
 
-          const availbleScheduleId = await checkScheduleAvailability(
-            checkData,
-            options.transaction
-          );
+        const availbleScheduleId = yield* Result.await(
+          checkScheduleAvailability(checkData, options.transaction),
+        );
 
-          const applyScheduleChange = async (transaction: Transaction) => {
-            const schedule = await appointment.getSchedule({
+        const applyScheduleChange = async (transaction: Transaction) => {
+          const schedule = await appointment.getSchedule({
+            transaction,
+          });
+          if (schedule) {
+            await schedule.removeAppointment(appointment, {
               transaction,
             });
-            if (schedule) {
-              await schedule.removeAppointment(appointment, {
-                transaction,
-              });
-            }
-
-            const updates: Partial<AppointmentAttributes> = { scheduleId: availbleScheduleId };
-            if (newAppt.service) updates.service = newAppt.service;
-            if (newAppt.status) updates.status = newAppt.status;
-            if (newAppt.employeeId) updates.employeeId = newAppt.employeeId;
-            if (newAppt.start) updates.start = convertISOToDate(newAppt.start);
-            if (newAppt.end) updates.end = convertISOToDate(newAppt.end);
-
-            appointment.set(updates);
-            await appointment.save({ transaction });
-            return appointment;
-          };
-
-          if (options.transaction) {
-            return await applyScheduleChange(options.transaction);
           }
 
-          return await sequelize.transaction(async (transaction) =>
-            applyScheduleChange(transaction),
+          const updates: Partial<AppointmentAttributes> = {
+            scheduleId: availbleScheduleId,
+          };
+          if (newAppt.service) updates.service = newAppt.service;
+          if (newAppt.status) updates.status = newAppt.status;
+          if (newAppt.employeeId) updates.employeeId = newAppt.employeeId;
+          if (newAppt.start) updates.start = convertISOToDate(newAppt.start);
+          if (newAppt.end) updates.end = convertISOToDate(newAppt.end);
+
+          appointment.set(updates);
+          await appointment.save({ transaction });
+          return appointment;
+        };
+
+        if (options.transaction) {
+          const transaction = options.transaction;
+          const updated = yield* Result.await(
+            Result.tryPromise({
+              try: () => applyScheduleChange(transaction),
+              catch: () =>
+                new DatabaseError({
+                  statusCode: 500,
+                  message: 'Failed to update appointment',
+                }),
+            }),
           );
+          return Result.ok(updated);
         }
-      }
 
-      // Simple update without schedule change
-      const updates: Partial<AppointmentAttributes> = {};
-      if (newAppt.service) updates.service = newAppt.service;
-      if (newAppt.status) updates.status = newAppt.status;
-      if (newAppt.employeeId) updates.employeeId = newAppt.employeeId;
-      if (newAppt.start) updates.start = convertISOToDate(newAppt.start);
-      if (newAppt.end) updates.end = convertISOToDate(newAppt.end);
-
-      appointment.set(updates);
-      await appointment.save({ transaction: options.transaction });
-      return appointment;
-    },
-    catch: (cause) => {
-      if (cause instanceof ApiError) {
-        return new DatabaseError({
-          statusCode: cause.statusCode,
-          message: cause.message,
-        });
+        const updated = yield* Result.await(
+          Result.tryPromise({
+            try: () =>
+              sequelize.transaction(async (transaction) =>
+                applyScheduleChange(transaction),
+              ),
+            catch: () =>
+              new DatabaseError({
+                statusCode: 500,
+                message: 'Failed to update appointment',
+              }),
+          }),
+        );
+        return Result.ok(updated);
       }
-      return new DatabaseError({
-        statusCode: 500,
-        message: 'Failed to update appointment',
-      });
-    },
+    }
+
+    // Simple update without schedule change
+    const updates: Partial<AppointmentAttributes> = {};
+    if (newAppt.service) updates.service = newAppt.service;
+    if (newAppt.status) updates.status = newAppt.status;
+    if (newAppt.employeeId) updates.employeeId = newAppt.employeeId;
+    if (newAppt.start) updates.start = convertISOToDate(newAppt.start);
+    if (newAppt.end) updates.end = convertISOToDate(newAppt.end);
+
+    appointment.set(updates);
+    const updated = yield* Result.await(
+      Result.tryPromise({
+        try: () => appointment.save({ transaction: options.transaction }),
+        catch: () =>
+          new DatabaseError({
+            statusCode: 500,
+            message: 'Failed to update appointment',
+          }),
+      }),
+    );
+    return Result.ok(updated);
   });
 
 export const getClientAppointmentById = async (id: string) =>

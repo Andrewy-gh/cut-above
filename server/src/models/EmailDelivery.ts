@@ -17,8 +17,6 @@ class EmailDelivery extends Model<
   declare dedupeKey: string;
   declare status: EmailDeliveryStatus;
   declare providerMessageId: string | null;
-  declare lastError: string | null;
-  declare sentAt: Date | null;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -43,14 +41,6 @@ EmailDelivery.init(
     },
     providerMessageId: {
       type: DataTypes.STRING,
-      allowNull: true,
-    },
-    lastError: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    sentAt: {
-      type: DataTypes.DATE,
       allowNull: true,
     },
     createdAt: {

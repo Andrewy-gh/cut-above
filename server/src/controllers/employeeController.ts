@@ -1,22 +1,54 @@
 import { Request, Response } from 'express';
+import { Result } from 'better-result';
 import { User } from '../models/index.js';
+import { DatabaseError } from '../errors.js';
 
 export const getAllEmployees = async (_req: Request, res: Response) => {
-  const employees = await User.findAll({
-    where: { role: 'employee' },
-    attributes: {
-      exclude: ['lastName', 'email', 'role', 'image', 'profile'],
-    },
+  const result = await Result.tryPromise({
+    try: () =>
+      User.findAll({
+        where: { role: 'employee' },
+        attributes: {
+          exclude: ['lastName', 'email', 'role', 'image', 'profile'],
+        },
+      }),
+    catch: (cause) =>
+      new DatabaseError({
+        statusCode: 500,
+        message:
+          cause instanceof Error
+            ? cause.message
+            : 'Failed to fetch employees',
+      }),
   });
-  res.json(employees);
+
+  return result.match({
+    ok: (employees) => res.json(employees),
+    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+  });
 };
 
 export const getEmployeeProfiles = async (_req: Request, res: Response) => {
-  const employees = await User.findAll({
-    where: { role: 'employee' },
-    attributes: {
-      exclude: ['lastName', 'email', 'role'],
-    },
+  const result = await Result.tryPromise({
+    try: () =>
+      User.findAll({
+        where: { role: 'employee' },
+        attributes: {
+          exclude: ['lastName', 'email', 'role'],
+        },
+      }),
+    catch: (cause) =>
+      new DatabaseError({
+        statusCode: 500,
+        message:
+          cause instanceof Error
+            ? cause.message
+            : 'Failed to fetch employees',
+      }),
   });
-  res.json(employees);
+
+  return result.match({
+    ok: (employees) => res.json(employees),
+    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+  });
 };

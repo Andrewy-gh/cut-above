@@ -29,7 +29,7 @@ describe('emailService', () => {
 
     const { sendEmail } = await import('./emailService.js');
 
-    const info = await sendEmail({
+    const result = await sendEmail({
       receiver: 'test@example.com',
       employee: 'John',
       date: '01/22/2024',
@@ -47,10 +47,12 @@ describe('emailService', () => {
         text: expect.stringContaining('01/22/2024'),
       })
     );
-    expect(info).toEqual(
+    expect(result.status).toBe('ok');
+    if (result.status !== 'ok') throw new Error('Expected Ok result');
+    expect(result.value).toEqual(
       expect.objectContaining({
         accepted: ['test@example.com'],
-      })
+      }),
     );
   });
 
@@ -62,16 +64,18 @@ describe('emailService', () => {
     const logger = (await import('../utils/logger/index.js')).default;
     const { sendEmail } = await import('./emailService.js');
 
-    await expect(
-      sendEmail({
-        receiver: 'test@example.com',
-        employee: 'John',
-        date: '01/22/2024',
-        time: '12:00pm',
-        option: 'confirmation',
-        emailLink: 'http://localhost:3000/appointment/appt-123',
-      })
-    ).rejects.toThrow('SMTP down');
+    const result = await sendEmail({
+      receiver: 'test@example.com',
+      employee: 'John',
+      date: '01/22/2024',
+      time: '12:00pm',
+      option: 'confirmation',
+      emailLink: 'http://localhost:3000/appointment/appt-123',
+    });
+
+    expect(result.status).toBe('error');
+    if (result.status !== 'error') throw new Error('Expected Error result');
+    expect(result.error.message).toBe('SMTP down');
 
     expect(logger.error).toHaveBeenCalled();
   });

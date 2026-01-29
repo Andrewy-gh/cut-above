@@ -1,9 +1,14 @@
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
+import { Result } from 'better-result';
 import { User, PasswordResetToken } from '../models/index.js';
 import { generateResetLink } from '../utils/emailOptions.js';
-import ApiError from '../utils/ApiError.js';
 import type { UserRole } from '../types/index.js';
+import {
+  AuthorizationError,
+  DatabaseError,
+  NotFoundError,
+} from '../errors.js';
 
 // Input types
 export interface RegisterCredentials {
@@ -45,119 +50,331 @@ export interface UserResponse {
   profile: string | null;
 }
 
-export const registerUser = async (credentials: RegisterCredentials) => {
-  const { firstName, lastName, email, password, role = 'client' } = credentials;
-  const passwordHash = await bcrypt.hash(password, 10);
-  return await User.create({ firstName, lastName, email, passwordHash, role });
-};
-
-export const authenticateUser = async (credentials: LoginCredentials) => {
-  const user = await User.scope('withPassword').findOne({
-    where: { email: credentials.email },
+export const registerUser = async (credentials: RegisterCredentials) =>
+  Result.tryPromise({
+    try: async () => {
+      const { firstName, lastName, email, password, role = 'client' } =
+        credentials;
+      const passwordHash = await bcrypt.hash(password, 10);
+      return User.create({ firstName, lastName, email, passwordHash, role });
+    },
+    catch: (cause) =>
+      new DatabaseError({
+        statusCode: 500,
+        message: cause instanceof Error ? cause.message : 'Failed to register',
+      }),
   });
-  if (!user) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-  const match = await bcrypt.compare(credentials.password, user.passwordHash);
-  if (!match) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-  const payload: UserResponse = {
-    id: user.id,
-    email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    role: user.role,
-    image: user.image,
-    profile: user.profile,
-  };
-  return payload;
-};
 
-export const updateEmail = async (user: UpdateEmailData) => {
-  const currentUser = await User.findByPk(user.id);
-  if (!currentUser) {
-    throw new ApiError(404, 'User not found');
-  }
-  currentUser.email = user.email;
-  await currentUser.save();
-  const payload: UserResponse = {
-    id: currentUser.id,
-    email: currentUser.email,
-    firstName: currentUser.firstName,
-    lastName: currentUser.lastName,
-    role: currentUser.role,
-    image: currentUser.image,
-    profile: currentUser.profile,
-  };
-  return payload;
-};
+export const authenticateUser = async (credentials: LoginCredentials) =>
+  Result.gen(async function* () {
+    const user = yield* Result.await(
+      Result.tryPromise({
+        try: () =>
+          User.scope('withPassword').findOne({
+            where: { email: credentials.email },
+          }),
+        catch: (cause) =>
+          new DatabaseError({
+            statusCode: 500,
+            message:
+              cause instanceof Error
+                ? cause.message
+                : 'Failed to authenticate',
+          }),
+      }),
+    );
 
-export const updatePassword = async (user: UpdatePasswordData) => {
-  const passwordHash = await bcrypt.hash(user.password, 10);
-  await User.update({ passwordHash }, { where: { id: user.id } });
-};
+    if (!user) {
+      return Result.err(
+        new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }),
+      );
+    }
 
-const storeToken = async (userId: string, token: string) => {
-  const tokenHash = await bcrypt.hash(token, 10);
-  return await PasswordResetToken.create({ userId, tokenHash });
-};
+    const match = yield* Result.await(
+      Result.tryPromise({
+        try: () => bcrypt.compare(credentials.password, user.passwordHash),
+        catch: (cause) =>
+          new DatabaseError({
+            statusCode: 500,
+            message:
+              cause instanceof Error
+                ? cause.message
+                : 'Failed to authenticate',
+          }),
+      }),
+    );
 
-const checkForExistingToken = async (userId: string) => {
-  const existingToken = await PasswordResetToken.findOne({ where: { userId } });
-  if (existingToken) {
-    await existingToken.destroy();
-  }
-};
+    if (!match) {
+      return Result.err(
+        new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }),
+      );
+    }
 
-export const generateTokenLink = async (email: string) => {
-  const user = await User.findOne({ where: { email } });
-  if (!user) {
-    return;
-  }
-  await checkForExistingToken(user.id);
-  const token = crypto.randomBytes(32).toString('hex'); // Generate random token
-  await storeToken(user.id, token);
-  const resetUrl = generateResetLink(user.id, token);
-  return resetUrl;
-};
-
-export const validateToken = async (user: ValidateTokenData) => {
-  const resetToken = await PasswordResetToken.findOne({
-    where: { userId: user.id },
+    const payload: UserResponse = {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
+      image: user.image,
+      profile: user.profile,
+    };
+    return Result.ok(payload);
   });
-  if (!resetToken) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-  if (new Date() > new Date(resetToken.expiresAt)) {
-    await resetToken.destroy();
-    throw new ApiError(401, 'Unauthorized');
-  }
-  if (resetToken.timesUsed > 1) {
-    // only two attempts allowed: initial validation and password reset
-    await resetToken.destroy();
-    throw new ApiError(401, 'Unauthorized');
-  }
-  const isValid = await bcrypt.compare(user.token, resetToken.tokenHash);
-  if (!isValid) {
-    await resetToken.destroy();
-    throw new ApiError(401, 'Unauthorized');
-  }
-  resetToken.timesUsed++;
-  await resetToken.save();
-  return resetToken;
-};
 
-export const resetPassword = async (user: User, password: string) => {
-  const passwordHash = await bcrypt.hash(password, 10);
-  user.passwordHash = passwordHash;
-  await user.save();
-  await deleteResetTokenById(user.id);
-};
+export const updateEmail = async (user: UpdateEmailData) =>
+  Result.gen(async function* () {
+    const currentUser = yield* Result.await(
+      Result.tryPromise({
+        try: () => User.findByPk(user.id),
+        catch: (cause) =>
+          new DatabaseError({
+            statusCode: 500,
+            message:
+              cause instanceof Error
+                ? cause.message
+                : 'Failed to update email',
+          }),
+      }),
+    );
+    if (!currentUser) {
+      return Result.err(
+        new NotFoundError({ statusCode: 404, message: 'User not found' }),
+      );
+    }
+    currentUser.email = user.email;
+    yield* Result.await(
+      Result.tryPromise({
+        try: () => currentUser.save(),
+        catch: (cause) =>
+          new DatabaseError({
+            statusCode: 500,
+            message:
+              cause instanceof Error
+                ? cause.message
+                : 'Failed to update email',
+          }),
+      }),
+    );
+    const payload: UserResponse = {
+      id: currentUser.id,
+      email: currentUser.email,
+      firstName: currentUser.firstName,
+      lastName: currentUser.lastName,
+      role: currentUser.role,
+      image: currentUser.image,
+      profile: currentUser.profile,
+    };
+    return Result.ok(payload);
+  });
 
-const deleteResetTokenById = async (id: string) => {
-  const token = await PasswordResetToken.findOne({ where: { userId: id } });
-  if (token) {
-    await token.destroy();
-  }
-};
+export const updatePassword = async (user: UpdatePasswordData) =>
+  Result.gen(async function* () {
+    const passwordHash = yield* Result.await(
+      Result.tryPromise({
+        try: () => bcrypt.hash(user.password, 10),
+        catch: (cause) =>
+          new DatabaseError({
+            statusCode: 500,
+            message:
+              cause instanceof Error
+                ? cause.message
+                : 'Failed to update password',
+          }),
+      }),
+    );
+    yield* Result.await(
+      Result.tryPromise({
+        try: () => User.update({ passwordHash }, { where: { id: user.id } }),
+        catch: (cause) =>
+          new DatabaseError({
+            statusCode: 500,
+            message:
+              cause instanceof Error
+                ? cause.message
+                : 'Failed to update password',
+          }),
+      }),
+    );
+    return Result.ok();
+  });
+
+const storeToken = async (userId: string, token: string) =>
+  Result.tryPromise({
+    try: async () => {
+      const tokenHash = await bcrypt.hash(token, 10);
+      return PasswordResetToken.create({ userId, tokenHash });
+    },
+    catch: (cause) =>
+      new DatabaseError({
+        statusCode: 500,
+        message:
+          cause instanceof Error ? cause.message : 'Failed to store token',
+      }),
+  });
+
+const checkForExistingToken = async (userId: string) =>
+  Result.tryPromise({
+    try: async () => {
+      const existingToken = await PasswordResetToken.findOne({
+        where: { userId },
+      });
+      if (existingToken) {
+        await existingToken.destroy();
+      }
+    },
+    catch: (cause) =>
+      new DatabaseError({
+        statusCode: 500,
+        message:
+          cause instanceof Error
+            ? cause.message
+            : 'Failed to rotate token',
+      }),
+  });
+
+export const generateTokenLink = async (email: string) =>
+  Result.gen(async function* () {
+    const user = yield* Result.await(
+      Result.tryPromise({
+        try: () => User.findOne({ where: { email } }),
+        catch: (cause) =>
+          new DatabaseError({
+            statusCode: 500,
+            message:
+              cause instanceof Error
+                ? cause.message
+                : 'Failed to generate reset link',
+          }),
+      }),
+    );
+    if (!user) {
+      return Result.ok(null);
+    }
+    yield* Result.await(checkForExistingToken(user.id));
+    const token = crypto.randomBytes(32).toString('hex'); // Generate random token
+    yield* Result.await(storeToken(user.id, token));
+    const resetUrl = generateResetLink(user.id, token);
+    return Result.ok(resetUrl);
+  });
+
+export const validateToken = async (user: ValidateTokenData) =>
+  Result.gen(async function* () {
+    const resetToken = yield* Result.await(
+      Result.tryPromise({
+        try: () =>
+          PasswordResetToken.findOne({ where: { userId: user.id } }),
+        catch: (cause) =>
+          new DatabaseError({
+            statusCode: 500,
+            message:
+              cause instanceof Error
+                ? cause.message
+                : 'Failed to validate token',
+          }),
+      }),
+    );
+    if (!resetToken) {
+      return Result.err(
+        new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }),
+      );
+    }
+    if (new Date() > new Date(resetToken.expiresAt)) {
+      yield* Result.await(deleteResetTokenById(user.id));
+      return Result.err(
+        new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }),
+      );
+    }
+    if (resetToken.timesUsed > 1) {
+      // only two attempts allowed: initial validation and password reset
+      yield* Result.await(deleteResetTokenById(user.id));
+      return Result.err(
+        new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }),
+      );
+    }
+    const isValid = yield* Result.await(
+      Result.tryPromise({
+        try: () => bcrypt.compare(user.token, resetToken.tokenHash),
+        catch: (cause) =>
+          new DatabaseError({
+            statusCode: 500,
+            message:
+              cause instanceof Error
+                ? cause.message
+                : 'Failed to validate token',
+          }),
+      }),
+    );
+    if (!isValid) {
+      yield* Result.await(deleteResetTokenById(user.id));
+      return Result.err(
+        new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }),
+      );
+    }
+    resetToken.timesUsed++;
+    yield* Result.await(
+      Result.tryPromise({
+        try: () => resetToken.save(),
+        catch: (cause) =>
+          new DatabaseError({
+            statusCode: 500,
+            message:
+              cause instanceof Error
+                ? cause.message
+                : 'Failed to validate token',
+          }),
+      }),
+    );
+    return Result.ok(resetToken);
+  });
+
+export const resetPassword = async (user: User, password: string) =>
+  Result.gen(async function* () {
+    const passwordHash = yield* Result.await(
+      Result.tryPromise({
+        try: () => bcrypt.hash(password, 10),
+        catch: (cause) =>
+          new DatabaseError({
+            statusCode: 500,
+            message:
+              cause instanceof Error
+                ? cause.message
+                : 'Failed to reset password',
+          }),
+      }),
+    );
+    user.passwordHash = passwordHash;
+    yield* Result.await(
+      Result.tryPromise({
+        try: () => user.save(),
+        catch: (cause) =>
+          new DatabaseError({
+            statusCode: 500,
+            message:
+              cause instanceof Error
+                ? cause.message
+                : 'Failed to reset password',
+          }),
+      }),
+    );
+    yield* Result.await(deleteResetTokenById(user.id));
+    return Result.ok();
+  });
+
+const deleteResetTokenById = async (id: string) =>
+  Result.tryPromise({
+    try: async () => {
+      const token = await PasswordResetToken.findOne({ where: { userId: id } });
+      if (token) {
+        await token.destroy();
+      }
+    },
+    catch: (cause) =>
+      new DatabaseError({
+        statusCode: 500,
+        message:
+          cause instanceof Error
+            ? cause.message
+            : 'Failed to clear reset token',
+      }),
+  });

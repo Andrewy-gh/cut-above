@@ -6,8 +6,13 @@ const tokenValidationMiddleware = async (
   _res: Response,
   next: NextFunction
 ) => {
-  await validateToken(req.params as { id: string; token: string });
-  next();
+  const result = await validateToken(req.params as { id: string; token: string });
+  return result.match({
+    ok: () => {
+      next();
+    },
+    err: (error) => _res.status(error.statusCode).json({ error: error.message }),
+  });
 };
 
 export default tokenValidationMiddleware;

@@ -21,10 +21,6 @@ class EmailOutbox extends Model<
   declare status: EmailOutboxStatus;
   declare attempts: CreationOptional<number>;
   declare availableAt: CreationOptional<Date>;
-  declare lockedAt: Date | null;
-  declare lockedBy: string | null;
-  declare lastError: string | null;
-  declare sentAt: Date | null;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -64,22 +60,6 @@ EmailOutbox.init(
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
-    },
-    lockedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    lockedBy: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    lastError: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    sentAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
     },
     createdAt: {
       type: DataTypes.DATE,

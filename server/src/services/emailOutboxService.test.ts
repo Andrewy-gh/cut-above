@@ -1,22 +1,27 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 const createMock = vi.fn();
+const findOrCreateMock = vi.fn();
 
 vi.mock('../models/EmailOutbox.js', () => ({
   default: {
     create: createMock,
+    findOrCreate: findOrCreateMock,
   },
 }));
 
 describe('emailOutboxService', () => {
   beforeEach(() => {
     createMock.mockReset();
+    findOrCreateMock.mockReset();
   });
 
   it('enqueues a generic email outbox item', async () => {
     const { enqueueEmail } = await import('./emailOutboxService.js');
 
-    await enqueueEmail({
+    findOrCreateMock.mockResolvedValue([{}, true]);
+
+    const result = await enqueueEmail({
       payload: {
         receiver: 'test@example.com',
         option: 'reset password',
@@ -25,23 +30,29 @@ describe('emailOutboxService', () => {
       dedupeKey: 'auth.reset_password:test',
     });
 
-    expect(createMock).toHaveBeenCalledWith(
+    expect(result.status).toBe('ok');
+    expect(findOrCreateMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        eventType: 'auth.reset_password',
-        dedupeKey: 'auth.reset_password:test',
-        status: 'pending',
-        payload: expect.objectContaining({
-          receiver: 'test@example.com',
+        where: { dedupeKey: 'auth.reset_password:test' },
+        defaults: expect.objectContaining({
+          eventType: 'auth.reset_password',
+          dedupeKey: 'auth.reset_password:test',
+          status: 'pending',
+          payload: expect.objectContaining({
+            receiver: 'test@example.com',
+          }),
         }),
+        transaction: undefined,
       }),
-      expect.objectContaining({ transaction: undefined })
     );
   });
 
   it('enqueues appointment emails with a deterministic dedupe key', async () => {
     const { enqueueAppointmentEmail } = await import('./emailOutboxService.js');
 
-    await enqueueAppointmentEmail({
+    findOrCreateMock.mockResolvedValue([{}, true]);
+
+    const result = await enqueueAppointmentEmail({
       appointmentId: 'appt-1',
       start: '2024-01-22T17:00:00.000Z',
       end: '2024-01-22T17:30:00.000Z',
@@ -52,16 +63,24 @@ describe('emailOutboxService', () => {
       option: 'confirmation',
     });
 
-    expect(createMock).toHaveBeenCalledWith(
+    expect(result.status).toBe('ok');
+    expect(findOrCreateMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        eventType: 'appointment.confirmation',
-        dedupeKey: expect.stringMatching(/^appointment:appt-1:/),
-        payload: expect.objectContaining({
-          receiver: 'client@example.com',
-          option: 'confirmation',
+        where: {
+          dedupeKey:
+            'appointment|appt-1|appointment.confirmation|2024-01-22T17:00:00.000Z|2024-01-22T17:30:00.000Z|Haircut|emp-1|client@example.com',
+        },
+        defaults: expect.objectContaining({
+          eventType: 'appointment.confirmation',
+          dedupeKey:
+            'appointment|appt-1|appointment.confirmation|2024-01-22T17:00:00.000Z|2024-01-22T17:30:00.000Z|Haircut|emp-1|client@example.com',
+          payload: expect.objectContaining({
+            receiver: 'client@example.com',
+            option: 'confirmation',
+          }),
         }),
+        transaction: undefined,
       }),
-      expect.objectContaining({ transaction: undefined })
     );
   });
 });

@@ -56,8 +56,6 @@ const claimOutboxBatch = async () =>
     await EmailOutbox.update(
       {
         status: 'processing',
-        lockedAt: new Date(),
-        lockedBy: WORKER_ID,
       },
       {
         where: {
@@ -74,10 +72,6 @@ const markOutboxSent = async (outboxId: string) =>
   EmailOutbox.update(
     {
       status: 'sent',
-      sentAt: new Date(),
-      lockedAt: null,
-      lockedBy: null,
-      lastError: null,
     },
     { where: { id: outboxId } },
   );
@@ -85,15 +79,11 @@ const markOutboxSent = async (outboxId: string) =>
 const markOutboxFailed = async (
   outboxId: string,
   attempts: number,
-  errorMessage: string,
 ) =>
   EmailOutbox.update(
     {
       status: 'failed',
       attempts,
-      lastError: errorMessage,
-      lockedAt: null,
-      lockedBy: null,
     },
     { where: { id: outboxId } },
   );
@@ -101,17 +91,13 @@ const markOutboxFailed = async (
 const scheduleOutboxRetry = async (
   outboxId: string,
   attempts: number,
-  errorMessage: string,
   delayMs: number,
 ) =>
   EmailOutbox.update(
     {
       status: 'pending',
       attempts,
-      lastError: errorMessage,
       availableAt: new Date(Date.now() + delayMs),
-      lockedAt: null,
-      lockedBy: null,
     },
     { where: { id: outboxId } },
   );
@@ -121,16 +107,12 @@ const upsertDeliveryStatus = async (
   status: 'sending' | 'sent' | 'failed',
   values: {
     providerMessageId?: string | null;
-    lastError?: string | null;
-    sentAt?: Date | null;
   } = {},
 ) =>
   EmailDelivery.upsert({
     dedupeKey,
     status,
     providerMessageId: values.providerMessageId ?? null,
-    lastError: values.lastError ?? null,
-    sentAt: values.sentAt ?? null,
   });
 
 const processOutboxItem = async (item: EmailOutbox) => {
@@ -148,27 +130,24 @@ const processOutboxItem = async (item: EmailOutbox) => {
 
   await upsertDeliveryStatus(dedupeKey, 'sending');
 
-  try {
-    const info = await sendEmail(payload);
+  const sendResult = await sendEmail(payload);
+  if (sendResult.status === 'ok') {
+    const info = sendResult.value;
     await upsertDeliveryStatus(dedupeKey, 'sent', {
       providerMessageId: info?.messageId ?? null,
-      sentAt: new Date(),
-      lastError: null,
     });
     await markOutboxSent(item.id);
-  } catch (cause) {
-    const errorMessage = formatErrorMessage(cause);
+  } else {
+    const errorMessage = sendResult.error.message;
     const nextAttempts = item.attempts + 1;
 
-    await upsertDeliveryStatus(dedupeKey, 'failed', {
-      lastError: errorMessage,
-    });
+    await upsertDeliveryStatus(dedupeKey, 'failed');
 
     if (nextAttempts >= MAX_EMAIL_RETRIES) {
       logger.error(
         `Email failed after ${nextAttempts} attempts: ${errorMessage}`,
       );
-      await markOutboxFailed(item.id, nextAttempts, errorMessage);
+      await markOutboxFailed(item.id, nextAttempts);
       return;
     }
 
@@ -176,7 +155,7 @@ const processOutboxItem = async (item: EmailOutbox) => {
     logger.warn(
       `Email send failed. Retrying in ${delayMs}ms (attempt ${nextAttempts}/${MAX_EMAIL_RETRIES}).`,
     );
-    await scheduleOutboxRetry(item.id, nextAttempts, errorMessage, delayMs);
+    await scheduleOutboxRetry(item.id, nextAttempts, delayMs);
   }
 };
 

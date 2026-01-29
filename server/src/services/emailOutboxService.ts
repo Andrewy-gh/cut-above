@@ -1,9 +1,11 @@
 import { randomUUID } from 'crypto';
 import type { Transaction } from 'sequelize';
+import { Result } from 'better-result';
 import EmailOutbox from '../models/EmailOutbox.js';
 import { formatEmail } from '../utils/formatters.js';
 import type { AppointmentService } from '../types/index.js';
 import type { EmailData, EmailOption } from './emailService.js';
+import { DatabaseError } from '../errors.js';
 
 interface EnqueueEmailOptions {
   payload: EmailData;
@@ -25,8 +27,25 @@ interface AppointmentEmailInput {
   transaction?: Transaction;
 }
 
-const buildAppointmentDedupeKey = (appointmentId: string) =>
-  `appointment:${appointmentId}:${randomUUID()}`;
+const buildAppointmentDedupeKey = (input: {
+  eventType: string;
+  appointmentId: string;
+  start: string;
+  end: string;
+  service: AppointmentService;
+  employeeId: string;
+  receiver: string;
+}) =>
+  [
+    'appointment',
+    input.appointmentId,
+    input.eventType,
+    input.start,
+    input.end,
+    input.service,
+    input.employeeId,
+    input.receiver,
+  ].join('|');
 
 export const enqueueEmail = async ({
   payload,
@@ -35,17 +54,56 @@ export const enqueueEmail = async ({
   availableAt,
   transaction,
 }: EnqueueEmailOptions) => {
-  return EmailOutbox.create(
-    {
-      eventType,
-      dedupeKey: dedupeKey ?? `${eventType}:${randomUUID()}`,
-      payload,
-      status: 'pending',
-      attempts: 0,
-      availableAt: availableAt ?? new Date(),
-    },
-    { transaction }
-  );
+  if (dedupeKey) {
+    return Result.tryPromise({
+      try: async () => {
+        const [record] = await EmailOutbox.findOrCreate({
+          where: { dedupeKey },
+          defaults: {
+            eventType,
+            dedupeKey,
+            payload,
+            status: 'pending',
+            attempts: 0,
+            availableAt: availableAt ?? new Date(),
+          },
+          transaction,
+        });
+        return record;
+      },
+      catch: (cause) =>
+        new DatabaseError({
+          statusCode: 500,
+          message:
+            cause instanceof Error
+              ? cause.message
+              : 'Failed to enqueue email',
+        }),
+    });
+  }
+
+  return Result.tryPromise({
+    try: () =>
+      EmailOutbox.create(
+        {
+          eventType,
+          dedupeKey: `${eventType}:${randomUUID()}`,
+          payload,
+          status: 'pending',
+          attempts: 0,
+          availableAt: availableAt ?? new Date(),
+        },
+        { transaction },
+      ),
+    catch: (cause) =>
+      new DatabaseError({
+        statusCode: 500,
+        message:
+          cause instanceof Error
+            ? cause.message
+            : 'Failed to enqueue email',
+      }),
+  });
 };
 
 export const enqueueAppointmentEmail = async ({
@@ -74,10 +132,19 @@ export const enqueueAppointmentEmail = async ({
     receiver,
   };
 
+  const eventType = `appointment.${option}`;
   return enqueueEmail({
     payload,
-    eventType: `appointment.${option}`,
-    dedupeKey: buildAppointmentDedupeKey(appointmentId),
+    eventType,
+    dedupeKey: buildAppointmentDedupeKey({
+      eventType,
+      appointmentId,
+      start,
+      end,
+      service,
+      employeeId,
+      receiver,
+    }),
     transaction,
   });
 };
