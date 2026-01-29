@@ -178,7 +178,7 @@ describe("Appointment Controller - API Integration", () => {
         })
         .expect(400); // Bad request
 
-      expect(response.body.error).toBeDefined();
+      expect(response.body.detail).toBeDefined();
     });
 
     it("rejects non-UTC ISO strings (timezone offsets)", async () => {
@@ -194,7 +194,7 @@ describe("Appointment Controller - API Integration", () => {
         })
         .expect(400);
 
-      expect(response.body.error).toContain("Z suffix required");
+      expect(response.body.detail).toContain("Z suffix required");
     });
 
     it("prevents double-booking same employee at same time", async () => {
@@ -222,7 +222,7 @@ describe("Appointment Controller - API Integration", () => {
         })
         .expect(409); // Conflict
 
-      expect(response.body.error).toContain(
+      expect(response.body.detail).toContain(
         "conflicts with existing appointment",
       );
     });
@@ -267,7 +267,7 @@ describe("Appointment Controller - API Integration", () => {
         })
         .expect(400);
 
-      expect(response.body.error).toBeDefined();
+      expect(response.body.detail).toBeDefined();
     });
 
     it("rejects end time before start time", async () => {
@@ -282,7 +282,7 @@ describe("Appointment Controller - API Integration", () => {
         })
         .expect(400);
 
-      expect(response.body.error).toContain(
+      expect(response.body.detail).toContain(
         "End time must be after start time",
       );
     });
@@ -299,7 +299,7 @@ describe("Appointment Controller - API Integration", () => {
         })
         .expect(400);
 
-      expect(response.body.error).toBe("Client and employee must be different");
+      expect(response.body.detail).toBe("Client and employee must be different");
     });
   });
 
@@ -382,7 +382,7 @@ describe("Appointment Controller - API Integration", () => {
         .set("Cookie", sessionCookie)
         .expect(404);
 
-      expect(response.body.error).toBe("Appointment not found");
+      expect(response.body.detail).toBe("Appointment not found");
     });
   });
 

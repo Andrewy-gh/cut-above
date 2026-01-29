@@ -4,17 +4,18 @@ import {
   getPrivateSchedules,
   createSchedules,
 } from '../services/scheduleService.js';
+import { sendProblem } from '../utils/problemDetails.js';
 
 /**
  * @description retrieve all public schedules for booking page includes only employee id
  * @route /api/schedules
  * @method GET
  */
-export const getAllSchedulesPublic = async (_: Request, res: Response) => {
+export const getAllSchedulesPublic = async (req: Request, res: Response) => {
   const result = await getPublicSchedules();
   return result.match({
     ok: (schedules) => res.json(schedules),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, req, error),
   });
 };
 
@@ -23,11 +24,11 @@ export const getAllSchedulesPublic = async (_: Request, res: Response) => {
  * @route /api/schedules/dashboard
  * @method GET
  */
-export const getAllSchedulesPrivate = async (_: Request, res: Response) => {
+export const getAllSchedulesPrivate = async (req: Request, res: Response) => {
   const result = await getPrivateSchedules();
   return result.match({
     ok: (schedules) => res.json(schedules),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, req, error),
   });
 };
 
@@ -46,6 +47,6 @@ export const createNewSchedule = async (req: Request, res: Response) => {
         message: 'New schedule added',
         data: savedSchedules,
       }),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, req, error),
   });
 };

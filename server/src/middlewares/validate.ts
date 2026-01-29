@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import * as v from 'valibot';
+import { ValidationError } from '../errors.js';
+import { sendProblem } from '../utils/problemDetails.js';
 
 type ValidationTarget = 'body' | 'params' | 'query';
 
@@ -32,14 +34,18 @@ export const validate = (config: ValidationConfig) => {
           };
         });
 
-        // Include first error message in error field for clarity
         const errorMessage = errors.length > 0
           ? errors[0].message
           : 'Validation Error';
 
-        res.status(400).json({
-          error: errorMessage,
-          details: errors,
+        const validationError = new ValidationError({
+          statusCode: 400,
+          message: errorMessage,
+        });
+
+        sendProblem(res, req, validationError, {
+          status: 400,
+          detail: errorMessage,
         });
         return;
       }

@@ -78,6 +78,7 @@ export const enqueueEmail = async ({
             cause instanceof Error
               ? cause.message
               : 'Failed to enqueue email',
+          cause,
         }),
     });
   }
@@ -102,6 +103,7 @@ export const enqueueEmail = async ({
           cause instanceof Error
             ? cause.message
             : 'Failed to enqueue email',
+        cause,
       }),
   });
 };

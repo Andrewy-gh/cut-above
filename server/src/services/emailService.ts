@@ -76,6 +76,7 @@ export const sendEmail = async ({
         statusCode: 502,
         message:
           cause instanceof Error ? cause.message : 'Failed to send email',
+        cause,
       });
     },
   });

@@ -18,6 +18,7 @@ import {
   SessionError,
   ValidationError,
 } from '../errors.js';
+import { sendProblem } from '../utils/problemDetails.js';
 
 const hashDedupeKey = (value: string) =>
   createHash('sha256').update(value).digest('hex');
@@ -34,7 +35,7 @@ export const register = async (req: Request, res: Response) => {
       res
         .status(200)
         .json({ success: true, message: 'Successfully registered account' }),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, req, error),
   });
 };
 
@@ -66,6 +67,7 @@ export const login = async (req: Request, res: Response) => {
               cause instanceof Error
                 ? cause.message
                 : 'Failed to persist session',
+            cause,
           }),
       }),
     );
@@ -78,7 +80,7 @@ export const login = async (req: Request, res: Response) => {
       res
         .status(200)
         .json({ success: true, message: 'Successfully logged in', user }),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, req, error),
   });
 };
 
@@ -100,6 +102,7 @@ export const logout = async (req: Request, res: Response) => {
             cause instanceof Error
               ? cause.message
               : 'Failed to lookup user',
+          cause,
         }),
     });
     if (userResult.status === 'ok') {
@@ -123,6 +126,7 @@ export const logout = async (req: Request, res: Response) => {
         statusCode: 500,
         message:
           cause instanceof Error ? cause.message : 'Failed to destroy session',
+        cause,
       }),
   });
 
@@ -150,12 +154,14 @@ export const logout = async (req: Request, res: Response) => {
 export const changeEmail = async (req: Request, res: Response) => {
   const userId = req.session.userId;
   if (!userId) {
-    return res.status(401).json({
-      error: new SessionError({
+    return sendProblem(
+      res,
+      req,
+      new SessionError({
         statusCode: 401,
         message: 'Session expired',
-      }).message,
-    });
+      }),
+    );
   }
 
   const result = await updateEmail({
@@ -169,7 +175,7 @@ export const changeEmail = async (req: Request, res: Response) => {
         message: 'User email successfully changed',
         user,
       }),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, req, error),
   });
 };
 
@@ -181,12 +187,14 @@ export const changeEmail = async (req: Request, res: Response) => {
 export const changePassword = async (req: Request, res: Response) => {
   const userId = req.session.userId;
   if (!userId) {
-    return res.status(401).json({
-      error: new SessionError({
+    return sendProblem(
+      res,
+      req,
+      new SessionError({
         statusCode: 401,
         message: 'Session expired',
-      }).message,
-    });
+      }),
+    );
   }
 
   const result = await updatePassword({
@@ -199,7 +207,7 @@ export const changePassword = async (req: Request, res: Response) => {
       res
         .status(200)
         .json({ success: true, message: 'User password successfully changed' }),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, req, error),
   });
 };
 
@@ -212,7 +220,7 @@ export const handleTokenValidation = async (req: Request, res: Response) => {
   const result = await validateToken(req.params as { id: string; token: string });
   return result.match({
     ok: () => res.json({ success: true, message: 'Token is valid' }),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, req, error),
   });
 };
 
@@ -233,6 +241,7 @@ export const handlePasswordReset = async (req: Request, res: Response) => {
               cause instanceof Error
                 ? cause.message
                 : 'Failed to reset password',
+            cause,
           }),
       }),
     );
@@ -259,6 +268,6 @@ export const handlePasswordReset = async (req: Request, res: Response) => {
 
   return result.match({
     ok: () => res.status(200).json({ success: true, message: 'Password updated' }),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, req, error),
   });
 };

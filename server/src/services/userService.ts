@@ -6,10 +6,11 @@ import { Result } from "better-result";
 export const findById = async (id: string) =>
   await Result.tryPromise({
     try: () => User.findByPk(id),
-    catch: () =>
+    catch: (cause) =>
       new DatabaseError({
         statusCode: 500,
         message: "Failed to fetch user from database",
+        cause,
       }),
   });
 

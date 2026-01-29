@@ -43,6 +43,7 @@ export const getPublicSchedules = async () =>
           cause instanceof Error
             ? cause.message
             : 'Failed to fetch schedules',
+        cause,
       }),
   });
 
@@ -97,6 +98,7 @@ export const getPrivateSchedules = async () =>
           cause instanceof Error
             ? cause.message
             : 'Failed to fetch schedules',
+        cause,
       }),
   });
 
@@ -123,6 +125,7 @@ export const createSchedules = async (
           cause instanceof Error
             ? cause.message
             : 'Failed to create schedules',
+        cause,
       }),
   });
 
@@ -150,6 +153,7 @@ export const checkScheduleAvailability = async (
               cause instanceof Error
                 ? cause.message
                 : 'Failed to fetch schedule',
+            cause,
           }),
       }),
     );
@@ -173,6 +177,7 @@ export const checkScheduleAvailability = async (
               cause instanceof Error
                 ? cause.message
                 : 'Failed to fetch appointments',
+            cause,
           }),
       }),
     );

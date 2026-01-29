@@ -12,6 +12,7 @@ import { Result } from "better-result";
 import { findByIdOrNotFound } from "../services/userService.js";
 import { enqueueAppointmentEmail } from "../services/emailOutboxService.js";
 import { sequelize } from "../utils/db.js";
+import { sendProblem } from "../utils/problemDetails.js";
 import {
   AuthorizationError,
   DatabaseError,
@@ -84,6 +85,7 @@ const toHttpError = (cause: unknown, fallbackMessage: string): HttpError => {
   return new DatabaseError({
     statusCode: 500,
     message: cause instanceof Error ? cause.message : fallbackMessage,
+    cause,
   });
 };
 
@@ -165,7 +167,7 @@ export const getAllAppointments = async (req: Request, res: Response) => {
 
   return result.match({
     ok: (appointments) => res.json(appointments),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, req, error),
   });
 };
 
@@ -198,7 +200,7 @@ export const getSingleAppointment = async (req: Request, res: Response) => {
 
   return result.match({
     ok: (appointment) => res.json(appointment),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, req, error),
   });
 };
 
@@ -263,7 +265,7 @@ export const bookAppointment = async (req: Request, res: Response) => {
 
   return result.match({
     ok: (payload) => res.status(200).json(payload),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, req, error),
   });
 };
 
@@ -376,7 +378,7 @@ export const modifyAppointment = async (req: Request, res: Response) => {
 
   return result.match({
     ok: (payload) => res.status(200).json(payload),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, req, error),
   });
 };
 
@@ -400,7 +402,7 @@ export const updateAppointmentStatus = async (req: Request, res: Response) => {
       res
         .status(200)
         .json({ success: true, message: "Appointment status updated" }),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, req, error),
   });
 };
 
@@ -472,6 +474,6 @@ export const deleteAppointmentById = async (req: Request, res: Response) => {
 
   return result.match({
     ok: (payload) => res.status(200).json(payload),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, req, error),
   });
 };

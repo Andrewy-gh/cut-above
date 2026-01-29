@@ -72,10 +72,11 @@ export const getAppointmentsByRole = async (user: User) =>
           return [];
       }
     },
-    catch: () =>
+    catch: (cause) =>
       new DatabaseError({
         statusCode: 500,
         message: 'Failed to fetch appointments',
+        cause,
       }),
   });
 
@@ -102,10 +103,11 @@ export const createNew = async (
             },
             { transaction: options.transaction },
           ),
-        catch: () =>
+        catch: (cause) =>
           new DatabaseError({
             statusCode: 500,
             message: 'Failed to create appointment',
+            cause,
           }),
       }),
     );
@@ -123,10 +125,11 @@ export const update = async (
           Appointment.findByPk(newAppt.id, {
             transaction: options.transaction,
           }),
-        catch: () =>
+        catch: (cause) =>
           new DatabaseError({
             statusCode: 500,
             message: 'Failed to update appointment',
+            cause,
           }),
       }),
     );
@@ -187,10 +190,11 @@ export const update = async (
           const updated = yield* Result.await(
             Result.tryPromise({
               try: () => applyScheduleChange(transaction),
-              catch: () =>
+              catch: (cause) =>
                 new DatabaseError({
                   statusCode: 500,
                   message: 'Failed to update appointment',
+                  cause,
                 }),
             }),
           );
@@ -203,10 +207,11 @@ export const update = async (
               sequelize.transaction(async (transaction) =>
                 applyScheduleChange(transaction),
               ),
-            catch: () =>
+            catch: (cause) =>
               new DatabaseError({
                 statusCode: 500,
                 message: 'Failed to update appointment',
+                cause,
               }),
           }),
         );
@@ -226,10 +231,11 @@ export const update = async (
     const updated = yield* Result.await(
       Result.tryPromise({
         try: () => appointment.save({ transaction: options.transaction }),
-        catch: () =>
+        catch: (cause) =>
           new DatabaseError({
             statusCode: 500,
             message: 'Failed to update appointment',
+            cause,
           }),
       }),
     );
@@ -257,9 +263,10 @@ export const getClientAppointmentById = async (id: string) =>
           },
         ],
       }),
-    catch: () =>
+    catch: (cause) =>
       new DatabaseError({
         statusCode: 500,
         message: 'Failed to fetch appointment',
+        cause,
       }),
   });

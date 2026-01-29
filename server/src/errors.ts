@@ -3,6 +3,7 @@ import { TaggedError } from "better-result";
 export class AppError extends TaggedError("AppError")<{
   statusCode: number;
   message: string;
+  cause?: unknown;
 }>() {}
 
 export class SessionError extends TaggedError("SessionError")<{
@@ -18,6 +19,7 @@ export class NotFoundError extends TaggedError("NotFoundError")<{
 export class DatabaseError extends TaggedError("DatabaseError")<{
   statusCode: number;
   message: string;
+  cause?: unknown;
 }>() {}
 
 export class AuthorizationError extends TaggedError("AuthorizationError")<{

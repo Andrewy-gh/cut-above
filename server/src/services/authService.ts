@@ -62,6 +62,7 @@ export const registerUser = async (credentials: RegisterCredentials) =>
       new DatabaseError({
         statusCode: 500,
         message: cause instanceof Error ? cause.message : 'Failed to register',
+        cause,
       }),
   });
 
@@ -80,6 +81,7 @@ export const authenticateUser = async (credentials: LoginCredentials) =>
               cause instanceof Error
                 ? cause.message
                 : 'Failed to authenticate',
+            cause,
           }),
       }),
     );
@@ -100,6 +102,7 @@ export const authenticateUser = async (credentials: LoginCredentials) =>
               cause instanceof Error
                 ? cause.message
                 : 'Failed to authenticate',
+            cause,
           }),
       }),
     );
@@ -134,6 +137,7 @@ export const updateEmail = async (user: UpdateEmailData) =>
               cause instanceof Error
                 ? cause.message
                 : 'Failed to update email',
+            cause,
           }),
       }),
     );
@@ -153,6 +157,7 @@ export const updateEmail = async (user: UpdateEmailData) =>
               cause instanceof Error
                 ? cause.message
                 : 'Failed to update email',
+            cause,
           }),
       }),
     );
@@ -180,6 +185,7 @@ export const updatePassword = async (user: UpdatePasswordData) =>
               cause instanceof Error
                 ? cause.message
                 : 'Failed to update password',
+            cause,
           }),
       }),
     );
@@ -193,6 +199,7 @@ export const updatePassword = async (user: UpdatePasswordData) =>
               cause instanceof Error
                 ? cause.message
                 : 'Failed to update password',
+            cause,
           }),
       }),
     );
@@ -210,6 +217,7 @@ const storeToken = async (userId: string, token: string) =>
         statusCode: 500,
         message:
           cause instanceof Error ? cause.message : 'Failed to store token',
+        cause,
       }),
   });
 
@@ -230,6 +238,7 @@ const checkForExistingToken = async (userId: string) =>
           cause instanceof Error
             ? cause.message
             : 'Failed to rotate token',
+        cause,
       }),
   });
 
@@ -245,6 +254,7 @@ export const generateTokenLink = async (email: string) =>
               cause instanceof Error
                 ? cause.message
                 : 'Failed to generate reset link',
+            cause,
           }),
       }),
     );
@@ -271,6 +281,7 @@ export const validateToken = async (user: ValidateTokenData) =>
               cause instanceof Error
                 ? cause.message
                 : 'Failed to validate token',
+            cause,
           }),
       }),
     );
@@ -302,6 +313,7 @@ export const validateToken = async (user: ValidateTokenData) =>
               cause instanceof Error
                 ? cause.message
                 : 'Failed to validate token',
+            cause,
           }),
       }),
     );
@@ -322,6 +334,7 @@ export const validateToken = async (user: ValidateTokenData) =>
               cause instanceof Error
                 ? cause.message
                 : 'Failed to validate token',
+            cause,
           }),
       }),
     );
@@ -340,6 +353,7 @@ export const resetPassword = async (user: User, password: string) =>
               cause instanceof Error
                 ? cause.message
                 : 'Failed to reset password',
+            cause,
           }),
       }),
     );
@@ -354,6 +368,7 @@ export const resetPassword = async (user: User, password: string) =>
               cause instanceof Error
                 ? cause.message
                 : 'Failed to reset password',
+            cause,
           }),
       }),
     );
@@ -376,5 +391,6 @@ const deleteResetTokenById = async (id: string) =>
           cause instanceof Error
             ? cause.message
             : 'Failed to clear reset token',
+        cause,
       }),
   });

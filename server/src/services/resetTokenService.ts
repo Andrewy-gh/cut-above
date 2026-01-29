@@ -20,5 +20,6 @@ export const deleteExpiredTokens = async () =>
           cause instanceof Error
             ? cause.message
             : 'Failed to delete expired tokens',
+        cause,
       }),
   });

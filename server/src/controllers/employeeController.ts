@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Result } from 'better-result';
 import { User } from '../models/index.js';
 import { DatabaseError } from '../errors.js';
+import { sendProblem } from '../utils/problemDetails.js';
 
 export const getAllEmployees = async (_req: Request, res: Response) => {
   const result = await Result.tryPromise({
@@ -19,12 +20,13 @@ export const getAllEmployees = async (_req: Request, res: Response) => {
           cause instanceof Error
             ? cause.message
             : 'Failed to fetch employees',
+        cause,
       }),
   });
 
   return result.match({
     ok: (employees) => res.json(employees),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, _req, error),
   });
 };
 
@@ -44,11 +46,12 @@ export const getEmployeeProfiles = async (_req: Request, res: Response) => {
           cause instanceof Error
             ? cause.message
             : 'Failed to fetch employees',
+        cause,
       }),
   });
 
   return result.match({
     ok: (employees) => res.json(employees),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, _req, error),
   });
 };

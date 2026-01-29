@@ -2,13 +2,14 @@ import { Request, Response } from 'express';
 import { Result } from 'better-result';
 import { User } from '../models/index.js';
 import { DatabaseError } from '../errors.js';
+import { sendProblem } from '../utils/problemDetails.js';
 
 /**
  * @description retrieves all Users
  * @route /api/users/
  * @method GET
  */
-export const getAllUsers = async (_: Request, res: Response) => {
+export const getAllUsers = async (req: Request, res: Response) => {
   const result = await Result.tryPromise({
     try: () => User.findAll(),
     catch: (cause) =>
@@ -18,11 +19,12 @@ export const getAllUsers = async (_: Request, res: Response) => {
           cause instanceof Error
             ? cause.message
             : 'Failed to fetch users',
+        cause,
       }),
   });
 
   return result.match({
     ok: (users) => res.json(users),
-    err: (error) => res.status(error.statusCode).json({ error: error.message }),
+    err: (error) => sendProblem(res, req, error),
   });
 };
