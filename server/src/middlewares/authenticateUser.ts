@@ -1,16 +1,22 @@
 import { Request, Response, NextFunction } from 'express';
-import ApiError from '../utils/ApiError.js';
+import { AuthorizationError, SessionError } from '../errors.js';
 
 export const authenticateUser = async (
   req: Request,
   _res: Response,
   next: NextFunction
-): Promise<void> => {
+) => {
   if (!req.session) {
-    throw new ApiError(403, 'Forbidden: not authenticated');
+    throw new AuthorizationError({
+      statusCode: 403,
+      message: 'Forbidden: not authenticated',
+    });
   }
   if (!req.session.userId) {
-    throw new ApiError(401, 'Session expired, please log in');
+    throw new SessionError({
+      statusCode: 401,
+      message: 'Session expired, please log in',
+    });
   }
   next();
 };
@@ -19,9 +25,12 @@ export const authenticateRole = async (
   req: Request,
   _res: Response,
   next: NextFunction
-): Promise<void> => {
+) => {
   if (!req.session.isAdmin) {
-    throw new ApiError(403, 'Forbidden: not authorized to access this page');
+    throw new AuthorizationError({
+      statusCode: 403,
+      message: 'Forbidden: not authorized to access this page',
+    });
   }
   next();
 };

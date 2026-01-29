@@ -155,7 +155,7 @@ describe("Appointment Booking - E2E Flow", () => {
         })
         .expect(410);
 
-      expect(response.body.error).toContain("No schedule found for selected date");
+      expect(response.body.detail).toContain("No schedule found for selected date");
     });
 
     it("prevents booking when not authenticated", async () => {
@@ -172,7 +172,7 @@ describe("Appointment Booking - E2E Flow", () => {
         })
         .expect(401);
 
-      expect(response.body.error).toContain("Session expired");
+      expect(response.body.detail).toBe("Unauthorized");
     });
 
     it("allows client to cancel their own appointment", async () => {

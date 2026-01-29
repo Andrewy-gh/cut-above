@@ -1,32 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
-import { ValidationError } from 'sequelize';
-import ApiError from '../utils/ApiError.js';
-import logger from '../utils/logger/index.js';
+import { errorResponse } from '../utils/errorDetails.js';
 
 const errorHandler = async (
   err: unknown,
-  _req: Request,
+  req: Request,
   res: Response,
   _next: NextFunction
-): Promise<Response | void> => {
-  logger.error('====================================');
-  logger.error(err);
-  logger.error('====================================');
-
-  if (err instanceof ApiError) {
-    return res.status(err.statusCode).json({ error: err.message });
-  }
-
-  if (err instanceof ValidationError) {
-    const errorMessage = err.errors.map((error) => error.message).join(', ');
-    return res.status(400).json({ error: errorMessage });
-  }
-
+) => {
   if (err instanceof Error) {
-    return res.status(500).json({ error: err.message });
+    return errorResponse(res, req, err);
   }
 
-  return res.status(500).json({ error: 'Unknown error occurred' });
+  return errorResponse(res, req, new Error('Unknown error occurred'), {
+    status: 500,
+  });
 };
 
 export default errorHandler;

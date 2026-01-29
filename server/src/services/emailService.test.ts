@@ -11,15 +11,7 @@ vi.mock('../utils/logger/index.js', () => ({
   default: {
     info: vi.fn(),
     error: vi.fn(),
-  },
-}));
-
-vi.mock('../utils/redis.js', () => ({
-  pub: {
-    xadd: vi.fn(),
-  },
-  sub: {
-    xread: vi.fn(),
+    warn: vi.fn(),
   },
 }));
 
@@ -37,7 +29,7 @@ describe('emailService', () => {
 
     const { sendEmail } = await import('./emailService.js');
 
-    await sendEmail({
+    const result = await sendEmail({
       receiver: 'test@example.com',
       employee: 'John',
       date: '01/22/2024',
@@ -55,9 +47,16 @@ describe('emailService', () => {
         text: expect.stringContaining('01/22/2024'),
       })
     );
+    expect(result.status).toBe('ok');
+    if (result.status !== 'ok') throw new Error('Expected Ok result');
+    expect(result.value).toEqual(
+      expect.objectContaining({
+        accepted: ['test@example.com'],
+      }),
+    );
   });
 
-  it('logs and does not throw on transport error', async () => {
+  it('logs and throws on transport error', async () => {
     const sendMail = vi.fn().mockRejectedValue(new Error('SMTP down'));
     (nodemailer as unknown as { createTransport: (opts: unknown) => unknown }).createTransport =
       vi.fn(() => ({ sendMail }));
@@ -65,42 +64,20 @@ describe('emailService', () => {
     const logger = (await import('../utils/logger/index.js')).default;
     const { sendEmail } = await import('./emailService.js');
 
-    await expect(
-      sendEmail({
-        receiver: 'test@example.com',
-        employee: 'John',
-        date: '01/22/2024',
-        time: '12:00pm',
-        option: 'confirmation',
-        emailLink: 'http://localhost:3000/appointment/appt-123',
-      })
-    ).resolves.toBeUndefined();
-
-    expect(logger.error).toHaveBeenCalled();
-  });
-
-  it('publishes formatted payload to redis stream', async () => {
-    const redis = await import('../utils/redis.js');
-    const { publishMessage } = await import('./emailService.js');
-
-    const payload = {
+    const result = await sendEmail({
       receiver: 'test@example.com',
       employee: 'John',
       date: '01/22/2024',
       time: '12:00pm',
-      option: 'confirmation' as const,
+      option: 'confirmation',
       emailLink: 'http://localhost:3000/appointment/appt-123',
-    };
+    });
 
-    await publishMessage(payload);
+    expect(result.status).toBe('error');
+    if (result.status !== 'error') throw new Error('Expected Error result');
+    expect(result.error.message).toBe('SMTP down');
 
-    expect(redis.pub.xadd).toHaveBeenCalledWith(
-      'email-stream',
-      'MAXLEN',
-      '100',
-      '*',
-      'data',
-      JSON.stringify(payload)
-    );
+    expect(logger.error).toHaveBeenCalled();
   });
+
 });

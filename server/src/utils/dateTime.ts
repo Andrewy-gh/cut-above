@@ -18,7 +18,7 @@ interface ScheduleEntry {
 
 // takes a local date: '2023-12-24' format and local time: '10:00' and converts it into dayjs obj with correct corresponding UTC time
 // used to send correct format to database
-export const convertDateAndTime = (inputDate: string, inputTime: string): Dayjs => {
+export const convertDateAndTime = (inputDate: string, inputTime: string) => {
   const dateObj = dayjs.tz(inputDate, selectedTimeZone);
   const [hour, minute] = inputTime.split(':');
   return dateObj.hour(Number(hour)).minute(Number(minute));
@@ -26,15 +26,15 @@ export const convertDateAndTime = (inputDate: string, inputTime: string): Dayjs 
 
 // takes a IOS date "2023-07-16T14:51:47.557Z" local and converts to correct corresponding UTC time, ex. 00:00 => 04:00
 // used to send correct format to database
-export const convertDate = (inputDate: string): Dayjs => {
+export const convertDate = (inputDate: string) => {
   return dayjs.tz(inputDate, selectedTimeZone);
 };
 
 // These two functions used to send readable formats in email service
-export const formatDateSlash = (date: string | Date): string =>
+export const formatDateSlash = (date: string | Date) =>
   dayjs(date).format('MM/DD/YYYY');
 
-export const formatTime = (time: string): string =>
+export const formatTime = (time: string) =>
   dayjs(time, 'HH:mm').format('h:mma');
 
 // Generates an array of dayjs obj to be used for scheduling.
@@ -42,7 +42,7 @@ export const generateRange = (
   dates: [string | Date, string | Date],
   open: string,
   close: string
-): ScheduleEntry[] => {
+) => {
   const [start, end] = dates;
   const endDate = dayjs(end).format('YYYY-MM-DD');
   const [openHour, openMinute] = open.split(':');
@@ -71,22 +71,22 @@ export const generateRange = (
 
 // Parse ISO datetime string to Dayjs object with America/New_York timezone
 // Uses UTC parsing first to prevent double-conversion with timezone offsets
-export const parseISOToLocalTime = (iso: string): Dayjs =>
+export const parseISOToLocalTime = (iso: string) =>
   dayjs.utc(iso).tz(selectedTimeZone);
 
 // Convert ISO datetime string to JavaScript Date object for DB storage
-export const convertISOToDate = (iso: string): Date =>
+export const convertISOToDate = (iso: string) =>
   parseISOToLocalTime(iso).toDate();
 
 // Extract YYYY-MM-DD date string from ISO datetime for schedule lookups
-export const extractDateFromISO = (iso: string): string =>
+export const extractDateFromISO = (iso: string) =>
   parseISOToLocalTime(iso).format('YYYY-MM-DD');
 
 // Check appointment availability using ISO datetime strings
 export const checkAvailabilityISO = (
   appointments: { start: string; end: string; employeeId: string }[],
   newAppt: { start: string; end: string; employeeId: string }
-): boolean => {
+) => {
   const newStart = parseISOToLocalTime(newAppt.start);
   const newEnd = parseISOToLocalTime(newAppt.end);
 
@@ -106,9 +106,9 @@ export const checkAvailabilityISO = (
 };
 
 // Format ISO datetime to MM/DD/YYYY for email display
-export const formatDateSlashISO = (isoDatetime: string): string =>
+export const formatDateSlashISO = (isoDatetime: string) =>
   parseISOToLocalTime(isoDatetime).format('MM/DD/YYYY');
 
 // Format ISO datetime to h:mma (e.g., "2:30pm") for email display
-export const formatTimeISO = (isoDatetime: string): string =>
+export const formatTimeISO = (isoDatetime: string) =>
   parseISOToLocalTime(isoDatetime).format('h:mma');

@@ -2,7 +2,7 @@ services:
   db:
     image: postgres:16.2
     ports:
-      - ${DB_PORT}:5432
+      - ${DB_PORT:-5432}:5432
     environment:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_USER=${DB_USER}
@@ -14,5 +14,5 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - 6379:6379
+      - ${REDIS_PORT:-6379}:6379
     container_name: cutabove-redis

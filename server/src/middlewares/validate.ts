@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import * as v from 'valibot';
+import { ValidationError } from '../errors.js';
+import { errorResponse } from '../utils/errorDetails.js';
 
 type ValidationTarget = 'body' | 'params' | 'query';
 
@@ -10,7 +12,7 @@ interface ValidationConfig {
 }
 
 export const validate = (config: ValidationConfig) => {
-  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const targets: ValidationTarget[] = ['body', 'params', 'query'];
 
@@ -24,22 +26,35 @@ export const validate = (config: ValidationConfig) => {
       next();
     } catch (error) {
       if (error instanceof v.ValiError) {
-        const errors = error.issues.map(issue => {
-          const path = issue.path?.map((item: { key: string | number | symbol }) => String(item.key)).join('.') || 'unknown';
+        const errors = error.issues.map((issue) => {
+          const path =
+            issue.path
+              ?.map((item: { key: string | number | symbol }) =>
+                String(item.key),
+              )
+              .join('.') || 'unknown';
           return {
             path,
             message: issue.message,
           };
         });
 
-        // Include first error message in error field for clarity
         const errorMessage = errors.length > 0
           ? errors[0].message
           : 'Validation Error';
 
-        res.status(400).json({
-          error: errorMessage,
-          details: errors,
+        const validationError = new ValidationError({
+          statusCode: 400,
+          message: errorMessage,
+        });
+
+        errorResponse(res, req, validationError, {
+          status: 400,
+          detail: errorMessage,
+          invalidParams: errors.map((issue) => ({
+            name: issue.path,
+            reason: issue.message,
+          })),
         });
         return;
       }

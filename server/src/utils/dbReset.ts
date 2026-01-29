@@ -2,7 +2,7 @@ import { sequelize } from './db.js';
 import logger from './logger/index.js';
 import '../models/index.js';
 
-const resetDatabase = async (): Promise<boolean> => {
+const resetDatabase = async () => {
   try {
     await sequelize.authenticate();
     logger.info('Connected to the database');
@@ -17,7 +17,7 @@ const resetDatabase = async (): Promise<boolean> => {
   }
 };
 
-async function main(): Promise<void> {
+async function main() {
   try {
     logger.info('Starting database reset...');
     await resetDatabase();

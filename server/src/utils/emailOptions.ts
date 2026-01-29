@@ -1,9 +1,9 @@
 import { CLIENT_URL, EMAIL_USER } from './config.js';
 
-export const generateAppointmentLink = (id: string): string =>
+export const generateAppointmentLink = (id: string) =>
   `${CLIENT_URL}/appointment/${id}`;
 
-export const generateResetLink = (id: string, token: string): string =>
+export const generateResetLink = (id: string, token: string) =>
   `${CLIENT_URL}/${id}/${token}`;
 
 interface ContactDetails {
@@ -34,7 +34,7 @@ export const options = (
   option: EmailOption,
   emailLink: string,
   contactDetails: Partial<ContactDetails> = {}
-): EmailTemplate => {
+) => {
   const templates: Record<EmailOption, EmailTemplate> = {
     confirmation: {
       subject: `Your booking at Cut Above Barbershop:`, // Subject line

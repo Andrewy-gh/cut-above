@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 import { resolve } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -16,6 +16,7 @@ export default defineConfig({
     globals: true,
     environment: 'node',
     setupFiles: ['./src/test/setup.ts'],
+    exclude: [...configDefaults.exclude, '**/opensrc/**'],
     // Run tests serially to avoid database conflicts
     fileParallelism: false,
     pool: 'forks',

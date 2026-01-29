@@ -10,10 +10,18 @@ import {
   normalizeSchedules,
 } from './date';
 
+type AppointmentInput = {
+  id: string;
+  start: string;
+  service: string;
+  status: string;
+  date?: string;
+};
+
 describe('date normalization helpers', () => {
   it('normalizes an appointment with ISO start into date and display time', () => {
     const start = '2024-01-22T17:00:00.000Z';
-    const appointment = {
+    const appointment: AppointmentInput = {
       id: 'appt-1',
       start,
       service: 'Haircut',
@@ -66,7 +74,7 @@ describe('date normalization helpers', () => {
         service: 'Haircut',
         status: 'scheduled',
       },
-    ]);
+    ] as AppointmentInput[]);
 
     expect(appointments).toHaveLength(1);
     expect(appointments[0].date).toBe(formatDateSlash(start));

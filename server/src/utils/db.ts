@@ -20,7 +20,7 @@ export const sequelize = new Sequelize(DATABASE_URL!, {
   },
 });
 
-export const connectToDatabase = async (): Promise<null> => {
+export const connectToDatabase = async () => {
   try {
     await sequelize.authenticate();
     logger.info('connected to the database');
