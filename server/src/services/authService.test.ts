@@ -135,15 +135,26 @@ describe('authService', () => {
     expect(result.value).toBeNull();
   });
 
-  it('generateTokenLink rotates existing token and stores new one', async () => {
+  it(
+    'generateTokenLink rotates existing token and stores new one',
+    async () => {
+    const hashSpy = vi
+      .spyOn(bcrypt, 'hash')
+      .mockImplementation(async (value: string | Buffer) => `hashed:${value}`);
+    const compareSpy = vi
+      .spyOn(bcrypt, 'compare')
+      .mockImplementation(async (value: string | Buffer, hash: string) => {
+        return hash === `hashed:${value}`;
+      });
+
     const user = await createUser({ email: 'reset@example.com' });
-    await PasswordResetToken.create({
-      userId: user.id,
-      tokenHash: await bcrypt.hash('old-token', 10),
-    });
+      await PasswordResetToken.create({
+        userId: user.id,
+        tokenHash: await bcrypt.hash('old-token', 10),
+      });
 
     const tokenBuffer = Buffer.from('test-token');
-    vi.spyOn(crypto, 'randomBytes').mockReturnValue(tokenBuffer);
+    vi.spyOn(crypto, 'randomBytes').mockImplementation(() => tokenBuffer);
     const tokenHex = tokenBuffer.toString('hex');
 
     const result = await generateTokenLink(user.email);
@@ -154,7 +165,12 @@ describe('authService', () => {
     const tokens = await PasswordResetToken.findAll({ where: { userId: user.id } });
     expect(tokens).toHaveLength(1);
     expect(await bcrypt.compare(tokenHex, tokens[0].tokenHash)).toBe(true);
-  });
+
+    hashSpy.mockRestore();
+    compareSpy.mockRestore();
+    },
+    10000,
+  );
 
   it('validateToken increments usage on success', async () => {
     const user = await createUser({ email: 'validate@example.com' });
