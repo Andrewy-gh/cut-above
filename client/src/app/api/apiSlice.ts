@@ -9,7 +9,7 @@ import { logoutUser } from "@/features/auth/authSlice";
 import { clearMessage, setError } from "@/features/notificationSlice";
 import { getErrorMessage, isUnauthorized } from "@/utils/apiError";
 
-const baseUrl = import.meta.env.PROD ? "https://cutaboveshop.fly.dev" : "";
+const baseUrl = import.meta.env.VITE_API_URL || "";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: baseUrl,

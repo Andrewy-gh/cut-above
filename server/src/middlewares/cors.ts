@@ -8,11 +8,20 @@ const allowedOrigins = [
 
 const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {
-    if (allowedOrigins.indexOf(origin as string) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error(`${origin}: Not allowed by CORS`));
+    const isDevOrTest = process.env.NODE_ENV !== 'production';
+    if (!origin) {
+      if (isDevOrTest) {
+        callback(null, true);
+        return;
+      }
+      callback(new Error('Origin required for CORS'));
+      return;
     }
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+    callback(new Error(`${origin}: Not allowed by CORS`));
   },
   credentials: true,
   optionsSuccessStatus: 200,
