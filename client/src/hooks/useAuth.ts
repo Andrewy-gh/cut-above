@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   useLoginMutation,
@@ -34,10 +34,10 @@ interface PasswordResetPayload {
 }
 
 export function useAuth() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const user = useSelector(selectCurrentUser);
-  const role = useSelector(selectCurrentUserRole);
+  const user = useAppSelector(selectCurrentUser);
+  const role = useAppSelector(selectCurrentUserRole);
   const [login] = useLoginMutation();
   const [logout] = useLogoutMutation();
   const [changeUserEmail] = useChangeUserEmailMutation();

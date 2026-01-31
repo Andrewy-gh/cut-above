@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '@/app/hooks';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -9,7 +9,7 @@ import { useFilter } from '@/hooks/useFilter';
 import { theme } from '@/styles/styles';
 
 export default function EmployeeSelect() {
-  const employees = useSelector(selectAllEmployees);
+  const employees = useAppSelector(selectAllEmployees);
   const { employee, handleEmployeeChange } = useFilter();
 
   const employeeId = employee?.id;

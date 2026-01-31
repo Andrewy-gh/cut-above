@@ -1,7 +1,7 @@
 import { ReactElement, ReactNode } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { MemoryRouter } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -20,14 +20,16 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
 }
 
 export function createTestStore(preloadedState: Record<string, unknown> = {}) {
+  const rootReducer = combineReducers({
+    [apiSlice.reducerPath]: apiSlice.reducer,
+    appointment: appointmentReducer,
+    auth: authReducer,
+    filter: filterReducer,
+    notification: notificationReducer,
+  });
+
   return configureStore({
-    reducer: {
-      [apiSlice.reducerPath]: apiSlice.reducer,
-      appointment: appointmentReducer,
-      auth: authReducer,
-      filter: filterReducer,
-      notification: notificationReducer,
-    },
+    reducer: rootReducer,
     preloadedState,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

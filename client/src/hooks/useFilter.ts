@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { Dayjs } from 'dayjs';
 import {
   resetFilter,
@@ -15,13 +15,13 @@ import { services } from '@/data/data';
 import { Slot, Employee } from '@/types';
 
 export function useFilter() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const { employees } = useEmployeesQuery();
   const [selection, setSelection] = useState<Slot | Record<string, never>>({});
-  const date = useSelector(selectDate);
-  const employee = useSelector(selectEmployee);
-  const service = useSelector(selectService);
+  const date = useAppSelector(selectDate);
+  const employee = useAppSelector(selectEmployee);
+  const service = useAppSelector(selectService);
 
   const handleDateChange = (newDate: Dayjs) => {
     dispatch(setDate(newDate.toISOString()));

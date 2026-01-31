@@ -10,9 +10,7 @@ export interface User {
   role: string;
 }
 
-const userAdapter = createEntityAdapter<User>({
-  selectId: (user) => user.id,
-});
+const userAdapter = createEntityAdapter<User>();
 
 const initialState = userAdapter.getInitialState();
 

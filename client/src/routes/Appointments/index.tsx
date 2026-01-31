@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '@/app/hooks';
 import { Link } from 'react-router-dom';
 import {
   selectAllAppointment,
@@ -14,7 +14,7 @@ import { Appointment } from '@/types';
 // This is the user's Appointments page when accessed through the Profile
 export default function Appointments() {
   useGetAppointmentQuery();
-  const appointments = useSelector(selectAllAppointment);
+  const appointments = useAppSelector(selectAllAppointment);
 
   let content;
 

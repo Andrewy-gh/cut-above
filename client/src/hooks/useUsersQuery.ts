@@ -1,13 +1,11 @@
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '@/app/hooks';
 import {
   selectUserById,
   useGetUsersQuery,
 } from '@/features/userSlice';
-import type { RootState } from '@/app/store';
-
 export function useUsersQuery(userId: string) {
   useGetUsersQuery();
-  const user = useSelector((state: RootState) => selectUserById(state, userId));
+  const user = useAppSelector((state) => selectUserById(state, userId));
 
   return { user };
 }

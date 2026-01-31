@@ -13,15 +13,13 @@ export interface Employee {
   bio?: string;
 }
 
-const employeeAdapter = createEntityAdapter<Employee>({
-  selectId: (employee) => employee.id,
-});
+const employeeAdapter = createEntityAdapter<Employee>();
 
 const initialState = employeeAdapter.getInitialState();
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getEmployees: builder.query<EntityState<Employee>, void>({
+    getEmployees: builder.query<EntityState<Employee, string>, void>({
       query: () => '/api/employees',
       transformResponse: (responseData: Employee[]) => {
         return employeeAdapter.setAll(initialState, responseData);

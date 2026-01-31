@@ -6,15 +6,13 @@ import { Appointment } from '../../types';
 import type { RootState } from '../../app/store';
 
 
-const appointmentAdapter = createEntityAdapter<Appointment>({
-  selectId: (appt) => appt.id,
-});
+const appointmentAdapter = createEntityAdapter<Appointment>();
 
 const initialState = appointmentAdapter.getInitialState();
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getAppointment: builder.query<EntityState<Appointment>, void>({
+    getAppointment: builder.query<EntityState<Appointment, string>, void>({
       query: () => '/api/appointments',
       transformResponse: (responseData: Appointment[]) => {
         const loadedPosts = responseData
