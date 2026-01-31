@@ -19,7 +19,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `pnpm -C client dev -- --host 127.0.0.1 --port ${PORT}`,
+    command: `pnpm -C client exec vite --host 127.0.0.1 --port ${PORT} --strictPort`,
     url: `http://127.0.0.1:${PORT}`,
     reuseExistingServer: !process.env.CI,
   },
