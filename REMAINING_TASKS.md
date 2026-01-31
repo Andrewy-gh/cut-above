@@ -4,10 +4,10 @@
 - [x] Setup pnpm workspace monorepo (shared schemas package, Dockerfile update, workspace deps)
 
 ## Phase 2: Tooling
-- [ ] Server Prettier config (ESLint already exists; Prettier missing)
-- [ ] Add Husky + lint-staged
-- [ ] Add CI workflow
-- [ ] Update dependencies (start with minor/patch)
+- [x] Server Prettier config (ESLint already exists; Prettier missing)
+- [x] Add Husky + lint-staged
+- [x] Add CI workflow
+- [x] Update dependencies (start with minor/patch)
 
 ## Phase 3: Production Polish
 - [ ] Fix security issues

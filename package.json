@@ -6,8 +6,26 @@
     "build": "pnpm -r build",
     "dev": "pnpm -r --if-present dev",
     "lint": "pnpm -r --if-present lint",
+    "prepare": "husky",
     "typecheck": "pnpm -r --if-present typecheck",
     "test": "pnpm -r --if-present test",
     "test:run": "pnpm -r --if-present test:run"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.8.1"
+  },
+  "lint-staged": {
+    "server/src/**/*.{ts,tsx}": [
+      "pnpm -C server lint -- --fix",
+      "pnpm exec prettier --write"
+    ],
+    "client/src/**/*.{ts,tsx,js,jsx}": [
+      "pnpm -C client lint -- --fix"
+    ],
+    "*.{md,json,yml,yaml}": [
+      "pnpm exec prettier --write"
+    ]
   }
 }
