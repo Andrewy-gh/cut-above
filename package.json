@@ -9,9 +9,11 @@
     "prepare": "husky",
     "typecheck": "pnpm -r --if-present typecheck",
     "test": "pnpm -r --if-present test",
-    "test:run": "pnpm -r --if-present test:run"
+    "test:run": "pnpm -r --if-present test:run",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.1",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
     "prettier": "^3.8.1"
