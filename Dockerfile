@@ -14,6 +14,7 @@ FROM base AS client-build
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3
 
+COPY .npmrc pnpm-workspace.yaml package.json ./
 COPY client/package.json client/pnpm-lock.yaml ./client/
 WORKDIR /app/client
 RUN pnpm install --frozen-lockfile
@@ -23,19 +24,27 @@ RUN pnpm run build
 # Build server
 FROM base AS server-build
 
-COPY server/package.json server/pnpm-lock.yaml ./
+COPY .npmrc pnpm-workspace.yaml package.json ./
+COPY server/package.json server/pnpm-lock.yaml ./server/
+COPY shared/package.json shared/tsconfig.json ./shared/
+WORKDIR /app/server
 RUN pnpm install --frozen-lockfile
-COPY server/ .
-RUN pnpm run build
-COPY --from=client-build /app/client/dist ./dist
+COPY server/ /app/server/
+COPY shared/ /app/shared/
+WORKDIR /app
+RUN pnpm --filter @cut-above/shared build
+RUN pnpm --filter cut-above-sql build
+COPY --from=client-build /app/client/dist /app/server/dist
 
 # Production stage
 FROM base
 
 ENV NODE_ENV="production"
 
-COPY --from=server-build /app/ .
+WORKDIR /app
+COPY --from=server-build /app/ /app/
 
 EXPOSE 3000
 
+WORKDIR /app/server
 CMD ["node", "build/index.js"]
