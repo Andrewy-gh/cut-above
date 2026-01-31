@@ -1,4 +1,4 @@
-import { useMediaQuery } from '@mui/material/';
+import { useMediaQuery } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import NavDesktop from './NavDesktop';

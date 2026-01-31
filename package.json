@@ -18,11 +18,11 @@
   },
   "lint-staged": {
     "server/src/**/*.{ts,tsx}": [
-      "pnpm -C server lint -- --fix",
+      "pnpm -C server exec eslint --fix --report-unused-disable-directives --max-warnings 0 --ext ts,tsx",
       "pnpm exec prettier --write"
     ],
     "client/src/**/*.{ts,tsx,js,jsx}": [
-      "pnpm -C client lint -- --fix"
+      "pnpm -C client exec eslint --fix --report-unused-disable-directives --max-warnings 0 --ext ts,tsx"
     ],
     "*.{md,json,yml,yaml}": [
       "pnpm exec prettier --write"
