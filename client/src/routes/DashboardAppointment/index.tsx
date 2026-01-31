@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 import { useScheduleQuery } from '@/hooks/useScheduleQuery';
 import StatusColumn from './StatusColumn';
 import StatusTab from './StatusTab';

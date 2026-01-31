@@ -1,5 +1,5 @@
 import Overlay from '@/components/Overlay';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 export default function Cancellation() {
   return (

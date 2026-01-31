@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { useParams, Outlet } from 'react-router-dom';
+import { useParams, Outlet } from 'react-router';
 
 import { useValidateTokenQuery } from '@/features/auth/authApiSlice';
 import LoadingSpinner from '@/components/LoadingSpinner';

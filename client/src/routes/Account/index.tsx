@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import LogoutButton from './LogoutButton';
 
 import { useAuth } from '@/hooks/useAuth';
