@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { useLocation, Navigate, Outlet } from 'react-router-dom';
+import { useLocation, Navigate, Outlet } from 'react-router';
 
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { useAuth } from '../../hooks/useAuth';

@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router';
+import { RouterProvider } from 'react-router/dom';
 
 import Layout from '@/routes/Layout';
 
@@ -35,87 +36,99 @@ const ErrorPage = lazy(() => import('./routes/ErrorPage'));
 const ResetPw = lazy(() => import('./routes/ResetPw'));
 const ResetPwError = lazy(() => import('./routes/ResetPw/error'));
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <Layout />,
+      hydrateFallbackElement: <LoadingSpinner />,
+      errorElement: (
+        <Suspense fallback={<LoadingSpinner />}>
+          <ErrorPage />
+        </Suspense>
+      ),
+      children: [
+        { index: true, element: <Home /> },
+        { path: 'signup', element: <Register /> },
+        { path: 'login', element: <Login /> },
+        { path: 'bookings/:id?', element: <BookingPage /> },
+        {
+          element: <RequireAuth />,
+          children: [
+            {
+              path: 'appointment/:id',
+              element: <AppointmentPage />,
+              errorElement: (
+                <Suspense fallback={<LoadingSpinner />}>
+                  <AppointmentError />
+                </Suspense>
+              ),
+            },
+            {
+              path: 'account',
+              errorElement: (
+                <Suspense fallback={<LoadingSpinner />}>
+                  <Unauthorized />
+                </Suspense>
+              ),
+              children: [
+                { index: true, element: <Account /> },
+                { path: 'settings', element: <Settings /> },
+                { path: 'appointments', element: <Appointments /> },
+              ],
+            },
+          ],
+        },
+        {
+          element: <RequireAuth requiredRole="admin" />,
+          errorElement: (
+            <Suspense fallback={<LoadingSpinner />}>
+              <Unauthorized />
+            </Suspense>
+          ),
+          children: [
+            { path: 'addschedule', element: <AddSchedule /> },
+            {
+              path: 'dashboard',
+              element: <DashboardSchedule />,
+            },
+            {
+              path: 'dashboard/:id',
+              element: <DashboardAppointment />,
+            },
+          ],
+        },
+        {
+          element: <TokenValidation />,
+          errorElement: (
+            <Suspense fallback={<LoadingSpinner />}>
+              <ResetPwError />
+            </Suspense>
+          ),
+          children: [
+            {
+              path: 'resetpw/:id?/:token?',
+              element: <ResetPw />,
+            },
+          ],
+        },
+        {
+          path: 'cancellation',
+          element: <Cancellation />,
+        },
+      ],
+    },
+  ],
   {
-    path: '/',
-    element: <Layout />,
-    errorElement: (
-      <Suspense fallback={<LoadingSpinner />}>
-        <ErrorPage />
-      </Suspense>
-    ),
-    children: [
-      { index: true, element: <Home /> },
-      { path: 'signup', element: <Register /> },
-      { path: 'login', element: <Login /> },
-      { path: 'bookings/:id?', element: <BookingPage /> },
-      {
-        element: <RequireAuth />,
-        children: [
-          {
-            path: 'appointment/:id',
-            element: <AppointmentPage />,
-            errorElement: (
-              <Suspense fallback={<LoadingSpinner />}>
-                <AppointmentError />
-              </Suspense>
-            ),
-          },
-          {
-            path: 'account',
-            errorElement: (
-              <Suspense fallback={<LoadingSpinner />}>
-                <Unauthorized />
-              </Suspense>
-            ),
-            children: [
-              { index: true, element: <Account /> },
-              { path: 'settings', element: <Settings /> },
-              { path: 'appointments', element: <Appointments /> },
-            ],
-          },
-        ],
-      },
-      {
-        element: <RequireAuth requiredRole="admin" />,
-        errorElement: (
-          <Suspense fallback={<LoadingSpinner />}>
-            <Unauthorized />
-          </Suspense>
-        ),
-        children: [
-          { path: 'addschedule', element: <AddSchedule /> },
-          {
-            path: 'dashboard',
-            element: <DashboardSchedule />,
-          },
-          {
-            path: 'dashboard/:id',
-            element: <DashboardAppointment />,
-          },
-        ],
-      },
-      {
-        element: <TokenValidation />,
-        errorElement: (
-          <Suspense fallback={<LoadingSpinner />}>
-            <ResetPwError />
-          </Suspense>
-        ),
-        children: [
-          {
-            path: 'resetpw/:id?/:token?',
-            element: <ResetPw />,
-          },
-        ],
-      },
-      {
-        path: 'cancellation',
-        element: <Cancellation />,
-      },
-    ],
-  },
-]);
+    future: {
+      v7_relativeSplatPath: true,
+      v7_fetcherPersist: true,
+      v7_normalizeFormMethod: true,
+      v7_partialHydration: true,
+      v7_skipActionErrorRevalidation: true,
+    },
+  }
+);
 
 export default function App() {
   return <RouterProvider router={router} />;

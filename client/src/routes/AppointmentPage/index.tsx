@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { useGetSingleAppointmentQuery } from '@/features/appointments/apptApiSlice';
 import CancelAppointment from '@/components/ApptCard/ApptButton/CancelAppointment';
 import ModifyAppointment from '@/components/ApptCard/ApptButton/ModifyAppointment';

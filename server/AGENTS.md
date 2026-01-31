@@ -1,3 +1,4 @@
+Note: Rebuilt bcrypt native binding via `pnpm -C server rebuild bcrypt` to unblock server tests on Windows.
 Note: Removed explicit return type annotations from functions in the server codebase to avoid incorrect type inference.
 
 <!-- opensrc:start -->
