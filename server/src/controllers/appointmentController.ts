@@ -48,7 +48,10 @@ export const getAllAppointments = async (req: Request, res: Response) => {
  * @route /api/appointments/:id
  * @method GET
  */
-export const getSingleAppointment = async (req: Request, res: Response) => {
+export const getSingleAppointment = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
   const result = await Result.gen(async function* () {
     const user = yield* Result.await(getUserFromSession(req));
     yield* assertRoleAllowed(user, ["client", "employee"]);
@@ -146,7 +149,10 @@ export const bookAppointment = async (req: Request, res: Response) => {
  * @route /api/appointments/:id
  * @method PUT
  */
-export const modifyAppointment = async (req: Request, res: Response) => {
+export const modifyAppointment = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
   const result = await Result.gen(async function* () {
     const user = yield* Result.await(getUserFromSession(req));
     yield* assertRoleAllowed(user, ["client", "employee", "admin"]);
@@ -259,7 +265,10 @@ export const modifyAppointment = async (req: Request, res: Response) => {
  * @route /api/appointments/status/:id
  * @method PUT
  */
-export const updateAppointmentStatus = async (req: Request, res: Response) => {
+export const updateAppointmentStatus = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
   const result = await Result.tryPromise({
     try: () =>
       Appointment.update(
@@ -283,7 +292,10 @@ export const updateAppointmentStatus = async (req: Request, res: Response) => {
  * @route /api/appointments/:id
  * @method DELETE
  */
-export const deleteAppointmentById = async (req: Request, res: Response) => {
+export const deleteAppointmentById = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
   const result = await Result.gen(async function* () {
     const user = yield* Result.await(getUserFromSession(req));
 

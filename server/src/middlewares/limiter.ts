@@ -1,5 +1,5 @@
 import { rateLimit } from 'express-rate-limit';
-import { RedisStore } from 'rate-limit-redis';
+import { RedisStore, type SendCommandFn } from 'rate-limit-redis';
 import type { RequestHandler } from 'express';
 
 let limiter: RequestHandler;
@@ -10,11 +10,10 @@ if (process.env.NODE_ENV === 'test') {
 } else {
   const { redisClient } = await import('../utils/redis.js');
   const redisClientWithCall = redisClient as unknown as {
-    call: (...args: string[]) => unknown;
+    call: (...args: string[]) => Promise<unknown>;
   };
-  type SendCommand = NonNullable<ConstructorParameters<typeof RedisStore>[0]['sendCommand']>;
-  const sendCommand: SendCommand = (...args) =>
-    redisClientWithCall.call(...args) as ReturnType<SendCommand>;
+  const sendCommand: SendCommandFn = (...args) =>
+    redisClientWithCall.call(...args) as ReturnType<SendCommandFn>;
 
   limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes

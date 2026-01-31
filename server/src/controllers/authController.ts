@@ -208,8 +208,11 @@ export const changePassword = async (req: Request, res: Response) => {
  * @route /validation/:id/:token
  * @method GET
  */
-export const handleTokenValidation = async (req: Request, res: Response) => {
-  const result = await validateToken(req.params as { id: string; token: string });
+export const handleTokenValidation = async (
+  req: Request<{ id: string; token: string }>,
+  res: Response,
+) => {
+  const result = await validateToken(req.params);
   return result.match({
     ok: () => res.json({ success: true, message: 'Token is valid' }),
     err: (error) => errorResponse(res, req, error),
@@ -221,7 +224,10 @@ export const handleTokenValidation = async (req: Request, res: Response) => {
  * @route /reset-pw/:id/:token
  * @method PUT
  */
-export const handlePasswordReset = async (req: Request, res: Response) => {
+export const handlePasswordReset = async (
+  req: Request<{ id: string; token: string }>,
+  res: Response,
+) => {
   const result = await Result.gen(async function* () {
     const user = yield* Result.await(
       tryDb({

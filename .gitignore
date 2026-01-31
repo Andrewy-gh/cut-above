@@ -1,5 +1,6 @@
 .claude
 tasks/
+shared/dist/
 
 # Claude agent instructions (all directories)
 **/CLAUDE*.md
