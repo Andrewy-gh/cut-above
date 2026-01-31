@@ -1,15 +1,13 @@
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '@/app/hooks';
 import {
   selectAllEmployees,
   selectEmployeeById,
   useGetEmployeesQuery,
 } from '@/features/employeeSlice';
-import type { RootState } from '@/app/store';
-
 export function useEmployeesQuery(employeeId?: string) {
   useGetEmployeesQuery();
-  const employees = useSelector(selectAllEmployees);
-  const employee = useSelector((state: RootState) =>
+  const employees = useAppSelector(selectAllEmployees);
+  const employee = useAppSelector((state) =>
     employeeId ? selectEmployeeById(state, employeeId) : null
   );
 

@@ -13,15 +13,13 @@ import {
 } from '../utils/date';
 import { Schedule } from '../types';
 
-const scheduleAdapter = createEntityAdapter<Schedule>({
-  selectId: (schedule) => schedule.id,
-});
+const scheduleAdapter = createEntityAdapter<Schedule>();
 
 const initialState = scheduleAdapter.getInitialState();
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getSchedule: builder.query<EntityState<Schedule>, void>({
+    getSchedule: builder.query<EntityState<Schedule, string>, void>({
       query: () => '/api/schedules',
       transformResponse: (responseData: Schedule[]) => {
         const loadedPosts = responseData

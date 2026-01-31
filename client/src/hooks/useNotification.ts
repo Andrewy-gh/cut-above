@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
   selectOpen,
   selectMessage,
@@ -10,10 +10,10 @@ import {
 import { getErrorMessage } from '@/utils/apiError';
 
 export function useNotification() {
-  const dispatch = useDispatch();
-  const open = useSelector(selectOpen);
-  const message = useSelector(selectMessage);
-  const severity = useSelector(selectSeverity);
+  const dispatch = useAppDispatch();
+  const open = useAppSelector(selectOpen);
+  const message = useAppSelector(selectMessage);
+  const severity = useAppSelector(selectSeverity);
   const handleSuccess = (msg: string) => dispatch(setSuccess(msg));
   const handleError = (err: unknown, extraErr?: unknown) => {
     const errorMessage = getErrorMessage(err);

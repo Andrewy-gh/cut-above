@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   useCancelAppointmentMutation,
@@ -13,11 +13,11 @@ import {
 import { useNotification } from '@/hooks/useNotification';
 
 export function useAppointment() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const rescheduling = useSelector(selectRescheduling);
-  const modifyingApptId = useSelector(selectModifyingApptId);
+  const rescheduling = useAppSelector(selectRescheduling);
+  const modifyingApptId = useAppSelector(selectModifyingApptId);
   const [cancelAppointment] = useCancelAppointmentMutation();
   const [updateAppointmentStatus] = useUpdateAppointmentStatusMutation();
   const { handleSuccess, handleError } = useNotification();
