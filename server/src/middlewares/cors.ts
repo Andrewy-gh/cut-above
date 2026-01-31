@@ -1,10 +1,21 @@
 import cors from 'cors';
 
-const allowedOrigins = [
+const defaultAllowedOrigins = [
   'https://cutaboveshop.fly.dev',
   'http://localhost:3000',
   'http://localhost:5173',
 ];
+
+const loadAllowedOrigins = () => {
+  const raw = process.env.CORS_ALLOWED_ORIGINS;
+  if (!raw) return defaultAllowedOrigins;
+  return raw
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+};
+
+const allowedOrigins = loadAllowedOrigins();
 
 const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {

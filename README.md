@@ -36,10 +36,11 @@ Cookie based session storage through Redis. Pub/Sub through redis to handle emai
    `cd client && pnpm install` to install client side dependencies, and then
    `cd ../server && pnpm install` to install server side dependencies
 
-3. Change `.env.example` to `.env` and fill in all the appropiate information.
+3. Copy `server/.env.example` to `server/.env` and fill in values (including `PROD_CLIENT_URL` for dashboard links and `CORS_ALLOWED_ORIGINS` when the UI is on a different domain).
+4. Copy `client/.env.example` to `client/.env` and set `VITE_API_URL` to your API (for example `https://cutaboveshop.fly.dev`).
 
-4. If you want to seed a local database, copy the example seed data: from `server/src/utils`, run `cp data.example.ts data.ts`.
+5. If you want to seed a local database, copy the example seed data: from `server/src/utils`, run `cp data.example.ts data.ts`.
 
-5. Run `pnpm run build:ui`. This creates the build process for the client side code.
+6. Run `pnpm run build:ui`. This creates the build process for the client side code.
 
-6. After the build process is done, you are ready to use. Just run `pnpm run start` while still inside the `server` directory, and navigate to `http://localhost:3000` in your browser.
+7. After the build process is done, you are ready to use. Just run `pnpm run start` while still inside the `server` directory, and navigate to `http://localhost:3000` in your browser.
