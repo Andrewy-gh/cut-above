@@ -4,6 +4,7 @@ shared/dist/
 playwright-report/
 test-results/
 .playwright/
+**/node_modules/
 
 # Claude agent instructions (all directories)
 **/CLAUDE*.md
