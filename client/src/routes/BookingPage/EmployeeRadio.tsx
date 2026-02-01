@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '@/app/hooks';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -7,14 +7,12 @@ import FormLabel from '@mui/material/FormLabel';
 
 import { selectEmployeeById } from '@/features/employeeSlice';
 import { useFilter } from '@/hooks/useFilter';
-import type { RootState } from '@/app/store';
-
 interface EmployeeRadioOptionProps {
   employeeId: string;
 }
 
 const EmployeeRadioOption = ({ employeeId }: EmployeeRadioOptionProps) => {
-  const employee = useSelector((state: RootState) =>
+  const employee = useAppSelector((state) =>
     selectEmployeeById(state, employeeId)
   );
 

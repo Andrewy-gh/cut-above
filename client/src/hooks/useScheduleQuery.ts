@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import {
   selectAllSchedule,
   selectScheduleById,
@@ -6,12 +6,10 @@ import {
 } from "@/features/scheduleSlice";
 
 import { normalizeAppointments, splitByUpcomingAndPast } from "@/utils/date";
-import type { RootState } from "@/app/store";
-
 export function useScheduleQuery(scheduleId?: string) {
   useGetScheduleQuery();
-  const schedules = useSelector(selectAllSchedule);
-  const schedule = useSelector((state: RootState) =>
+  const schedules = useAppSelector(selectAllSchedule);
+  const schedule = useAppSelector((state) =>
     scheduleId ? selectScheduleById(state, scheduleId) : null,
   );
   const appointments = schedule
