@@ -14,18 +14,21 @@ import { CssBaseline, ThemeProvider, responsiveFontSizes } from '@mui/material';
 import { theme } from '@/styles/styles';
 
 import { PersistGate } from 'redux-persist/integration/react';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <ThemeProvider theme={responsiveFontSizes(theme)}>
-            <CssBaseline />
-            <App />
-          </ThemeProvider>
-        </LocalizationProvider>
-      </PersistGate>
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <ThemeProvider theme={responsiveFontSizes(theme)}>
+              <CssBaseline />
+              <App />
+            </ThemeProvider>
+          </LocalizationProvider>
+        </PersistGate>
+      </Provider>
+    </ErrorBoundary>
   </StrictMode>
 );
