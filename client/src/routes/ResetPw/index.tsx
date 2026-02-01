@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import Button from '@mui/material/Button';
 import FormHelperText from '@mui/material/FormHelperText';
 

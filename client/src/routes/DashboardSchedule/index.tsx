@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useScheduleQuery } from '../../hooks/useScheduleQuery';
 import ScheduleCard from './ScheduleCard';
 import styles from './styles.module.css';

@@ -1,4 +1,4 @@
-import { Link, useRouteError } from 'react-router-dom';
+import { Link, useRouteError } from 'react-router';
 import { RouteError } from '@/types';
 
 export default function Unauthorized() {

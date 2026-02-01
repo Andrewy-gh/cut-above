@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import Button from '@mui/material/Button';
 import { formatDateFull, formatDateToTime } from '../../utils/date';
 import styles from './styles.module.css';
