@@ -28,6 +28,11 @@ Cookie based session storage through Redis. Pub/Sub through redis to handle emai
 
 - Email service for users which allow them to access appointment and account settings.
 
+## API Docs
+
+- Swagger UI: `/api/docs`
+- OpenAPI spec: `/api/docs/openapi.json`
+
 ## How to Run:
 
 1. Fork the repository
