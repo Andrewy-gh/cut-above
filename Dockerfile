@@ -18,23 +18,20 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3
 
 COPY .npmrc pnpm-workspace.yaml package.json pnpm-lock.yaml ./
-COPY client/package.json ./client/
+COPY client/ ./client/
+WORKDIR /app
+RUN pnpm install --frozen-lockfile --filter ./client...
 WORKDIR /app/client
-RUN pnpm install --frozen-lockfile
-COPY client/ .
 RUN pnpm run build
 
 # Build server
 FROM base AS server-build
 
 COPY .npmrc pnpm-workspace.yaml package.json pnpm-lock.yaml ./
-COPY server/package.json ./server/
-COPY shared/package.json shared/tsconfig.json ./shared/
-WORKDIR /app/server
-RUN pnpm install --frozen-lockfile
 COPY server/ /app/server/
 COPY shared/ /app/shared/
 WORKDIR /app
+RUN pnpm install --frozen-lockfile
 RUN pnpm --filter @cut-above/shared build
 RUN pnpm --filter cut-above-sql build
 COPY --from=client-build /app/client/dist /app/server/dist
