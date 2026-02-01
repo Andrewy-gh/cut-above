@@ -6,6 +6,7 @@ import { generateResetLink } from '../utils/emailOptions.js';
 import type { UserRole } from '../types/index.js';
 import { AuthorizationError, NotFoundError } from '../errors.js';
 import { tryDb } from '../utils/dbResult.js';
+import { setDbContextValue } from '../utils/dbContext.js';
 
 // Input types
 export interface RegisterCredentials {
@@ -176,6 +177,7 @@ export const generateTokenLink = async (email: string) =>
     if (!user) {
       return Result.ok(null);
     }
+    await setDbContextValue('app.auth_user_id', user.id);
     yield* Result.await(checkForExistingToken(user.id));
     const token = crypto.randomBytes(32).toString('hex'); // Generate random token
     yield* Result.await(storeToken(user.id, token));

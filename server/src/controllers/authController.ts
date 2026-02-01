@@ -12,16 +12,11 @@ import {
 } from '../services/authService.js';
 import { User } from '../models/index.js';
 import { enqueueEmail } from '../services/emailOutboxService.js';
-import {
-  AppError,
-  SessionError,
-  ValidationError,
-} from '../errors.js';
+import { AppError, SessionError, ValidationError } from '../errors.js';
 import { tryDb } from '../utils/dbResult.js';
 import { errorResponse } from '../utils/errorDetails.js';
 
-const hashDedupeKey = (value: string) =>
-  createHash('sha256').update(value).digest('hex');
+const hashDedupeKey = (value: string) => createHash('sha256').update(value).digest('hex');
 
 /**
  * @description register user
@@ -31,10 +26,7 @@ const hashDedupeKey = (value: string) =>
 export const register = async (req: Request, res: Response) => {
   const result = await registerUser(req.body);
   return result.match({
-    ok: () =>
-      res
-        .status(200)
-        .json({ success: true, message: 'Successfully registered account' }),
+    ok: () => res.status(200).json({ success: true, message: 'Successfully registered account' }),
     err: (error) => errorResponse(res, req, error),
   });
 };
@@ -49,6 +41,7 @@ export const login = async (req: Request, res: Response) => {
     const user = yield* Result.await(authenticateUser(req.body));
     req.session.userId = user.id;
     req.session.isAdmin = user.role === 'admin';
+    req.session.userRole = user.role;
 
     // Explicitly save session (required for tests and some configurations)
     yield* Result.await(
@@ -63,23 +56,17 @@ export const login = async (req: Request, res: Response) => {
         catch: (cause) =>
           new AppError({
             statusCode: 500,
-            message:
-              cause instanceof Error
-                ? cause.message
-                : 'Failed to persist session',
+            message: cause instanceof Error ? cause.message : 'Failed to persist session',
             cause,
           }),
-      }),
+      })
     );
 
     return Result.ok(user);
   });
 
   return result.match({
-    ok: (user) =>
-      res
-        .status(200)
-        .json({ success: true, message: 'Successfully logged in', user }),
+    ok: (user) => res.status(200).json({ success: true, message: 'Successfully logged in', user }),
     err: (error) => errorResponse(res, req, error),
   });
 };
@@ -116,8 +103,7 @@ export const logout = async (req: Request, res: Response) => {
     catch: (cause) =>
       new AppError({
         statusCode: 500,
-        message:
-          cause instanceof Error ? cause.message : 'Failed to destroy session',
+        message: cause instanceof Error ? cause.message : 'Failed to destroy session',
         cause,
       }),
   });
@@ -152,7 +138,7 @@ export const changeEmail = async (req: Request, res: Response) => {
       new SessionError({
         statusCode: 401,
         message: 'Session expired',
-      }),
+      })
     );
   }
 
@@ -185,7 +171,7 @@ export const changePassword = async (req: Request, res: Response) => {
       new SessionError({
         statusCode: 401,
         message: 'Session expired',
-      }),
+      })
     );
   }
 
@@ -196,9 +182,7 @@ export const changePassword = async (req: Request, res: Response) => {
 
   return result.match({
     ok: () =>
-      res
-        .status(200)
-        .json({ success: true, message: 'User password successfully changed' }),
+      res.status(200).json({ success: true, message: 'User password successfully changed' }),
     err: (error) => errorResponse(res, req, error),
   });
 };
@@ -210,7 +194,7 @@ export const changePassword = async (req: Request, res: Response) => {
  */
 export const handleTokenValidation = async (
   req: Request<{ id: string; token: string }>,
-  res: Response,
+  res: Response
 ) => {
   const result = await validateToken(req.params);
   return result.match({
@@ -226,19 +210,17 @@ export const handleTokenValidation = async (
  */
 export const handlePasswordReset = async (
   req: Request<{ id: string; token: string }>,
-  res: Response,
+  res: Response
 ) => {
   const result = await Result.gen(async function* () {
     const user = yield* Result.await(
       tryDb({
         try: () => User.findByPk(req.params.id),
         message: 'Failed to reset password',
-      }),
+      })
     );
     if (!user) {
-      return Result.err(
-        new ValidationError({ statusCode: 400, message: 'Bad Request' }),
-      );
+      return Result.err(new ValidationError({ statusCode: 400, message: 'Bad Request' }));
     }
     yield* Result.await(resetPassword(user, req.body.password));
     yield* Result.await(
@@ -249,9 +231,9 @@ export const handlePasswordReset = async (
         },
         eventType: 'auth.reset_password_success',
         dedupeKey: `auth.reset_password_success|${hashDedupeKey(
-          `${req.params.id}|${req.params.token}`,
+          `${req.params.id}|${req.params.token}`
         )}`,
-      }),
+      })
     );
     return Result.ok();
   });

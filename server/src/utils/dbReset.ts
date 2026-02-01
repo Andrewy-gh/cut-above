@@ -1,6 +1,8 @@
-import { sequelize } from './db.js';
+import { sequelize, setDefaultDbRole } from './db.js';
 import logger from './logger/index.js';
 import '../models/index.js';
+
+setDefaultDbRole(process.env.DB_DEFAULT_ROLE ?? 'service');
 
 const resetDatabase = async () => {
   try {

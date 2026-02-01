@@ -10,3 +10,4 @@ setDefaultEnv('SESSION_SECRET', 'test-session-secret');
 setDefaultEnv('EMAIL_SERVICE', 'smtp');
 setDefaultEnv('EMAIL_USER', 'sender@example.com');
 setDefaultEnv('PROD_CLIENT_URL', 'http://localhost:3000');
+setDefaultEnv('DB_DEFAULT_ROLE', 'service');

@@ -3,21 +3,17 @@ import { Op } from 'sequelize';
 import EmailOutbox from '../models/EmailOutbox.js';
 import EmailDelivery from '../models/EmailDelivery.js';
 import { sendEmail } from '../services/emailService.js';
-import { connectToDatabase, sequelize } from '../utils/db.js';
+import { connectToDatabase, sequelize, setDefaultDbRole } from '../utils/db.js';
 import logger from '../utils/logger/index.js';
 
 const WORKER_ID = process.env.EMAIL_OUTBOX_WORKER_ID ?? randomUUID();
-const POLL_INTERVAL_MS = Number(
-  process.env.EMAIL_OUTBOX_POLL_INTERVAL_MS ?? '2000',
-);
+const POLL_INTERVAL_MS = Number(process.env.EMAIL_OUTBOX_POLL_INTERVAL_MS ?? '2000');
 const BATCH_SIZE = Number(process.env.EMAIL_OUTBOX_BATCH_SIZE ?? '10');
 const MAX_EMAIL_RETRIES = Number(process.env.EMAIL_MAX_RETRIES ?? '3');
-const BASE_RETRY_DELAY_MS = Number(
-  process.env.EMAIL_RETRY_BASE_DELAY_MS ?? '2000',
-);
-const MAX_RETRY_DELAY_MS = Number(
-  process.env.EMAIL_RETRY_MAX_DELAY_MS ?? '60000',
-);
+const BASE_RETRY_DELAY_MS = Number(process.env.EMAIL_RETRY_BASE_DELAY_MS ?? '2000');
+const MAX_RETRY_DELAY_MS = Number(process.env.EMAIL_RETRY_MAX_DELAY_MS ?? '60000');
+
+setDefaultDbRole(process.env.DB_DEFAULT_ROLE ?? 'service');
 
 const getRetryDelayMs = (attempt: number) =>
   Math.min(BASE_RETRY_DELAY_MS * 2 ** attempt, MAX_RETRY_DELAY_MS);
@@ -62,7 +58,7 @@ const claimOutboxBatch = async () =>
           id: items.map((item) => item.id),
         },
         transaction,
-      },
+      }
     );
 
     return items;
@@ -73,33 +69,26 @@ const markOutboxSent = async (outboxId: string) =>
     {
       status: 'sent',
     },
-    { where: { id: outboxId } },
+    { where: { id: outboxId } }
   );
 
-const markOutboxFailed = async (
-  outboxId: string,
-  attempts: number,
-) =>
+const markOutboxFailed = async (outboxId: string, attempts: number) =>
   EmailOutbox.update(
     {
       status: 'failed',
       attempts,
     },
-    { where: { id: outboxId } },
+    { where: { id: outboxId } }
   );
 
-const scheduleOutboxRetry = async (
-  outboxId: string,
-  attempts: number,
-  delayMs: number,
-) =>
+const scheduleOutboxRetry = async (outboxId: string, attempts: number, delayMs: number) =>
   EmailOutbox.update(
     {
       status: 'pending',
       attempts,
       availableAt: new Date(Date.now() + delayMs),
     },
-    { where: { id: outboxId } },
+    { where: { id: outboxId } }
   );
 
 const upsertDeliveryStatus = async (
@@ -107,7 +96,7 @@ const upsertDeliveryStatus = async (
   status: 'sending' | 'sent' | 'failed',
   values: {
     providerMessageId?: string | null;
-  } = {},
+  } = {}
 ) =>
   EmailDelivery.upsert({
     dedupeKey,
@@ -144,16 +133,14 @@ const processOutboxItem = async (item: EmailOutbox) => {
     await upsertDeliveryStatus(dedupeKey, 'failed');
 
     if (nextAttempts >= MAX_EMAIL_RETRIES) {
-      logger.error(
-        `Email failed after ${nextAttempts} attempts: ${errorMessage}`,
-      );
+      logger.error(`Email failed after ${nextAttempts} attempts: ${errorMessage}`);
       await markOutboxFailed(item.id, nextAttempts);
       return;
     }
 
     const delayMs = getRetryDelayMs(item.attempts);
     logger.warn(
-      `Email send failed. Retrying in ${delayMs}ms (attempt ${nextAttempts}/${MAX_EMAIL_RETRIES}).`,
+      `Email send failed. Retrying in ${delayMs}ms (attempt ${nextAttempts}/${MAX_EMAIL_RETRIES}).`
     );
     await scheduleOutboxRetry(item.id, nextAttempts, delayMs);
   }
@@ -175,17 +162,13 @@ const run = async () => {
         await processOutboxItem(item);
       }
     } catch (cause) {
-      logger.error(
-        `Email outbox worker error: ${formatErrorMessage(cause)}`,
-      );
+      logger.error(`Email outbox worker error: ${formatErrorMessage(cause)}`);
       await delay(POLL_INTERVAL_MS);
     }
   }
 };
 
 run().catch((cause) => {
-  logger.error(
-    `Email outbox worker failed to start: ${formatErrorMessage(cause)}`,
-  );
+  logger.error(`Email outbox worker failed to start: ${formatErrorMessage(cause)}`);
   process.exit(1);
 });

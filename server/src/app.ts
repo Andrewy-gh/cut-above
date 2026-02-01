@@ -10,6 +10,7 @@ import session from './middlewares/session.js';
 import cors from './middlewares/cors.js';
 import limiter from './middlewares/limiter.js';
 import setCSPHeader from './middlewares/contentSecurity.js';
+import dbContext from './middlewares/dbContext.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,6 +30,7 @@ app.use(cors);
 
 // session config
 app.use(session);
+app.use(dbContext);
 
 // rate limiter middleware
 app.use(limiter);

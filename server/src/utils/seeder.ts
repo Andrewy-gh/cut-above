@@ -2,20 +2,13 @@ import crypto from 'crypto';
 import { existsSync } from 'fs';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
-import {
-  Appointment,
-  PasswordResetToken,
-  User,
-  Schedule,
-} from '../models/index.js';
+import { Appointment, PasswordResetToken, User, Schedule } from '../models/index.js';
 import logger from './logger/index.js';
-import { sequelize } from './db.js';
+import { sequelize, setDefaultDbRole } from './db.js';
 import { convertISOToDate } from './dateTime.js';
-import type {
-  AppointmentService,
-  AppointmentStatus,
-  UserRole,
-} from '../types/index.js';
+import type { AppointmentService, AppointmentStatus, UserRole } from '../types/index.js';
+
+setDefaultDbRole(process.env.DB_DEFAULT_ROLE ?? 'service');
 
 interface SeedUser {
   firstName: string;
@@ -62,17 +55,11 @@ const loadSeedData = async () => {
 export const seedUsers = async (users: SeedUser[]) => {
   const newUsers = await User.bulkCreate(users, { returning: true });
   logger.info('new users created');
-  logger.info(
-    JSON.stringify(
-      newUsers.map((u) => ({ id: u.id, email: u.email, role: u.role }))
-    )
-  );
+  logger.info(JSON.stringify(newUsers.map((u) => ({ id: u.id, email: u.email, role: u.role }))));
   return newUsers;
 };
 
-export const seedSchedules = async (
-  schedules: SeedSchedule[]
-) => {
+export const seedSchedules = async (schedules: SeedSchedule[]) => {
   const schedulesWithFormattedDates = schedules.map((schedule) => ({
     open: convertISOToDate(schedule.open),
     close: convertISOToDate(schedule.close),
@@ -99,8 +86,7 @@ export const seedAppointments = async (
   const appointmentsWithFK = appointments.map((appointment, index) => {
     const client = clients[index % clients.length];
     const employee = employees[index % employees.length];
-    const schedule =
-      schedules.length > 0 ? schedules[index % schedules.length] : null;
+    const schedule = schedules.length > 0 ? schedules[index % schedules.length] : null;
 
     return {
       service: appointment.service,
@@ -142,9 +128,7 @@ export const seedTokens = async (users: User[]) => {
     returning: true,
   });
   logger.info('new tokens created');
-  logger.info(
-    JSON.stringify(newTokens.map((t) => ({ id: t.id, userId: t.userId })))
-  );
+  logger.info(JSON.stringify(newTokens.map((t) => ({ id: t.id, userId: t.userId }))));
   return newTokens;
 };
 
