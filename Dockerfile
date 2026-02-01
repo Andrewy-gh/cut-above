@@ -17,8 +17,8 @@ ENV VITE_API_URL=$VITE_API_URL
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3
 
-COPY .npmrc pnpm-workspace.yaml package.json ./
-COPY client/package.json client/pnpm-lock.yaml ./client/
+COPY .npmrc pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY client/package.json ./client/
 WORKDIR /app/client
 RUN pnpm install --frozen-lockfile
 COPY client/ .
@@ -27,8 +27,8 @@ RUN pnpm run build
 # Build server
 FROM base AS server-build
 
-COPY .npmrc pnpm-workspace.yaml package.json ./
-COPY server/package.json server/pnpm-lock.yaml ./server/
+COPY .npmrc pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY server/package.json ./server/
 COPY shared/package.json shared/tsconfig.json ./shared/
 WORKDIR /app/server
 RUN pnpm install --frozen-lockfile
