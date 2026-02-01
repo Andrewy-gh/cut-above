@@ -23,17 +23,17 @@
   - [x] Update/normalize MUI imports (remove `@mui/material/` trailing slash)
     - `client/src/components/Navbar/index.tsx`
     - `client/src/routes/BookingPage/AvailableTimes/index.tsx`
-  - [ ] Verify AccordionSummary heading wrapper change (default `h3`)
+  - [x] Verify AccordionSummary heading wrapper change (default `h3`)
     - `client/src/routes/BookingPage/EmployeeAccordion/index.tsx`
-  - [ ] Date pickers migration pass (slot/prop changes, adapter)
+  - [x] Date pickers migration pass (slot/prop changes, adapter)
     - `client/src/components/DatePickers/DatePicker.tsx`
     - `client/src/components/DatePickers/DateRangePicker.tsx`
     - `client/src/routes/AddSchedule/index.tsx`
     - `client/src/main.tsx`
     - `client/src/test/test-utils.tsx`
-  - [ ] Theme + CssBaseline overrides sanity check
+  - [x] Theme + CssBaseline overrides sanity check
     - `client/src/styles/styles.ts`
-  - [ ] Icons + core components smoke pass (visual + RTL)
+  - [x] Icons + core components smoke pass (visual + RTL)
     - `client/src/components/**`
     - `client/src/routes/**`
 - [ ] Optional: OpenAPI docs

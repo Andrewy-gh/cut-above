@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Button from '@mui/material/Button';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import DateRangePicker from '@/components/DatePickers/DateRangePicker';
+import type { DateRange } from '@mui/x-date-pickers-pro/models';
 import dayjs, { Dayjs } from 'dayjs';
 import { useAddScheduleMutation } from '@/features/scheduleSlice';
 import { useNotification } from '@/hooks/useNotification';
@@ -15,21 +16,27 @@ export default function AddSchedule() {
   const closeString = `${currentDate} ${closeTime}`;
   const [open, setOpen] = useState<Dayjs | null>(dayjs(openString));
   const [close, setClose] = useState<Dayjs | null>(dayjs(closeString));
-  const [dates, setDates] = useState<[Dayjs, Dayjs]>([
+  const [dates, setDates] = useState<DateRange<Dayjs>>([
     dayjs(),
     dayjs().add(2, 'week'),
   ]);
   const { handleSuccess, handleError } = useNotification();
   const [addSchedule] = useAddScheduleMutation();
 
-  const handleDateChange = (newDates: [Dayjs, Dayjs]) => {
+  const handleDateChange = (newDates: DateRange<Dayjs>) => {
     setDates(newDates);
   };
 
-  const handleAddSchedule = async (dates: [Dayjs, Dayjs]) => {
+  const handleAddSchedule = async (dates: DateRange<Dayjs>) => {
+    const [startDate, endDate] = dates;
+    if (!startDate || !endDate) {
+      handleError('Please choose a start and end date');
+      return;
+    }
+
     try {
       const newSchedule = await addSchedule({
-        dates: dates.map((d) => d.toISOString()),
+        dates: [startDate.toISOString(), endDate.toISOString()],
         open: open?.format('HH:mm') || openTime,
         close: close?.format('HH:mm') || closeTime,
       }).unwrap();

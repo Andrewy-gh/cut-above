@@ -13,9 +13,12 @@ export default function EmployeeAccordion({
   children,
 }: EmployeeAccordionProps) {
   return (
-    <Accordion style={{ backgroundColor: '#393939' }}>
+    <Accordion
+      style={{ backgroundColor: '#393939' }}
+      slotProps={{ heading: { component: 'h3' } }}
+    >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <div className={`body2 ${styles.yellow}`}>Choose an employee: </div>
+        <span className={`body2 ${styles.yellow}`}>Choose an employee:</span>
       </AccordionSummary>
       <AccordionDetails>{children}</AccordionDetails>
     </Accordion>

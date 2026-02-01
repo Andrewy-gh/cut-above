@@ -4,7 +4,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
 interface DatePickerProps {
   date: dayjs.Dayjs;
-  handleDateChange: (value: dayjs.Dayjs | null) => void;
+  handleDateChange: (value: dayjs.Dayjs) => void;
   minDate: dayjs.Dayjs;
   maxDate: dayjs.Dayjs;
 }
@@ -15,13 +15,19 @@ export default function DatePicker({
   minDate,
   maxDate,
 }: DatePickerProps) {
+  const handleChange = (value: dayjs.Dayjs | null) => {
+    if (value) {
+      handleDateChange(value);
+    }
+  };
+
   return (
     <div>
       <MobileDatePicker
         label="Pick a date"
         format="MM/DD/YYYY"
         value={date}
-        onChange={handleDateChange}
+        onChange={handleChange}
         sx={{
           width: '100%',
           display: { xs: 'block', md: 'none' },
@@ -31,7 +37,7 @@ export default function DatePicker({
       />
       <DateCalendar
         value={date}
-        onChange={handleDateChange}
+        onChange={handleChange}
         sx={{
           display: { xs: 'none', md: 'block' },
         }}

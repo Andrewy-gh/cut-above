@@ -1,19 +1,20 @@
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
+import type { DateRange } from '@mui/x-date-pickers-pro/models';
 import dayjs from 'dayjs';
 
-interface DateRangerPickerProps {
-  dates: [dayjs.Dayjs | null, dayjs.Dayjs | null];
-  handleDateChange: (value: [dayjs.Dayjs | null, dayjs.Dayjs | null]) => void;
+interface DateRangePickerProps {
+  dates: DateRange<dayjs.Dayjs>;
+  handleDateChange: (value: DateRange<dayjs.Dayjs>) => void;
   minDate: dayjs.Dayjs;
   maxDate: dayjs.Dayjs;
 }
 
-export default function DateRangerPicker({
+export default function DateRangePicker({
   dates,
   handleDateChange,
   minDate,
   maxDate,
-}: DateRangerPickerProps) {
+}: DateRangePickerProps) {
   return (
     <div>
       <MobileDateRangePicker
