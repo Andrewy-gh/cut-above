@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { sequelize } from '../utils/db.js';
 import { PasswordResetToken, User } from '../models/index.js';
@@ -49,9 +49,7 @@ describe('authService', () => {
     const stored = await User.scope('withPassword').findByPk(result.value.id);
     expect(stored).toBeTruthy();
     expect(stored?.passwordHash).not.toBe('super-secret');
-    expect(await bcrypt.compare('super-secret', stored?.passwordHash ?? '')).toBe(
-      true,
-    );
+    expect(await bcrypt.compare('super-secret', stored?.passwordHash ?? '')).toBe(true);
   });
 
   it('authenticateUser returns payload for valid credentials', async () => {
@@ -123,9 +121,7 @@ describe('authService', () => {
 
     const updated = await User.scope('withPassword').findByPk(user.id);
     expect(updated).toBeTruthy();
-    expect(await bcrypt.compare('new-password', updated?.passwordHash ?? '')).toBe(
-      true,
-    );
+    expect(await bcrypt.compare('new-password', updated?.passwordHash ?? '')).toBe(true);
   });
 
   it('generateTokenLink returns null when user does not exist', async () => {
@@ -135,9 +131,7 @@ describe('authService', () => {
     expect(result.value).toBeNull();
   });
 
-  it(
-    'generateTokenLink rotates existing token and stores new one',
-    async () => {
+  it('generateTokenLink rotates existing token and stores new one', async () => {
     const hashSpy = vi
       .spyOn(bcrypt, 'hash')
       .mockImplementation(async (value: string | Buffer) => `hashed:${value}`);
@@ -148,10 +142,10 @@ describe('authService', () => {
       });
 
     const user = await createUser({ email: 'reset@example.com' });
-      await PasswordResetToken.create({
-        userId: user.id,
-        tokenHash: await bcrypt.hash('old-token', 10),
-      });
+    await PasswordResetToken.create({
+      userId: user.id,
+      tokenHash: await bcrypt.hash('old-token', 10),
+    });
 
     const tokenBuffer = Buffer.from('test-token');
     vi.spyOn(crypto, 'randomBytes').mockImplementation(() => tokenBuffer);
@@ -168,9 +162,7 @@ describe('authService', () => {
 
     hashSpy.mockRestore();
     compareSpy.mockRestore();
-    },
-    10000,
-  );
+  }, 10000);
 
   it('validateToken increments usage on success', async () => {
     const user = await createUser({ email: 'validate@example.com' });
@@ -213,9 +205,7 @@ describe('authService', () => {
     if (result.status !== 'ok') throw new Error('Expected Ok result');
 
     const updated = await User.scope('withPassword').findByPk(user.id);
-    expect(await bcrypt.compare('brand-new', updated?.passwordHash ?? '')).toBe(
-      true,
-    );
+    expect(await bcrypt.compare('brand-new', updated?.passwordHash ?? '')).toBe(true);
 
     const remaining = await PasswordResetToken.findOne({ where: { userId: user.id } });
     expect(remaining).toBeNull();

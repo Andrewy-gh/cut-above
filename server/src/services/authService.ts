@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { Result } from 'better-result';
 import { User, PasswordResetToken } from '../models/index.js';
 import { generateResetLink } from '../utils/emailOptions.js';
@@ -50,8 +50,7 @@ export interface UserResponse {
 export const registerUser = async (credentials: RegisterCredentials) =>
   tryDb({
     try: async () => {
-      const { firstName, lastName, email, password, role = 'client' } =
-        credentials;
+      const { firstName, lastName, email, password, role = 'client' } = credentials;
       const passwordHash = await bcrypt.hash(password, 10);
       return User.create({ firstName, lastName, email, passwordHash, role });
     },
@@ -67,26 +66,22 @@ export const authenticateUser = async (credentials: LoginCredentials) =>
             where: { email: credentials.email },
           }),
         message: 'Failed to authenticate',
-      }),
+      })
     );
 
     if (!user) {
-      return Result.err(
-        new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }),
-      );
+      return Result.err(new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }));
     }
 
     const match = yield* Result.await(
       tryDb({
         try: () => bcrypt.compare(credentials.password, user.passwordHash),
         message: 'Failed to authenticate',
-      }),
+      })
     );
 
     if (!match) {
-      return Result.err(
-        new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }),
-      );
+      return Result.err(new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }));
     }
 
     const payload: UserResponse = {
@@ -107,19 +102,17 @@ export const updateEmail = async (user: UpdateEmailData) =>
       tryDb({
         try: () => User.findByPk(user.id),
         message: 'Failed to update email',
-      }),
+      })
     );
     if (!currentUser) {
-      return Result.err(
-        new NotFoundError({ statusCode: 404, message: 'User not found' }),
-      );
+      return Result.err(new NotFoundError({ statusCode: 404, message: 'User not found' }));
     }
     currentUser.email = user.email;
     yield* Result.await(
       tryDb({
         try: () => currentUser.save(),
         message: 'Failed to update email',
-      }),
+      })
     );
     const payload: UserResponse = {
       id: currentUser.id,
@@ -139,13 +132,13 @@ export const updatePassword = async (user: UpdatePasswordData) =>
       tryDb({
         try: () => bcrypt.hash(user.password, 10),
         message: 'Failed to update password',
-      }),
+      })
     );
     yield* Result.await(
       tryDb({
         try: () => User.update({ passwordHash }, { where: { id: user.id } }),
         message: 'Failed to update password',
-      }),
+      })
     );
     return Result.ok();
   });
@@ -178,7 +171,7 @@ export const generateTokenLink = async (email: string) =>
       tryDb({
         try: () => User.findOne({ where: { email } }),
         message: 'Failed to generate reset link',
-      }),
+      })
     );
     if (!user) {
       return Result.ok(null);
@@ -194,47 +187,38 @@ export const validateToken = async (user: ValidateTokenData) =>
   Result.gen(async function* () {
     const resetToken = yield* Result.await(
       tryDb({
-        try: () =>
-          PasswordResetToken.findOne({ where: { userId: user.id } }),
+        try: () => PasswordResetToken.findOne({ where: { userId: user.id } }),
         message: 'Failed to validate token',
-      }),
+      })
     );
     if (!resetToken) {
-      return Result.err(
-        new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }),
-      );
+      return Result.err(new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }));
     }
     if (new Date() > new Date(resetToken.expiresAt)) {
       yield* Result.await(deleteResetTokenById(user.id));
-      return Result.err(
-        new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }),
-      );
+      return Result.err(new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }));
     }
     if (resetToken.timesUsed > 1) {
       // only two attempts allowed: initial validation and password reset
       yield* Result.await(deleteResetTokenById(user.id));
-      return Result.err(
-        new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }),
-      );
+      return Result.err(new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }));
     }
     const isValid = yield* Result.await(
       tryDb({
         try: () => bcrypt.compare(user.token, resetToken.tokenHash),
         message: 'Failed to validate token',
-      }),
+      })
     );
     if (!isValid) {
       yield* Result.await(deleteResetTokenById(user.id));
-      return Result.err(
-        new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }),
-      );
+      return Result.err(new AuthorizationError({ statusCode: 401, message: 'Unauthorized' }));
     }
     resetToken.timesUsed++;
     yield* Result.await(
       tryDb({
         try: () => resetToken.save(),
         message: 'Failed to validate token',
-      }),
+      })
     );
     return Result.ok(resetToken);
   });
@@ -245,14 +229,14 @@ export const resetPassword = async (user: User, password: string) =>
       tryDb({
         try: () => bcrypt.hash(password, 10),
         message: 'Failed to reset password',
-      }),
+      })
     );
     user.passwordHash = passwordHash;
     yield* Result.await(
       tryDb({
         try: () => user.save(),
         message: 'Failed to reset password',
-      }),
+      })
     );
     yield* Result.await(deleteResetTokenById(user.id));
     return Result.ok();

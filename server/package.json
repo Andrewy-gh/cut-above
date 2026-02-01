@@ -32,7 +32,7 @@
   "license": "ISC",
   "dependencies": {
     "@cut-above/shared": "workspace:*",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "better-result": "^2.6.0",
     "body-parser": "^1.20.4",
     "connect-redis": "^7.1.1",
@@ -58,7 +58,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@flydotio/dockerfile": "^0.5.9",
-    "@types/bcrypt": "^6.0.0",
+    "@types/bcryptjs": "^2.4.6",
     "@types/body-parser": "^1.19.6",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
@@ -81,7 +81,6 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "bcrypt",
       "esbuild"
     ]
   }
