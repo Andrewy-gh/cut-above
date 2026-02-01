@@ -42,7 +42,10 @@
 
 - [x] Add React error boundary
 - [ ] Logging improvements (request IDs, JSON in prod)
-- [ ] Remove unused deps (redis package, MUI Pro, prop-types)
+- [ ] Remove unused deps
+  - [x] Remove redis package
+  - [x] Remove prop-types
+  - [ ] MUI Pro still in use (DateRangePicker)
 - [x] Shared schema validation (replace Joi with Valibot + shared package)
 - [ ] Delete user feature (backend endpoint + cascade behavior)
 - [x] Cookie name consistency
