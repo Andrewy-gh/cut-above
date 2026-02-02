@@ -22,6 +22,11 @@ const getRetryDelayMs = (attempt: number) =>
   Math.min(BASE_RETRY_DELAY_MS * 2 ** attempt, MAX_RETRY_DELAY_MS);
 
 const resolveEmailConfig = () => ({
+  host: process.env.EMAIL_HOST ?? process.env.DEV_EMAIL_HOST ?? "",
+  port: Number(process.env.EMAIL_PORT ?? process.env.DEV_EMAIL_PORT ?? "0"),
+  secure: (process.env.EMAIL_SECURE ?? process.env.DEV_EMAIL_SECURE ?? "false")
+    .toLowerCase()
+    .trim() === "true",
   service: process.env.EMAIL_SERVICE ?? process.env.DEV_EMAIL_SERVICE ?? "",
   user: process.env.EMAIL_USER ?? process.env.DEV_EMAIL_USER ?? "",
   pass: process.env.EMAIL_PASSWORD ?? process.env.DEV_EMAIL_PASSWORD ?? "",
@@ -38,20 +43,30 @@ const sendEmail = async (payload: EmailPayload) => {
     return { messageId: "log" };
   }
 
-  const { service, user, pass } = resolveEmailConfig();
-  if (!service || !user || !pass) {
+  const { host, port, secure, service, user, pass } = resolveEmailConfig();
+  const useHost = Boolean(host);
+  if (!useHost && (!service || !user || !pass)) {
     throw new Error(
       "Missing EMAIL_SERVICE, EMAIL_USER, or EMAIL_PASSWORD for email delivery."
     );
   }
 
-  const transporter = nodemailer.createTransport({
-    service,
-    auth: {
-      user,
-      pass,
-    },
-  });
+  const transporter = nodemailer.createTransport(
+    useHost
+      ? {
+          host,
+          port: port || 25,
+          secure,
+          ...(user && pass ? { auth: { user, pass } } : {}),
+        }
+      : {
+          service,
+          auth: {
+            user,
+            pass,
+          },
+        }
+  );
 
   const template = buildEmailTemplate(payload);
   return transporter.sendMail({
