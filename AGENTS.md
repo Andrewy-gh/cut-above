@@ -9,7 +9,8 @@ Use this file to record trouble encountered at the end of each migration phase.
 
 ## Phase 1
 
-- none
+- Phase 1a: `npx convex init` is deprecated; CLI requires `npx convex dev --once --configure=new`.
+- Phase 1a: Convex CLI cannot prompt for login in this non-interactive environment, so `npx convex dev` fails with: "Cannot prompt for input in non-interactive terminals. (Welcome to Convex! Would you like to login to your account?)".
 
 ## Phase 2
 

@@ -5,6 +5,7 @@
   "scripts": {
     "build": "pnpm -r build",
     "dev": "pnpm -r --if-present dev",
+    "dev:convex": "npx convex dev",
     "lint": "pnpm -r --if-present lint",
     "prepare": "husky",
     "typecheck": "pnpm -r --if-present typecheck",
