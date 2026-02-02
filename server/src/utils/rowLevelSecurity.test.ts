@@ -6,6 +6,8 @@ import { sequelize } from './db.js';
 import { runWithDbContext } from './dbContext.js';
 import { Appointment, PasswordResetToken, Schedule, User } from '../models/index.js';
 
+const describeDb = process.env.SKIP_DB_TESTS ? describe.skip : describe;
+
 const applyRlsPolicies = async () => {
   await sequelize.query(`
     ALTER TABLE users ENABLE ROW LEVEL SECURITY;
@@ -334,7 +336,7 @@ const seedSchedule = async () =>
     )
   );
 
-describe('row level security', () => {
+describeDb('row level security', () => {
   beforeEach(async () => {
     await sequelize.sync({ force: true });
     await ensureRlsRole();

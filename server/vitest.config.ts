@@ -11,6 +11,11 @@ process.env.DOTENV_CONFIG_PATH = resolve(rootDir, '.env.test');
 import { config } from 'dotenv';
 config({ path: process.env.DOTENV_CONFIG_PATH });
 
+if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = 'postgres://postgres:postgres@localhost:5432/postgres';
+  process.env.SKIP_DB_TESTS = 'true';
+}
+
 export default defineConfig({
   test: {
     globals: true,

@@ -26,7 +26,9 @@ const createUser = async (overrides?: Partial<User>) => {
   });
 };
 
-describe('authService', () => {
+const describeDb = process.env.SKIP_DB_TESTS ? describe.skip : describe;
+
+describeDb('authService', () => {
   beforeEach(async () => {
     await sequelize.sync({ force: true });
   });

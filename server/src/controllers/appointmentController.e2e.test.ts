@@ -5,7 +5,9 @@ import { sequelize } from '../utils/db.js';
 import bcrypt from 'bcryptjs';
 import { User, Schedule, Appointment } from '../models/index.js';
 
-describe('Appointment Booking - E2E Flow', () => {
+const describeDb = process.env.SKIP_DB_TESTS ? describe.skip : describe;
+
+describeDb('Appointment Booking - E2E Flow', () => {
   const testPassword = 'Password123!';
   const testEmail = 'client-e2e@test.com';
   let employeeId: string;

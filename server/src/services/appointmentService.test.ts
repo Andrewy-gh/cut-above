@@ -3,7 +3,9 @@ import { sequelize } from '../utils/db.js';
 import { getAppointmentsByRole, update } from './appointmentService.js';
 import { Appointment, User, Schedule } from '../models/index.js';
 
-describe('appointmentService', () => {
+const describeDb = process.env.SKIP_DB_TESTS ? describe.skip : describe;
+
+describeDb('appointmentService', () => {
   beforeEach(async () => {
     // Clean up database before each test
     await sequelize.sync({ force: true });
@@ -170,9 +172,9 @@ describe('appointmentService', () => {
       const originalScheduleId = appointment.scheduleId;
 
       // Mock Appointment.prototype.save to throw error on next call
-      const saveSpy = vi.spyOn(Appointment.prototype, 'save').mockRejectedValueOnce(
-        new Error('Simulated save failure')
-      );
+      const saveSpy = vi
+        .spyOn(Appointment.prototype, 'save')
+        .mockRejectedValueOnce(new Error('Simulated save failure'));
 
       // Attempt update that changes date (triggers transaction)
       const updateResult = await update({

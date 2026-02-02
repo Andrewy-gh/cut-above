@@ -5,7 +5,9 @@ import { sequelize } from '../utils/db.js';
 import bcrypt from 'bcryptjs';
 import { User, Schedule, Appointment } from '../models/index.js';
 
-describe('Appointment Controller - API Integration', () => {
+const describeDb = process.env.SKIP_DB_TESTS ? describe.skip : describe;
+
+describeDb('Appointment Controller - API Integration', () => {
   let sessionCookie: string;
   let adminSessionCookie: string;
   let employeeSessionCookie: string;
