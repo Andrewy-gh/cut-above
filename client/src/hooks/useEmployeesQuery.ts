@@ -5,7 +5,8 @@ import {
   useGetEmployeesQuery,
 } from '@/features/employeeSlice';
 export function useEmployeesQuery(employeeId?: string) {
-  useGetEmployeesQuery();
+  const { isLoading } = useGetEmployeesQuery();
+
   const employees = useAppSelector(selectAllEmployees);
   const employee = useAppSelector((state) =>
     employeeId ? selectEmployeeById(state, employeeId) : null
@@ -14,5 +15,6 @@ export function useEmployeesQuery(employeeId?: string) {
   return {
     employees,
     employee,
+    isLoading,
   };
 }

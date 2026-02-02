@@ -10,9 +10,12 @@ import { theme } from '@/styles/styles';
 
 import { apiSlice } from '@/app/api/apiSlice';
 import appointmentReducer from '@/features/appointments/appointmentSlice';
+import appointmentsReducer from '@/features/appointments/apptApiSlice';
 import authReducer from '@/features/auth/authSlice';
+import employeesReducer from '@/features/employeeSlice';
 import filterReducer from '@/features/filterSlice';
 import notificationReducer from '@/features/notificationSlice';
+import schedulesReducer from '@/features/scheduleSlice';
 
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
   preloadedState?: Record<string, unknown>;
@@ -23,9 +26,12 @@ export function createTestStore(preloadedState: Record<string, unknown> = {}) {
   const rootReducer = combineReducers({
     [apiSlice.reducerPath]: apiSlice.reducer,
     appointment: appointmentReducer,
+    appointments: appointmentsReducer,
     auth: authReducer,
+    employees: employeesReducer,
     filter: filterReducer,
     notification: notificationReducer,
+    schedules: schedulesReducer,
   });
 
   return configureStore({
