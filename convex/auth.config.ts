@@ -4,10 +4,6 @@ import type { AuthConfig } from "convex/server";
 const authConfig = {
   providers: [
     getAuthConfigProvider(),
-    {
-      applicationID: "convex",
-      domain: process.env.CONVEX_SITE_URL!,
-    },
   ],
 } satisfies AuthConfig;
 

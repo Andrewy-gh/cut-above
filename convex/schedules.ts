@@ -23,7 +23,7 @@ const loadUsersByIds = async (ctx: DbCtx, ids: string[]) => {
   const uniqueIds = Array.from(new Set(ids.filter(Boolean)));
   const users = await Promise.all(
     uniqueIds.map((id) =>
-      ctx.db.query("users").withIndex("by_id", (q) => q.eq("id", id)).first()
+      ctx.db.query("users").withIndex("by_user_id", (q) => q.eq("id", id)).first()
     )
   );
   const userMap = new Map<string, Doc<"users">>();

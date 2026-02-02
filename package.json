@@ -5,7 +5,7 @@
   "scripts": {
     "build": "pnpm -r build",
     "dev": "pnpm -r --if-present dev",
-    "dev:convex": "npx convex dev",
+    "dev:convex": "pnpm dlx convex dev",
     "lint": "pnpm -r --if-present lint",
     "seed": "tsx convex/seed.ts",
     "prepare": "husky",
@@ -18,8 +18,9 @@
     "dayjs": "^1.11.19"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.1",
     "@convex-dev/better-auth": "^0.10.10",
+    "@playwright/test": "^1.58.1",
+    "@types/node": "^25.1.0",
     "better-auth": "1.4.9",
     "convex": "^1.31.7",
     "husky": "^9.1.7",

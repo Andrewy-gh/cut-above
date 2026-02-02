@@ -42,7 +42,7 @@ const toPublicUser = (user: Doc<"users"> | null) => {
 type DbCtx = { db: QueryCtx["db"] };
 
 const loadUserById = async (ctx: DbCtx, id: string) =>
-  ctx.db.query("users").withIndex("by_id", (q) => q.eq("id", id)).first();
+  ctx.db.query("users").withIndex("by_user_id", (q) => q.eq("id", id)).first();
 
 const ensureEmployee = async (
   ctx: DbCtx,
@@ -173,7 +173,7 @@ export const getAppointmentById = query({
 
     const appointment = await ctx.db
       .query("appointments")
-      .withIndex("by_id", (q) => q.eq("id", args.id))
+      .withIndex("by_appointment_id", (q) => q.eq("id", args.id))
       .first();
 
     if (!appointment) {
@@ -269,7 +269,7 @@ export const modifyAppointment = mutation({
 
     const appointment = await ctx.db
       .query("appointments")
-      .withIndex("by_id", (q) => q.eq("id", args.id))
+      .withIndex("by_appointment_id", (q) => q.eq("id", args.id))
       .first();
 
     if (!appointment) {
@@ -357,7 +357,7 @@ export const updateAppointmentStatus = mutation({
 
     const appointment = await ctx.db
       .query("appointments")
-      .withIndex("by_id", (q) => q.eq("id", args.id))
+      .withIndex("by_appointment_id", (q) => q.eq("id", args.id))
       .first();
 
     if (!appointment) {
@@ -380,7 +380,7 @@ export const cancelAppointment = mutation({
 
     const appointment = await ctx.db
       .query("appointments")
-      .withIndex("by_id", (q) => q.eq("id", args.id))
+      .withIndex("by_appointment_id", (q) => q.eq("id", args.id))
       .first();
 
     if (!appointment) {

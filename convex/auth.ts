@@ -1,9 +1,13 @@
 import { betterAuth, type BetterAuthOptions } from "better-auth/minimal";
-import { createClient, type GenericCtx } from "@convex-dev/better-auth";
+import {
+  createClient,
+  type AuthFunctions,
+  type GenericCtx,
+} from "@convex-dev/better-auth";
 import { convex, crossDomain } from "@convex-dev/better-auth/plugins";
 
 import authConfig from "./auth.config";
-import { components } from "./_generated/api";
+import { components, internal } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
 import { parseName } from "./lib/names";
@@ -20,13 +24,16 @@ const requireEnv = (value: string, name: string) => {
 
 const DEFAULT_ROLE = "client";
 
+const authFunctions: AuthFunctions = internal.auth;
+
 export const authComponent = createClient<DataModel>(components.betterAuth, {
+  authFunctions,
   triggers: {
     user: {
       onCreate: async (ctx, doc) => {
         const existing = await ctx.db
           .query("users")
-          .withIndex("by_id", (q) => q.eq("id", doc._id))
+          .withIndex("by_user_id", (q) => q.eq("id", doc._id))
           .first();
         if (existing) return;
         const parsedName = parseName(doc.name);
@@ -45,7 +52,7 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
       onUpdate: async (ctx, newDoc) => {
         const existing = await ctx.db
           .query("users")
-          .withIndex("by_id", (q) => q.eq("id", newDoc._id))
+          .withIndex("by_user_id", (q) => q.eq("id", newDoc._id))
           .first();
         if (!existing) return;
         const parsedName = parseName(newDoc.name);
@@ -60,7 +67,7 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
       onDelete: async (ctx, doc) => {
         const existing = await ctx.db
           .query("users")
-          .withIndex("by_id", (q) => q.eq("id", doc._id))
+          .withIndex("by_user_id", (q) => q.eq("id", doc._id))
           .first();
         if (!existing) return;
         await ctx.db.delete(existing._id);
@@ -68,6 +75,8 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
     },
   },
 });
+
+export const { onCreate, onUpdate, onDelete } = authComponent.triggersApi();
 
 export const createAuthOptions = (ctx: GenericCtx<DataModel>) => {
   const baseURL = requireEnv(convexSiteUrl, "CONVEX_SITE_URL");
@@ -113,7 +122,7 @@ export const getCurrentUser = query({
 
     const user = await ctx.db
       .query("users")
-      .withIndex("by_id", (q) => q.eq("id", authUser._id))
+      .withIndex("by_user_id", (q) => q.eq("id", authUser._id))
       .first();
 
     if (user) return user;

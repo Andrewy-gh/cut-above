@@ -16,7 +16,7 @@ export default defineSchema({
     updatedAt: v.optional(v.number()),
   })
     .index("by_email", ["email"])
-    .index("by_id", ["id"])
+    .index("by_user_id", ["id"])
     .index("by_role", ["role"]),
   schedules: defineTable({
     id: v.string(),
@@ -36,7 +36,7 @@ export default defineSchema({
     employeeId: v.string(),
     scheduleId: v.string(),
   })
-    .index("by_id", ["id"])
+    .index("by_appointment_id", ["id"])
     .index("by_client", ["clientId"])
     .index("by_employee", ["employeeId"])
     .index("by_schedule", ["scheduleId"]),

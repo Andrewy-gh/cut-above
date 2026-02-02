@@ -1,5 +1,6 @@
 import { ConvexError } from "convex/values";
 import type { GenericCtx } from "@convex-dev/better-auth";
+import { requireQueryCtx } from "@convex-dev/better-auth/utils";
 
 import type { DataModel } from "../_generated/dataModel";
 import { authComponent } from "../auth";
@@ -17,9 +18,10 @@ export const requireAuthUser = async (ctx: GenericCtx<DataModel>) => {
 
 export const requireAdmin = async (ctx: GenericCtx<DataModel>) => {
   const authUser = await requireAuthUser(ctx);
-  const user = await ctx.db
+  const queryCtx = requireQueryCtx(ctx);
+  const user = await queryCtx.db
     .query("users")
-    .withIndex("by_id", (q) => q.eq("id", authUser._id))
+    .withIndex("by_user_id", (q) => q.eq("id", authUser._id))
     .first();
 
   if (!user || user.role !== "admin") {
