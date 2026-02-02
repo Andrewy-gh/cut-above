@@ -15,20 +15,26 @@ import { theme } from '@/styles/styles';
 
 import { PersistGate } from 'redux-persist/integration/react';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import ConvexConnectionBoundary from '@/components/ConvexConnectionBoundary';
+import { ConvexProvider, convexClient } from '../../convex/client';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <ThemeProvider theme={responsiveFontSizes(theme)}>
-              <CssBaseline />
-              <App />
-            </ThemeProvider>
-          </LocalizationProvider>
-        </PersistGate>
-      </Provider>
+      <ConvexProvider client={convexClient}>
+        <ConvexConnectionBoundary>
+          <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <ThemeProvider theme={responsiveFontSizes(theme)}>
+                  <CssBaseline />
+                  <App />
+                </ThemeProvider>
+              </LocalizationProvider>
+            </PersistGate>
+          </Provider>
+        </ConvexConnectionBoundary>
+      </ConvexProvider>
     </ErrorBoundary>
   </StrictMode>
 );

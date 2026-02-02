@@ -22,6 +22,7 @@
     "@mui/x-date-pickers": "^7.29.4",
     "@mui/x-date-pickers-pro": "^7.29.4",
     "@reduxjs/toolkit": "^2.0.0",
+    "convex": "^1.31.7",
     "dayjs": "^1.11.19",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
