@@ -1,5 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { apiSlice } from './api/apiSlice';
 import appointmentReducer from '../features/appointments/appointmentSlice';
 import appointmentsReducer from '../features/appointments/apptApiSlice';
 import authReducer from '../features/auth/authSlice';
@@ -27,7 +26,6 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-  [apiSlice.reducerPath]: apiSlice.reducer,
   appointment: appointmentReducer,
   appointments: appointmentsReducer,
   auth: persistReducer(persistConfig, authReducer), // Wrap authReducer with persistReducer
@@ -44,7 +42,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(apiSlice.middleware),
+    }),
   devTools: import.meta.env.DEV,
 });
 

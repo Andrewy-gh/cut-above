@@ -1,5 +1,4 @@
 packages:
   - 'client'
   - 'convex-tests'
-  - 'server'
   - 'shared'

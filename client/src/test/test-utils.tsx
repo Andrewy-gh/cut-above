@@ -8,7 +8,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { ThemeProvider, responsiveFontSizes } from '@mui/material';
 import { theme } from '@/styles/styles';
 
-import { apiSlice } from '@/app/api/apiSlice';
 import appointmentReducer from '@/features/appointments/appointmentSlice';
 import appointmentsReducer from '@/features/appointments/apptApiSlice';
 import authReducer from '@/features/auth/authSlice';
@@ -24,7 +23,6 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
 
 export function createTestStore(preloadedState: Record<string, unknown> = {}) {
   const rootReducer = combineReducers({
-    [apiSlice.reducerPath]: apiSlice.reducer,
     appointment: appointmentReducer,
     appointments: appointmentsReducer,
     auth: authReducer,
@@ -40,7 +38,7 @@ export function createTestStore(preloadedState: Record<string, unknown> = {}) {
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         serializableCheck: false,
-      }).concat(apiSlice.middleware),
+      }),
   });
 }
 
