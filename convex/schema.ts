@@ -7,10 +7,12 @@ export default defineSchema({
     name: v.string(),
     email: v.string(),
     role: v.string(),
-    passwordHash: v.string(),
+    passwordHash: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
-  }).index("by_email", ["email"]),
+  })
+    .index("by_email", ["email"])
+    .index("by_id", ["id"]),
   schedules: defineTable({
     id: v.string(),
     employeeId: v.string(),

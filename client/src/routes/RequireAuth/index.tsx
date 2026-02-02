@@ -9,8 +9,16 @@ interface RequireAuthProps {
 }
 
 export default function RequireAuth({ requiredRole }: RequireAuthProps) {
-  const { role, user } = useAuth();
+  const { role, user, isAuthLoading } = useAuth();
   const location = useLocation();
+
+  if (isAuthLoading) {
+    return (
+      <Suspense fallback={<LoadingSpinner />}>
+        <LoadingSpinner />
+      </Suspense>
+    );
+  }
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }

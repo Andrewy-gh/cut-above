@@ -1,34 +1,29 @@
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { useNavigate, useLocation } from 'react-router';
-import {
-  useLoginMutation,
-  useLogoutMutation,
-  useChangeUserEmailMutation,
-  useChangeUserPasswordMutation,
-  useDeleteUserMutation,
-  useResetUserPasswordMutation,
-} from '@/features/auth/authApiSlice';
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router";
+
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import {
   logoutUser,
   selectCurrentUser,
   selectCurrentUserRole,
   setCredentials,
-  updateUserDetails,
-} from '@/features/auth/authSlice';
-import { useNotification } from './useNotification';
-
-import { cleanEmail } from '@/utils/email';
+} from "@/features/auth/authSlice";
+import { authClient } from "@/convex/authClient";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { useNotification } from "./useNotification";
+import { cleanEmail } from "@/utils/email";
 
 interface EmailChangePayload {
   email: string;
 }
 
 interface PasswordChangePayload {
-  password: string;
+  currentPassword: string;
+  newPassword: string;
 }
 
 interface PasswordResetPayload {
-  id: string;
   token: string;
   password: string;
 }
@@ -36,36 +31,45 @@ interface PasswordResetPayload {
 export function useAuth() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const user = useAppSelector(selectCurrentUser);
-  const role = useAppSelector(selectCurrentUserRole);
-  const [login] = useLoginMutation();
-  const [logout] = useLogoutMutation();
-  const [changeUserEmail] = useChangeUserEmailMutation();
-  const [changeUserPassword] = useChangeUserPasswordMutation();
-  const [deleteUser] = useDeleteUserMutation();
-  const [resetUserPassword] = useResetUserPasswordMutation();
+  const storedUser = useAppSelector(selectCurrentUser);
+  const storedRole = useAppSelector(selectCurrentUserRole);
+  const session = authClient.useSession();
+  const currentUser = useQuery(api.auth.getCurrentUser, {});
 
   const location = useLocation();
 
   const { handleSuccess, handleError } = useNotification();
 
+  const sessionUser = session.data?.user ?? null;
+  const user = sessionUser?.email ?? currentUser?.email ?? storedUser;
+  const role = currentUser?.role ?? storedRole;
+  const isAuthLoading =
+    session.isPending || (sessionUser != null && currentUser === undefined);
+
+  useEffect(() => {
+    if (sessionUser?.email) {
+      dispatch(
+        setCredentials({
+          user: sessionUser.email,
+          role: role ?? null,
+        })
+      );
+    }
+  }, [dispatch, role, sessionUser?.email]);
+
   const handleLogin = async (email: string, password: string) => {
     try {
-      const loggedInUser = await login({
+      const result = await authClient.signIn.email({
         email: cleanEmail(email),
         password,
-      }).unwrap();
-      if (loggedInUser.success) {
-        const { from } = location.state || {};
-        dispatch(
-          setCredentials({
-            user: loggedInUser.user.email,
-            role: loggedInUser.user.role,
-          })
-        );
-        handleSuccess(loggedInUser.message);
-        navigate(from || '/account');
+      });
+      if (result?.error) {
+        handleError(result.error);
+        return;
       }
+      const { from } = location.state || {};
+      handleSuccess("Successfully logged in");
+      navigate(from || "/account");
     } catch (err) {
       handleError(err);
     }
@@ -73,27 +77,28 @@ export function useAuth() {
 
   const handleLogout = async () => {
     try {
-      await logout();
+      const result = await authClient.signOut();
+      if (result?.error) {
+        handleError(result.error);
+        return;
+      }
       dispatch(logoutUser());
     } catch (error) {
-
-      handleError('Error logging out: ', error);
+      handleError("Error logging out: ", error);
     }
   };
 
   const handleUserEmailChange = async (newEmailObj: EmailChangePayload) => {
     try {
-      const updatedUser = await changeUserEmail(newEmailObj).unwrap();
-      if (updatedUser.success) {
-        dispatch(
-          updateUserDetails({
-            user: updatedUser.user.email,
-            role: updatedUser.user.role,
-          })
-        );
-        handleSuccess(updatedUser.message);
-        return true;
+      const result = await authClient.changeEmail({
+        newEmail: cleanEmail(newEmailObj.email),
+      });
+      if (result?.error) {
+        handleError(result.error);
+        return false;
       }
+      handleSuccess("Email updated");
+      return true;
     } catch (error) {
       handleError(`Error changing email: ${error}`);
     }
@@ -101,11 +106,16 @@ export function useAuth() {
 
   const handleUserPasswordChange = async (newPasswordObj: PasswordChangePayload) => {
     try {
-      const updatedUser = await changeUserPassword(newPasswordObj).unwrap();
-      if (updatedUser.success) {
-        handleSuccess(updatedUser.message);
-        return true;
+      const result = await authClient.changePassword({
+        currentPassword: newPasswordObj.currentPassword,
+        newPassword: newPasswordObj.newPassword,
+      });
+      if (result?.error) {
+        handleError(result.error);
+        return false;
       }
+      handleSuccess("Password updated");
+      return true;
     } catch (error) {
       handleError(`Error changing password: ${error}`);
     }
@@ -113,11 +123,13 @@ export function useAuth() {
 
   const handleUserDelete = async () => {
     try {
-      const deletedUser = await deleteUser().unwrap();
-      if (deletedUser.success) {
-        handleSuccess(deletedUser.message);
-        dispatch(logoutUser());
+      const result = await authClient.deleteUser({});
+      if (result?.error) {
+        handleError(result.error);
+        return;
       }
+      handleSuccess("Account deleted");
+      dispatch(logoutUser());
     } catch (error) {
       handleError(`Error deleting user: ${error}`);
     }
@@ -125,11 +137,16 @@ export function useAuth() {
 
   const handleUserPasswordReset = async (newCredentials: PasswordResetPayload) => {
     try {
-      const updatedUser = await resetUserPassword(newCredentials).unwrap();
-      if (updatedUser.success) {
-        handleSuccess(updatedUser.message);
-        return true;
+      const result = await authClient.resetPassword({
+        token: newCredentials.token,
+        newPassword: newCredentials.password,
+      });
+      if (result?.error) {
+        handleError(result.error);
+        return false;
       }
+      handleSuccess("Password updated");
+      return true;
     } catch (err) {
       handleError(err);
     }
@@ -138,6 +155,7 @@ export function useAuth() {
   return {
     user,
     role,
+    isAuthLoading,
     handleLogin,
     handleLogout,
     handleUserEmailChange,

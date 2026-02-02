@@ -4,9 +4,9 @@ import {
   useConvex,
   useMutation,
   useQuery,
-} from 'convex/react';
+} from "convex/react";
 
-import { CONVEX_URL } from './env';
+import { CONVEX_URL } from "./env";
 
 export const convexClient = new ConvexReactClient(CONVEX_URL);
 

@@ -11,7 +11,6 @@ import BookingPage from '@/routes/BookingPage';
 import Login from '@/routes/Login';
 
 import Register from '@/routes/Register';
-import TokenValidation from './routes/TokenVaidation';
 import LoadingSpinner from './components/LoadingSpinner';
 
 import { disableReactDevTools } from '@fvilers/disable-react-devtools';
@@ -99,18 +98,13 @@ const router = createBrowserRouter(
           ],
         },
         {
-          element: <TokenValidation />,
+          path: 'resetpw',
+          element: <ResetPw />,
           errorElement: (
             <Suspense fallback={<LoadingSpinner />}>
               <ResetPwError />
             </Suspense>
           ),
-          children: [
-            {
-              path: 'resetpw/:id?/:token?',
-              element: <ResetPw />,
-            },
-          ],
         },
         {
           path: 'cancellation',

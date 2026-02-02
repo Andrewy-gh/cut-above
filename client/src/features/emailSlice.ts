@@ -14,14 +14,6 @@ export interface ContactDetails {
 
 export const emailSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    sendPasswordReset: builder.mutation<EmailResponse, { email: string }>({
-      query: (email) => ({
-        url: '/api/email/reset-pw',
-        method: 'POST',
-        body: email
-      }),
-    }),
-
     sendMessageResponse: builder.mutation<EmailResponse, { contactDetails: ContactDetails }>({
       query: (email) => ({
         url: '/api/email/new-message',
@@ -32,5 +24,5 @@ export const emailSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useSendPasswordResetMutation, useSendMessageResponseMutation } =
+export const { useSendMessageResponseMutation } =
   emailSlice;

@@ -4,11 +4,18 @@ import TextField from '@mui/material/TextField';
 import { useAuth } from '../../hooks/useAuth';
 
 export default function ChangePassword() {
+  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [error, setError] = useState(false);
   const [helperText, setHelperText] = useState('');
   const { handleUserPasswordChange } = useAuth();
+
+  const handleCurrentPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setError(false);
+    setHelperText('');
+    setCurrentPassword(e.target.value);
+  };
 
   const handleNewPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setError(false);
@@ -30,9 +37,11 @@ export default function ChangePassword() {
       return;
     }
     const passwordChanged = await handleUserPasswordChange({
-      password: newPassword,
+      currentPassword,
+      newPassword,
     });
     if (passwordChanged) {
+      setCurrentPassword('');
       setNewPassword('');
       setConfirmNewPassword('');
     }
@@ -40,6 +49,15 @@ export default function ChangePassword() {
 
   return (
     <form onSubmit={handleSubmit} className="container-sm">
+      <TextField
+        label="Current Password"
+        type="password"
+        required
+        fullWidth
+        value={currentPassword}
+        onChange={handleCurrentPasswordChange}
+        sx={{ marginBlock: '.5rem' }}
+      ></TextField>
       <TextField
         label="New Password"
         type="password"

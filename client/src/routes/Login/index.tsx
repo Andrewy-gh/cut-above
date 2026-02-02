@@ -7,13 +7,13 @@ import { useAuth } from '@/hooks/useAuth';
 
 import { useNotification } from '@/hooks/useNotification';
 
-import { useSendPasswordResetMutation } from '@/features/emailSlice';
+import { authClient } from '@/convex/authClient';
 
 import Overlay from '@/components/Overlay';
 
 import PasswordInput from '@/components/PasswordInput';
 
-import { emailIsValid } from '@/utils/email';
+import { cleanEmail, emailIsValid } from '@/utils/email';
 
 import styles from './styles.module.css';
 
@@ -33,7 +33,6 @@ export default function Login() {
   const { user, handleLogin } = useAuth();
 
   const { handleSuccess, handleError } = useNotification();
-  const [sendPasswordReset] = useSendPasswordResetMutation();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -51,8 +50,17 @@ export default function Login() {
         setHelperText('invalid email');
         return;
       }
-      const sentResetEmail = await sendPasswordReset({ email }).unwrap();
-      if (sentResetEmail.success) handleSuccess(sentResetEmail.message);
+      const result = await authClient.requestPasswordReset({
+        email: cleanEmail(email),
+        redirectTo: `${window.location.origin}/resetpw`,
+      });
+      if (result?.error) {
+        handleError(result.error);
+        return;
+      }
+      handleSuccess(
+        "If this email exists in our system, check your email for the reset link"
+      );
     } catch (err) {
       handleError(err);
     }
