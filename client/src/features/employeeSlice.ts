@@ -8,10 +8,10 @@ import { useAppDispatch } from '@/app/hooks';
 export interface Employee {
   id: string;
   firstName: string;
-  lastName: string;
-  email: string;
+  lastName?: string;
+  email?: string;
   phone?: string;
-  role: string;
+  role?: string;
   bio?: string;
 }
 
