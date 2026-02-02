@@ -271,6 +271,8 @@ Notes
 - Update README + docs for Convex dev/prod workflow.
 - Ensure routes are fully migrated and no old API paths are referenced.
 
+Status: Completed on February 2, 2026.
+
 Success criteria
 
 - Docs updated and ready for deployment.
@@ -285,6 +287,8 @@ Notes
 ## Phase 5c - Final Lint/Test Gate
 
 - Run full gate (lint/typecheck/tests/docs).
+
+Status: Completed on February 2, 2026.
 
 Success criteria
 

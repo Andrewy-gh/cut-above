@@ -35,4 +35,4 @@ Use this file to record trouble encountered at the end of each migration phase.
 
 ## Phase 5
 
-- none
+- Phase 5b/5c: Convex-only docs updated; full gate run (lint/typecheck/tests/docs). Mailpit email automation documented.
