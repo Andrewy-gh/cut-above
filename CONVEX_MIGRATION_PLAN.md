@@ -1,12 +1,28 @@
 # Convex Migration Plan (Cut Above)
 
-Goal: full, clean migration of frontend + backend to Convex. All existing backend routes become Convex queries/mutations/actions (or HTTP actions only if explicitly needed). Frontend switches to Convex client calls. Every phase ends with lint + tests passing and a commit.
+Goal: full, clean migration of frontend + backend to Convex. All existing backend routes become Convex queries/mutations/actions (Convex-native only). Frontend switches to Convex client calls. Every phase ends with lint + tests passing and a commit.
 
-## Phase 0 - Decisions + Baseline Inventory
+## Phase 0a - Decisions
 
-- Decide auth provider and approach (Convex Auth vs Clerk/Auth0) and how to handle password reset.
-- Decide whether to keep any HTTP actions for REST compatibility or go Convex-native only.
-- Inventory all API routes and UI flows; map to Convex function list.
+- Confirm Better Auth + Convex integration (convex@latest, @convex-dev/better-auth, better-auth@1.4.9).
+- Convex-native only: no REST endpoints or HTTP actions.
+- Confirm deploy target: Vercel.
+
+Success criteria
+
+- Decisions recorded in plan.
+- Lint + tests pass.
+- Commit.
+
+Notes
+
+- Add any trouble notes to `AGENTS.md`.
+- Add gotchas to `docs/convex-gotchas-phase0a.md`.
+
+## Phase 0b - Inventory + Mapping
+
+- Inventory all API routes and UI flows.
+- Map routes to Convex function list.
 - Capture current test coverage and identify critical flows for minimal edge-case tests.
 
 Success criteria
@@ -18,14 +34,12 @@ Success criteria
 Notes
 
 - Add any trouble notes to `AGENTS.md`.
-- Add gotchas to `docs/convex-gotchas-phase0.md`.
+- Add gotchas to `docs/convex-gotchas-phase0b.md`.
 
-## Phase 1 - Convex Scaffolding + Repo Wiring
+## Phase 1a - Convex Init + Config
 
 - Add Convex project config + `convex/` folder skeleton.
-- Add baseline `schema.ts` with tables and indexes (users, schedules, appointments, password reset tokens, email outbox/deliveries).
-- Add Convex dev scripts + env wiring for client.
-- Add minimal seed script placeholder.
+- Install Convex + Better Auth deps: `convex@latest`, `@convex-dev/better-auth`, `better-auth@1.4.9`.
 
 Success criteria
 
@@ -36,12 +50,57 @@ Success criteria
 Notes
 
 - Add any trouble notes to `AGENTS.md`.
-- Add gotchas to `docs/convex-gotchas-phase1.md`.
+- Add gotchas to `docs/convex-gotchas-phase1a.md`.
 
-## Phase 2 - Auth + User Accounts (Frontend + Backend)
+## Phase 1b - Schema + Indexes
 
-- Implement auth flows using chosen provider.
+- Add baseline `schema.ts` with tables and indexes (users, schedules, appointments, password reset tokens, email outbox/deliveries).
+
+Success criteria
+
+- Schema compiles.
+- Lint + tests pass.
+- Commit.
+
+Notes
+
+- Add any trouble notes to `AGENTS.md`.
+- Add gotchas to `docs/convex-gotchas-phase1b.md`.
+
+## Phase 1c - Client Wiring + Seed Placeholder
+
+- Add Convex dev scripts + env wiring for client.
+- Add minimal seed script placeholder.
+
+Success criteria
+
+- Client connects to Convex locally.
+- Lint + tests pass.
+- Commit.
+
+Notes
+
+- Add any trouble notes to `AGENTS.md`.
+- Add gotchas to `docs/convex-gotchas-phase1c.md`.
+
+## Phase 2a - Better Auth Backend Setup
+
+- Implement Better Auth flows using Convex integration.
 - Add Convex auth helpers for role checks.
+
+Success criteria
+
+- Auth backend working in Convex.
+- Lint + tests pass.
+- Commit.
+
+Notes
+
+- Add any trouble notes to `AGENTS.md`.
+- Add gotchas to `docs/convex-gotchas-phase2a.md`.
+
+## Phase 2b - Frontend Auth Wiring
+
 - Replace `authApiSlice` + session-based logic with Convex auth in the client.
 - Update protected routes and user state.
 
@@ -54,13 +113,56 @@ Success criteria
 Notes
 
 - Add any trouble notes to `AGENTS.md`.
-- Add gotchas to `docs/convex-gotchas-phase2.md`.
+- Add gotchas to `docs/convex-gotchas-phase2b.md`.
 
-## Phase 3 - Scheduling + Booking (Core Flow)
+## Phase 2c - Auth Tests
 
-- Implement Convex queries/mutations for schedules and appointments.
+- Add minimal auth tests: login/logout + access guard.
+
+Success criteria
+
+- Auth tests pass.
+- Lint + tests pass.
+- Commit.
+
+Notes
+
+- Add any trouble notes to `AGENTS.md`.
+- Add gotchas to `docs/convex-gotchas-phase2c.md`.
+
+## Phase 3a - Schedules Queries/Mutations
+
+- Implement Convex queries/mutations for schedules.
+
+Success criteria
+
+- Schedule flows work.
+- Lint + tests pass.
+- Commit.
+
+Notes
+
+- Add any trouble notes to `AGENTS.md`.
+- Add gotchas to `docs/convex-gotchas-phase3a.md`.
+
+## Phase 3b - Appointments Mutations
+
+- Implement Convex queries/mutations for appointments.
+
+Success criteria
+
+- Appointment create/update/delete works.
+- Lint + tests pass.
+- Commit.
+
+Notes
+
+- Add any trouble notes to `AGENTS.md`.
+- Add gotchas to `docs/convex-gotchas-phase3b.md`.
+
+## Phase 3c - Booking UI Swap
+
 - Replace RTK Query booking flows (`useBooking`, appointment APIs) with Convex client calls.
-- Add critical edge-case tests: schedule conflict, invalid employee selection, unauthorized booking.
 
 Success criteria
 
@@ -71,18 +173,74 @@ Success criteria
 Notes
 
 - Add any trouble notes to `AGENTS.md`.
-- Add gotchas to `docs/convex-gotchas-phase3.md`.
+- Add gotchas to `docs/convex-gotchas-phase3c.md`.
 
-## Phase 4 - Admin/Employee Dashboards + Email Outbox
+## Phase 3d - Booking Tests
+
+- Add critical edge-case tests: schedule conflict, invalid employee selection, unauthorized booking.
+
+Success criteria
+
+- Booking tests pass.
+- Lint + tests pass.
+- Commit.
+
+Notes
+
+- Add any trouble notes to `AGENTS.md`.
+- Add gotchas to `docs/convex-gotchas-phase3d.md`.
+
+## Phase 4a - Admin/Employee Views
 
 - Implement admin/employee appointment views + status updates with Convex.
-- Replace email outbox worker with Convex actions + scheduled functions.
-- Update UI to use new data sources.
+
+Success criteria
+
+- Admin/employee views work.
+- Lint + tests pass.
+- Commit.
+
+Notes
+
+- Add any trouble notes to `AGENTS.md`.
+- Add gotchas to `docs/convex-gotchas-phase4a.md`.
+
+## Phase 4b - Email Actions
+
+- Replace email outbox worker with Convex actions.
+
+Success criteria
+
+- Email enqueue works.
+- Lint + tests pass.
+- Commit.
+
+Notes
+
+- Add any trouble notes to `AGENTS.md`.
+- Add gotchas to `docs/convex-gotchas-phase4b.md`.
+
+## Phase 4c - Scheduling + Retry
+
+- Replace polling worker with Convex scheduled functions + retry logic.
+
+Success criteria
+
+- Scheduled retries work.
+- Lint + tests pass.
+- Commit.
+
+Notes
+
+- Add any trouble notes to `AGENTS.md`.
+- Add gotchas to `docs/convex-gotchas-phase4c.md`.
+
+## Phase 4d - Email Tests
+
 - Add a minimal test for email enqueue + retry behavior (unit level).
 
 Success criteria
 
-- Admin status updates + employee views work.
 - Email enqueue path covered with minimal test.
 - Lint + tests pass.
 - Commit.
@@ -90,32 +248,60 @@ Success criteria
 Notes
 
 - Add any trouble notes to `AGENTS.md`.
-- Add gotchas to `docs/convex-gotchas-phase4.md`.
+- Add gotchas to `docs/convex-gotchas-phase4d.md`.
 
-## Phase 5 - Cleanup + Deletion of Legacy Backend
+## Phase 5a - Remove Legacy Backend
 
 - Remove Express/Sequelize/Redis server code and dependencies.
 - Remove server docker files, migrations, and RLS policies.
-- Update README + docs for Convex dev/prod workflow.
-- Ensure routes are fully migrated and no old API paths are referenced.
 
 Success criteria
 
 - App runs on Convex only.
 - Lint + tests pass.
-- Docs updated and ready for deployment.
 - Commit.
 
 Notes
 
 - Add any trouble notes to `AGENTS.md`.
-- Add gotchas to `docs/convex-gotchas-phase5.md`.
+- Add gotchas to `docs/convex-gotchas-phase5a.md`.
+
+## Phase 5b - Docs + Deploy Notes
+
+- Update README + docs for Convex dev/prod workflow.
+- Ensure routes are fully migrated and no old API paths are referenced.
+
+Success criteria
+
+- Docs updated and ready for deployment.
+- Lint + tests pass.
+- Commit.
+
+Notes
+
+- Add any trouble notes to `AGENTS.md`.
+- Add gotchas to `docs/convex-gotchas-phase5b.md`.
+
+## Phase 5c - Final Lint/Test Gate
+
+- Run full gate (lint/typecheck/tests/docs).
+
+Success criteria
+
+- Lint + tests pass.
+- Code ready for deployment.
+- Commit.
+
+Notes
+
+- Add any trouble notes to `AGENTS.md`.
+- Add gotchas to `docs/convex-gotchas-phase5c.md`.
 
 ## Seed Data Plan (Portfolio-safe)
 
 - Users: 200 (20 admins/employees, 180 clients)
 - Schedules: 365 days
-- Appointments: 5,000-20,000 over last 12 months
+- Appointments: 5,000-20,000 over last 6 months
 - Email outbox: 500-1,000 sample records
 - Keep avg doc size under ~2-5KB to stay well inside free-tier storage
 
@@ -130,5 +316,6 @@ Notes
 
 - Node + pnpm (existing).
 - Convex CLI + project configured (Convex dev server).
-- Email provider credentials for action tests (or stub/console transport).
+- Mailpit container for email action tests.
 - Optional: seeded dataset script runner (node script or convex function).
+- Deployment target: Vercel.
