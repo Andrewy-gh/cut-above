@@ -10,11 +10,14 @@
 
 import type * as appointments from "../appointments.js";
 import type * as auth from "../auth.js";
+import type * as email from "../email.js";
+import type * as emailOutbox from "../emailOutbox.js";
 import type * as employees from "../employees.js";
 import type * as http from "../http.js";
 import type * as lib_auth from "../lib/auth.js";
 import type * as lib_dateTime from "../lib/dateTime.js";
 import type * as lib_emailOutbox from "../lib/emailOutbox.js";
+import type * as lib_emailTemplates from "../lib/emailTemplates.js";
 import type * as lib_names from "../lib/names.js";
 import type * as schedules from "../schedules.js";
 import type * as seed from "../seed.js";
@@ -28,11 +31,14 @@ import type {
 declare const fullApi: ApiFromModules<{
   appointments: typeof appointments;
   auth: typeof auth;
+  email: typeof email;
+  emailOutbox: typeof emailOutbox;
   employees: typeof employees;
   http: typeof http;
   "lib/auth": typeof lib_auth;
   "lib/dateTime": typeof lib_dateTime;
   "lib/emailOutbox": typeof lib_emailOutbox;
+  "lib/emailTemplates": typeof lib_emailTemplates;
   "lib/names": typeof lib_names;
   schedules: typeof schedules;
   seed: typeof seed;

@@ -13,9 +13,25 @@ import {
 } from "@/utils/date";
 import { useQuery } from "@/convex/client";
 import { api } from "../../../convex/_generated/api";
-export function useScheduleQuery(scheduleId?: string) {
+
+type ScheduleScope = "public" | "private";
+
+interface UseScheduleQueryOptions {
+  scope?: ScheduleScope;
+}
+
+export function useScheduleQuery(
+  scheduleId?: string,
+  options: UseScheduleQueryOptions = {}
+) {
   const dispatch = useAppDispatch();
-  const schedulesData = useQuery(api.schedules.getPublicSchedules, {});
+  const scope = options.scope ?? "public";
+  const schedulesData = useQuery(
+    scope === "private"
+      ? api.schedules.getPrivateSchedules
+      : api.schedules.getPublicSchedules,
+    {}
+  );
 
   const normalizedSchedules = useMemo(() => {
     if (!schedulesData) return [];

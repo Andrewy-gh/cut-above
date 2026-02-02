@@ -9,7 +9,7 @@ import styles from './styles.module.css';
 
 export default function DashboardAppointment() {
   const { id } = useParams<{ id: string }>();
-  const { appointments } = useScheduleQuery(id);
+  const { appointments } = useScheduleQuery(id, { scope: 'private' });
   const formatTimeAppt = sortAndFormatApptByStartTime(appointments || []);
   const [status, setStatus] = useState('scheduled');
   const statuses = filterByApptStatus(formatTimeAppt);
