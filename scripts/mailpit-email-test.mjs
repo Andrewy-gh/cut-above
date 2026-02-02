@@ -46,7 +46,14 @@ try {
   run("docker", ["compose", "up", "-d", "mailpit"], { env, cwd: repoRoot });
   run(
     "pnpm",
-    ["-C", "convex-tests", "vitest", "run", "src/emailOutbox.mailpit.test.ts"],
+    [
+      "-C",
+      "convex-tests",
+      "exec",
+      "vitest",
+      "run",
+      "src/emailOutbox.mailpit.test.ts",
+    ],
     { env, cwd: repoRoot }
   );
 } catch (error) {
