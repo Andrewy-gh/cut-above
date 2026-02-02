@@ -6,6 +6,7 @@ import authConfig from "./auth.config";
 import { components } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
+import { parseName } from "./lib/names";
 
 const appSiteUrl = process.env.SITE_URL ?? process.env.VITE_SITE_URL ?? "";
 const convexSiteUrl = process.env.CONVEX_SITE_URL ?? "";
@@ -28,13 +29,17 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
           .withIndex("by_id", (q) => q.eq("id", doc._id))
           .first();
         if (existing) return;
+        const parsedName = parseName(doc.name);
+        const createdAt = doc.createdAt ?? Date.now();
         await ctx.db.insert("users", {
           id: doc._id,
-          name: doc.name,
+          name: parsedName.name,
+          firstName: parsedName.firstName,
+          lastName: parsedName.lastName,
           email: doc.email,
           role: DEFAULT_ROLE,
-          createdAt: doc.createdAt,
-          updatedAt: doc.updatedAt,
+          createdAt,
+          updatedAt: doc.updatedAt ?? createdAt,
         });
       },
       onUpdate: async (ctx, newDoc) => {
@@ -43,10 +48,13 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
           .withIndex("by_id", (q) => q.eq("id", newDoc._id))
           .first();
         if (!existing) return;
+        const parsedName = parseName(newDoc.name);
         await ctx.db.patch(existing._id, {
-          name: newDoc.name,
           email: newDoc.email,
-          updatedAt: newDoc.updatedAt,
+          name: parsedName.name ?? existing.name,
+          firstName: parsedName.firstName ?? existing.firstName,
+          lastName: parsedName.lastName ?? existing.lastName,
+          updatedAt: newDoc.updatedAt ?? Date.now(),
         });
       },
       onDelete: async (ctx, doc) => {
@@ -109,10 +117,13 @@ export const getCurrentUser = query({
       .first();
 
     if (user) return user;
+    const parsedName = parseName(authUser.name);
 
     return {
       id: authUser._id,
-      name: authUser.name,
+      name: parsedName.name,
+      firstName: parsedName.firstName,
+      lastName: parsedName.lastName,
       email: authUser.email,
       role: DEFAULT_ROLE,
       createdAt: authUser.createdAt,

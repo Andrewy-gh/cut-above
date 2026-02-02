@@ -6,6 +6,10 @@ settings:
 
 importers:
   .:
+    dependencies:
+      dayjs:
+        specifier: ^1.11.19
+        version: 1.11.19
     devDependencies:
       '@convex-dev/better-auth':
         specifier: ^0.10.10
@@ -652,6 +656,12 @@ packages:
         integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==,
       }
     engines: { node: '>= 8' }
+
+  dayjs@1.11.19:
+    resolution:
+      {
+        integrity: sha512-t5EcLVS6QPBNqM2z8fakk/NKel+Xzshgt8FFKAn+qwlD1pzZWxh0nVCrvFK7ZDb6XucZeF9z8C7CBWTRIVApAw==,
+      }
 
   debug@4.4.3:
     resolution:
@@ -1521,6 +1531,8 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  dayjs@1.11.19: {}
 
   debug@4.4.3:
     dependencies:
