@@ -4,12 +4,21 @@ import dns from 'dns';
 
 dns.setDefaultResultOrder('verbatim');
 
+const convexDeploymentUrl = process.env.CONVEX_DEPLOYMENT_URL ?? '';
+
 // https://vitejs.dev/config/
 export default defineConfig({
+  define: {
+    'import.meta.env.CONVEX_DEPLOYMENT_URL':
+      JSON.stringify(convexDeploymentUrl),
+  },
   plugins: [react()],
   server: {
     host: 'localhost',
     port: 5173,
+    fs: {
+      allow: ['..'],
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:3000',
