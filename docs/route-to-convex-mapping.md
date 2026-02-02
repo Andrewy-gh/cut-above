@@ -1,5 +1,7 @@
 # Route to Convex Mapping (Phase 0b)
 
+> Legacy Express routes have been removed. This mapping is retained for historical reference and validation of Convex function coverage.
+
 ## API routes inventory -> Convex mapping
 
 | Route                           | Method | Convex type | Key data models                          | Notes                                                                        |
