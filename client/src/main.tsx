@@ -16,7 +16,7 @@ import { theme } from '@/styles/styles';
 import { PersistGate } from 'redux-persist/integration/react';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import ConvexConnectionBoundary from '@/components/ConvexConnectionBoundary';
-import { ConvexProvider, convexClient } from '../../convex/client';
+import { ConvexProvider, convexClient } from '@/convex/client';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>

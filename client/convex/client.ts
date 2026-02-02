@@ -6,7 +6,7 @@ import {
   useQuery,
 } from 'convex/react';
 
-import { CONVEX_URL } from '../client/convex/env';
+import { CONVEX_URL } from './env';
 
 export const convexClient = new ConvexReactClient(CONVEX_URL);
 

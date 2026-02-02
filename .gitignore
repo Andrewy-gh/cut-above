@@ -8,3 +8,5 @@ test-results/
 
 # Claude agent instructions (all directories)
 **/CLAUDE*.md
+
+.env.local
