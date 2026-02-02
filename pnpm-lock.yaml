@@ -6,6 +6,13 @@ settings:
 
 importers:
   .:
+    dependencies:
+      dayjs:
+        specifier: ^1.11.19
+        version: 1.11.19
+      nodemailer:
+        specifier: ^6.10.1
+        version: 6.10.1
     devDependencies:
       '@convex-dev/better-auth':
         specifier: ^0.10.10
@@ -13,6 +20,12 @@ importers:
       '@playwright/test':
         specifier: ^1.58.1
         version: 1.58.1
+      '@types/node':
+        specifier: ^25.1.0
+        version: 25.2.0
+      '@types/nodemailer':
+        specifier: ^7.0.9
+        version: 7.0.9
       better-auth:
         specifier: 1.4.9
         version: 1.4.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -453,6 +466,18 @@ packages:
         integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==,
       }
 
+  '@types/node@25.2.0':
+    resolution:
+      {
+        integrity: sha512-DZ8VwRFUNzuqJ5khrvwMXHmvPe+zGayJhr2CDNiKB1WBE1ST8Djl00D0IC4vvNmHMdj6DlbYRIaFE7WHjlDl5w==,
+      }
+
+  '@types/nodemailer@7.0.9':
+    resolution:
+      {
+        integrity: sha512-vI8oF1M+8JvQhsId0Pc38BdUP2evenIIys7c7p+9OZXSPOH5c1dyINP1jT8xQ2xPuBUXmIC87s+91IZMDjH8Ow==,
+      }
+
   ansi-escapes@7.2.0:
     resolution:
       {
@@ -652,6 +677,12 @@ packages:
         integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==,
       }
     engines: { node: '>= 8' }
+
+  dayjs@1.11.19:
+    resolution:
+      {
+        integrity: sha512-t5EcLVS6QPBNqM2z8fakk/NKel+Xzshgt8FFKAn+qwlD1pzZWxh0nVCrvFK7ZDb6XucZeF9z8C7CBWTRIVApAw==,
+      }
 
   debug@4.4.3:
     resolution:
@@ -878,6 +909,13 @@ packages:
         integrity: sha512-yJBmDJr18xy47dbNVlHcgdPrulSn1nhSE6Ns9vTG+Nx9VPT6iV1MD6aQFp/t52zpf82FhLLTXAXr30NuCnxvwA==,
       }
     engines: { node: ^20.0.0 || >=22.0.0 }
+
+  nodemailer@6.10.1:
+    resolution:
+      {
+        integrity: sha512-Z+iLaBGVaSjbIzQ4pX6XV41HrooLsQ10ZWPUehGmuantvzWoDVBnmsdUcOIDM1t+yPor5pDhVlDESgOMEGxhHA==,
+      }
+    engines: { node: '>=6.0.0' }
 
   npm-run-path@5.3.0:
     resolution:
@@ -1149,6 +1187,12 @@ packages:
       }
     engines: { node: '>=14.17' }
     hasBin: true
+
+  undici-types@7.16.0:
+    resolution:
+      {
+        integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==,
+      }
 
   which@2.0.2:
     resolution:
@@ -1438,6 +1482,14 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
+  '@types/node@25.2.0':
+    dependencies:
+      undici-types: 7.16.0
+
+  '@types/nodemailer@7.0.9':
+    dependencies:
+      '@types/node': 25.2.0
+
   ansi-escapes@7.2.0:
     dependencies:
       environment: 1.1.0
@@ -1521,6 +1573,8 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  dayjs@1.11.19: {}
 
   debug@4.4.3:
     dependencies:
@@ -1662,6 +1716,8 @@ snapshots:
 
   nanostores@1.1.0: {}
 
+  nodemailer@6.10.1: {}
+
   npm-run-path@5.3.0:
     dependencies:
       path-key: 4.0.0
@@ -1780,6 +1836,8 @@ snapshots:
   type-fest@4.41.0: {}
 
   typescript@5.9.3: {}
+
+  undici-types@7.16.0: {}
 
   which@2.0.2:
     dependencies:

@@ -50,8 +50,9 @@ afterEach(() => {
   console.error = originalError;
 });
 
-vi.mock('@/features/emailSlice', () => ({
-  useSendMessageResponseMutation: () => [vi.fn(), { isLoading: false }],
+vi.mock('@/convex/client', () => ({
+  useMutation: () => vi.fn().mockResolvedValue({ success: true, message: 'ok' }),
+  useQuery: () => undefined,
 }));
 
 vi.mock('@/features/employeeSlice', async (importOriginal) => {

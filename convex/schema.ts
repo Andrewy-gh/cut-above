@@ -4,64 +4,71 @@ import { v } from "convex/values";
 export default defineSchema({
   users: defineTable({
     id: v.string(),
-    name: v.string(),
+    name: v.optional(v.string()),
+    firstName: v.optional(v.string()),
+    lastName: v.optional(v.string()),
     email: v.string(),
     role: v.string(),
     passwordHash: v.optional(v.string()),
-    createdAt: v.number(),
-    updatedAt: v.number(),
+    image: v.optional(v.string()),
+    profile: v.optional(v.string()),
+    createdAt: v.optional(v.number()),
+    updatedAt: v.optional(v.number()),
   })
     .index("by_email", ["email"])
-    .index("by_id", ["id"]),
+    .index("by_user_id", ["id"])
+    .index("by_role", ["role"]),
   schedules: defineTable({
     id: v.string(),
-    employeeId: v.string(),
     date: v.string(),
-    startTime: v.string(),
-    endTime: v.string(),
-    isAvailable: v.boolean(),
-  }).index("by_employee_date", ["employeeId", "date"]),
+    open: v.string(),
+    close: v.string(),
+  })
+    .index("by_date", ["date"])
+    .index("by_open", ["open"]),
   appointments: defineTable({
     id: v.string(),
+    status: v.string(),
+    service: v.string(),
+    start: v.string(),
+    end: v.string(),
     clientId: v.string(),
     employeeId: v.string(),
     scheduleId: v.string(),
-    status: v.string(),
-    notes: v.optional(v.string()),
-    createdAt: v.number(),
-    updatedAt: v.number(),
   })
+    .index("by_appointment_id", ["id"])
     .index("by_client", ["clientId"])
     .index("by_employee", ["employeeId"])
     .index("by_schedule", ["scheduleId"]),
   passwordResetTokens: defineTable({
     id: v.string(),
     userId: v.string(),
-    token: v.string(),
+    tokenHash: v.string(),
+    timesUsed: v.number(),
     expiresAt: v.number(),
   })
-    .index("by_token", ["token"])
+    .index("by_token_hash", ["tokenHash"])
     .index("by_user", ["userId"])
     .index("by_expires_at", ["expiresAt"]),
   emailOutbox: defineTable({
     id: v.string(),
-    to: v.string(),
-    subject: v.string(),
-    body: v.string(),
+    eventType: v.string(),
+    dedupeKey: v.string(),
+    payload: v.any(),
     status: v.string(),
-    retryCount: v.number(),
-    nextRetryAt: v.number(),
+    attempts: v.number(),
+    availableAt: v.number(),
     createdAt: v.number(),
     updatedAt: v.number(),
-  }).index("by_status_next_retry", ["status", "nextRetryAt"]),
+  })
+    .index("by_status_available_at", ["status", "availableAt"])
+    .index("by_dedupe_key", ["dedupeKey"]),
   emailDeliveries: defineTable({
     id: v.string(),
-    emailId: v.string(),
+    dedupeKey: v.string(),
     status: v.string(),
-    messageId: v.optional(v.string()),
-    sentAt: v.optional(v.number()),
-    error: v.optional(v.string()),
+    providerMessageId: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
-  }).index("by_email", ["emailId"]),
+  }).index("by_dedupe_key", ["dedupeKey"]),
 });

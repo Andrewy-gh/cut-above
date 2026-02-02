@@ -5,8 +5,11 @@
   "scripts": {
     "build": "pnpm -r build",
     "dev": "pnpm -r --if-present dev",
-    "dev:convex": "npx convex dev",
+    "dev:convex": "pnpm dlx convex dev",
     "lint": "pnpm -r --if-present lint",
+    "mailpit:up": "docker compose up -d mailpit",
+    "mailpit:down": "docker compose down",
+    "email:test": "node scripts/mailpit-email-test.mjs",
     "seed": "tsx convex/seed.ts",
     "prepare": "husky",
     "typecheck": "pnpm -r --if-present typecheck",
@@ -14,9 +17,15 @@
     "test:run": "pnpm -r --if-present test:run",
     "test:e2e": "playwright test"
   },
+  "dependencies": {
+    "dayjs": "^1.11.19",
+    "nodemailer": "^6.10.1"
+  },
   "devDependencies": {
-    "@playwright/test": "^1.58.1",
     "@convex-dev/better-auth": "^0.10.10",
+    "@playwright/test": "^1.58.1",
+    "@types/node": "^25.1.0",
+    "@types/nodemailer": "^7.0.9",
     "better-auth": "1.4.9",
     "convex": "^1.31.7",
     "husky": "^9.1.7",
@@ -26,10 +35,6 @@
     "typescript": "^5.9.3"
   },
   "lint-staged": {
-    "server/src/**/*.{ts,tsx}": [
-      "pnpm -C server exec eslint --fix --report-unused-disable-directives --max-warnings 0 --ext ts,tsx",
-      "pnpm exec prettier --write"
-    ],
     "client/src/**/*.{ts,tsx,js,jsx}": [
       "pnpm -C client exec eslint --fix --report-unused-disable-directives --max-warnings 0 --ext ts,tsx"
     ],

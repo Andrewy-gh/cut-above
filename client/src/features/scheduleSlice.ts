@@ -1,5 +1,9 @@
-import { createSelector, createEntityAdapter, EntityState } from '@reduxjs/toolkit';
-import { apiSlice } from '../app/api/apiSlice';
+import {
+  createSelector,
+  createEntityAdapter,
+  createSlice,
+  type PayloadAction,
+} from '@reduxjs/toolkit';
 import { selectEmployeeIds } from './employeeSlice';
 import { selectDate, selectEmployee, selectService } from './filterSlice';
 import type { RootState } from '../app/store';
@@ -9,7 +13,6 @@ import {
   currentDate,
   findAvailableTimeSlots,
   formatDate,
-  normalizeSchedule,
 } from '../utils/date';
 import { Schedule } from '../types';
 
@@ -17,59 +20,25 @@ const scheduleAdapter = createEntityAdapter<Schedule>();
 
 const initialState = scheduleAdapter.getInitialState();
 
-export const extendedApiSlice = apiSlice.injectEndpoints({
-  endpoints: (builder) => ({
-    getSchedule: builder.query<EntityState<Schedule, string>, void>({
-      query: () => '/api/schedules',
-      transformResponse: (responseData: Schedule[]) => {
-        const loadedPosts = responseData
-          .sort((a, b) => new Date(a.open).getTime() - new Date(b.open).getTime())
-          .map((s) => {
-            return normalizeSchedule(s);
-          });
-        return scheduleAdapter.setAll(initialState, loadedPosts);
-      },
-      providesTags: ['Schedule'],
-    }),
-
-    addSchedule: builder.mutation<{ success: boolean; message: string; schedule: Schedule }, Partial<Schedule> & { dates?: string[] }>({
-      query: (schedule) => ({
-        url: '/api/schedules',
-        method: 'POST',
-        body: schedule
-      }),
-      invalidatesTags: ['Appointment', 'Schedule'],
-    }),
-
-    updateSchedule: builder.mutation<{ success: boolean; message: string; schedule: Schedule }, Partial<Schedule> & { id: string }>({
-      query: (schedule) => ({
-        url: `/api/schedules/${schedule.id}`,
-        method: 'PUT',
-        body: schedule
-      }),
-      invalidatesTags: ['Appointment', 'Schedule'],
-    })
-  }),
+const scheduleSlice = createSlice({
+  name: 'schedules',
+  initialState,
+  reducers: {
+    setSchedules: (state, action: PayloadAction<Schedule[]>) => {
+      scheduleAdapter.setAll(state, action.payload);
+    },
+    clearSchedules: (state) => {
+      scheduleAdapter.removeAll(state);
+    },
+  },
 });
 
-
-export const {
-  useGetScheduleQuery,
-  useAddScheduleMutation,
-  useUpdateScheduleMutation,
-} = extendedApiSlice;
-
-export const selectScheduleResult =
-  extendedApiSlice.endpoints.getSchedule.select();
-
-const selectScheduleData = createSelector(
-  selectScheduleResult,
-  (scheduleResult) => scheduleResult.data
-);
+export const { setSchedules, clearSchedules } = scheduleSlice.actions;
+export default scheduleSlice.reducer;
 
 export const { selectAll: selectAllSchedule, selectById: selectScheduleById } =
   scheduleAdapter.getSelectors(
-    (state: RootState) => selectScheduleData(state) ?? initialState
+    (state: RootState) => state.schedules ?? initialState
   );
 
 

@@ -6,7 +6,10 @@ import { Schedule } from '@/types';
 
 // This is an admin page which list all upcoming and past schedules
 export default function DashboardSchedule() {
-  const { schedules, upcomingSchedules, pastSchedules } = useScheduleQuery();
+  const { schedules, upcomingSchedules, pastSchedules } = useScheduleQuery(
+    undefined,
+    { scope: 'private' }
+  );
 
   let content;
   if (!schedules || schedules.length === 0) {

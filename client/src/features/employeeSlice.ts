@@ -1,15 +1,17 @@
-import { createSelector, createEntityAdapter, EntityState } from '@reduxjs/toolkit';
-import { apiSlice } from '../app/api/apiSlice';
-import { EmployeeProfile } from '@/types';
+import { createEntityAdapter, createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../app/store';
+import { useEffect } from 'react';
+import { useQuery } from '@/convex/client';
+import { api } from '../../../convex/_generated/api';
+import { useAppDispatch } from '@/app/hooks';
 
 export interface Employee {
   id: string;
   firstName: string;
-  lastName: string;
-  email: string;
+  lastName?: string;
+  email?: string;
   phone?: string;
-  role: string;
+  role?: string;
   bio?: string;
 }
 
@@ -17,39 +19,55 @@ const employeeAdapter = createEntityAdapter<Employee>();
 
 const initialState = employeeAdapter.getInitialState();
 
-export const extendedApiSlice = apiSlice.injectEndpoints({
-  endpoints: (builder) => ({
-    getEmployees: builder.query<EntityState<Employee, string>, void>({
-      query: () => '/api/employees',
-      transformResponse: (responseData: Employee[]) => {
-        return employeeAdapter.setAll(initialState, responseData);
-      },
-      keepUnusedDataFor: 5,
-      providesTags: ['Employee'],
-    }),
-
-    getEmployeesProfiles: builder.query<EmployeeProfile[], void>({
-      query: () => '/api/employees/profiles',
-      transformResponse: (responseData: EmployeeProfile[]) => responseData,
-    })
-  }),
+const employeeSlice = createSlice({
+  name: 'employees',
+  initialState,
+  reducers: {
+    setEmployees: (state, action: PayloadAction<Employee[]>) => {
+      employeeAdapter.setAll(state, action.payload);
+    },
+    clearEmployees: (state) => {
+      employeeAdapter.removeAll(state);
+    },
+  },
 });
 
-export const { useGetEmployeesQuery, useGetEmployeesProfilesQuery } =
-  extendedApiSlice;
-
-export const selectEmployeesResult =
-  extendedApiSlice.endpoints.getEmployees.select();
-
-const selectEmployeesData = createSelector(
-  selectEmployeesResult,
-  (employeeResult) => employeeResult.data
-);
+export const { setEmployees, clearEmployees } = employeeSlice.actions;
+export default employeeSlice.reducer;
 
 export const {
   selectAll: selectAllEmployees,
   selectById: selectEmployeeById,
   selectIds: selectEmployeeIds,
 } = employeeAdapter.getSelectors(
-  (state: RootState) => selectEmployeesData(state) ?? initialState
+  (state: RootState) => state.employees ?? initialState
 );
+
+export const useGetEmployeesQuery = () => {
+  const dispatch = useAppDispatch();
+  const data = useQuery(api.employees.getEmployees, {});
+
+  useEffect(() => {
+    if (data) {
+      dispatch(setEmployees(data));
+    }
+  }, [data, dispatch]);
+
+  return {
+    data,
+    isLoading: data === undefined,
+    isSuccess: Boolean(data),
+    isError: false,
+  };
+};
+
+export const useGetEmployeesProfilesQuery = () => {
+  const data = useQuery(api.employees.getEmployeeProfiles, {});
+
+  return {
+    data,
+    isLoading: data === undefined,
+    isSuccess: Boolean(data),
+    isError: false,
+  };
+};

@@ -10,3 +10,4 @@ test-results/
 **/CLAUDE*.md
 
 .env.local
+.env.mailpit.local

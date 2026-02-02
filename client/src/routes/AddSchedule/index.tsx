@@ -4,7 +4,8 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import DateRangePicker from '@/components/DatePickers/DateRangePicker';
 import type { DateRange } from '@mui/x-date-pickers-pro/models';
 import dayjs, { Dayjs } from 'dayjs';
-import { useAddScheduleMutation } from '@/features/scheduleSlice';
+import { useMutation } from '@/convex/client';
+import { api } from '../../../../convex/_generated/api';
 import { useNotification } from '@/hooks/useNotification';
 import styles from './styles.module.css';
 
@@ -21,7 +22,7 @@ export default function AddSchedule() {
     dayjs().add(2, 'week'),
   ]);
   const { handleSuccess, handleError } = useNotification();
-  const [addSchedule] = useAddScheduleMutation();
+  const createSchedules = useMutation(api.schedules.createSchedules);
 
   const handleDateChange = (newDates: DateRange<Dayjs>) => {
     setDates(newDates);
@@ -35,12 +36,12 @@ export default function AddSchedule() {
     }
 
     try {
-      const newSchedule = await addSchedule({
+      await createSchedules({
         dates: [startDate.toISOString(), endDate.toISOString()],
         open: open?.format('HH:mm') || openTime,
         close: close?.format('HH:mm') || closeTime,
-      }).unwrap();
-      if (newSchedule.success) handleSuccess(newSchedule.message);
+      });
+      handleSuccess('New schedule added');
     } catch (err) {
       handleError(err);
     }

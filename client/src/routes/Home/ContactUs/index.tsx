@@ -2,7 +2,8 @@ import { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-import { useSendMessageResponseMutation } from '@/features/emailSlice';
+import { useMutation } from '@/convex/client';
+import { api } from '../../../../../convex/_generated/api';
 
 import { useNotification } from '@/hooks/useNotification';
 
@@ -31,7 +32,7 @@ export default function ContactUs() {
   };
 
   const { handleSuccess, handleError } = useNotification();
-  const [sendMessageResponse] = useSendMessageResponseMutation();
+  const sendMessage = useMutation(api.email.sendMessage);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,9 +41,9 @@ export default function ContactUs() {
         setEmailError({ error: true, helperText: 'invalid email' });
         return;
       }
-      const sentMessageResponse = await sendMessageResponse({
+      const sentMessageResponse = await sendMessage({
         contactDetails: contact,
-      }).unwrap();
+      });
       if (sentMessageResponse.success) {
         handleSuccess(sentMessageResponse.message);
         setContact({
