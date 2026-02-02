@@ -4,7 +4,7 @@ Use this file to record trouble encountered at the end of each migration phase.
 
 ## Phase 0
 
-- Phase 0a: no trouble encountered.
+- Phase 0a: server tests fail without DATABASE_URL (.env.test); TypeError "The \"url\" argument must be of type string. Received undefined" from server/src/utils/db.ts.
 
 ## Phase 1
 
