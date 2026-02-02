@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const repoRoot = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
-const envFile = resolve(repoRoot, ".env.mailpit");
+const envFile = resolve(repoRoot, ".env.mailpit.local");
 
 const parseEnvFile = (filePath) => {
   if (!existsSync(filePath)) return {};
@@ -34,6 +34,12 @@ const env = {
   ...process.env,
   ...parseEnvFile(envFile),
 };
+
+if (!existsSync(envFile)) {
+  console.warn(
+    "Missing .env.mailpit.local. Falling back to MAILPIT_URL/EMAIL_HOST defaults."
+  );
+}
 
 env.MAILPIT_URL = env.MAILPIT_URL ?? "http://localhost:8025";
 env.EMAIL_HOST = env.EMAIL_HOST ?? "127.0.0.1";
