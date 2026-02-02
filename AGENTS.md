@@ -4,7 +4,7 @@ Use this file to record trouble encountered at the end of each migration phase.
 
 ## Phase 0
 
-- none
+- Phase 0a: no trouble encountered.
 
 ## Phase 1
 
