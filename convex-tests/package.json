@@ -1,0 +1,16 @@
+{
+  "name": "cut-above-convex-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run"
+  },
+  "devDependencies": {
+    "@convex-dev/better-auth": "^0.10.10",
+    "@edge-runtime/vm": "^5.0.0",
+    "convex": "^1.31.7",
+    "convex-test": "^0.0.38",
+    "vitest": "^1.6.1"
+  }
+}

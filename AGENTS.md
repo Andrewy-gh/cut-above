@@ -27,7 +27,7 @@ Use this file to record trouble encountered at the end of each migration phase.
 
 ## Phase 3
 
-- none
+- Phase 3d: added convex-tests workspace using convex-test + Better Auth component registration for appointment edge-case coverage.
 
 ## Phase 4
 

@@ -1,4 +1,5 @@
 packages:
-  - "client"
-  - "server"
-  - "shared"
+  - 'client'
+  - 'convex-tests'
+  - 'server'
+  - 'shared'
