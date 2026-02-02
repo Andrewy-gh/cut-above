@@ -71,3 +71,9 @@ export const checkAvailabilityISO = (
   }
   return true;
 };
+
+export const formatDateSlashISO = (isoDatetime: string) =>
+  parseISOToLocalTime(isoDatetime).format("MM/DD/YYYY");
+
+export const formatTimeISO = (isoDatetime: string) =>
+  parseISOToLocalTime(isoDatetime).format("h:mma");

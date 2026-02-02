@@ -36,6 +36,7 @@ export default defineSchema({
     employeeId: v.string(),
     scheduleId: v.string(),
   })
+    .index("by_id", ["id"])
     .index("by_client", ["clientId"])
     .index("by_employee", ["employeeId"])
     .index("by_schedule", ["scheduleId"]),
