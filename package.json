@@ -11,7 +11,7 @@
     "mailpit:up": "docker compose up -d mailpit",
     "mailpit:down": "docker compose down",
     "email:test": "node scripts/mailpit-email-test.mjs",
-    "seed": "tsx convex/seed.ts",
+    "seed": "tsx scripts/seed.ts",
     "prepare": "husky",
     "typecheck": "pnpm -r --if-present typecheck",
     "test": "pnpm -r --if-present test",
