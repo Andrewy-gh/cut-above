@@ -74,7 +74,7 @@ describe("emailOutbox.processOutbox", () => {
       dedupeKey: "dedupe-sent",
     });
 
-    await t.action(internal.emailOutbox.processOutbox, {});
+    await t.action(internal.emailOutboxActions.processOutbox, {});
 
     const outbox = await t.run((ctx) => ctx.db.get(outboxId));
     expect(outbox?.status).toBe("sent");
@@ -102,7 +102,7 @@ describe("emailOutbox.processOutbox", () => {
       dedupeKey: "dedupe-retry",
     });
 
-    await t.action(internal.emailOutbox.processOutbox, {});
+    await t.action(internal.emailOutboxActions.processOutbox, {});
 
     const outbox = await t.run((ctx) => ctx.db.get(outboxId));
     expect(outbox?.status).toBe("pending");

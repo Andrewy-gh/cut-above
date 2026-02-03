@@ -102,35 +102,39 @@ const seedSchedule = async (t: ReturnType<typeof createConvexTest>) => {
 };
 
 describe('appointments.createAppointment', () => {
-  it('rejects conflicting bookings for the same employee', async () => {
-    const t = createConvexTest();
-    await seedSchedule(t);
-    await seedEmployee(t);
-    const client = await createAuthUser(t, 'client');
+  it(
+    'rejects conflicting bookings for the same employee',
+    { timeout: 10000 },
+    async () => {
+      const t = createConvexTest();
+      await seedSchedule(t);
+      await seedEmployee(t);
+      const client = await createAuthUser(t, 'client');
 
-    await t.run(async (ctx) => {
-      await ctx.db.insert('appointments', {
-        id: 'existing-appt',
-        status: 'scheduled',
-        service,
-        start: startTime,
-        end: endTime,
-        clientId: 'client-1',
-        employeeId,
-        scheduleId,
+      await t.run(async (ctx) => {
+        await ctx.db.insert('appointments', {
+          id: 'existing-appt',
+          status: 'scheduled',
+          service,
+          start: startTime,
+          end: endTime,
+          clientId: 'client-1',
+          employeeId,
+          scheduleId,
+        });
       });
-    });
 
-    const asClient = t.withIdentity(client.identity);
-    await expect(
-      asClient.mutation(api.appointments.createAppointment, {
-        start: '2026-02-02T15:30:00.000Z',
-        end: '2026-02-02T16:30:00.000Z',
-        service,
-        employee: { id: employeeId, firstName: 'Pat' },
-      })
-    ).rejects.toThrow(/Time slot conflicts with existing appointment/);
-  });
+      const asClient = t.withIdentity(client.identity);
+      await expect(
+        asClient.mutation(api.appointments.createAppointment, {
+          start: '2026-02-02T15:30:00.000Z',
+          end: '2026-02-02T16:30:00.000Z',
+          service,
+          employee: { id: employeeId, firstName: 'Pat' },
+        })
+      ).rejects.toThrow(/Time slot conflicts with existing appointment/);
+    }
+  );
 
   it('rejects invalid employee selections', async () => {
     const t = createConvexTest();

@@ -129,7 +129,7 @@ describe("email outbox critical cases", () => {
       const t = createConvexTest();
       const outboxId = await insertOutboxItem(t, { dedupeKey: "dedupe-max" });
 
-      await t.action(internal.emailOutbox.processOutbox, {});
+      await t.action(internal.emailOutboxActions.processOutbox, {});
 
       const outbox = await t.run((ctx) => ctx.db.get(outboxId));
       expect(outbox?.status).toBe("failed");

@@ -7,7 +7,8 @@ const crons = cronJobs();
 crons.interval(
   "process email outbox",
   { seconds: 30 },
-  internal.emailOutbox.processOutbox
+  internal.emailOutboxActions.processOutbox,
+  {}
 );
 
 export default crons;

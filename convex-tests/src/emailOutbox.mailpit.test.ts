@@ -68,7 +68,7 @@ describeMailpit("emailOutbox.processOutbox (mailpit)", () => {
     const t = createConvexTest();
     await insertOutboxItem(t);
 
-    await t.action(internal.emailOutbox.processOutbox, {});
+    await t.action(internal.emailOutboxActions.processOutbox, {});
 
     const messages = await listMessages();
     expect(messages.length).toBeGreaterThan(0);
