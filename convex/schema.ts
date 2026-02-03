@@ -9,9 +9,6 @@ export default defineSchema({
     lastName: v.optional(v.string()),
     email: v.string(),
     role: v.string(),
-    passwordHash: v.optional(v.string()),
-    image: v.optional(v.string()),
-    profile: v.optional(v.string()),
     createdAt: v.optional(v.number()),
     updatedAt: v.optional(v.number()),
   })
@@ -40,16 +37,6 @@ export default defineSchema({
     .index("by_client", ["clientId"])
     .index("by_employee", ["employeeId"])
     .index("by_schedule", ["scheduleId"]),
-  passwordResetTokens: defineTable({
-    id: v.string(),
-    userId: v.string(),
-    tokenHash: v.string(),
-    timesUsed: v.number(),
-    expiresAt: v.number(),
-  })
-    .index("by_token_hash", ["tokenHash"])
-    .index("by_user", ["userId"])
-    .index("by_expires_at", ["expiresAt"]),
   emailOutbox: defineTable({
     id: v.string(),
     eventType: v.string(),

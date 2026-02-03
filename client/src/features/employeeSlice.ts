@@ -8,11 +8,6 @@ import { useAppDispatch } from '@/app/hooks';
 export interface Employee {
   id: string;
   firstName: string;
-  lastName?: string;
-  email?: string;
-  phone?: string;
-  role?: string;
-  bio?: string;
 }
 
 const employeeAdapter = createEntityAdapter<Employee>();
@@ -61,13 +56,3 @@ export const useGetEmployeesQuery = () => {
   };
 };
 
-export const useGetEmployeesProfilesQuery = () => {
-  const data = useQuery(api.employees.getEmployeeProfiles, {});
-
-  return {
-    data,
-    isLoading: data === undefined,
-    isSuccess: Boolean(data),
-    isError: false,
-  };
-};

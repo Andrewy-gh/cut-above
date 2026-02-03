@@ -60,7 +60,6 @@ vi.mock('@/features/employeeSlice', async (importOriginal) => {
   return {
     ...actual,
     useGetEmployeesQuery: () => ({ data: [], isLoading: false, isSuccess: true }),
-    useGetEmployeesProfilesQuery: () => ({ data: [], isLoading: false, isSuccess: true }),
   };
 });
 

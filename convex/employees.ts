@@ -22,19 +22,3 @@ export const getEmployees = query({
   },
 });
 
-export const getEmployeeProfiles = query({
-  args: {},
-  handler: async (ctx) => {
-    const employees = await ctx.db
-      .query("users")
-      .withIndex("by_role", (q) => q.eq("role", "employee"))
-      .collect();
-
-    return employees.map((employee) => ({
-      id: employee.id,
-      firstName: getFirstName(employee),
-      image: employee.image ?? "",
-      profile: employee.profile ?? "",
-    }));
-  },
-});
