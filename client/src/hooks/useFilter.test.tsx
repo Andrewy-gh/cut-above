@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import dayjs from 'dayjs';
 import type { ReactNode } from 'react';
@@ -5,8 +6,6 @@ import { Provider } from 'react-redux';
 
 import { createTestStore } from '@/test/test-utils';
 import { useFilter } from './useFilter';
-
-import { vi } from 'vitest';
 
 vi.mock('@/hooks/useEmployeesQuery', () => ({
   useEmployeesQuery: () => ({
