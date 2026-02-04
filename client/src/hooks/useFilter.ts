@@ -24,7 +24,7 @@ export function useFilter() {
   const service = useAppSelector(selectService);
 
   const handleDateChange = (newDate: Dayjs) => {
-    dispatch(setDate(newDate.toISOString()));
+    dispatch(setDate(newDate.format('YYYY-MM-DD')));
   };
 
   const handleEmployeeChange = (id: string | undefined) => {
