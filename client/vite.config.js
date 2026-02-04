@@ -8,11 +8,13 @@ dns.setDefaultResultOrder('verbatim');
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const convexDeploymentUrl = env.CONVEX_DEPLOYMENT_URL ?? '';
+  const convexSiteUrl = env.CONVEX_SITE_URL ?? '';
 
   return {
     define: {
       'import.meta.env.CONVEX_DEPLOYMENT_URL':
         JSON.stringify(convexDeploymentUrl),
+      'import.meta.env.CONVEX_SITE_URL': JSON.stringify(convexSiteUrl),
     },
     plugins: [react()],
     server: {

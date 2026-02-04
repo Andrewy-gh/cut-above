@@ -9,7 +9,7 @@
    `pnpm dev:convex`
 
 3. Set client env:
-   Copy `.env.example` to `.env.local` and set `CONVEX_DEPLOYMENT_URL` from the Convex dev output.
+   Copy `.env.example` to `.env.local` and set `CONVEX_DEPLOYMENT_URL` and `CONVEX_SITE_URL` from the Convex dev output.
 
 4. Set Convex runtime env (Better Auth + emails):
    - `CONVEX_SITE_URL`: your Convex deployment site URL.
