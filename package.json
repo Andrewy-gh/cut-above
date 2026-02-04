@@ -6,6 +6,7 @@
     "build": "pnpm -r build",
     "dev": "pnpm -r --if-present dev",
     "dev:convex": "pnpm dlx convex dev",
+    "dev:setup": "node scripts/dev-setup.mjs",
     "dev:stop": "node scripts/dev-stop.mjs",
     "lint": "pnpm -r --if-present lint",
     "mailpit:up": "docker compose up -d mailpit",

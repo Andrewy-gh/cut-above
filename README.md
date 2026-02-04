@@ -34,9 +34,9 @@ Cookie based session storage through Redis. Pub/Sub through redis to handle emai
 
 4. Set environment variables:
    - Client + seed script: copy `.env.example` to `.env.local` and set `CONVEX_DEPLOYMENT_URL` and `CONVEX_SITE_URL` from the Convex dev output.
-     (Alternative: set them in `client/.env.local`.)
-   - Convex env: set `CONVEX_SITE_URL` (Convex deployment site URL) and `SITE_URL` (client origin) for Better Auth.
-     Use the Convex CLI: `pnpm dlx convex env set <NAME> <VALUE>`.
+     Client reads the repo-root `.env.local` (no `client/.env.local`).
+   - Convex env (one time per deployment): set `SITE_URL` (client origin) for Better Auth:
+     `pnpm dev:setup`
 
 5. Seed the database (Convex dev server must be running):
    `pnpm seed`
