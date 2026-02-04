@@ -29,18 +29,22 @@ Cookie based session storage through Redis. Pub/Sub through redis to handle emai
 2. Install dependencies:
    `pnpm install`
 
-3. Start Convex dev:
+3. Start Convex dev (terminal 1):
    `pnpm dev:convex`
 
 4. Set environment variables:
-   - Client: copy `.env.example` to `.env.local` and set `CONVEX_DEPLOYMENT_URL` from the Convex dev output.
+   - Client + seed script: copy `.env.example` to `.env.local` and set `CONVEX_DEPLOYMENT_URL` from the Convex dev output.
+     (Alternative: set it in `client/.env.local`.)
    - Convex env: set `CONVEX_SITE_URL` (Convex deployment site URL) and `SITE_URL` (client origin) for Better Auth.
      Use the Convex CLI: `pnpm dlx convex env set <NAME> <VALUE>`.
 
-5. Run the client:
+5. Seed the database (Convex dev server must be running):
+   `pnpm seed`
+
+6. Run the client (terminal 2):
    `pnpm -C client dev`
 
-6. Optional (email automation via Mailpit):
+7. Optional (email automation via Mailpit):
    - Copy `.env.mailpit.example` to `.env.mailpit.local`.
    - Run `pnpm email:test`.
 
