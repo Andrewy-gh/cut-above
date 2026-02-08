@@ -18,6 +18,8 @@
 
    Use the CLI (one time per deployment):
    `pnpm dev:setup`
+   For local Mailpit SMTP:
+   `pnpm dev:setup:mailpit`
 
 5. Run the client:
    `pnpm -C client dev`

@@ -12,12 +12,14 @@ if (!siteUrl) {
   process.exit(1);
 }
 
-const pnpmCommand = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
+const isWindows = process.platform === "win32";
+// On Windows, `pnpm` is typically a `.cmd` shim and works best via `shell: true`.
+const pnpmCommand = "pnpm";
 
 const result = spawnSync(
   pnpmCommand,
   ["dlx", "convex", "env", "set", "SITE_URL", siteUrl],
-  { stdio: "inherit" }
+  { stdio: "inherit", shell: isWindows }
 );
 
 if (result.error) {
