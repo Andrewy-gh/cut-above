@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn, spawnSync } from 'node:child_process';
+import net from 'node:net';
 
 const repoRoot = resolve(fileURLToPath(new URL('.', import.meta.url)), '..');
 const isWindows = process.platform === 'win32';
@@ -66,6 +67,10 @@ run('pnpm', ['convex:use:local']);
 // Bring up Mailpit.
 run('docker', ['compose', 'up', '-d', 'mailpit']);
 
+const envLocalFile = resolve(repoRoot, '.env.local');
+const envLocal = parseEnvFile(envLocalFile);
+const convexUrl = envLocal.CONVEX_DEPLOYMENT_URL || 'http://localhost:3210';
+
 const childEnv = {
   ...process.env,
   SITE_URL: siteUrl,
@@ -80,6 +85,7 @@ const childEnv = {
 console.info(`Mailpit UI: ${mailpitUrl}`);
 console.info(`SMTP: ${emailHost}:${emailPort}`);
 console.info(`SITE_URL: ${siteUrl}`);
+console.info(`Convex URL (client): ${convexUrl}`);
 
 const children = [];
 
@@ -94,9 +100,47 @@ const spawnLong = (cmd, cmdArgs) => {
   return child;
 };
 
+const waitForTcp = async (url, timeoutMs = 120_000) => {
+  const parsed = new URL(url);
+  const host = parsed.hostname;
+  const port = Number(parsed.port || (parsed.protocol === 'https:' ? '443' : '80'));
+  const startedAt = Date.now();
+
+  while (Date.now() - startedAt < timeoutMs) {
+    const ok = await new Promise((resolve) => {
+      const socket = net.connect({ host, port });
+      socket.once('connect', () => {
+        socket.end();
+        resolve(true);
+      });
+      socket.once('error', () => {
+        resolve(false);
+      });
+      socket.setTimeout(500, () => {
+        socket.destroy();
+        resolve(false);
+      });
+    });
+
+    if (ok) return true;
+    await sleep(500);
+  }
+  return false;
+};
+
 // Start Convex dev (prefer local dev deployment).
 // This may prompt on first run.
 spawnLong('pnpm', ['dev:convex:local']);
+
+// Wait for the local Convex backend to actually start listening.
+// If it never comes up (e.g. waiting for interactive config), the client can look "logged in"
+// from persisted state while auth calls (like sign out) fail with NetworkError.
+const isConvexUp = await waitForTcp(convexUrl);
+if (!isConvexUp) {
+  console.warn(
+    `Warning: Convex is not reachable at ${convexUrl} yet. If you see auth/network errors, finish Convex config and restart.`
+  );
+}
 
 // Best-effort: set Convex runtime env for Mailpit once Convex is reachable.
 // If Convex isn't configured yet, this will keep failing until you complete the prompt.

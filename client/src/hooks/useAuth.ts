@@ -1,18 +1,19 @@
-import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
   logoutUser,
   selectCurrentUser,
   selectCurrentUserRole,
   setCredentials,
-} from "@/features/auth/authSlice";
-import { authClient } from "@/convex/authClient";
-import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
-import { useNotification } from "./useNotification";
-import { cleanEmail } from "@/utils/email";
+} from '@/features/auth/authSlice';
+import { authClient } from '@/convex/authClient';
+import { CONVEX_SITE_URL, CONVEX_URL } from '@/convex/env';
+import { useQuery } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
+import { useNotification } from './useNotification';
+import { cleanEmail } from '@/utils/email';
 
 interface EmailChangePayload {
   email: string;
@@ -43,8 +44,7 @@ export function useAuth() {
   const sessionUser = session.data?.user ?? null;
   const user = sessionUser?.email ?? currentUser?.email ?? storedUser;
   const role = currentUser?.role ?? storedRole;
-  const isAuthLoading =
-    session.isPending || (sessionUser != null && currentUser === undefined);
+  const isAuthLoading = session.isPending || (sessionUser != null && currentUser === undefined);
 
   useEffect(() => {
     if (sessionUser?.email) {
@@ -68,8 +68,8 @@ export function useAuth() {
         return;
       }
       const { from } = location.state || {};
-      handleSuccess("Successfully logged in");
-      navigate(from || "/account");
+      handleSuccess('Successfully logged in');
+      navigate(from || '/account');
     } catch (err) {
       handleError(err);
     }
@@ -84,7 +84,16 @@ export function useAuth() {
       }
       dispatch(logoutUser());
     } catch (error) {
-      handleError("Error logging out: ", error);
+      if (import.meta.env.DEV) {
+        // Common dev failure: switching Convex local/cloud without restarting Vite,
+        // or Convex not running at the configured URL.
+        console.error('authClient.signOut failed', {
+          CONVEX_SITE_URL,
+          CONVEX_URL,
+          error,
+        });
+      }
+      handleError('Could not log out. Backend unreachable.', error);
     }
   };
 
@@ -97,7 +106,7 @@ export function useAuth() {
         handleError(result.error);
         return false;
       }
-      handleSuccess("Email updated");
+      handleSuccess('Email updated');
       return true;
     } catch (error) {
       handleError(`Error changing email: ${error}`);
@@ -114,7 +123,7 @@ export function useAuth() {
         handleError(result.error);
         return false;
       }
-      handleSuccess("Password updated");
+      handleSuccess('Password updated');
       return true;
     } catch (error) {
       handleError(`Error changing password: ${error}`);
@@ -128,7 +137,7 @@ export function useAuth() {
         handleError(result.error);
         return;
       }
-      handleSuccess("Account deleted");
+      handleSuccess('Account deleted');
       dispatch(logoutUser());
     } catch (error) {
       handleError(`Error deleting user: ${error}`);
@@ -145,7 +154,7 @@ export function useAuth() {
         handleError(result.error);
         return false;
       }
-      handleSuccess("Password updated");
+      handleSuccess('Password updated');
       return true;
     } catch (err) {
       handleError(err);
