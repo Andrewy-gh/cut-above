@@ -95,6 +95,7 @@ const spawnLong = (cmd, cmdArgs) => {
     shell: isWindows,
     cwd: repoRoot,
     env: childEnv,
+    detached: !isWindows, // allow killing the whole process group on Unix
   });
   children.push(child);
   return child;
@@ -167,7 +168,14 @@ const shutdown = () => {
           shell: false,
         });
       } else {
-        child.kill('SIGINT');
+        // On Unix, kill the process group so pnpm + its children (convex, vite) exit.
+        if (child.pid) {
+          try {
+            process.kill(-child.pid, 'SIGINT');
+          } catch {
+            process.kill(child.pid, 'SIGINT');
+          }
+        }
       }
     } catch {
       // ignore
