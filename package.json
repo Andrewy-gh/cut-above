@@ -8,6 +8,7 @@
     "dev:convex": "pnpm dlx convex dev",
     "dev:convex:local": "pnpm convex:use:local && pnpm dlx convex dev --configure existing --dev-deployment local",
     "dev:convex:cloud": "pnpm convex:use:cloud && pnpm dlx convex dev --configure existing --dev-deployment cloud",
+    "dev:local": "node scripts/dev-local.mjs",
     "dev:setup": "node scripts/dev-setup.mjs",
     "dev:setup:mailpit": "node scripts/dev-setup-mailpit.mjs",
     "dev:stop": "node scripts/dev-stop.mjs",

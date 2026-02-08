@@ -36,3 +36,4 @@ Use this file to record trouble encountered at the end of each migration phase.
 ## Phase 5
 
 - Phase 5b/5c: Convex-only docs updated; full gate run (lint/typecheck/tests/docs). Mailpit email automation documented.
+- Phase 5d: Frontend error page currently shows raw error messages; may need to sanitize/replace with user-friendly copy to avoid leaking internal details.
