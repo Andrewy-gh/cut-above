@@ -30,7 +30,10 @@ Cookie based session storage through Redis. Pub/Sub through redis to handle emai
    `pnpm install`
 
 3. Start Convex dev (terminal 1):
-   `pnpm dev:convex`
+   - Cloud dev deployment (default):
+     `pnpm dev:convex`
+   - Local dev deployment (can reach local Mailpit at 127.0.0.1):
+     `pnpm dev:convex:local`
 
 4. Set environment variables:
    - Client + seed script: copy `.env.example` to `.env.local` and set `CONVEX_DEPLOYMENT_URL` and `CONVEX_SITE_URL` from the Convex dev output.
@@ -46,7 +49,21 @@ Cookie based session storage through Redis. Pub/Sub through redis to handle emai
 
 7. Optional (email automation via Mailpit):
    - Copy `.env.mailpit.example` to `.env.mailpit.local`.
+   - Set Convex runtime env to use Mailpit SMTP:
+     `pnpm dev:setup:mailpit`
    - Run `pnpm email:test`.
+
+## Switching Convex dev (local vs cloud)
+
+- Store your cloud dev URLs once in `.env.local`:
+  - `CONVEX_DEPLOYMENT_URL_CLOUD=...`
+  - `CONVEX_SITE_URL_CLOUD=...` (falls back to deployment url if omitted)
+- Switch client config:
+  - Use local: `pnpm convex:use:local` (defaults to `http://localhost:3210`)
+  - Use cloud: `pnpm convex:use:cloud`
+- Start Convex dev in the same mode:
+  - Local: `pnpm dev:convex:local`
+  - Cloud: `pnpm dev:convex:cloud`
 
 ## Docs
 
