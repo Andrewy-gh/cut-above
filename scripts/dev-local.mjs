@@ -157,9 +157,18 @@ if (!backendOnly) {
 }
 
 const shutdown = () => {
+  // `child.kill()` doesn't reliably terminate the whole process tree on Windows,
+  // especially when spawned via a shell. Use taskkill as a last resort.
   for (const child of children) {
     try {
-      child.kill();
+      if (isWindows && child.pid) {
+        spawnSync('taskkill', ['/PID', String(child.pid), '/T', '/F'], {
+          stdio: 'ignore',
+          shell: false,
+        });
+      } else {
+        child.kill('SIGINT');
+      }
     } catch {
       // ignore
     }
