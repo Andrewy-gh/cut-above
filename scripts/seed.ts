@@ -58,20 +58,70 @@ const appointmentSeeds = [
 ];
 
 const env = {
-  ...parseEnvFile(resolve(repoRoot, ".env.local")),
+  // Prefer repo-root .env.local over client/.env.local if both exist.
+  // This avoids accidentally seeding a different deployment than local dev is pointed at.
   ...parseEnvFile(resolve(repoRoot, "client/.env.local")),
+  ...parseEnvFile(resolve(repoRoot, ".env.local")),
   ...process.env,
 };
 
+const envClient = parseEnvFile(resolve(repoRoot, "client/.env.local"));
+const envRoot = parseEnvFile(resolve(repoRoot, ".env.local"));
+
+const getDeploymentUrl = (source: Record<string, string>) =>
+  source.CONVEX_DEPLOYMENT_URL ?? source.CONVEX_URL ?? source.CONVEX_HTTP_URL;
+
+const clientDeploymentUrl = getDeploymentUrl(envClient);
+const rootDeploymentUrl = getDeploymentUrl(envRoot);
+const procDeploymentUrl = getDeploymentUrl(process.env as Record<string, string>);
+
+let deploymentUrlSource: "process.env" | ".env.local" | "client/.env.local" | "unknown" =
+  "unknown";
 const deploymentUrl =
-  env.CONVEX_DEPLOYMENT_URL ?? env.CONVEX_URL ?? env.CONVEX_HTTP_URL;
+  procDeploymentUrl ??
+  rootDeploymentUrl ??
+  clientDeploymentUrl ??
+  env.CONVEX_DEPLOYMENT_URL ??
+  env.CONVEX_URL ??
+  env.CONVEX_HTTP_URL;
+
+if (deploymentUrl === procDeploymentUrl) deploymentUrlSource = "process.env";
+else if (deploymentUrl === rootDeploymentUrl) deploymentUrlSource = ".env.local";
+else if (deploymentUrl === clientDeploymentUrl) deploymentUrlSource = "client/.env.local";
+
+if (
+  rootDeploymentUrl &&
+  clientDeploymentUrl &&
+  rootDeploymentUrl !== clientDeploymentUrl
+) {
+  console.warn(
+    [
+      "Note: .env.local and client/.env.local have different Convex deployment URLs.",
+      `- .env.local: ${rootDeploymentUrl}`,
+      `- client/.env.local: ${clientDeploymentUrl}`,
+      `Using: ${deploymentUrl} (from ${deploymentUrlSource})`,
+    ].join("\n")
+  );
+}
 
 if (!deploymentUrl) {
   console.error(
-    "Missing CONVEX_DEPLOYMENT_URL (or CONVEX_URL). Set it in .env.local or client/.env.local."
+    "Missing CONVEX_DEPLOYMENT_URL (or CONVEX_URL). Set it in .env.local (preferred) or client/.env.local."
   );
   process.exit(1);
 }
+
+const isCloudDeployment = deploymentUrl.includes(".convex.cloud");
+if (isCloudDeployment && env.ALLOW_CLOUD_SEED !== "true") {
+  console.error(
+    `Refusing to seed a cloud deployment (${deploymentUrl}). Set ALLOW_CLOUD_SEED=true to proceed.`
+  );
+  process.exit(1);
+}
+
+console.info(
+  `Seeding Convex deployment: ${deploymentUrl} (${isCloudDeployment ? "cloud" : "local"}; from ${deploymentUrlSource})`
+);
 
 const convex = new ConvexHttpClient(deploymentUrl);
 
