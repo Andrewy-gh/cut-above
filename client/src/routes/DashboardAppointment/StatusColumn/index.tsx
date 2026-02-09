@@ -1,7 +1,6 @@
 import UpdateApptStatus from '../UpdateApptStatus';
 import Employee from '@/components/Employee';
 import ApptTitle from '@/components/ApptCard/ApptTitle';
-import ModifyAppointment from '@/components/ApptCard/ApptButton/ModifyAppointment';
 import CancelAppointment from '@/components/ApptCard/ApptButton/CancelAppointment';
 import styles from './styles.module.css';
 import { Appointment } from '@/types';
@@ -45,9 +44,6 @@ export default function StatusColumn({
           <div className={styles.buttons_wrap}>
             <div className="grow-0">
               <UpdateApptStatus appointment={appt} newStatus={newStatus} />
-            </div>
-            <div className="grow-0">
-              <ModifyAppointment appointment={appt} />
             </div>
             <div className="grow-0">
               <CancelAppointment appointment={appt} />
