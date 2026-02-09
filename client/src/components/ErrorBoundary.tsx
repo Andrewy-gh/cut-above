@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { getPublicErrorContent } from '@/utils/publicError';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -29,14 +30,18 @@ export default class ErrorBoundary extends Component<
 
   render() {
     if (this.state.hasError) {
+      const { heading, message, details } = getPublicErrorContent(
+        this.state.error
+      );
       return (
         <div className="container-lg" role="alert" aria-live="assertive">
-          <h1>Something went wrong.</h1>
-          <p>Sorry, an unexpected error has occurred.</p>
-          {this.state.error?.message ? (
-            <p>
-              <i>{this.state.error.message}</i>
-            </p>
+          <h1>{heading}</h1>
+          <p>{message}</p>
+          {import.meta.env.DEV && details ? (
+            <details>
+              <summary>Details</summary>
+              <pre style={{ whiteSpace: 'pre-wrap' }}>{details}</pre>
+            </details>
           ) : null}
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
             <button type="button" onClick={this.handleReload}>

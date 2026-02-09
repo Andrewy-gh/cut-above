@@ -1,16 +1,18 @@
 import { Link, useRouteError } from 'react-router';
-import { RouteError } from '@/types';
+import { getPublicErrorContent } from '@/utils/publicError';
 
 export default function Error() {
   const error = useRouteError();
+  const { details } = getPublicErrorContent(error);
   return (
     <main className="container-lg">
       <h5>Oops looks like an error happened...</h5>
-      <p>
-        <i>
-          {(error as RouteError).statusText || (error as RouteError).message}
-        </i>
-      </p>
+      {import.meta.env.DEV && details ? (
+        <details>
+          <summary>Details</summary>
+          <pre style={{ whiteSpace: 'pre-wrap' }}>{details}</pre>
+        </details>
+      ) : null}
       <p>
         Click{' '}
         <Link to="/login">
