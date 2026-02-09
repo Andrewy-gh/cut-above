@@ -4,12 +4,14 @@ import { getPublicErrorContent } from '@/utils/publicError';
 export default function ErrorPage() {
   const error = useRouteError();
   const { heading, message, details } = getPublicErrorContent(error);
+  const showDetails =
+    import.meta.env.DEV && import.meta.env.VITE_SHOW_ERROR_DETAILS === 'true';
 
   return (
     <div className="container-lg">
       <h1>{heading}</h1>
       <p>{message}</p>
-      {import.meta.env.DEV && details ? (
+      {showDetails && details ? (
         <details>
           <summary>Details</summary>
           <pre style={{ whiteSpace: 'pre-wrap' }}>{details}</pre>

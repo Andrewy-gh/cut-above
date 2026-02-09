@@ -7,7 +7,7 @@ import {
   setError,
   clearMessage,
 } from '@/features/notificationSlice';
-import { getErrorMessage } from '@/utils/apiError';
+import { getPublicErrorMessage } from '@/utils/apiError';
 
 export function useNotification() {
   const dispatch = useAppDispatch();
@@ -16,8 +16,8 @@ export function useNotification() {
   const severity = useAppSelector(selectSeverity);
   const handleSuccess = (msg: string) => dispatch(setSuccess(msg));
   const handleError = (err: unknown, extraErr?: unknown) => {
-    const errorMessage = getErrorMessage(err);
-    const extraMessage = extraErr == null ? '' : getErrorMessage(extraErr);
+    const errorMessage = getPublicErrorMessage(err);
+    const extraMessage = extraErr == null ? '' : getPublicErrorMessage(extraErr);
     const finalMessage = extraMessage ? `${errorMessage} ${extraMessage}` : errorMessage;
     dispatch(setError(`Error: ${finalMessage}`));
   };

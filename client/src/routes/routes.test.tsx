@@ -35,7 +35,6 @@ beforeEach(() => {
   console.error = (...args: unknown[]) => {
     const msg = args[0]?.toString() || '';
     if (
-      msg.includes('Not authorized') ||
       msg.includes('Consider adding an error boundary')
     ) {
       return;
@@ -201,7 +200,7 @@ describe('Protected Routes - Authenticated', () => {
 });
 
 describe('Admin Routes', () => {
-  it('throws error for non-admin accessing admin routes', () => {
+  it('shows access denied for non-admin accessing admin routes', () => {
     mockAuthState.user = 'user@example.com';
     mockAuthState.role = 'user';
     const TestRoutes = () => (
@@ -212,9 +211,8 @@ describe('Admin Routes', () => {
       </Routes>
     );
 
-    expect(() => {
-      render(<TestRoutes />, { route: '/dashboard' });
-    }).toThrow('Not authorized');
+    render(<TestRoutes />, { route: '/dashboard' });
+    expect(screen.getByText(/not allowed/i)).toBeInTheDocument();
   });
 
   it('allows admin to access admin routes', () => {

@@ -1,4 +1,5 @@
 import { isRouteErrorResponse } from 'react-router';
+import { getPublicErrorMessage } from '@/utils/apiError';
 
 type PublicErrorContent = {
   heading: string;
@@ -50,12 +51,26 @@ export function getPublicErrorContent(error: unknown): PublicErrorContent {
   }
 
   if (error instanceof Error) {
-    const details = [error.name ? `${error.name}: ${error.message}` : error.message, error.stack]
+    const publicMessage = getPublicErrorMessage(error, 'Please try again.');
+    const heading =
+      publicMessage.toLowerCase().includes('sign in')
+        ? 'Sign in required.'
+        : publicMessage.toLowerCase().includes('permission') ||
+            publicMessage.toLowerCase().includes("don't have access")
+          ? 'Not allowed.'
+          : publicMessage.toLowerCase().includes('could not be found')
+            ? 'Not found.'
+            : 'Something went wrong.';
+
+    const details = [
+      error.name ? `${error.name}: ${error.message}` : error.message,
+      error.stack,
+    ]
       .filter(Boolean)
       .join('\n');
     return {
-      heading: 'Something went wrong.',
-      message: 'Please try again.',
+      heading,
+      message: publicMessage,
       details,
     };
   }
@@ -66,4 +81,3 @@ export function getPublicErrorContent(error: unknown): PublicErrorContent {
     details: safeStringify(error),
   };
 }
-

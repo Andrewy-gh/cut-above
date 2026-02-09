@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+
 import { useNavigate, useParams, useLocation } from 'react-router';
 
 import { useEmployeesQuery } from '@/hooks/useEmployeesQuery';
@@ -22,6 +22,8 @@ import { useNotification } from '@/hooks/useNotification';
 import { Slot } from '@/types';
 
 import styles from './styles.module.css';
+import { api } from '../../../../convex/_generated/api';
+import { useQuery } from '@/convex/client';
 
 export default function BookingPage() {
   const navigate = useNavigate();
@@ -34,14 +36,13 @@ export default function BookingPage() {
   const { user } = useAuth();
   const { handleError } = useNotification();
 
-  // handles modifying an appointment
-  const [rescheduling, setRescheduling] = useState<boolean | null>(null);
   const { id } = useParams();
-  useEffect(() => {
-    if (id) {
-      setRescheduling(true);
-    }
-  }, [id]);
+  const rescheduling = Boolean(id);
+
+  // If we're rescheduling, validate that the appointment exists and is accessible.
+  // If not, Convex will throw and react-router will render the nearest errorElement.
+  useQuery(api.appointments.getAppointmentById, id ? { id } : 'skip');
+
   const message = rescheduling
     ? 'Please book your new appointment'
     : 'Schedule your appointment';

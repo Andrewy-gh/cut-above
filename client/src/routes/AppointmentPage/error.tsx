@@ -3,22 +3,28 @@ import { getPublicErrorContent } from '@/utils/publicError';
 
 export default function Error() {
   const error = useRouteError();
-  const { details } = getPublicErrorContent(error);
+  const { heading, message, details } = getPublicErrorContent(error);
+  const showDetails =
+    import.meta.env.DEV && import.meta.env.VITE_SHOW_ERROR_DETAILS === 'true';
   return (
     <main className="container-lg">
-      <h5>Oops looks like an error happened...</h5>
-      {import.meta.env.DEV && details ? (
+      <h1>{heading}</h1>
+      <p>{message}</p>
+      {showDetails && details ? (
         <details>
           <summary>Details</summary>
           <pre style={{ whiteSpace: 'pre-wrap' }}>{details}</pre>
         </details>
       ) : null}
       <p>
-        Please{' '}
-        <Link to="/login">
-          <u>login</u>{' '}
+        <Link to="/account/appointments">
+          View <u>your appointments</u>
         </Link>
-        to access your appointment information.
+      </p>
+      <p>
+        <Link to="/">
+          Return <u>home</u>
+        </Link>
       </p>
     </main>
   );

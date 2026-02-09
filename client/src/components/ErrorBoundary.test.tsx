@@ -27,7 +27,8 @@ describe('ErrorBoundary', () => {
     expect(
       screen.getByRole('heading', { name: /something went wrong/i })
     ).toBeInTheDocument();
-    expect(screen.getByText(/boom/i)).toBeInTheDocument();
+    // Error details are hidden by default (even in dev) unless VITE_SHOW_ERROR_DETAILS=true.
+    expect(screen.queryByText(/boom/i)).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /reload/i })).toBeInTheDocument();
   });
 });

@@ -33,11 +33,13 @@ export default class ErrorBoundary extends Component<
       const { heading, message, details } = getPublicErrorContent(
         this.state.error
       );
+      const showDetails =
+        import.meta.env.DEV && import.meta.env.VITE_SHOW_ERROR_DETAILS === 'true';
       return (
         <div className="container-lg" role="alert" aria-live="assertive">
           <h1>{heading}</h1>
           <p>{message}</p>
-          {import.meta.env.DEV && details ? (
+          {showDetails && details ? (
             <details>
               <summary>Details</summary>
               <pre style={{ whiteSpace: 'pre-wrap' }}>{details}</pre>

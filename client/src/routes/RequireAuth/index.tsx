@@ -3,6 +3,7 @@ import { useLocation, Navigate, Outlet } from 'react-router';
 
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { useAuth } from '../../hooks/useAuth';
+import AccessDenied from './AccessDenied';
 
 interface RequireAuthProps {
   requiredRole?: string;
@@ -24,7 +25,7 @@ export default function RequireAuth({ requiredRole }: RequireAuthProps) {
   }
 
   if (requiredRole && role !== requiredRole) {
-    throw new Error('Not authorized');
+    return <AccessDenied requiredRole={requiredRole} />;
   }
 
   return (

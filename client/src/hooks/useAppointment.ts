@@ -39,7 +39,7 @@ export function useAppointment() {
   };
 
   const handleBeginRescheduling = (id: string) => {
-    navigate(`/bookings/${id}`);
+    navigate(`/account/appointments/${id}/reschedule`);
   };
 
   const handleEndRescheduling = () => dispatch(endRescheduling());

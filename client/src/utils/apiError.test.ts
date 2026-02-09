@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   getErrorMessage,
+  getPublicErrorMessage,
   getInvalidParams,
   isUnauthorized,
 } from '@/utils/apiError';
@@ -52,5 +53,17 @@ describe('apiError helpers', () => {
     expect(getInvalidParams(err)).toEqual([
       { name: 'email', reason: 'Required' },
     ]);
+  });
+
+  it('sanitizes Convex wrapper errors (no request id / function names)', () => {
+    const err = new Error(
+      'Error: [CONVEX M(appointments:createAppointment)] [Request ID: eeaa2110631495ac] Server Error Uncaught ConvexError: Time slot conflicts with existing appointment Called by client'
+    );
+
+    const msg = getPublicErrorMessage(err);
+    expect(msg.toLowerCase()).toContain('no longer available');
+    expect(msg.toLowerCase()).not.toContain('request id');
+    expect(msg.toLowerCase()).not.toContain('convex');
+    expect(msg.toLowerCase()).not.toContain('appointments:createappointment');
   });
 });
