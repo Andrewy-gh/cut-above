@@ -15,11 +15,29 @@ import { parseName } from "./lib/names";
 const appSiteUrl = process.env.SITE_URL ?? process.env.VITE_SITE_URL ?? "";
 const convexSiteUrl = process.env.CONVEX_SITE_URL ?? "";
 
+const isLocalDeployment = () =>
+  (process.env.CONVEX_DEPLOYMENT ?? "").toLowerCase().startsWith("local:");
+
 const requireEnv = (value: string, name: string) => {
   if (!value) {
     throw new Error(`Missing ${name} for Better Auth configuration.`);
   }
   return value;
+};
+
+const resolveAuthSecret = () => {
+  const configured =
+    process.env.BETTER_AUTH_SECRET ?? process.env.AUTH_SECRET ?? "";
+
+  if (configured) return configured;
+
+  // Better Auth rejects its DEFAULT_SECRET outside of tests; provide a stable
+  // local dev secret so local auth routes work out of the box.
+  if (isLocalDeployment()) {
+    return "cut-above-local-dev-secret-please-change-me-32chars";
+  }
+
+  throw new Error("Missing BETTER_AUTH_SECRET for Better Auth configuration.");
 };
 
 const DEFAULT_ROLE = "client";
@@ -81,9 +99,11 @@ export const { onCreate, onUpdate, onDelete } = authComponent.triggersApi();
 export const createAuthOptions = (ctx: GenericCtx<DataModel>) => {
   const baseURL = requireEnv(convexSiteUrl, "CONVEX_SITE_URL");
   const siteUrl = requireEnv(appSiteUrl, "SITE_URL");
+  const secret = resolveAuthSecret();
 
   return {
     baseURL,
+    secret,
     trustedOrigins: [siteUrl, baseURL],
     database: authComponent.adapter(ctx),
     emailAndPassword: {

@@ -43,10 +43,14 @@ const env = parseEnv(raw);
 
 const get = (key) => process.env[key] ?? env.get(key) ?? '';
 
-const defaultLocal = 'http://localhost:3210';
+// Local deployments expose two endpoints:
+// - deployment URL: websocket + function API (default 3210)
+// - site URL: HTTP actions / auth routes (default 3211)
+const defaultLocalDeploymentUrl = 'http://localhost:3210';
+const defaultLocalSiteUrl = 'http://localhost:3211';
 const deploymentUrl =
   mode === 'local'
-    ? get('CONVEX_DEPLOYMENT_URL_LOCAL') || defaultLocal
+    ? get('CONVEX_DEPLOYMENT_URL_LOCAL') || defaultLocalDeploymentUrl
     : get('CONVEX_DEPLOYMENT_URL_CLOUD');
 
 if (!deploymentUrl) {
@@ -60,7 +64,7 @@ if (!deploymentUrl) {
 
 const siteUrl =
   mode === 'local'
-    ? get('CONVEX_SITE_URL_LOCAL') || deploymentUrl
+    ? get('CONVEX_SITE_URL_LOCAL') || defaultLocalSiteUrl
     : get('CONVEX_SITE_URL_CLOUD') || deploymentUrl;
 
 setOrAppend(lines, 'CONVEX_DEPLOYMENT_URL', deploymentUrl);

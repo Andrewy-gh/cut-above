@@ -11,3 +11,6 @@ test-results/
 
 .env.local
 .env.mailpit.local
+
+# opensrc - source code for packages
+opensrc/

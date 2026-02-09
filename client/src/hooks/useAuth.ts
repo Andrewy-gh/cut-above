@@ -47,6 +47,14 @@ export function useAuth() {
   const isAuthLoading = session.isPending || (sessionUser != null && currentUser === undefined);
 
   useEffect(() => {
+    // If Better Auth reports "no session", clear any persisted Redux auth state.
+    // Otherwise the UI can look logged-in even though auth routes will fail.
+    if (!session.isPending && sessionUser == null && storedUser != null) {
+      dispatch(logoutUser());
+    }
+  }, [dispatch, session.isPending, sessionUser, storedUser]);
+
+  useEffect(() => {
     if (sessionUser?.email) {
       dispatch(
         setCredentials({

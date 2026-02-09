@@ -37,3 +37,32 @@ Use this file to record trouble encountered at the end of each migration phase.
 
 - Phase 5b/5c: Convex-only docs updated; full gate run (lint/typecheck/tests/docs). Mailpit email automation documented.
 - Phase 5d: Frontend error page currently shows raw error messages; may need to sanitize/replace with user-friendly copy to avoid leaking internal details.
+- Phase 5e (local dev auth/email): fixed local Convex Windows ESM loader spam from email outbox by routing local email delivery through Mailpit HTTP (`EMAIL_DELIVERY_MODE=mailpit_http`) and moving SMTP delivery into a separate `"use node"` action (`convex/emailOutboxNodeActions.ts`).
+- Phase 5e (local dev auth): fixed "Backend unreachable" / "Something went wrong" auth flows by correcting local URL split: `CONVEX_DEPLOYMENT_URL` should be `http://localhost:3210` and `CONVEX_SITE_URL` (HTTP actions/auth) should be `http://localhost:3211` (updated `scripts/convex-use.mjs`, `.env.example`, `scripts/dev-local.mjs`).
+- Phase 5e (Better Auth): `GET http://localhost:3211/api/auth/get-session` was returning 500 with `BetterAuthError: You are using the default secret...`; fixed by passing `secret` into Better Auth config from `BETTER_AUTH_SECRET` and providing a local-dev fallback (`convex/auth.ts`).
+- Phase 5e (UX): added guard to clear persisted Redux auth when Better Auth session is null to avoid "phantom logged-in" UI (`client/src/hooks/useAuth.ts`).
+- Phase 5e (ops): `scripts/dev-stop.mjs` now also stops `convex-local-backend` so port `3210` doesn't remain bound between runs.
+- Phase 5e (convex env): `pnpm dlx convex env set CONVEX_SITE_URL ...` fails with `EnvVarNameForbidden` because `CONVEX_SITE_URL` is built-in and cannot be overridden; treat it as deployment-provided, not app-configured.
+
+<!-- opensrc:start -->
+
+## Source Code Reference
+
+Source code for dependencies is available in `opensrc/` for deeper understanding of implementation details.
+
+See `opensrc/sources.json` for the list of available packages and their versions.
+
+Use this source code when you need to understand how a package works internally, not just its types/interface.
+
+### Fetching Additional Source Code
+
+To fetch source code for a package or repository you need to understand, run:
+
+```bash
+npx opensrc <package>           # npm package (e.g., npx opensrc zod)
+npx opensrc pypi:<package>      # Python package (e.g., npx opensrc pypi:requests)
+npx opensrc crates:<package>    # Rust crate (e.g., npx opensrc crates:serde)
+npx opensrc <owner>/<repo>      # GitHub repo (e.g., npx opensrc vercel/ai)
+```
+
+<!-- opensrc:end -->
