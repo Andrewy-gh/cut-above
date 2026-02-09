@@ -1,6 +1,3 @@
-"use node";
-
-import nodemailer from "nodemailer";
 import { v } from "convex/values";
 
 import { internalAction, type ActionCtx } from "./_generated/server";
@@ -16,60 +13,103 @@ const MAX_RETRY_DELAY_MS = Number(process.env.EMAIL_RETRY_MAX_DELAY_MS ?? "60000
 const getRetryDelayMs = (attempt: number) =>
   Math.min(BASE_RETRY_DELAY_MS * 2 ** attempt, MAX_RETRY_DELAY_MS);
 
-const resolveEmailConfig = () => ({
-  host: process.env.EMAIL_HOST ?? process.env.DEV_EMAIL_HOST ?? "",
-  port: Number(process.env.EMAIL_PORT ?? process.env.DEV_EMAIL_PORT ?? "0"),
-  secure: (process.env.EMAIL_SECURE ?? process.env.DEV_EMAIL_SECURE ?? "false")
-    .toLowerCase()
-    .trim() === "true",
-  service: process.env.EMAIL_SERVICE ?? process.env.DEV_EMAIL_SERVICE ?? "",
-  user: process.env.EMAIL_USER ?? process.env.DEV_EMAIL_USER ?? "",
-  pass: process.env.EMAIL_PASSWORD ?? process.env.DEV_EMAIL_PASSWORD ?? "",
-});
-
 const isEmailPayload = (value: unknown): value is EmailPayload =>
   typeof value === "object" &&
   value !== null &&
   typeof (value as { receiver?: unknown }).receiver === "string";
 
-const sendEmail = async (payload: EmailPayload) => {
-  if (process.env.EMAIL_DELIVERY_MODE === "log") {
+type EmailSendResult = { messageId?: string };
+
+const normalizeDeliveryMode = (value: string) => value.toLowerCase().trim();
+
+const getDeliveryMode = () =>
+  normalizeDeliveryMode(process.env.EMAIL_DELIVERY_MODE ?? "smtp");
+
+const getMailpitUrl = () =>
+  (process.env.MAILPIT_URL ?? process.env.DEV_MAILPIT_URL ?? "").trim();
+
+const isLocalDeployment = () =>
+  (process.env.CONVEX_DEPLOYMENT ?? "").toLowerCase().startsWith("local:");
+
+const sendEmailViaMailpitHttp = async (
+  payload: EmailPayload
+): Promise<EmailSendResult> => {
+  const mailpitUrl = getMailpitUrl().replace(/\/+$/, "");
+  if (!mailpitUrl) {
+    throw new Error("Missing MAILPIT_URL for Mailpit HTTP delivery.");
+  }
+
+  const from =
+    process.env.EMAIL_USER ??
+    process.env.DEV_EMAIL_USER ??
+    "no-reply@cutabove.local";
+
+  const template = buildEmailTemplate(payload);
+  const response = await fetch(`${mailpitUrl}/api/v1/send`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      From: { Email: from },
+      To: [{ Email: payload.receiver }],
+      Subject: template.subject,
+      Text: template.text,
+    }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Mailpit send failed: ${response.status} ${text}`);
+  }
+
+  try {
+    const data = (await response.json()) as Record<string, unknown>;
+    const id = data.ID ?? data.Id ?? data.id;
+    if (typeof id === "string" && id.length) return { messageId: id };
+  } catch {
+    // ignore JSON parse errors; Mailpit may return an empty body.
+  }
+
+  return { messageId: "mailpit" };
+};
+
+const sendEmailViaSmtp = async (
+  ctx: ActionCtx,
+  payload: EmailPayload
+): Promise<EmailSendResult> => {
+  const template = buildEmailTemplate(payload);
+  return ctx.runAction(internal.emailOutboxNodeActions.sendEmailSmtp, {
+    receiver: payload.receiver,
+    subject: template.subject,
+    text: template.text,
+  });
+};
+
+const sendEmail = async (
+  ctx: ActionCtx,
+  payload: EmailPayload
+): Promise<EmailSendResult> => {
+  const mode = getDeliveryMode();
+
+  if (mode === "log") {
     console.info("Email delivery disabled; logging payload.", payload);
     return { messageId: "log" };
   }
 
-  const { host, port, secure, service, user, pass } = resolveEmailConfig();
-  const useHost = Boolean(host);
-  if (!useHost && (!service || !user || !pass)) {
-    throw new Error(
-      "Missing EMAIL_SERVICE, EMAIL_USER, or EMAIL_PASSWORD for email delivery."
-    );
+  // Local deployments on Windows have hit Node ESM loader errors. Prefer Mailpit's
+  // HTTP API in local dev when MAILPIT_URL is configured.
+  if (mode === "mailpit_http") {
+    return sendEmailViaMailpitHttp(payload);
+  }
+  if (mode === "smtp" && isLocalDeployment() && getMailpitUrl()) {
+    return sendEmailViaMailpitHttp(payload);
+  }
+  if (mode === "smtp") {
+    return sendEmailViaSmtp(ctx, payload);
   }
 
-  const transporter = nodemailer.createTransport(
-    useHost
-      ? {
-          host,
-          port: port || 25,
-          secure,
-          ...(user && pass ? { auth: { user, pass } } : {}),
-        }
-      : {
-          service,
-          auth: {
-            user,
-            pass,
-          },
-        }
-  );
-
-  const template = buildEmailTemplate(payload);
-  return transporter.sendMail({
-    from: user,
-    to: payload.receiver,
-    subject: template.subject,
-    text: template.text,
-  });
+  throw new Error(`Unsupported EMAIL_DELIVERY_MODE: ${mode}`);
 };
 
 const processOutboxItem = async (
@@ -102,7 +142,7 @@ const processOutboxItem = async (
   });
 
   try {
-    const result = await sendEmail(payload);
+    const result = await sendEmail(ctx, payload);
     await ctx.runMutation(internal.emailOutbox.upsertDeliveryStatus, {
       dedupeKey: item.dedupeKey,
       status: "sent",

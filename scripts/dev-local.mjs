@@ -69,23 +69,27 @@ run('docker', ['compose', 'up', '-d', 'mailpit']);
 
 const envLocalFile = resolve(repoRoot, '.env.local');
 const envLocal = parseEnvFile(envLocalFile);
-const convexUrl = envLocal.CONVEX_DEPLOYMENT_URL || 'http://localhost:3210';
+const convexDeploymentUrl = envLocal.CONVEX_DEPLOYMENT_URL || 'http://localhost:3210';
+const convexSiteUrl = envLocal.CONVEX_SITE_URL || 'http://localhost:3211';
 
 const childEnv = {
   ...process.env,
   SITE_URL: siteUrl,
+  MAILPIT_URL: mailpitUrl,
   EMAIL_HOST: emailHost,
   EMAIL_PORT: String(emailPort),
   EMAIL_SECURE: String(emailSecure),
   EMAIL_USER: emailUser,
   // Ensure we don't accidentally stay in `log` mode.
-  EMAIL_DELIVERY_MODE: 'smtp',
+  EMAIL_DELIVERY_MODE: 'mailpit_http',
 };
 
 console.info(`Mailpit UI: ${mailpitUrl}`);
-console.info(`SMTP: ${emailHost}:${emailPort}`);
+console.info(`Mailpit SMTP: ${emailHost}:${emailPort}`);
 console.info(`SITE_URL: ${siteUrl}`);
-console.info(`Convex URL (client): ${convexUrl}`);
+console.info(`CONVEX_DEPLOYMENT_URL (client): ${convexDeploymentUrl}`);
+console.info(`CONVEX_SITE_URL (auth/http): ${convexSiteUrl}`);
+console.info(`EMAIL_DELIVERY_MODE: ${childEnv.EMAIL_DELIVERY_MODE}`);
 
 const children = [];
 
@@ -136,10 +140,10 @@ spawnLong('pnpm', ['dev:convex:local']);
 // Wait for the local Convex backend to actually start listening.
 // If it never comes up (e.g. waiting for interactive config), the client can look "logged in"
 // from persisted state while auth calls (like sign out) fail with NetworkError.
-const isConvexUp = await waitForTcp(convexUrl);
+const isConvexUp = await waitForTcp(convexDeploymentUrl);
 if (!isConvexUp) {
   console.warn(
-    `Warning: Convex is not reachable at ${convexUrl} yet. If you see auth/network errors, finish Convex config and restart.`
+    `Warning: Convex is not reachable at ${convexDeploymentUrl} yet. If you see auth/network errors, finish Convex config and restart.`
   );
 }
 

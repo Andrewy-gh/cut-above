@@ -36,6 +36,7 @@ const mailpitEnv = {
   ...parseEnvFile(envLocal),
 };
 
+const mailpitUrl = mailpitEnv.MAILPIT_URL || "http://localhost:8025";
 const emailHost = mailpitEnv.EMAIL_HOST || "127.0.0.1";
 const emailPort = mailpitEnv.EMAIL_PORT || "1025";
 const emailSecure = mailpitEnv.EMAIL_SECURE || "false";
@@ -56,9 +57,9 @@ const run = (cmd, cmdArgs) => {
 // - SMTP settings pointing at Mailpit
 // - EMAIL_DELIVERY_MODE forced off of "log"
 run("pnpm", ["dlx", "convex", "env", "set", "SITE_URL", siteUrl]);
+run("pnpm", ["dlx", "convex", "env", "set", "MAILPIT_URL", mailpitUrl]);
 run("pnpm", ["dlx", "convex", "env", "set", "EMAIL_HOST", emailHost]);
 run("pnpm", ["dlx", "convex", "env", "set", "EMAIL_PORT", String(emailPort)]);
 run("pnpm", ["dlx", "convex", "env", "set", "EMAIL_SECURE", String(emailSecure)]);
 run("pnpm", ["dlx", "convex", "env", "set", "EMAIL_USER", emailUser]);
-run("pnpm", ["dlx", "convex", "env", "set", "EMAIL_DELIVERY_MODE", "smtp"]);
-
+run("pnpm", ["dlx", "convex", "env", "set", "EMAIL_DELIVERY_MODE", "mailpit_http"]);
