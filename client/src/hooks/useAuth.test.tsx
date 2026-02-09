@@ -65,7 +65,7 @@ beforeEach(() => {
 });
 
 describe('useAuth', () => {
-  it('logs in with cleaned email and navigates to from path', async () => {
+  it('logs in with cleaned email', async () => {
     const store = createTestStore();
     const { result } = renderHook(() => useAuth(), {
       wrapper: createWrapper(store),
@@ -79,7 +79,7 @@ describe('useAuth', () => {
       email: 'test@example.com',
       password: 'pw',
     });
-    expect(mocks.navigate).toHaveBeenCalledWith('/account');
+    expect(mocks.navigate).not.toHaveBeenCalled();
   });
 
   it('logs out and clears auth state', async () => {

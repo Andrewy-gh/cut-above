@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router';
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
@@ -31,13 +30,10 @@ interface PasswordResetPayload {
 
 export function useAuth() {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const storedUser = useAppSelector(selectCurrentUser);
   const storedRole = useAppSelector(selectCurrentUserRole);
   const session = authClient.useSession();
   const currentUser = useQuery(api.auth.getCurrentUser, {});
-
-  const location = useLocation();
 
   const { handleSuccess, handleError } = useNotification();
 
@@ -75,9 +71,7 @@ export function useAuth() {
         handleError(result.error);
         return;
       }
-      const { from } = location.state || {};
       handleSuccess('Successfully logged in');
-      navigate(from || '/account');
     } catch (err) {
       handleError(err);
     }

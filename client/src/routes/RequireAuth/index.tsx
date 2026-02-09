@@ -21,7 +21,9 @@ export default function RequireAuth({ requiredRole }: RequireAuthProps) {
     );
   }
   if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    const returnTo = `${location.pathname}${location.search}${location.hash}`;
+    const loginTo = `/login?returnTo=${encodeURIComponent(returnTo)}`;
+    return <Navigate to={loginTo} state={{ from: returnTo }} replace />;
   }
 
   if (requiredRole && role !== requiredRole) {

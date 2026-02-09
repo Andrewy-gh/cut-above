@@ -241,7 +241,7 @@ describe('Route Navigation', () => {
 
   it('Account page has links to settings and appointments', () => {
     mockAuthState.user = 'test@example.com';
-    mockAuthState.role = 'user';
+    mockAuthState.role = 'client';
     const TestRoutes = () => (
       <Routes>
         <Route element={<RequireAuth />}>
@@ -254,5 +254,23 @@ describe('Route Navigation', () => {
 
     expect(screen.getByRole('link', { name: /account settings/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /view your appointments/i })).toBeInTheDocument();
+  });
+
+  it('Account page hides appointments link for admin', () => {
+    mockAuthState.user = 'admin@example.com';
+    mockAuthState.role = 'admin';
+    const TestRoutes = () => (
+      <Routes>
+        <Route element={<RequireAuth />}>
+          <Route path="/account" element={<Account />} />
+        </Route>
+      </Routes>
+    );
+
+    render(<TestRoutes />, { route: '/account' });
+
+    expect(
+      screen.queryByRole('link', { name: /view your appointments/i })
+    ).not.toBeInTheDocument();
   });
 });
