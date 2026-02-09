@@ -50,9 +50,10 @@ export const {
   (state: RootState) => state.appointments ?? initialState
 );
 
-export const useGetAppointmentQuery = () => {
+export const useGetAppointmentQuery = (options?: { enabled?: boolean }) => {
+  const enabled = options?.enabled ?? true;
   const dispatch = useAppDispatch();
-  const data = useQuery(api.appointments.getAppointments, {});
+  const data = useQuery(api.appointments.getAppointments, enabled ? {} : 'skip');
 
   const normalized = useMemo(() => {
     if (!data) return [];
@@ -69,17 +70,24 @@ export const useGetAppointmentQuery = () => {
 
   return {
     data,
-    isLoading: data === undefined,
+    isLoading: enabled && data === undefined,
   };
 };
 
-export const useGetSingleAppointmentQuery = (id: string) => {
-  const data = useQuery(api.appointments.getAppointmentById, { id });
+export const useGetSingleAppointmentQuery = (
+  id: string | null | undefined,
+  options?: { enabled?: boolean }
+) => {
+  const enabled = options?.enabled ?? true;
+  const data = useQuery(
+    api.appointments.getAppointmentById,
+    enabled && id ? { id } : 'skip'
+  );
   const normalized = data ? normalizeAppointment(data) : undefined;
 
   return {
     data: normalized,
-    isLoading: data === undefined,
+    isLoading: enabled && id != null && data === undefined,
     isSuccess: Boolean(data),
     isError: false,
   };

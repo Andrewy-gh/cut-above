@@ -4,6 +4,8 @@ import {
   selectAllAppointment,
   useGetAppointmentQuery,
 } from '@/features/appointments/apptApiSlice';
+import { useAuth } from '@/hooks/useAuth';
+import AccessDenied from '@/routes/RequireAuth/AccessDenied';
 
 import UpcomingCard from '@/components/ApptCard/UpcomingCard';
 import PastCard from '@/components/ApptCard/PastCard';
@@ -13,8 +15,13 @@ import { Appointment } from '@/types';
 
 // This is the user's Appointments page when accessed through the Profile
 export default function Appointments() {
-  useGetAppointmentQuery();
+  const { role } = useAuth();
+  useGetAppointmentQuery({ enabled: role !== 'admin' });
   const appointments = useAppSelector(selectAllAppointment);
+
+  if (role === 'admin') {
+    return <AccessDenied requiredRole="client" />;
+  }
 
   let content;
 

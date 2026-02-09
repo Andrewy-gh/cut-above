@@ -5,18 +5,24 @@ import ModifyAppointment from '@/components/ApptCard/ApptButton/ModifyAppointmen
 import ApptTitle from '@/components/ApptCard/ApptTitle';
 import styles from './styles.module.css';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { useAuth } from '@/hooks/useAuth';
+import AccessDenied from '@/routes/RequireAuth/AccessDenied';
 
 // This is the single Appontment page shown when accessing through email
 export default function AppointmentPage() {
   const { id } = useParams<{ id: string }>();
+  const { role } = useAuth();
   const {
     data: appointment,
     isLoading,
     isSuccess,
     isError,
-  } = useGetSingleAppointmentQuery(id!);
+  } = useGetSingleAppointmentQuery(id, { enabled: role !== 'admin' });
 
   let content;
+  if (role === 'admin') {
+    return <AccessDenied requiredRole="client" />;
+  }
   if (isLoading) {
     return <LoadingSpinner />;
   } else if (isSuccess && appointment) {

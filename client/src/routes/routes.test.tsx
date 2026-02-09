@@ -12,6 +12,8 @@ import BookingPage from '@/routes/BookingPage';
 // Protected route components
 import RequireAuth from '@/routes/RequireAuth';
 import Account from '@/routes/Account';
+import Appointments from '@/routes/Appointments';
+import AppointmentPage from '@/routes/AppointmentPage';
 
 const mockAuthState = {
   user: null as string | null,
@@ -272,5 +274,39 @@ describe('Route Navigation', () => {
     expect(
       screen.queryByRole('link', { name: /view your appointments/i })
     ).not.toBeInTheDocument();
+  });
+});
+
+describe('Admin Restrictions', () => {
+  it('prevents admin from viewing client appointments page', () => {
+    mockAuthState.user = 'admin@example.com';
+    mockAuthState.role = 'admin';
+
+    const TestRoutes = () => (
+      <Routes>
+        <Route element={<RequireAuth />}>
+          <Route path="/account/appointments" element={<Appointments />} />
+        </Route>
+      </Routes>
+    );
+
+    render(<TestRoutes />, { route: '/account/appointments' });
+    expect(screen.getByText(/not allowed/i)).toBeInTheDocument();
+  });
+
+  it('prevents admin from viewing appointment deep link', () => {
+    mockAuthState.user = 'admin@example.com';
+    mockAuthState.role = 'admin';
+
+    const TestRoutes = () => (
+      <Routes>
+        <Route element={<RequireAuth />}>
+          <Route path="/appointment/:id" element={<AppointmentPage />} />
+        </Route>
+      </Routes>
+    );
+
+    render(<TestRoutes />, { route: '/appointment/123' });
+    expect(screen.getByText(/not allowed/i)).toBeInTheDocument();
   });
 });
