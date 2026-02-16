@@ -1,10 +1,90 @@
+/* ── Status Tab ── */
+
 .tab {
   cursor: pointer;
-  padding: 0.65rem;
-  border-radius: 0.7813rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
+  gap: 0.6rem;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.tab:hover {
+  border-color: #444;
+}
+
+.tab_active {
+  border-color: transparent;
+}
+
+/* Status-specific active backgrounds */
+.tab_scheduled {
+  background: rgba(38, 196, 224, 0.12);
+  border-color: rgba(38, 196, 224, 0.3);
+}
+
+.tab_checked_in {
+  background: rgba(224, 160, 13, 0.12);
+  border-color: rgba(224, 160, 13, 0.3);
+}
+
+.tab_completed {
+  background: rgba(76, 175, 80, 0.12);
+  border-color: rgba(76, 175, 80, 0.3);
+}
+
+/* Dot indicator */
+.status_dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot_scheduled {
+  background: #26C4E0;
+}
+
+.dot_checked_in {
+  background: #E0A00D;
+}
+
+.dot_completed {
+  background: #4caf50;
+}
+
+/* Label */
+.tab_label {
+  font-family: 'Nobile', sans-serif;
+  font-size: 0.9rem;
+  color: #999;
+  transition: color 0.2s;
+}
+
+.tab_active .tab_label {
+  color: #E6B953;
+  font-weight: 700;
+}
+
+/* Count badge */
+.tab_count {
+  font-family: 'Corben', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #555;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.1rem 0.5rem;
+  border-radius: 1rem;
+  min-width: 1.5rem;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.tab_active .tab_count {
+  color: #E6B953;
+  background: rgba(230, 185, 83, 0.1);
 }
