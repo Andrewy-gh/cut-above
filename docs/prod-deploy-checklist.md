@@ -62,3 +62,4 @@ Repo defaults are in `vercel.json`:
 - `installCommand`: `pnpm install --frozen-lockfile`
 - `buildCommand`: `pnpm -C client build`
 - `outputDirectory`: `client/dist`
+- SPA fallback is configured to serve `index.html` for deep links (`vercel.json` and `client/vercel.json`).
