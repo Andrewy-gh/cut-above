@@ -34,7 +34,7 @@ The client reads these from repo-root `.env.local` (see `client/vite.config.js` 
 Notes:
 
 - `client/.env.local` is not where the Vite app reads Convex URLs from. Prefer repo-root `.env.local`.
-- If both `.env.local` and `client/.env.local` exist and disagree, `pnpm seed` will warn.
+- If both `.env.local` and `client/.env.local` exist and disagree, seed scripts will warn.
 
 ## Switching "contracts": local backend vs cloud backend
 
@@ -110,9 +110,9 @@ Best-effort cleanup:
 - Windows: kills `node.exe` processes with command line matching `cut-above`, plus `convex-local-backend`
 - Non-Windows: `pkill -f cut-above`, plus `pkill -f convex-local-backend`
 
-### `seed.ts` (`pnpm seed`)
+### `seed.ts` (`pnpm seed`, `pnpm seed:dev`, `pnpm seed:prod`)
 
-Seeds the Convex deployment at `CONVEX_DEPLOYMENT_URL`.
+Seeds the Convex deployment at `CONVEX_DEPLOYMENT_URL` with realistic data.
 
 Safety:
 
@@ -120,12 +120,43 @@ Safety:
 
 Common usage:
 
-- Local: `pnpm convex:use:local && pnpm seed`
-- Cloud: `pnpm convex:use:cloud && $env:ALLOW_CLOUD_SEED=\"true\"; pnpm seed`
+- Local dev seed: `pnpm convex:use:local && pnpm seed:dev`
+- Cloud prod-like seed: `pnpm convex:use:cloud && $env:ALLOW_CLOUD_SEED=\"true\"; pnpm seed:prod`
 
 Extras:
 
-- `SEED_PASSWORD` (defaults to `Strongpassword123!`)
+- `SEED_MODE` (`dev` or `prod`; scripts already set this by command)
+- `SEED_START_OFFSET_DAYS` (default `14`)
+- `SEED_TOTAL_DAYS` (default `120`)
+- `SEED_MIN_APPOINTMENTS_PER_EMPLOYEE_DAY` (default `2`)
+- `SEED_MAX_APPOINTMENTS_PER_EMPLOYEE_DAY` (default `4`)
+- `SEED_ID_PREFIX` (default `seed-`)
+- `SEED_PASSWORD` (dev mode shared password; defaults to `Strongpassword123!`)
+- `SEED_USERS_FILE` (prod mode; defaults to `.seed-prod.json`)
+
+Prod seed file:
+
+- Copy `.seed-prod.example.json` to `.seed-prod.json` (gitignored)
+- Set per-user passwords in `.seed-prod.json`
+
+### `seed-reset.ts` (`pnpm seed:reset`)
+
+Deletes seed-owned data so you can reseed cleanly.
+
+What it deletes:
+
+- Appointments/schedules/outbox/deliveries with IDs starting with `SEED_ID_PREFIX`
+- App users and Better Auth users for the seeded email list
+
+Safety:
+
+- Requires `CONFIRM_SEED_RESET=true`
+- Refuses cloud reset unless `ALLOW_CLOUD_SEED=true`
+
+Common usage:
+
+- Dev reset: `$env:CONFIRM_SEED_RESET=\"true\"; pnpm seed:reset`
+- Prod-style reset: `$env:CONFIRM_SEED_RESET=\"true\"; pnpm seed:reset:prod`
 
 ### `mailpit-email-test.mjs` (`pnpm email:test`)
 
@@ -134,7 +165,9 @@ Brings up Mailpit, runs the Mailpit integration test, then tears Mailpit down.
 ## Quick commands (copy/paste)
 
 - Full local stack: `pnpm dev:local`
-- Local seed: `pnpm seed`
+- Local seed: `pnpm seed:dev`
 - Switch to cloud backend: `pnpm convex:use:cloud`
-- Cloud seed (explicit): `$env:ALLOW_CLOUD_SEED=\"true\"; pnpm seed`
+- Cloud seed (explicit): `$env:ALLOW_CLOUD_SEED=\"true\"; pnpm seed:prod`
+- Reset seeded data: `$env:CONFIRM_SEED_RESET=\"true\"; pnpm seed:reset`
+- Reset prod seeded data: `$env:CONFIRM_SEED_RESET=\"true\"; pnpm seed:reset:prod`
 - Stop dev processes: `pnpm dev:stop`
