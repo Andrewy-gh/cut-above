@@ -33,6 +33,7 @@ const DashboardAppointment = lazy(
 const Settings = lazy(() => import('./routes/Settings'));
 const Unauthorized = lazy(() => import('./routes/RequireAuth/Unauthorized'));
 const ErrorPage = lazy(() => import('./routes/ErrorPage'));
+const NotFound = lazy(() => import('./routes/NotFound'));
 const ResetPw = lazy(() => import('./routes/ResetPw'));
 const ResetPwError = lazy(() => import('./routes/ResetPw/error'));
 
@@ -129,6 +130,10 @@ const router = createBrowserRouter(
         {
           path: 'cancellation',
           element: <Cancellation />,
+        },
+        {
+          path: '*',
+          element: <NotFound />,
         },
       ],
     },
