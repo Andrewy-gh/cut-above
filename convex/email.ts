@@ -13,6 +13,9 @@ const contactDetailsSchema = v.object({
 const getEmailUser = () =>
   process.env.EMAIL_USER ?? process.env.DEV_EMAIL_USER ?? "";
 
+const getDeliveryMode = () =>
+  (process.env.EMAIL_DELIVERY_MODE ?? "smtp").toLowerCase().trim();
+
 const cleanContactDetails = (contactDetails: {
   firstName: string;
   lastName: string;
@@ -31,7 +34,9 @@ export const sendMessage = mutation({
   },
   handler: async (ctx, args) => {
     const emailUser = getEmailUser();
-    if (!emailUser) {
+    const loggingOnlyMode = getDeliveryMode() === "log";
+
+    if (!emailUser && !loggingOnlyMode) {
       throw new ConvexError("EMAIL_USER must be defined to send messages");
     }
 
@@ -46,18 +51,22 @@ export const sendMessage = mutation({
       eventType: "contact.auto_reply",
     });
 
-    await enqueueEmail(ctx, {
-      payload: {
-        receiver: emailUser,
-        option: "message submission",
-        contactDetails,
-      },
-      eventType: "contact.submission",
-    });
+    if (emailUser) {
+      await enqueueEmail(ctx, {
+        payload: {
+          receiver: emailUser,
+          option: "message submission",
+          contactDetails,
+        },
+        eventType: "contact.submission",
+      });
+    }
 
     return {
       success: true,
-      message: "Message sent",
+      message: loggingOnlyMode
+        ? "Message received. Email notifications are temporarily disabled."
+        : "Message sent",
     };
   },
 });

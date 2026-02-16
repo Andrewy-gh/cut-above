@@ -8,7 +8,7 @@ Minimum required:
 
 - `SITE_URL` (public frontend origin, e.g. `https://app.example.com`)
 - `BETTER_AUTH_SECRET` (strong random secret)
-- `EMAIL_USER` (from/reply mailbox used by app)
+- `EMAIL_USER` (from/reply mailbox used by app; required unless `EMAIL_DELIVERY_MODE=log`)
 
 Email provider config (pick one mode):
 
@@ -24,6 +24,7 @@ Email provider config (pick one mode):
 Optional:
 
 - `EMAIL_DELIVERY_MODE` (defaults to `smtp`)
+  - Set `EMAIL_DELIVERY_MODE=log` to temporarily disable outbound email delivery while keeping the app functional.
 
 ## 2) Run one command
 

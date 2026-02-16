@@ -23,15 +23,18 @@ const run = (cmd, args, options = {}) => {
 const required = {
   SITE_URL: process.env.SITE_URL ?? "",
   BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET ?? "",
-  EMAIL_USER: process.env.EMAIL_USER ?? "",
 };
 
+const emailUser = process.env.EMAIL_USER ?? "";
 const emailService = process.env.EMAIL_SERVICE ?? "";
 const emailPassword = process.env.EMAIL_PASSWORD ?? "";
 const emailHost = process.env.EMAIL_HOST ?? "";
 const emailPort = process.env.EMAIL_PORT ?? "";
 const emailSecure = process.env.EMAIL_SECURE ?? "";
-const emailDeliveryMode = process.env.EMAIL_DELIVERY_MODE ?? "smtp";
+const emailDeliveryMode = (process.env.EMAIL_DELIVERY_MODE ?? "smtp")
+  .toLowerCase()
+  .trim();
+const loggingOnlyMode = emailDeliveryMode === "log";
 
 const missingRequired = Object.entries(required)
   .filter(([, value]) => !value)
@@ -52,7 +55,12 @@ if (missingRequired.length > 0) {
 const usingServiceConfig = Boolean(emailService);
 const usingHostConfig = Boolean(emailHost);
 
-if (!usingServiceConfig && !usingHostConfig) {
+if (!loggingOnlyMode && !emailUser) {
+  console.error("EMAIL_USER is required unless EMAIL_DELIVERY_MODE=log.");
+  process.exit(1);
+}
+
+if (!loggingOnlyMode && !usingServiceConfig && !usingHostConfig) {
   console.error(
     [
       "Email config missing. Provide one of:",
@@ -63,7 +71,7 @@ if (!usingServiceConfig && !usingHostConfig) {
   process.exit(1);
 }
 
-if (usingServiceConfig && !usingHostConfig && !emailPassword) {
+if (!loggingOnlyMode && usingServiceConfig && !usingHostConfig && !emailPassword) {
   console.error("EMAIL_PASSWORD is required when EMAIL_SERVICE is set.");
   process.exit(1);
 }
@@ -83,15 +91,18 @@ const setProdEnv = () => {
   const envPairs = [
     ["SITE_URL", required.SITE_URL],
     ["BETTER_AUTH_SECRET", required.BETTER_AUTH_SECRET],
-    ["EMAIL_USER", required.EMAIL_USER],
     ["EMAIL_DELIVERY_MODE", emailDeliveryMode],
   ];
 
-  if (usingServiceConfig) {
+  if (emailUser) {
+    envPairs.push(["EMAIL_USER", emailUser]);
+  }
+
+  if (!loggingOnlyMode && usingServiceConfig) {
     envPairs.push(["EMAIL_SERVICE", emailService], ["EMAIL_PASSWORD", emailPassword]);
   }
 
-  if (usingHostConfig) {
+  if (!loggingOnlyMode && usingHostConfig) {
     envPairs.push(["EMAIL_HOST", emailHost]);
     if (emailPort) envPairs.push(["EMAIL_PORT", emailPort]);
     if (emailSecure) envPairs.push(["EMAIL_SECURE", emailSecure]);

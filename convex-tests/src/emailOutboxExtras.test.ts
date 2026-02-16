@@ -104,6 +104,46 @@ describe("email outbox critical cases", () => {
     }
   });
 
+  it("allows contact form submissions in log mode without EMAIL_USER", async () => {
+    const originalEmailMode = process.env.EMAIL_DELIVERY_MODE;
+    const originalEmailUser = process.env.EMAIL_USER;
+    const originalDevEmailUser = process.env.DEV_EMAIL_USER;
+    process.env.EMAIL_DELIVERY_MODE = "log";
+    delete process.env.EMAIL_USER;
+    delete process.env.DEV_EMAIL_USER;
+
+    try {
+      const t = createConvexTest();
+      const result = await t.mutation(api.email.sendMessage, {
+        contactDetails: {
+          firstName: "Ada",
+          lastName: "Lovelace",
+          email: "ada@example.com",
+          message: "Hello",
+        },
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.message).toContain("temporarily disabled");
+
+      const items = await t.run((ctx) =>
+        ctx.db.query("emailOutbox").collect()
+      );
+
+      expect(items).toHaveLength(1);
+      expect(items[0]?.payload?.receiver).toBe("ada@example.com");
+    } finally {
+      if (originalEmailMode === undefined) delete process.env.EMAIL_DELIVERY_MODE;
+      else process.env.EMAIL_DELIVERY_MODE = originalEmailMode;
+
+      if (originalEmailUser === undefined) delete process.env.EMAIL_USER;
+      else process.env.EMAIL_USER = originalEmailUser;
+
+      if (originalDevEmailUser === undefined) delete process.env.DEV_EMAIL_USER;
+      else process.env.DEV_EMAIL_USER = originalDevEmailUser;
+    }
+  });
+
   it("marks outbox failed after max retries", async () => {
     const envBackup = {
       EMAIL_DELIVERY_MODE: process.env.EMAIL_DELIVERY_MODE,

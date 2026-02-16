@@ -1,0 +1,76 @@
+name: Convex Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'convex/**'
+      - 'scripts/deploy-prod.mjs'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/convex-deploy.yml'
+
+jobs:
+  deploy:
+    name: Deploy Convex Production
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+    concurrency:
+      group: convex-deploy-production
+      cancel-in-progress: false
+    env:
+      CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+      SITE_URL: ${{ vars.SITE_URL }}
+      BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+      EMAIL_USER: ${{ vars.EMAIL_USER }}
+      EMAIL_DELIVERY_MODE: ${{ vars.EMAIL_DELIVERY_MODE }}
+      EMAIL_SERVICE: ${{ vars.EMAIL_SERVICE }}
+      EMAIL_HOST: ${{ vars.EMAIL_HOST }}
+      EMAIL_PORT: ${{ vars.EMAIL_PORT }}
+      EMAIL_SECURE: ${{ vars.EMAIL_SECURE }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - name: Validate deployment configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(CONVEX_DEPLOY_KEY SITE_URL BETTER_AUTH_SECRET)
+          for key in "${required[@]}"; do
+            if [[ -z "${!key:-}" ]]; then
+              echo "::error::Missing required environment value: $key"
+              exit 1
+            fi
+          done
+
+          mode="${EMAIL_DELIVERY_MODE:-smtp}"
+          mode="$(echo "$mode" | tr '[:upper:]' '[:lower:]' | xargs)"
+
+          if [[ "$mode" != "log" && -z "${EMAIL_USER:-}" ]]; then
+            echo "::error::Missing required environment value: EMAIL_USER"
+            exit 1
+          fi
+
+          if [[ "$mode" != "log" ]]; then
+            if [[ -z "${EMAIL_SERVICE:-}" && -z "${EMAIL_HOST:-}" ]]; then
+              echo "::error::Set either EMAIL_SERVICE or EMAIL_HOST."
+              exit 1
+            fi
+
+            if [[ -n "${EMAIL_SERVICE:-}" && -z "${EMAIL_HOST:-}" && -z "${EMAIL_PASSWORD:-}" ]]; then
+              echo "::error::EMAIL_PASSWORD is required when EMAIL_SERVICE is set."
+              exit 1
+            fi
+          fi
+      - name: Deploy Convex production
+        run: pnpm deploy:prod
