@@ -31,9 +31,10 @@ const emailPassword = process.env.EMAIL_PASSWORD ?? "";
 const emailHost = process.env.EMAIL_HOST ?? "";
 const emailPort = process.env.EMAIL_PORT ?? "";
 const emailSecure = process.env.EMAIL_SECURE ?? "";
-const emailDeliveryMode = (process.env.EMAIL_DELIVERY_MODE ?? "log")
-  .toLowerCase()
-  .trim();
+const emailDeliveryMode =
+  (process.env.EMAIL_DELIVERY_MODE ?? "")
+    .toLowerCase()
+    .trim() || "log";
 const loggingOnlyMode = emailDeliveryMode === "log";
 
 const missingRequired = Object.entries(required)
