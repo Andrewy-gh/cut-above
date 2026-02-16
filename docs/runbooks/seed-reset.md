@@ -20,6 +20,8 @@ Use this to generate realistic demo data and refresh safely.
 - Span: 120 days.
 - Weekdays only.
 - Daily density per employee: 2-4 appointments.
+- Appointment starts align to 15-minute boundaries.
+- Seed avoids overlapping bookings for the same client.
 - Seeded ID prefix: `seed-`.
 
 ## Optional env knobs

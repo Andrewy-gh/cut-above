@@ -29,6 +29,7 @@ const DEFAULT_MIN_APPOINTMENTS_PER_EMPLOYEE_DAY = 2;
 const DEFAULT_MAX_APPOINTMENTS_PER_EMPLOYEE_DAY = 4;
 const DEFAULT_SEED_USERS_FILE = ".seed-prod.json";
 const DEFAULT_SEED_PREFIX = "seed-";
+const SEED_TIME_INCREMENT_MINUTES = 15;
 
 type SeedMode = "dev" | "prod";
 
@@ -129,6 +130,16 @@ const sanitizeIdToken = (value: string) =>
 
 const getDeploymentUrl = (source: Record<string, string | undefined>) =>
   source.CONVEX_DEPLOYMENT_URL ?? source.CONVEX_URL ?? source.CONVEX_HTTP_URL;
+
+type MinuteRange = { startMinute: number; endMinute: number };
+
+const hasRangeOverlap = (existingRanges: MinuteRange[], candidate: MinuteRange) =>
+  existingRanges.some(
+    (range) =>
+      candidate.startMinute < range.endMinute && candidate.endMinute > range.startMinute
+  );
+
+const getClientBookingKey = (date: string, clientId: string) => `${date}:${clientId}`;
 
 const loadProdUsers = (usersFile: string): SeedUserWithPassword[] => {
   const absolutePath = resolve(repoRoot, usersFile);
@@ -242,10 +253,12 @@ const convex = new ConvexHttpClient(deploymentUrl);
 
 const run = async () => {
   const userMap = new Map<string, string>();
+  const clientBookingsByDay = new Map<string, MinuteRange[]>();
   let userUpserts = 0;
   let scheduleInserts = 0;
   let appointmentInserts = 0;
   let appointmentAttempts = 0;
+  let skippedClientConflicts = 0;
 
   for (const user of users) {
     const name = `${user.firstName} ${user.lastName}`.trim();
@@ -303,16 +316,43 @@ const run = async () => {
         maxAppointmentsPerEmployeeDay
       );
 
-      let minuteCursor = 9 * 60 + randomBetween(rand, 0, 60);
+      let minuteCursor = 9 * 60 + randomBetween(rand, 0, 4) * SEED_TIME_INCREMENT_MINUTES;
 
       for (let slotIndex = 0; slotIndex < targetCount; slotIndex += 1) {
         const service = pickService(rand);
         const endMinute = minuteCursor + service.durationMinutes;
         if (endMinute > 17 * 60) break;
 
-        const client = clients[Math.floor(rand() * clients.length)];
-        const clientId = userMap.get(client.email);
-        if (!clientId) continue;
+        const clientStartIndex = randomBetween(rand, 0, clients.length - 1);
+        let selectedClient: (typeof clients)[number] | null = null;
+        let selectedClientId: string | null = null;
+
+        for (let offset = 0; offset < clients.length; offset += 1) {
+          const client = clients[(clientStartIndex + offset) % clients.length];
+          const clientId = userMap.get(client.email);
+          if (!clientId) continue;
+
+          const bookingKey = getClientBookingKey(date, clientId);
+          const existingBookings = clientBookingsByDay.get(bookingKey) ?? [];
+          if (
+            hasRangeOverlap(existingBookings, {
+              startMinute: minuteCursor,
+              endMinute,
+            })
+          ) {
+            continue;
+          }
+
+          selectedClient = client;
+          selectedClientId = clientId;
+          break;
+        }
+
+        if (!selectedClient || !selectedClientId) {
+          skippedClientConflicts += 1;
+          minuteCursor += SEED_TIME_INCREMENT_MINUTES;
+          continue;
+        }
 
         const startTime = minuteToTime(minuteCursor);
         const endTime = minuteToTime(endMinute);
@@ -326,10 +366,16 @@ const run = async () => {
           end: toIso(date, endTime),
           service: service.name,
           status: "scheduled",
-          clientId,
+          clientId: selectedClientId,
           employeeId,
         });
-        if (result?.inserted) appointmentInserts += 1;
+        if (result?.inserted) {
+          appointmentInserts += 1;
+          const bookingKey = getClientBookingKey(date, selectedClientId);
+          const existingBookings = clientBookingsByDay.get(bookingKey) ?? [];
+          existingBookings.push({ startMinute: minuteCursor, endMinute });
+          clientBookingsByDay.set(bookingKey, existingBookings);
+        }
 
         const nextGap = [15, 30, 45][Math.floor(rand() * 3)];
         minuteCursor = endMinute + nextGap;
@@ -344,6 +390,7 @@ const run = async () => {
     schedulesInserted: scheduleInserts,
     appointmentsInserted: appointmentInserts,
     appointmentAttempts,
+    skippedClientConflicts,
     startDate: toDateString(startDate),
     firstFiveUsers: users.slice(0, 5).map((user) => ({ email: user.email, role: user.role })),
   });
