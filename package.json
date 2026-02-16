@@ -12,6 +12,7 @@
     "dev:setup": "node scripts/dev-setup.mjs",
     "dev:setup:mailpit": "node scripts/dev-setup-mailpit.mjs",
     "dev:stop": "node scripts/dev-stop.mjs",
+    "deploy:prod": "node scripts/deploy-prod.mjs",
     "lint": "pnpm -r --if-present lint",
     "mailpit:up": "docker compose up -d mailpit",
     "mailpit:down": "docker compose down",

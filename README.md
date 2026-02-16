@@ -69,5 +69,5 @@ Cookie based session storage through Redis. Pub/Sub through redis to handle emai
 
 ## Docs
 
-- `docs/convex-workflow.md` for Convex dev/deploy setup.
+- `docs/prod-deploy-checklist.md` for production release steps.
 - `scripts/README.md` for local vs cloud switching details (and what the dev/seed scripts do).

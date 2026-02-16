@@ -43,6 +43,7 @@ Use this file to record trouble encountered at the end of each migration phase.
 - Phase 5e (UX): added guard to clear persisted Redux auth when Better Auth session is null to avoid "phantom logged-in" UI (`client/src/hooks/useAuth.ts`).
 - Phase 5e (ops): `scripts/dev-stop.mjs` now also stops `convex-local-backend` so port `3210` doesn't remain bound between runs.
 - Phase 5e (convex env): `pnpm dlx convex env set CONVEX_SITE_URL ...` fails with `EnvVarNameForbidden` because `CONVEX_SITE_URL` is built-in and cannot be overridden; treat it as deployment-provided, not app-configured.
+- Phase 5f (deploy handoff): production deploy deferred to next session; use `pnpm exec convex deploy -y`, set Convex prod env (`SITE_URL`, `BETTER_AUTH_SECRET`, email vars) with `pnpm exec convex env set ... --prod`, and set frontend host env (`CONVEX_DEPLOYMENT_URL`, `CONVEX_SITE_URL`); Fly workflow deploy step is skipped unless `fly.toml` exists.
 
 <!-- opensrc:start -->
 
