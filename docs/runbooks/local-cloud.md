@@ -1,0 +1,59 @@
+# Local Cloud-Dev Runbook
+
+Use Convex cloud dev backend + local frontend.
+
+## 1) Configure cloud URLs once
+
+In repo root `.env.local`, set:
+
+- `CONVEX_DEPLOYMENT_URL_CLOUD=...`
+- `CONVEX_SITE_URL_CLOUD=...`
+
+## 2) Switch client to cloud URLs
+
+```powershell
+pnpm convex:use:cloud
+```
+
+## 3) Run frontend (and optional cloud dev watcher)
+
+Frontend only:
+
+```powershell
+pnpm -C client dev
+```
+
+With cloud dev watcher:
+
+```powershell
+pnpm dev:convex:cloud
+pnpm -C client dev
+```
+
+## 4) Optional Mailpit (local only)
+
+You can still run local Mailpit for local testing:
+
+```powershell
+pnpm dev:setup:mailpit
+pnpm email:test
+```
+
+## 5) Seed and reset on cloud dev
+
+Both operations are guarded.
+
+Seed:
+
+```powershell
+$env:ALLOW_CLOUD_SEED="true"
+pnpm seed:dev
+```
+
+Reset:
+
+```powershell
+$env:ALLOW_CLOUD_SEED="true"
+$env:CONFIRM_SEED_RESET="true"
+pnpm seed:reset
+```

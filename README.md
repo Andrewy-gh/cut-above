@@ -69,5 +69,10 @@ Cookie based session storage through Redis. Pub/Sub through redis to handle emai
 
 ## Docs
 
+- `docs/runbooks/README.md` for the environment matrix and scenario-specific runbooks.
+- `docs/runbooks/local-non-cloud.md` for local Convex + local frontend flow.
+- `docs/runbooks/local-cloud.md` for cloud Convex dev + local frontend flow.
+- `docs/runbooks/production.md` for production deploy and host env wiring.
+- `docs/runbooks/seed-reset.md` for seed/reset behavior and safety guards.
 - `docs/prod-deploy-checklist.md` for production release steps.
-- `scripts/README.md` for local vs cloud switching details (and what the dev/seed scripts do).
+- `scripts/README.md` for script index and quick command matrix.

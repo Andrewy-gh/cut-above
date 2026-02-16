@@ -29,11 +29,11 @@
       "password": "ChangeMe_Salah_123!"
     },
     {
-      "firstName": "Mia",
+      "firstName": "Mike",
       "lastName": "Chen",
-      "email": "mia.chen@cutabove.test",
-      "role": "employee",
-      "password": "ChangeMe_Mia_123!"
+      "email": "mike.chen@cutabove.test",
+      "role": "client",
+      "password": "ChangeMe_Mike_123!"
     },
     {
       "firstName": "John",
@@ -43,11 +43,11 @@
       "password": "ChangeMe_John_123!"
     },
     {
-      "firstName": "Emily",
+      "firstName": "Emilio",
       "lastName": "Johnson",
-      "email": "emily.johnson@cutabove.test",
+      "email": "emilio.johnson@cutabove.test",
       "role": "client",
-      "password": "ChangeMe_Emily_123!"
+      "password": "ChangeMe_Emilio_123!"
     },
     {
       "firstName": "Michael",
@@ -57,11 +57,11 @@
       "password": "ChangeMe_Michael_123!"
     },
     {
-      "firstName": "Sophia",
+      "firstName": "Scott",
       "lastName": "Davis",
-      "email": "sophia.davis@cutabove.test",
+      "email": "scott.davis@cutabove.test",
       "role": "client",
-      "password": "ChangeMe_Sophia_123!"
+      "password": "ChangeMe_Scott_123!"
     },
     {
       "firstName": "Daniel",
