@@ -11,7 +11,7 @@ In repo root `.env.local`, set:
 
 ## 2) Switch client to cloud URLs
 
-```powershell
+```bash
 pnpm convex:use:cloud
 ```
 
@@ -19,13 +19,13 @@ pnpm convex:use:cloud
 
 Frontend only:
 
-```powershell
+```bash
 pnpm -C client dev
 ```
 
 With cloud dev watcher:
 
-```powershell
+```bash
 pnpm dev:convex:cloud
 pnpm -C client dev
 ```
@@ -34,7 +34,7 @@ pnpm -C client dev
 
 You can still run local Mailpit for local testing:
 
-```powershell
+```bash
 pnpm dev:setup:mailpit
 pnpm email:test
 ```
@@ -45,15 +45,12 @@ Both operations are guarded.
 
 Seed:
 
-```powershell
-$env:ALLOW_CLOUD_SEED="true"
-pnpm seed:dev
+```bash
+ALLOW_CLOUD_SEED=true pnpm seed:dev
 ```
 
 Reset:
 
-```powershell
-$env:ALLOW_CLOUD_SEED="true"
-$env:CONFIRM_SEED_RESET="true"
-pnpm seed:reset
+```bash
+ALLOW_CLOUD_SEED=true CONFIRM_SEED_RESET=true pnpm seed:reset
 ```

@@ -4,7 +4,7 @@ Use local Convex backend + local frontend. Optional local Mailpit.
 
 ## 1) Switch to local URLs
 
-```powershell
+```bash
 pnpm convex:use:local
 ```
 
@@ -17,20 +17,20 @@ Expected:
 
 All-in-one:
 
-```powershell
+```bash
 pnpm dev:local
 ```
 
 Manual:
 
-```powershell
+```bash
 pnpm dev:convex:local
 pnpm -C client dev
 ```
 
 ## 3) Optional Mailpit flow
 
-```powershell
+```bash
 pnpm dev:setup:mailpit
 pnpm email:test
 ```
@@ -39,13 +39,12 @@ pnpm email:test
 
 Seed:
 
-```powershell
+```bash
 pnpm seed:dev
 ```
 
 Reset seeded data:
 
-```powershell
-$env:CONFIRM_SEED_RESET="true"
-pnpm seed:reset
+```bash
+CONFIRM_SEED_RESET=true pnpm seed:reset
 ```

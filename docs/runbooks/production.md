@@ -28,7 +28,7 @@ Preferred:
 
 Manual fallback:
 
-```powershell
+```bash
 pnpm deploy:prod
 ```
 
@@ -45,15 +45,12 @@ Do not set `CONVEX_SITE_URL` with `convex env set`.
 
 Seed:
 
-```powershell
-$env:ALLOW_CLOUD_SEED="true"
-pnpm seed:prod
+```bash
+ALLOW_CLOUD_SEED=true pnpm seed:prod
 ```
 
 Reset (break-glass only):
 
-```powershell
-$env:ALLOW_CLOUD_SEED="true"
-$env:CONFIRM_SEED_RESET="true"
-pnpm seed:reset:prod
+```bash
+ALLOW_CLOUD_SEED=true CONFIRM_SEED_RESET=true pnpm seed:reset:prod
 ```

@@ -40,21 +40,17 @@ Use this to generate realistic demo data and refresh safely.
 
 ## Common commands
 
-```powershell
+```bash
 # local dev seed
 pnpm seed:dev
 
 # local dev reset + reseed
-$env:CONFIRM_SEED_RESET="true"
-pnpm seed:reset
+CONFIRM_SEED_RESET=true pnpm seed:reset
 pnpm seed:dev
 
 # prod-like seed
-$env:ALLOW_CLOUD_SEED="true"
-pnpm seed:prod
+ALLOW_CLOUD_SEED=true pnpm seed:prod
 
 # prod-like reset (break-glass)
-$env:ALLOW_CLOUD_SEED="true"
-$env:CONFIRM_SEED_RESET="true"
-pnpm seed:reset:prod
+ALLOW_CLOUD_SEED=true CONFIRM_SEED_RESET=true pnpm seed:reset:prod
 ```
