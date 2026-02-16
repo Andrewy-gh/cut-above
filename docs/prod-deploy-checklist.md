@@ -23,7 +23,7 @@ Email provider config (pick one mode):
 
 Optional:
 
-- `EMAIL_DELIVERY_MODE` (defaults to `smtp`)
+- `EMAIL_DELIVERY_MODE` (defaults to `log`)
   - Set `EMAIL_DELIVERY_MODE=log` to temporarily disable outbound email delivery while keeping the app functional.
 
 ## 2) Run one command
@@ -54,6 +54,11 @@ Important: do not try to set `CONVEX_SITE_URL` via `convex env set`; it is deplo
 - Create/modify/cancel appointment
 - Submit contact form and confirm email outbox delivery
 
-## 5) Current deployment caveat
+## 5) Frontend deployment source
 
-GitHub Fly deploy workflow runs only when `fly.toml` exists. If missing, Fly deploy is skipped.
+Frontend deployment is handled by the Vercel Git integration (not GitHub Actions).
+Repo defaults are in `vercel.json`:
+
+- `installCommand`: `pnpm install --frozen-lockfile`
+- `buildCommand`: `pnpm -C client build`
+- `outputDirectory`: `client/dist`
