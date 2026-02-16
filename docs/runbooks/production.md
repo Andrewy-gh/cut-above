@@ -12,12 +12,12 @@ Use this for production deployment and host env wiring.
 Required:
 
 - `CONVEX_DEPLOY_KEY` (GitHub Secret)
-- `SITE_URL` (GitHub Variable)
+- `SITE_URL` (GitHub Secret or Variable)
 - `BETTER_AUTH_SECRET` (GitHub Secret)
 
 Email today:
 
-- If stubbing email: set `EMAIL_DELIVERY_MODE=log`
+- If stubbing email: set `EMAIL_DELIVERY_MODE=log` (or leave unset; workflow defaults to `log`)
 - If real SMTP: set `EMAIL_USER` and provider vars/secrets
 
 ## 3) Deploy

@@ -24,15 +24,15 @@ jobs:
       cancel-in-progress: false
     env:
       CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-      SITE_URL: ${{ vars.SITE_URL }}
+      SITE_URL: ${{ secrets.SITE_URL || vars.SITE_URL }}
       BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
-      EMAIL_USER: ${{ vars.EMAIL_USER }}
-      EMAIL_DELIVERY_MODE: ${{ vars.EMAIL_DELIVERY_MODE }}
-      EMAIL_SERVICE: ${{ vars.EMAIL_SERVICE }}
-      EMAIL_HOST: ${{ vars.EMAIL_HOST }}
-      EMAIL_PORT: ${{ vars.EMAIL_PORT }}
-      EMAIL_SECURE: ${{ vars.EMAIL_SECURE }}
-      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      EMAIL_USER: ${{ secrets.EMAIL_USER || vars.EMAIL_USER }}
+      EMAIL_DELIVERY_MODE: ${{ secrets.EMAIL_DELIVERY_MODE || vars.EMAIL_DELIVERY_MODE }}
+      EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE || vars.EMAIL_SERVICE }}
+      EMAIL_HOST: ${{ secrets.EMAIL_HOST || vars.EMAIL_HOST }}
+      EMAIL_PORT: ${{ secrets.EMAIL_PORT || vars.EMAIL_PORT }}
+      EMAIL_SECURE: ${{ secrets.EMAIL_SECURE || vars.EMAIL_SECURE }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD || vars.EMAIL_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -53,7 +53,7 @@ jobs:
             fi
           done
 
-          mode="${EMAIL_DELIVERY_MODE:-smtp}"
+          mode="${EMAIL_DELIVERY_MODE:-log}"
           mode="$(echo "$mode" | tr '[:upper:]' '[:lower:]' | xargs)"
 
           if [[ "$mode" != "log" && -z "${EMAIL_USER:-}" ]]; then
