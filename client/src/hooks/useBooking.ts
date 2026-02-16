@@ -39,7 +39,7 @@ export function useBooking() {
           end,
           service,
           employee,
-        }).unwrap();
+        });
         if (modifiedAppt.success) {
           handleSuccess(modifiedAppt.message);
           handleEndRescheduling();
@@ -50,7 +50,7 @@ export function useBooking() {
           end,
           service,
           employee,
-        }).unwrap();
+        });
         if (newAppt.success) {
           handleSuccess(newAppt.message);
           handleFilterReset();

@@ -1,43 +1,29 @@
 import Grid from '@mui/material/Grid';
-import { useGetEmployeesProfilesQuery } from '@/features/employeeSlice';
 import { useFilter } from '@/hooks/useFilter';
+import { useEmployeesQuery } from '@/hooks/useEmployeesQuery';
 import styles from './styles.module.css';
 import MemberCard from './MemberCard';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import { EmployeeProfile } from '@/types';
+import { teamMembers } from '@/data/team-members';
 
 export default function TeamMember() {
   const { handleEmployeeChange } = useFilter();
-  let content;
-  const {
-    data: employees,
-    isLoading,
-    isSuccess,
-    isError,
-  } = useGetEmployeesProfilesQuery();
-  if (isLoading) {
-    content = Array.from({ length: 3 }, (_, i) => (
-      <Grid item xs={12} sm={6} md={4} sx={{ marginInline: 'auto' }} key={i}>
-        <LoadingSpinner />
-      </Grid>
-    ));
-  }
-  if (isError) {
-    content = <p>Error...</p>;
-  }
-  if (isSuccess) {
-    content = (
-      <>
-        {employees.map((employee: EmployeeProfile) => (
-          <MemberCard
-            key={employee.id}
-            employee={employee}
-            handleClick={handleEmployeeChange}
-          />
-        ))}
-      </>
-    );
-  }
+  const { employees } = useEmployeesQuery();
+  const employeeIdByName = new Map(
+    employees.map((employee) => [employee.firstName.toLowerCase(), employee.id])
+  );
+
+  const handleMemberClick = (employee: (typeof teamMembers)[number]) => {
+    const resolvedId = employeeIdByName.get(employee.firstName.toLowerCase());
+    handleEmployeeChange(resolvedId);
+  };
+
+  const content = teamMembers.map((employee) => (
+    <MemberCard
+      key={employee.id}
+      employee={employee}
+      handleClick={handleMemberClick}
+    />
+  ));
   return (
     <div className={styles.card_container}>
       <h3 className="text-center">Our Team</h3>

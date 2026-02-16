@@ -7,11 +7,11 @@ import Layout from '@/routes/Layout';
 import Home from '@/routes/Home';
 
 import BookingPage from '@/routes/BookingPage';
+import LegacyRescheduleRedirect from '@/routes/BookingPage/LegacyRescheduleRedirect';
 
 import Login from '@/routes/Login';
 
 import Register from '@/routes/Register';
-import TokenValidation from './routes/TokenVaidation';
 import LoadingSpinner from './components/LoadingSpinner';
 
 import { disableReactDevTools } from '@fvilers/disable-react-devtools';
@@ -51,7 +51,8 @@ const router = createBrowserRouter(
         { index: true, element: <Home /> },
         { path: 'signup', element: <Register /> },
         { path: 'login', element: <Login /> },
-        { path: 'bookings/:id?', element: <BookingPage /> },
+        { path: 'bookings', element: <BookingPage /> },
+        { path: 'bookings/:id', element: <LegacyRescheduleRedirect /> },
         {
           element: <RequireAuth />,
           children: [
@@ -75,6 +76,24 @@ const router = createBrowserRouter(
                 { index: true, element: <Account /> },
                 { path: 'settings', element: <Settings /> },
                 { path: 'appointments', element: <Appointments /> },
+                {
+                  path: 'appointments/:id',
+                  element: <AppointmentPage />,
+                  errorElement: (
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <AppointmentError />
+                    </Suspense>
+                  ),
+                },
+                {
+                  path: 'appointments/:id/reschedule',
+                  element: <BookingPage />,
+                  errorElement: (
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <AppointmentError />
+                    </Suspense>
+                  ),
+                },
               ],
             },
           ],
@@ -99,18 +118,13 @@ const router = createBrowserRouter(
           ],
         },
         {
-          element: <TokenValidation />,
+          path: 'resetpw',
+          element: <ResetPw />,
           errorElement: (
             <Suspense fallback={<LoadingSpinner />}>
               <ResetPwError />
             </Suspense>
           ),
-          children: [
-            {
-              path: 'resetpw/:id?/:token?',
-              element: <ResetPw />,
-            },
-          ],
         },
         {
           path: 'cancellation',

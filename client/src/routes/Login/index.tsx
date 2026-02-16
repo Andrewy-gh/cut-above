@@ -7,24 +7,42 @@ import { useAuth } from '@/hooks/useAuth';
 
 import { useNotification } from '@/hooks/useNotification';
 
-import { useSendPasswordResetMutation } from '@/features/emailSlice';
+import { authClient } from '@/convex/authClient';
 
 import Overlay from '@/components/Overlay';
 
 import PasswordInput from '@/components/PasswordInput';
 
-import { emailIsValid } from '@/utils/email';
+import { cleanEmail, emailIsValid } from '@/utils/email';
 
 import styles from './styles.module.css';
 
 interface LocationState {
-  from?: string;
+  from?: unknown;
 }
+
+const isSafeInternalPath = (value: unknown): value is string => {
+  if (typeof value !== 'string') return false;
+  if (!value.startsWith('/')) return false;
+  // Avoid scheme-relative / absolute URLs.
+  if (value.startsWith('//')) return false;
+  return true;
+};
+
+const resolveReturnTo = (location: ReturnType<typeof useLocation>) => {
+  const state = location.state as LocationState | null;
+  const fromState = state?.from;
+  if (isSafeInternalPath(fromState)) return fromState;
+
+  const returnToParam = new URLSearchParams(location.search).get('returnTo');
+  if (isSafeInternalPath(returnToParam)) return returnToParam;
+
+  return null;
+};
 
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  const state = location.state as LocationState;
   const [view, setView] = useState('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,7 +51,6 @@ export default function Login() {
   const { user, handleLogin } = useAuth();
 
   const { handleSuccess, handleError } = useNotification();
-  const [sendPasswordReset] = useSendPasswordResetMutation();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -51,8 +68,17 @@ export default function Login() {
         setHelperText('invalid email');
         return;
       }
-      const sentResetEmail = await sendPasswordReset({ email }).unwrap();
-      if (sentResetEmail.success) handleSuccess(sentResetEmail.message);
+      const result = await authClient.requestPasswordReset({
+        email: cleanEmail(email),
+        redirectTo: `${window.location.origin}/resetpw`,
+      });
+      if (result?.error) {
+        handleError(result.error);
+        return;
+      }
+      handleSuccess(
+        "If this email exists in our system, check your email for the reset link"
+      );
     } catch (err) {
       handleError(err);
     }
@@ -61,10 +87,10 @@ export default function Login() {
 
   useEffect(() => {
     if (user) {
-      const from = state?.from;
-      navigate(from || '/account');
+      const returnTo = resolveReturnTo(location);
+      navigate(returnTo || '/account');
     }
-  }, [user, navigate, state]);
+  }, [user, navigate, location]);
 
   if (view === 'login') {
     content = (

@@ -54,13 +54,6 @@ export interface RouteError {
 export interface Employee {
   id: string;
   firstName: string;
-  lastName: string;
-  email: string;
-  phone?: string;
-  role: string;
-  bio?: string;
-  image?: string;
-  profile?: string;
 }
 
 export interface EmployeeProfile {

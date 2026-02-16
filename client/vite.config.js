@@ -1,43 +1,47 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import dns from 'dns';
+import { resolve } from 'path';
 
 dns.setDefaultResultOrder('verbatim');
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    host: 'localhost',
-    port: 5173,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
+export default defineConfig(({ mode }) => {
+  const envDir = resolve(process.cwd(), '..');
+  const env = loadEnv(mode, envDir, '');
+  const convexDeploymentUrl = env.CONVEX_DEPLOYMENT_URL ?? '';
+  const convexSiteUrl = env.CONVEX_SITE_URL ?? '';
+
+  return {
+    envDir,
+    define: {
+      'import.meta.env.CONVEX_DEPLOYMENT_URL':
+        JSON.stringify(convexDeploymentUrl),
+      'import.meta.env.CONVEX_SITE_URL': JSON.stringify(convexSiteUrl),
+    },
+    plugins: [react()],
+    server: {
+      host: 'localhost',
+      port: 5173,
+      fs: {
+        allow: ['..'],
       },
     },
-  },
-  resolve: {
-    alias: {
-      '@': '/src',
+    resolve: {
+      alias: {
+        '@': '/src',
+      },
+      extensions: ['.ts', '.tsx', '.js', '.jsx'],
     },
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
-  },
-  optimizeDeps: {
-    include: [
-      'prop-types',
-      // eslint-disable-next-line no-undef
-      process.env.NODE_ENV === 'production' ? undefined : 'prop-types',
-    ],
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'mui-x-date-pickers': ['@mui/x-date-pickers'],
-          'mui-x-date-pickers-pro': ['@mui/x-date-pickers-pro'],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'mui-x-date-pickers': ['@mui/x-date-pickers'],
+            'mui-x-date-pickers-pro': ['@mui/x-date-pickers-pro'],
+          },
         },
       },
     },
-  },
+  };
 });

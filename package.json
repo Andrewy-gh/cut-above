@@ -3,27 +3,51 @@
   "private": true,
   "packageManager": "pnpm@9.5.0",
   "scripts": {
-    "build": "pnpm -r build",
+    "build": "pnpm -r --if-present build",
     "dev": "pnpm -r --if-present dev",
+    "dev:convex": "pnpm dlx convex dev",
+    "dev:convex:local": "pnpm convex:use:local && pnpm dlx convex dev --configure existing --dev-deployment local --team andrew-bb926 --project cut-above",
+    "dev:convex:cloud": "pnpm convex:use:cloud && pnpm dlx convex dev --configure existing --dev-deployment cloud --team andrew-bb926 --project cut-above",
+    "dev:local": "node scripts/dev-local.mjs",
+    "dev:setup": "node scripts/dev-setup.mjs",
+    "dev:setup:mailpit": "node scripts/dev-setup-mailpit.mjs",
+    "dev:stop": "node scripts/dev-stop.mjs",
+    "deploy:prod": "node scripts/deploy-prod.mjs",
     "lint": "pnpm -r --if-present lint",
+    "mailpit:up": "docker compose up -d mailpit",
+    "mailpit:down": "docker compose down",
+    "email:test": "node scripts/mailpit-email-test.mjs",
+    "seed": "tsx scripts/seed.ts --mode dev",
+    "seed:dev": "tsx scripts/seed.ts --mode dev",
+    "seed:prod": "tsx scripts/seed.ts --mode prod",
+    "seed:reset": "tsx scripts/seed-reset.ts",
+    "seed:reset:prod": "tsx scripts/seed-reset.ts --mode prod",
+    "convex:use:local": "node scripts/convex-use.mjs local",
+    "convex:use:cloud": "node scripts/convex-use.mjs cloud",
     "prepare": "husky",
     "typecheck": "pnpm -r --if-present typecheck",
     "test": "pnpm -r --if-present test",
     "test:run": "pnpm -r --if-present test:run",
     "test:e2e": "playwright test"
   },
+  "dependencies": {
+    "dayjs": "^1.11.19",
+    "nodemailer": "^6.10.1"
+  },
   "devDependencies": {
+    "@convex-dev/better-auth": "^0.10.10",
     "@playwright/test": "^1.58.1",
+    "@types/node": "^25.1.0",
+    "@types/nodemailer": "^7.0.9",
+    "better-auth": "1.4.9",
+    "convex": "^1.31.7",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
     "prettier": "^3.8.1",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
   "lint-staged": {
-    "server/src/**/*.{ts,tsx}": [
-      "pnpm -C server exec eslint --fix --report-unused-disable-directives --max-warnings 0 --ext ts,tsx",
-      "pnpm exec prettier --write"
-    ],
     "client/src/**/*.{ts,tsx,js,jsx}": [
       "pnpm -C client exec eslint --fix --report-unused-disable-directives --max-warnings 0 --ext ts,tsx"
     ],

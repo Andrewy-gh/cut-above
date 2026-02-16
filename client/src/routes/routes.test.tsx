@@ -12,6 +12,24 @@ import BookingPage from '@/routes/BookingPage';
 // Protected route components
 import RequireAuth from '@/routes/RequireAuth';
 import Account from '@/routes/Account';
+import Appointments from '@/routes/Appointments';
+import AppointmentPage from '@/routes/AppointmentPage';
+
+const mockAuthState = {
+  user: null as string | null,
+  role: null as string | null,
+  isAuthLoading: false,
+  handleLogin: vi.fn(),
+  handleLogout: vi.fn(),
+  handleUserEmailChange: vi.fn(),
+  handleUserPasswordChange: vi.fn(),
+  handleUserDelete: vi.fn(),
+  handleUserPasswordReset: vi.fn(),
+};
+
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: () => mockAuthState,
+}));
 
 // Suppress console.error for expected errors
 const originalError = console.error;
@@ -19,32 +37,23 @@ beforeEach(() => {
   console.error = (...args: unknown[]) => {
     const msg = args[0]?.toString() || '';
     if (
-      msg.includes('Not authorized') ||
       msg.includes('Consider adding an error boundary')
     ) {
       return;
     }
     originalError.call(console, ...args);
   };
+  mockAuthState.user = null;
+  mockAuthState.role = null;
+  mockAuthState.isAuthLoading = false;
 });
 afterEach(() => {
   console.error = originalError;
 });
 
-// Mock RTK Query hooks to prevent API calls
-vi.mock('@/features/auth/authApiSlice', () => ({
-  useLoginMutation: () => [vi.fn(), { isLoading: false }],
-  useLogoutMutation: () => [vi.fn(), { isLoading: false }],
-  useRegisterAccountMutation: () => [vi.fn(), { isLoading: false }],
-  useChangeUserEmailMutation: () => [vi.fn(), { isLoading: false }],
-  useChangeUserPasswordMutation: () => [vi.fn(), { isLoading: false }],
-  useDeleteUserMutation: () => [vi.fn(), { isLoading: false }],
-  useResetUserPasswordMutation: () => [vi.fn(), { isLoading: false }],
-}));
-
-vi.mock('@/features/emailSlice', () => ({
-  useSendPasswordResetMutation: () => [vi.fn(), { isLoading: false }],
-  useSendMessageResponseMutation: () => [vi.fn(), { isLoading: false }],
+vi.mock('@/convex/client', () => ({
+  useMutation: () => vi.fn().mockResolvedValue({ success: true, message: 'ok' }),
+  useQuery: () => undefined,
 }));
 
 vi.mock('@/features/employeeSlice', async (importOriginal) => {
@@ -52,7 +61,6 @@ vi.mock('@/features/employeeSlice', async (importOriginal) => {
   return {
     ...actual,
     useGetEmployeesQuery: () => ({ data: [], isLoading: false, isSuccess: true }),
-    useGetEmployeesProfilesQuery: () => ({ data: [], isLoading: false, isSuccess: true }),
   };
 });
 
@@ -142,6 +150,8 @@ describe('Protected Routes - Unauthenticated', () => {
 
 describe('Protected Routes - Authenticated', () => {
   it('renders Account page when authenticated', () => {
+    mockAuthState.user = 'test@example.com';
+    mockAuthState.role = 'user';
     const TestRoutes = () => (
       <Routes>
         <Route element={<RequireAuth />}>
@@ -150,18 +160,15 @@ describe('Protected Routes - Authenticated', () => {
       </Routes>
     );
 
-    render(<TestRoutes />, {
-      route: '/account',
-      preloadedState: {
-        auth: { user: 'test@example.com', role: 'user' },
-      },
-    });
+    render(<TestRoutes />, { route: '/account' });
 
     expect(screen.getByText(/welcome test@example.com/i)).toBeInTheDocument();
     expect(screen.getByText(/account page/i)).toBeInTheDocument();
   });
 
   it('shows admin links for admin users', () => {
+    mockAuthState.user = 'admin@example.com';
+    mockAuthState.role = 'admin';
     const TestRoutes = () => (
       <Routes>
         <Route element={<RequireAuth />}>
@@ -170,18 +177,15 @@ describe('Protected Routes - Authenticated', () => {
       </Routes>
     );
 
-    render(<TestRoutes />, {
-      route: '/account',
-      preloadedState: {
-        auth: { user: 'admin@example.com', role: 'admin' },
-      },
-    });
+    render(<TestRoutes />, { route: '/account' });
 
     expect(screen.getByText(/schedule dashboard/i)).toBeInTheDocument();
     expect(screen.getByText(/add a new schedule/i)).toBeInTheDocument();
   });
 
   it('hides admin links for non-admin users', () => {
+    mockAuthState.user = 'user@example.com';
+    mockAuthState.role = 'user';
     const TestRoutes = () => (
       <Routes>
         <Route element={<RequireAuth />}>
@@ -190,12 +194,7 @@ describe('Protected Routes - Authenticated', () => {
       </Routes>
     );
 
-    render(<TestRoutes />, {
-      route: '/account',
-      preloadedState: {
-        auth: { user: 'user@example.com', role: 'user' },
-      },
-    });
+    render(<TestRoutes />, { route: '/account' });
 
     expect(screen.queryByText(/schedule dashboard/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/add a new schedule/i)).not.toBeInTheDocument();
@@ -203,7 +202,9 @@ describe('Protected Routes - Authenticated', () => {
 });
 
 describe('Admin Routes', () => {
-  it('throws error for non-admin accessing admin routes', () => {
+  it('shows access denied for non-admin accessing admin routes', () => {
+    mockAuthState.user = 'user@example.com';
+    mockAuthState.role = 'user';
     const TestRoutes = () => (
       <Routes>
         <Route element={<RequireAuth requiredRole="admin" />}>
@@ -212,17 +213,13 @@ describe('Admin Routes', () => {
       </Routes>
     );
 
-    expect(() => {
-      render(<TestRoutes />, {
-        route: '/dashboard',
-        preloadedState: {
-          auth: { user: 'user@example.com', role: 'user' },
-        },
-      });
-    }).toThrow('Not authorized');
+    render(<TestRoutes />, { route: '/dashboard' });
+    expect(screen.getByText(/not allowed/i)).toBeInTheDocument();
   });
 
   it('allows admin to access admin routes', () => {
+    mockAuthState.user = 'admin@example.com';
+    mockAuthState.role = 'admin';
     const TestRoutes = () => (
       <Routes>
         <Route element={<RequireAuth requiredRole="admin" />}>
@@ -231,12 +228,7 @@ describe('Admin Routes', () => {
       </Routes>
     );
 
-    render(<TestRoutes />, {
-      route: '/dashboard',
-      preloadedState: {
-        auth: { user: 'admin@example.com', role: 'admin' },
-      },
-    });
+    render(<TestRoutes />, { route: '/dashboard' });
 
     expect(screen.getByText('Dashboard Content')).toBeInTheDocument();
   });
@@ -250,6 +242,8 @@ describe('Route Navigation', () => {
   });
 
   it('Account page has links to settings and appointments', () => {
+    mockAuthState.user = 'test@example.com';
+    mockAuthState.role = 'client';
     const TestRoutes = () => (
       <Routes>
         <Route element={<RequireAuth />}>
@@ -258,14 +252,61 @@ describe('Route Navigation', () => {
       </Routes>
     );
 
-    render(<TestRoutes />, {
-      route: '/account',
-      preloadedState: {
-        auth: { user: 'test@example.com', role: 'user' },
-      },
-    });
+    render(<TestRoutes />, { route: '/account' });
 
     expect(screen.getByRole('link', { name: /account settings/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /view your appointments/i })).toBeInTheDocument();
+  });
+
+  it('Account page hides appointments link for admin', () => {
+    mockAuthState.user = 'admin@example.com';
+    mockAuthState.role = 'admin';
+    const TestRoutes = () => (
+      <Routes>
+        <Route element={<RequireAuth />}>
+          <Route path="/account" element={<Account />} />
+        </Route>
+      </Routes>
+    );
+
+    render(<TestRoutes />, { route: '/account' });
+
+    expect(
+      screen.queryByRole('link', { name: /view your appointments/i })
+    ).not.toBeInTheDocument();
+  });
+});
+
+describe('Admin Restrictions', () => {
+  it('prevents admin from viewing client appointments page', () => {
+    mockAuthState.user = 'admin@example.com';
+    mockAuthState.role = 'admin';
+
+    const TestRoutes = () => (
+      <Routes>
+        <Route element={<RequireAuth />}>
+          <Route path="/account/appointments" element={<Appointments />} />
+        </Route>
+      </Routes>
+    );
+
+    render(<TestRoutes />, { route: '/account/appointments' });
+    expect(screen.getByText(/not allowed/i)).toBeInTheDocument();
+  });
+
+  it('prevents admin from viewing appointment deep link', () => {
+    mockAuthState.user = 'admin@example.com';
+    mockAuthState.role = 'admin';
+
+    const TestRoutes = () => (
+      <Routes>
+        <Route element={<RequireAuth />}>
+          <Route path="/appointment/:id" element={<AppointmentPage />} />
+        </Route>
+      </Routes>
+    );
+
+    render(<TestRoutes />, { route: '/appointment/123' });
+    expect(screen.getByText(/not allowed/i)).toBeInTheDocument();
   });
 });

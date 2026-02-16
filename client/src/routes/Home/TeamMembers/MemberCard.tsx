@@ -11,7 +11,7 @@ import { EmployeeProfile } from '@/types';
 
 interface MemberCardProps {
   employee: EmployeeProfile;
-  handleClick: (id: string) => void;
+  handleClick: (employee: EmployeeProfile) => void;
 }
 
 export default function MemberCard({ employee, handleClick }: MemberCardProps) {
@@ -37,7 +37,7 @@ export default function MemberCard({ employee, handleClick }: MemberCardProps) {
           <p className={`body1 ${styles.paragraph}`}>{employee.profile}</p>
         </CardContent>
         <CardActions sx={{ marginInline: 'auto', mb: 2 }}>
-          <Link to="/bookings" onClick={() => handleClick(employee.id)}>
+          <Link to="/bookings" onClick={() => handleClick(employee)}>
             <Button
               size="small"
               variant="contained"

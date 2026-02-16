@@ -1,0 +1,74 @@
+{
+  "users": [
+    {
+      "firstName": "Avery",
+      "lastName": "Cole",
+      "email": "avery.cole@cutabove.test",
+      "role": "admin",
+      "password": "ChangeMe_Admin_123!"
+    },
+    {
+      "firstName": "Andre",
+      "lastName": "Silva",
+      "email": "andre.silva@cutabove.test",
+      "role": "employee",
+      "password": "ChangeMe_Andre_123!"
+    },
+    {
+      "firstName": "Obi",
+      "lastName": "Mensah",
+      "email": "obi.mensah@cutabove.test",
+      "role": "employee",
+      "password": "ChangeMe_Obi_123!"
+    },
+    {
+      "firstName": "Salah",
+      "lastName": "Rahman",
+      "email": "salah.rahman@cutabove.test",
+      "role": "employee",
+      "password": "ChangeMe_Salah_123!"
+    },
+    {
+      "firstName": "Mike",
+      "lastName": "Chen",
+      "email": "mike.chen@cutabove.test",
+      "role": "client",
+      "password": "ChangeMe_Mike_123!"
+    },
+    {
+      "firstName": "John",
+      "lastName": "Smith",
+      "email": "john.smith@cutabove.test",
+      "role": "client",
+      "password": "ChangeMe_John_123!"
+    },
+    {
+      "firstName": "Emilio",
+      "lastName": "Johnson",
+      "email": "emilio.johnson@cutabove.test",
+      "role": "client",
+      "password": "ChangeMe_Emilio_123!"
+    },
+    {
+      "firstName": "Michael",
+      "lastName": "Brown",
+      "email": "michael.brown@cutabove.test",
+      "role": "client",
+      "password": "ChangeMe_Michael_123!"
+    },
+    {
+      "firstName": "Scott",
+      "lastName": "Davis",
+      "email": "scott.davis@cutabove.test",
+      "role": "client",
+      "password": "ChangeMe_Scott_123!"
+    },
+    {
+      "firstName": "Daniel",
+      "lastName": "Wilson",
+      "email": "daniel.wilson@cutabove.test",
+      "role": "client",
+      "password": "ChangeMe_Daniel_123!"
+    }
+  ]
+}

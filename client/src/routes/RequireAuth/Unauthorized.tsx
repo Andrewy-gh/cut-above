@@ -1,22 +1,26 @@
 import { Link, useRouteError } from 'react-router';
-import { RouteError } from '@/types';
+import { getPublicErrorContent } from '@/utils/publicError';
 
 export default function Unauthorized() {
   const error = useRouteError();
+  const { heading, message, details } = getPublicErrorContent(error);
+  const showDetails =
+    import.meta.env.DEV && import.meta.env.VITE_SHOW_ERROR_DETAILS === 'true';
+
   return (
-    <main className="container-lg">
-      <h5>Oops Looks like you took a wrong turn.</h5>
+    <main className="container-lg" aria-live="polite">
+      <h1>{heading}</h1>
+      <p>{message}</p>
+      {showDetails && details ? (
+        <details>
+          <summary>Details</summary>
+          <pre style={{ whiteSpace: 'pre-wrap' }}>{details}</pre>
+        </details>
+      ) : null}
       <p>
-        <i>
-          {(error as RouteError).statusText || (error as RouteError).message}
-        </i>
-      </p>
-      <p>
-        Click{' '}
         <Link to="/">
-          <u>here</u>{' '}
+          Return <u>home</u>
         </Link>
-        to return Home
       </p>
     </main>
   );

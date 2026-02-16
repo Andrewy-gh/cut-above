@@ -6,58 +6,7 @@ on:
   pull_request:
 
 jobs:
-  server:
-    runs-on: ubuntu-latest
-    env:
-      DATABASE_URL: postgres://postgres:${{ secrets.TEST_DB_PASSWORD }}@localhost:5433/cutabove_test
-      REDIS_URL: redis://localhost:6379
-    services:
-      postgres:
-        image: postgres:16.2
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
-          POSTGRES_DB: cutabove_test
-        ports:
-          - 5433:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
-      redis:
-        image: redis:7-alpine
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-          cache-dependency-path: server/pnpm-lock.yaml
-      - name: Install dependencies
-        working-directory: server
-        run: pnpm install --frozen-lockfile
-      - name: Build shared
-        working-directory: shared
-        run: pnpm build
-      - name: Lint server
-        working-directory: server
-        run: pnpm lint
-      - name: Typecheck server
-        working-directory: server
-        run: pnpm typecheck
-      - name: Run server tests
-        working-directory: server
-        run: pnpm test:run
-  client:
+  build_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -66,19 +15,14 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
-          cache-dependency-path: client/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
       - name: Install dependencies
-        working-directory: client
         run: pnpm install --frozen-lockfile
-      - name: Lint client
-        working-directory: client
+      - name: Lint
         run: pnpm lint
-      - name: Typecheck client
-        working-directory: client
+      - name: Typecheck
         run: pnpm typecheck
-      - name: Run client tests
-        working-directory: client
+      - name: Run tests
         run: pnpm test:run
-      - name: Build client
-        working-directory: client
+      - name: Build
         run: pnpm build

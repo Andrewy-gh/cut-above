@@ -4,10 +4,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import FormHelperText from '@mui/material/FormHelperText';
 
-import {
-  useRegisterAccountMutation,
-  RegisterData,
-} from '@/features/auth/authApiSlice';
+import { authClient } from '@/convex/authClient';
 
 import PasswordInput from '@/components/PasswordInput';
 
@@ -21,7 +18,11 @@ import { passwordIsValid, passwordValidationError } from '@/utils/password';
 
 import styles from './styles.module.css';
 
-interface UserState extends RegisterData {
+interface UserState {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password?: string;
   confirmPwd: string;
 }
 
@@ -39,8 +40,6 @@ export default function Register() {
     helperText: '',
   });
   const [pwdError, setPwdError] = useState({ error: false, helperText: '' });
-
-  const [registerAccount] = useRegisterAccountMutation();
 
   const { handleSuccess, handleError } = useNotification();
 
@@ -78,16 +77,18 @@ export default function Register() {
         setPwdError({ error: true, helperText: 'Passwords do not match' });
         return;
       }
-      const newUser = await registerAccount({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        password: user.password,
+      const fullName = [user.firstName, user.lastName].filter(Boolean).join(' ');
+      const result = await authClient.signUp.email({
+        name: fullName || 'User',
+        password: user.password ?? '',
         email: cleanEmail(user.email),
-      }).unwrap();
-      if (newUser.success) {
-        navigate('/login');
-        handleSuccess(newUser.message);
+      });
+      if (result?.error) {
+        handleError(result.error);
+        return;
       }
+      navigate('/login');
+      handleSuccess('Successfully registered account');
     } catch (err) {
       handleError(err);
     }

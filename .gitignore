@@ -8,3 +8,11 @@ test-results/
 
 # Claude agent instructions (all directories)
 **/CLAUDE*.md
+
+.env.local
+.env.mailpit.local
+.env.prod
+.seed-prod.json
+
+# opensrc - source code for packages
+opensrc/

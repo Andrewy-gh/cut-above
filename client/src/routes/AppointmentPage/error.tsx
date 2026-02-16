@@ -1,22 +1,30 @@
 import { Link, useRouteError } from 'react-router';
-import { RouteError } from '@/types';
+import { getPublicErrorContent } from '@/utils/publicError';
 
 export default function Error() {
   const error = useRouteError();
+  const { heading, message, details } = getPublicErrorContent(error);
+  const showDetails =
+    import.meta.env.DEV && import.meta.env.VITE_SHOW_ERROR_DETAILS === 'true';
   return (
     <main className="container-lg">
-      <h5>Oops looks like an error happened...</h5>
+      <h1>{heading}</h1>
+      <p>{message}</p>
+      {showDetails && details ? (
+        <details>
+          <summary>Details</summary>
+          <pre style={{ whiteSpace: 'pre-wrap' }}>{details}</pre>
+        </details>
+      ) : null}
       <p>
-        <i>
-          {(error as RouteError).statusText || (error as RouteError).message}
-        </i>
+        <Link to="/account/appointments">
+          View <u>your appointments</u>
+        </Link>
       </p>
       <p>
-        Please{' '}
-        <Link to="/login">
-          <u>login</u>{' '}
+        <Link to="/">
+          Return <u>home</u>
         </Link>
-        to access your appointment information.
       </p>
     </main>
   );

@@ -26,7 +26,7 @@ export function useAppointment() {
     try {
       const cancelledAppt = await cancelAppointment({
         id,
-      }).unwrap();
+      });
       if (cancelledAppt.success) {
         handleSuccess(cancelledAppt.message);
         if (location.pathname.startsWith('/appointment/')) {
@@ -39,7 +39,7 @@ export function useAppointment() {
   };
 
   const handleBeginRescheduling = (id: string) => {
-    navigate(`/bookings/${id}`);
+    navigate(`/account/appointments/${id}/reschedule`);
   };
 
   const handleEndRescheduling = () => dispatch(endRescheduling());
@@ -49,7 +49,7 @@ export function useAppointment() {
       const statusUpdate = await updateAppointmentStatus({
         id,
         status: newStatus,
-      }).unwrap();
+      });
       if (statusUpdate.success) handleSuccess(statusUpdate.message);
     } catch (err) {
       handleError(err);

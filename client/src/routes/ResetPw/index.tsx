@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import Button from '@mui/material/Button';
 import FormHelperText from '@mui/material/FormHelperText';
 
@@ -9,7 +9,9 @@ import { passwordIsValid, passwordValidationError } from '@/utils/password';
 
 // This is the Reset Password page when accessed through email
 export default function ResetPw() {
-  const { token, id } = useParams();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token');
+  const errorParam = searchParams.get('error');
   const navigate = useNavigate();
   const [user, setUser] = useState({
     password: '',
@@ -18,11 +20,8 @@ export default function ResetPw() {
   const [pwdError, setPwdError] = useState({ error: false, helperText: '' });
   const { handleUserPasswordReset } = useAuth();
 
-  if (!id) {
-    throw new Error('no id');
-  }
   if (!token) {
-    throw new Error('no token');
+    throw new Error(errorParam || 'no token');
   }
 
   const handlePwdChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -48,12 +47,13 @@ export default function ResetPw() {
       setPwdError({ error: true, helperText: 'Passwords do not match' });
       return;
     }
-    await handleUserPasswordReset({
-      id,
+    const resetOk = await handleUserPasswordReset({
       token,
       password: user.password,
     });
-    navigate('/login');
+    if (resetOk) {
+      navigate('/login');
+    }
   };
 
   return (

@@ -25,9 +25,11 @@ export default function Account() {
       <div className="body1">
         <Link to="settings">Account settings</Link>
       </div>
-      <div className="body1">
-        <Link to="appointments">View your appointments</Link>
-      </div>
+      {role !== 'admin' ? (
+        <div className="body1">
+          <Link to="appointments">View your appointments</Link>
+        </div>
+      ) : null}
       {role === 'admin' && adminRoutes}
       <div className="mt-4">
         <LogoutButton />
