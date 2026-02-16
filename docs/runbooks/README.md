@@ -4,11 +4,11 @@ Single source of truth for local, cloud-dev, and production workflows.
 
 ## Scenario Matrix
 
-| Scenario        | Backend                      | Frontend | Mailpit                          | Seed                                   | Reset                                                                |
-| --------------- | ---------------------------- | -------- | -------------------------------- | -------------------------------------- | -------------------------------------------------------------------- |
-| Local non-cloud | Local Convex (`localhost`)   | Local    | Optional/Recommended             | `pnpm seed:dev`                        | `pnpm seed:reset`                                                    |
-| Local cloud-dev | Convex cloud dev deployment  | Local    | Optional (local)                 | `ALLOW_CLOUD_SEED=true pnpm seed:dev`  | `ALLOW_CLOUD_SEED=true CONFIRM_SEED_RESET=true pnpm seed:reset`      |
-| Production      | Convex production deployment | Hosted   | Not used (use provider/log mode) | `ALLOW_CLOUD_SEED=true pnpm seed:prod` | `ALLOW_CLOUD_SEED=true CONFIRM_SEED_RESET=true pnpm seed:reset:prod` |
+| Scenario        | Backend                      | Frontend | Start Convex                                | Start Client         | Mailpit                          | Seed                                   | Reset                                                                |
+| --------------- | ---------------------------- | -------- | ------------------------------------------- | -------------------- | -------------------------------- | -------------------------------------- | -------------------------------------------------------------------- |
+| Local non-cloud | Local Convex (`localhost`)   | Local    | `pnpm dev:convex:local` or `pnpm dev:local` | `pnpm -C client dev` | Optional/Recommended             | `pnpm seed:dev`                        | `CONFIRM_SEED_RESET=true pnpm seed:reset`                            |
+| Local cloud-dev | Convex cloud dev deployment  | Local    | `pnpm dev:convex:cloud` (optional)          | `pnpm -C client dev` | Optional (local)                 | `ALLOW_CLOUD_SEED=true pnpm seed:dev`  | `ALLOW_CLOUD_SEED=true CONFIRM_SEED_RESET=true pnpm seed:reset`      |
+| Production      | Convex production deployment | Hosted   | GitHub workflow `Convex Deploy`             | Hosted platform      | Not used (use provider/log mode) | `ALLOW_CLOUD_SEED=true pnpm seed:prod` | `ALLOW_CLOUD_SEED=true CONFIRM_SEED_RESET=true pnpm seed:reset:prod` |
 
 Notes:
 
