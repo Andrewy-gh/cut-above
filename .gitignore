@@ -1,4 +1,5 @@
 .claude
+better-auth-convex-example/
 tasks/
 shared/dist/
 playwright-report/
