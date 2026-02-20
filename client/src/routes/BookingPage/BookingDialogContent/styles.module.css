@@ -1,19 +1,52 @@
-.flex,
-.flex_sb {
+.dialog_header {
   display: flex;
-}
-
-.flex {
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.flex_sb {
   justify-content: space-between;
-  gap: 1rem;
+  align-items: center;
+  padding: 1.25rem 1.25rem 0.875rem;
+  border-bottom: 1px solid #2a2a2a;
 }
 
-.padding {
+.dialog_title {
+  font-family: 'Corben', sans-serif;
+  font-weight: 700;
+  font-size: var(--step-1);
+  color: #E6B953;
+  margin: 0;
+}
+
+.close_btn_wrap {
   padding: 0.25rem;
+}
+
+.detail_row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(3, 126, 148, 0.06);
+  border: 1px solid rgba(3, 126, 148, 0.15);
+  border-radius: 0.625rem;
+  margin-bottom: 0.625rem;
+}
+
+.detail_icon {
+  color: #629aa4;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.detail_text {
+  font-family: 'Nobile', sans-serif;
+  color: #E6B953;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.detail_sub {
+  font-family: 'Nobile', sans-serif;
+  color: #888;
+  font-size: 0.85rem;
+  margin-left: auto;
+  white-space: nowrap;
 }
