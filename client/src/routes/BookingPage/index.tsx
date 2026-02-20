@@ -52,10 +52,6 @@ export default function BookingPage() {
     return <AccessDenied requiredRole="client" />;
   }
 
-  const message = rescheduling
-    ? 'Please book your new appointment'
-    : 'Schedule your appointment';
-
   const handleSelectAndOpen = (data: typeof selection) => {
     handleSelectionChange(data as Parameters<typeof handleSelectionChange>[0]);
     handleOpen();
@@ -90,7 +86,14 @@ export default function BookingPage() {
   return (
     <>
       <div className={styles.flex_container}>
-        <h3 className={styles.header}>{message}</h3>
+        <h3 className={styles.header}>
+          {rescheduling ? 'Reschedule Appointment' : 'Book Your Appointment'}
+        </h3>
+        {rescheduling && (
+          <div className={styles.reschedule_badge}>
+            Rescheduling — select your new date &amp; time
+          </div>
+        )}
         <BookingForm handleOpen={handleSelectAndOpen} employee={employee} />
         <BookingDialog
           open={open}

@@ -1,17 +1,52 @@
 .flex_container {
-  margin-bottom: 4rem;
+  max-width: 900px;
+  margin-inline: auto;
+  padding: 2.5rem 1rem 4rem;
   min-height: calc(100vh - 4rem);
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-}
-
-.container {
-  width: min(40ch, 100% - 2rem);
-  margin-inline: auto;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 3rem;
+  font-family: 'Corben', sans-serif;
+  font-weight: 700;
+  font-size: var(--step-2);
+  color: #E6B953;
+  margin: 0 0 2.5rem;
+  position: relative;
+  padding-bottom: 1.25rem;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #037E94, #26C4E0, #037E94, transparent);
+}
+
+.reschedule_badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Nobile', sans-serif;
+  font-size: var(--step--2);
+  color: #E0A00D;
+  background: rgba(224, 160, 13, 0.1);
+  border: 1px solid rgba(224, 160, 13, 0.3);
+  border-radius: 2rem;
+  padding: 0.25rem 0.875rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  align-self: center;
+}
+
+/* keep .container for legacy use */
+.container {
+  width: min(40ch, 100% - 2rem);
+  margin-inline: auto;
 }
