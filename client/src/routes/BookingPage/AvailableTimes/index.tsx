@@ -1,5 +1,4 @@
 import { useMediaQuery } from '@mui/material';
-import Button from '@mui/material/Button';
 import { Dayjs } from 'dayjs';
 
 import { formatTime } from '@/utils/date';
@@ -14,16 +13,18 @@ interface Slot {
   available: string[];
 }
 
-interface AvailableTimeProps {
-  children: React.ReactNode;
+interface TimeSlotButtonProps {
+  time: string;
+  slotsCount: string;
   handleOpen: () => void;
 }
 
-const AvailableTime = ({ children, handleOpen }: AvailableTimeProps) => {
+const TimeSlotButton = ({ time, slotsCount, handleOpen }: TimeSlotButtonProps) => {
   return (
-    <Button variant="contained" onClick={handleOpen}>
-      {children}
-    </Button>
+    <button className={styles.time_slot} onClick={handleOpen} type="button">
+      <span className={styles.time_value}>{time}</span>
+      {slotsCount && <span className={styles.slots_count}>{slotsCount}</span>}
+    </button>
   );
 };
 
@@ -43,42 +44,41 @@ export default function AvailableTimes({
   const containerClass = isMobile
     ? styles.container_mobile
     : styles.container_desktop;
-  const itemClass = isMobile ? styles.item_mobile : null;
+  const itemClass = isMobile ? styles.item_mobile : undefined;
 
-  let title;
-  let timesAvailable;
-  let availableTimes;
-  if (timeSlots.length > 0) {
-    timesAvailable = `Choose Your Time - ${
-      timeSlots.length > 1
-        ? timeSlots.length + ' slots available'
-        : '1 slot available'
-    }`;
-    title = <h5 className="text-center">{timesAvailable}</h5>;
-    availableTimes = (
+  if (timeSlots.length === 0) {
+    return (
+      <div className={styles.times_section}>
+        <div className={styles.times_empty}>No times available for this date</div>
+      </div>
+    );
+  }
+
+  const slotWord = timeSlots.length === 1 ? 'slot' : 'slots';
+
+  return (
+    <div className={styles.times_section}>
+      <div className={styles.times_header}>
+        <span className={styles.times_title}>Choose Your Time</span>
+        <span className={styles.times_count}>
+          {timeSlots.length} {slotWord} available
+        </span>
+      </div>
       <div className={containerClass}>
         {timeSlots.map((slot: Slot) => {
-          const startTime = formatTime(slot.start); // dayjs obj => 10:45am
-          const slotsAvailable =
-            !employee ? `${slot.available.length} left` : '';
+          const startTime = formatTime(slot.start);
+          const slotsCount = !employee ? `${slot.available.length} left` : '';
           return (
             <div key={slot.id} className={itemClass}>
-              <AvailableTime
+              <TimeSlotButton
+                time={startTime}
+                slotsCount={slotsCount}
                 handleOpen={() => handleOpen(slot)}
-              >{`${startTime} ${slotsAvailable}`}</AvailableTime>
+              />
             </div>
           );
         })}
       </div>
-    );
-  } else {
-    title = <h5 className="text-center">No Times Available</h5>;
-  }
-
-  return (
-    <div className={styles.spacing}>
-      {title}
-      {availableTimes}
     </div>
   );
 }
