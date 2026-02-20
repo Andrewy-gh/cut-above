@@ -1,6 +1,3 @@
-import Button from '@mui/material/Button';
-import PersonIcon from '@mui/icons-material/Person';
-
 import styles from './styles.module.css';
 
 interface EmployeeEditProps {
@@ -17,12 +14,16 @@ export default function EmployeeEdit({
   if (!employee) return null;
 
   return (
-    <div className={styles.flex_sb}>
-      <div className={styles.flex}>
-        <PersonIcon />
-        <div className={`body2 ${styles.yellow}`}>{employee.firstName}</div>
+    <div className={styles.employee_row}>
+      <div className={styles.employee_info}>
+        <div className={styles.employee_avatar}>
+          {employee.firstName.charAt(0).toUpperCase()}
+        </div>
+        <span className={styles.employee_name}>{employee.firstName}</span>
       </div>
-      <Button onClick={handleClick}>Edit</Button>
+      <button className={styles.edit_btn} onClick={handleClick} type="button">
+        Change
+      </button>
     </div>
   );
 }

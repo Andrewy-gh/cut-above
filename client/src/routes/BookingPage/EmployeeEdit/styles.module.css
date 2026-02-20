@@ -1,17 +1,54 @@
-.flex,
-.flex_sb {
+.employee_row {
   display: flex;
   align-items: center;
-}
-
-.flex {
-  gap: 0.5rem;
-}
-
-.flex_sb {
   justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: rgba(3, 126, 148, 0.06);
+  border: 1px solid rgba(3, 126, 148, 0.15);
+  border-radius: 0.625rem;
 }
 
-.yellow {
-  color: #e6b953;
+.employee_info {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.employee_avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #037E94, #26C4E0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Corben', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.employee_name {
+  font-family: 'Nobile', sans-serif;
+  font-size: 0.95rem;
+  color: #E6B953;
+  font-weight: 500;
+}
+
+.edit_btn {
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.75rem;
+  font-family: 'Nobile', sans-serif;
+  font-size: 0.8rem;
+  color: #629aa4;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.edit_btn:hover {
+  border-color: #037E94;
+  color: #26C4E0;
 }

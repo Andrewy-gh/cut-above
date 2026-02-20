@@ -7,6 +7,27 @@ import FormLabel from '@mui/material/FormLabel';
 
 import { selectEmployeeById } from '@/features/employeeSlice';
 import { useFilter } from '@/hooks/useFilter';
+
+const radioGroupSx = {
+  '& .MuiFormLabel-root': {
+    fontFamily: 'Nobile, sans-serif',
+    fontSize: '0.75rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.08em',
+    color: '#629aa4',
+    '&.Mui-focused': { color: '#629aa4' },
+  },
+  '& .MuiFormControlLabel-label': {
+    fontFamily: 'Nobile, sans-serif',
+    color: '#E6B953',
+    fontSize: '0.95rem',
+  },
+  '& .MuiRadio-root': {
+    color: '#2a2a2a',
+    '&.Mui-checked': { color: '#26C4E0' },
+  },
+};
+
 interface EmployeeRadioOptionProps {
   employeeId: string;
 }
@@ -21,7 +42,7 @@ const EmployeeRadioOption = ({ employeeId }: EmployeeRadioOptionProps) => {
   return (
     <FormControlLabel
       value={employee.id}
-      control={<Radio />}
+      control={<Radio size="small" />}
       label={employee.firstName}
     />
   );
@@ -35,11 +56,12 @@ export default function EmployeeRadio({ employees }: EmployeeRadioProps) {
   const { employee, handleEmployeeChange } = useFilter();
 
   return (
-    <FormControl>
-      <FormLabel>Available Barbers:</FormLabel>
+    <FormControl sx={radioGroupSx}>
+      <FormLabel>Available Barbers</FormLabel>
       <RadioGroup
         value={employee}
         onChange={(e) => handleEmployeeChange(e.target.value)}
+        row
       >
         {employees.map((employeeId) => (
           <EmployeeRadioOption key={employeeId} employeeId={employeeId} />
