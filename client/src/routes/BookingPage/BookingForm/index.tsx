@@ -28,14 +28,31 @@ export default function BookingForm({
   return (
     <>
       <div className={styles.container}>
-        <EmployeeSelect />
-        <ServiceSelect />
-        <DatePicker
-          date={dayjs(date)}
-          handleDateChange={handleDateChange}
-          minDate={currentDate}
-          maxDate={oneMonthFromCurrent}
-        />
+        <div className={styles.field_group}>
+          <span className={styles.section_label}>Barber</span>
+          <EmployeeSelect />
+        </div>
+
+        <div className={styles.section_divider} />
+
+        <div className={styles.field_group}>
+          <span className={styles.section_label}>Service</span>
+          <ServiceSelect />
+        </div>
+
+        <div className={styles.section_divider} />
+
+        <div className={styles.field_group}>
+          <span className={styles.section_label}>Date</span>
+          <div className={styles.date_wrapper}>
+            <DatePicker
+              date={dayjs(date)}
+              handleDateChange={handleDateChange}
+              minDate={currentDate}
+              maxDate={oneMonthFromCurrent}
+            />
+          </div>
+        </div>
       </div>
       <AvailableTimes
         timeSlots={timeSlots}
