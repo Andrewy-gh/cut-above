@@ -1,5 +1,7 @@
 import * as v from 'valibot';
 
+import { APPOINTMENT_STATUSES, SERVICE_NAMES } from '../domain/appointment.js';
+
 const isoDatetime = v.pipe(
   v.string(),
   v.isoTimestamp(),
@@ -17,13 +19,7 @@ export const bookingSchema = v.pipe(
       id: v.pipe(v.string(), v.uuid()),
       firstName: v.string(),
     }),
-    service: v.picklist([
-      'Haircut',
-      'Beard Trim',
-      'Straight Razor Shave',
-      'Cut and Shave Package',
-      'The Full Package',
-    ]),
+    service: v.picklist(SERVICE_NAMES),
   }),
   v.check(
     (value) => new Date(value.end) > new Date(value.start),
@@ -32,7 +28,7 @@ export const bookingSchema = v.pipe(
 );
 
 export const statusSchema = v.object({
-  status: v.picklist(['scheduled', 'checked-in', 'completed', 'no show']),
+  status: v.picklist(APPOINTMENT_STATUSES),
 });
 
 export const idSchema = v.object({

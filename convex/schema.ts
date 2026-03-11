@@ -1,6 +1,15 @@
 import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
 
+import {
+  appointmentStatusValidator,
+  emailDeliveryStatusValidator,
+  emailEventTypeValidator,
+  emailOutboxStatusValidator,
+  roleValidator,
+  serviceNameValidator,
+} from "./lib/domainValidators";
+
 export default defineSchema({
   users: defineTable({
     id: v.string(),
@@ -8,7 +17,7 @@ export default defineSchema({
     firstName: v.optional(v.string()),
     lastName: v.optional(v.string()),
     email: v.string(),
-    role: v.string(),
+    role: roleValidator,
     createdAt: v.optional(v.number()),
     updatedAt: v.optional(v.number()),
   })
@@ -26,8 +35,8 @@ export default defineSchema({
     .index('by_open', ['open']),
   appointments: defineTable({
     id: v.string(),
-    status: v.string(),
-    service: v.string(),
+    status: appointmentStatusValidator,
+    service: serviceNameValidator,
     start: v.string(),
     end: v.string(),
     clientId: v.string(),
@@ -50,10 +59,10 @@ export default defineSchema({
     .index('by_appointment_id', ['appointmentId']),
   emailOutbox: defineTable({
     id: v.string(),
-    eventType: v.string(),
+    eventType: emailEventTypeValidator,
     dedupeKey: v.string(),
     payload: v.any(),
-    status: v.string(),
+    status: emailOutboxStatusValidator,
     attempts: v.number(),
     availableAt: v.number(),
     createdAt: v.number(),
@@ -65,7 +74,7 @@ export default defineSchema({
   emailDeliveries: defineTable({
     id: v.string(),
     dedupeKey: v.string(),
-    status: v.string(),
+    status: emailDeliveryStatusValidator,
     providerMessageId: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
