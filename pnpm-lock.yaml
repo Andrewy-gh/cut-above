@@ -7,6 +7,9 @@ settings:
 importers:
   .:
     dependencies:
+      '@cut-above/shared':
+        specifier: workspace:*
+        version: link:shared
       dayjs:
         specifier: ^1.11.19
         version: 1.11.19
