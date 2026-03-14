@@ -8,6 +8,7 @@ const scheduleId = 'schedule-1';
 const otherScheduleId = 'schedule-2';
 const employeeId = 'employee-1';
 const clientId = 'client-1';
+const futureScheduleDate = '2099-02-03';
 
 const createAuthUser = async (
   t: ReturnType<typeof createConvexTest>,
@@ -89,9 +90,9 @@ const seedSchedules = async (t: ReturnType<typeof createConvexTest>) => {
     });
     await ctx.db.insert('schedules', {
       id: otherScheduleId,
-      date: '2026-02-03',
-      open: '2026-02-03T15:00:00.000Z',
-      close: '2026-02-03T21:00:00.000Z',
+      date: futureScheduleDate,
+      open: '2099-02-03T15:00:00.000Z',
+      close: '2099-02-03T21:00:00.000Z',
     });
   });
 };
@@ -182,6 +183,79 @@ describe('schedules queries', () => {
         firstName: 'Casey',
         lastName: 'Client',
       },
+    });
+  });
+
+  it('lists private schedules by view with compact dashboard summaries', async () => {
+    const t = createConvexTest();
+    await seedSchedules(t);
+    await seedUsersAndAppointment(t);
+    const admin = await createAuthUser(t, 'admin');
+
+    const asAdmin = t.withIdentity(admin.identity);
+
+    const pastSchedules = await asAdmin.query(api.schedules.listPrivateSchedules, {
+      view: 'past',
+      search: '2026-02',
+      paginationOpts: {
+        numItems: 10,
+        cursor: null,
+      },
+    });
+
+    expect(pastSchedules.page).toEqual([
+      {
+        id: scheduleId,
+        date: scheduleDate,
+        open: '2026-02-02T15:00:00.000Z',
+        close: '2026-02-02T21:00:00.000Z',
+        appointmentCount: 1,
+        appointmentStatusCounts: {
+          scheduled: 1,
+          'checked-in': 0,
+          completed: 0,
+        },
+      },
+    ]);
+
+    const upcomingSchedules = await asAdmin.query(api.schedules.listPrivateSchedules, {
+      view: 'upcoming',
+      paginationOpts: {
+        numItems: 10,
+        cursor: null,
+      },
+    });
+
+    expect(upcomingSchedules.page).toEqual([
+      {
+        id: otherScheduleId,
+        date: futureScheduleDate,
+        open: '2099-02-03T15:00:00.000Z',
+        close: '2099-02-03T21:00:00.000Z',
+        appointmentCount: 0,
+        appointmentStatusCounts: {
+          scheduled: 0,
+          'checked-in': 0,
+          completed: 0,
+        },
+      },
+    ]);
+  });
+
+  it('returns private schedule dashboard stats', async () => {
+    const t = createConvexTest();
+    await seedSchedules(t);
+    await seedUsersAndAppointment(t);
+    const admin = await createAuthUser(t, 'admin');
+
+    const asAdmin = t.withIdentity(admin.identity);
+    const stats = await asAdmin.query(api.schedules.getPrivateScheduleStats, {});
+
+    expect(stats).toEqual({
+      totalSchedules: 2,
+      totalAppointments: 1,
+      upcomingSchedules: 1,
+      pastSchedules: 1,
     });
   });
 });

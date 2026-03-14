@@ -1,3 +1,5 @@
+import { paginationOptsValidator } from "convex/server";
+import type { PaginationOptions } from "convex/server";
 import { v } from "convex/values";
 
 import { mutation, query } from "./_generated/server";
@@ -19,6 +21,22 @@ const toPublicUser = (user: Doc<"users"> | null) => {
 
 type DbCtx = { db: QueryCtx["db"] };
 type ScheduleDoc = Doc<"schedules">;
+type ScheduleListView = "upcoming" | "past";
+type AppointmentStatusCounts = {
+  scheduled: number;
+  "checked-in": number;
+  completed: number;
+};
+
+const scheduleListViewValidator = v.union(
+  v.literal("upcoming"),
+  v.literal("past")
+);
+const createEmptyAppointmentStatusCounts = (): AppointmentStatusCounts => ({
+  scheduled: 0,
+  "checked-in": 0,
+  completed: 0,
+});
 
 const loadUsersByIds = async (ctx: DbCtx, ids: string[]) => {
   const uniqueIds = Array.from(new Set(ids.filter(Boolean)));
@@ -117,6 +135,85 @@ const getScheduleById = async (ctx: DbCtx, id: string) =>
     .withIndex("by_schedule_id", (q) => q.eq("id", id))
     .first();
 
+const summarizeScheduleAppointments = async (ctx: DbCtx, scheduleId: string) => {
+  const appointments = await ctx.db
+    .query("appointments")
+    .withIndex("by_schedule", (q) => q.eq("scheduleId", scheduleId))
+    .collect();
+
+  const statusCounts = appointments.reduce<AppointmentStatusCounts>(
+    (counts, appointment) => {
+      if (appointment.status === "scheduled") counts.scheduled += 1;
+      if (appointment.status === "checked-in") counts["checked-in"] += 1;
+      if (appointment.status === "completed") counts.completed += 1;
+      return counts;
+    },
+    createEmptyAppointmentStatusCounts()
+  );
+
+  return {
+    appointmentCount: appointments.length,
+    appointmentStatusCounts: statusCounts,
+  };
+};
+
+const buildScheduleListItems = async (ctx: DbCtx, schedules: ScheduleDoc[]) =>
+  Promise.all(
+    schedules.map(async (schedule) => ({
+      id: schedule.id,
+      date: schedule.date,
+      open: schedule.open,
+      close: schedule.close,
+      ...(await summarizeScheduleAppointments(ctx, schedule.id)),
+    }))
+  );
+
+const paginatePrivateSchedules = async (
+  ctx: DbCtx,
+  args: {
+    paginationOpts: PaginationOptions;
+    search?: string;
+    view: ScheduleListView;
+  }
+) => {
+  const nowIso = new Date().toISOString();
+  const search = args.search?.trim().toLowerCase();
+  const order = args.view === "past" ? "desc" : "asc";
+
+  if (search) {
+    const page = await ctx.db
+      .query("schedules")
+      .withIndex("by_date", (q) =>
+        q.gte("date", search).lte("date", `${search}\uffff`)
+      )
+      .order(order)
+      .filter((q) =>
+        args.view === "upcoming"
+          ? q.gte(q.field("open"), nowIso)
+          : q.lt(q.field("open"), nowIso)
+      )
+      .paginate(args.paginationOpts);
+
+    return {
+      ...page,
+      page: await buildScheduleListItems(ctx, page.page),
+    };
+  }
+
+  const page = await ctx.db
+    .query("schedules")
+    .withIndex("by_open", (q) =>
+      args.view === "upcoming" ? q.gte("open", nowIso) : q.lt("open", nowIso)
+    )
+    .order(order)
+    .paginate(args.paginationOpts);
+
+  return {
+    ...page,
+    page: await buildScheduleListItems(ctx, page.page),
+  };
+};
+
 export const getPublicSchedules = query({
   args: {},
   handler: async (ctx) => {
@@ -173,6 +270,42 @@ export const getPrivateScheduleById = query({
       includeClient: true,
       includeCancelled: true,
     });
+  },
+});
+
+export const listPrivateSchedules = query({
+  args: {
+    paginationOpts: paginationOptsValidator,
+    search: v.optional(v.string()),
+    view: scheduleListViewValidator,
+  },
+  handler: async (ctx, args) => {
+    await requireAdmin(ctx);
+    return paginatePrivateSchedules(ctx, args);
+  },
+});
+
+export const getPrivateScheduleStats = query({
+  args: {},
+  handler: async (ctx) => {
+    await requireAdmin(ctx);
+
+    const nowIso = new Date().toISOString();
+    const [schedules, appointments] = await Promise.all([
+      ctx.db.query("schedules").withIndex("by_open").collect(),
+      ctx.db.query("appointments").collect(),
+    ]);
+
+    const upcomingSchedules = schedules.filter(
+      (schedule) => schedule.open >= nowIso
+    ).length;
+
+    return {
+      totalSchedules: schedules.length,
+      totalAppointments: appointments.length,
+      upcomingSchedules,
+      pastSchedules: schedules.length - upcomingSchedules,
+    };
   },
 });
 

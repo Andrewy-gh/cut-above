@@ -3,27 +3,23 @@ import { Link } from 'react-router';
 import Button from '@mui/material/Button';
 import { formatDateFull, formatDateToTime } from '../../utils/date';
 import styles from './styles.module.css';
-import { Schedule } from '@/types';
+import type { ScheduleSummary } from '@/types';
 
 interface ScheduleCardProps {
-  schedule: Schedule;
+  schedule: ScheduleSummary;
   isPast?: boolean;
 }
 
 const MAX_CAPACITY = 12;
 
 export default function ScheduleCard({ schedule, isPast }: ScheduleCardProps) {
-  const apptCount = schedule.appointments.length;
+  const apptCount = schedule.appointmentCount;
   const capacityPct = Math.min((apptCount / MAX_CAPACITY) * 100, 100);
 
-  const statusCounts = useMemo(() => {
-    const counts = { scheduled: 0, 'checked-in': 0, completed: 0 };
-    schedule.appointments.forEach((appt) => {
-      const s = appt.status as keyof typeof counts;
-      if (s in counts) counts[s]++;
-    });
-    return counts;
-  }, [schedule.appointments]);
+  const statusCounts = useMemo(
+    () => schedule.appointmentStatusCounts,
+    [schedule.appointmentStatusCounts]
+  );
 
   const fullDate = formatDateFull(schedule.date);
   const dateParts = fullDate.split(' ');
