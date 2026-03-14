@@ -36,11 +36,9 @@ const scheduleSlice = createSlice({
 export const { setSchedules, clearSchedules } = scheduleSlice.actions;
 export default scheduleSlice.reducer;
 
-export const { selectAll: selectAllSchedule, selectById: selectScheduleById } =
-  scheduleAdapter.getSelectors(
-    (state: RootState) => state.schedules ?? initialState
-  );
-
+const { selectAll: selectAllSchedule } = scheduleAdapter.getSelectors(
+  (state: RootState) => state.schedules ?? initialState
+);
 
 export const selectScheduleByDate = createSelector(
   selectAllSchedule,

@@ -122,7 +122,6 @@ const hydrateSchedules = async (
   Promise.all(
     schedules.map((schedule) => hydrateSchedule(ctx, schedule, options))
   );
-
 const getScheduleByDate = async (ctx: DbCtx, date: string) =>
   ctx.db
     .query("schedules")
@@ -224,7 +223,6 @@ export const getPublicSchedules = query({
     });
   },
 });
-
 export const getPublicScheduleByDate = query({
   args: {
     date: v.string(),
@@ -253,7 +251,6 @@ export const getPrivateSchedules = query({
     });
   },
 });
-
 export const getPrivateScheduleById = query({
   args: {
     id: v.string(),
