@@ -76,10 +76,6 @@ vi.mock('@/hooks/useScheduleDetailQuery', () => ({
   useScheduleDetailQuery: () => ({ schedule: null, appointments: null, isLoading: false }),
 }));
 
-vi.mock('@/hooks/useScheduleDetailQuery', () => ({
-  useScheduleDetailQuery: () => ({ schedule: null, appointments: null, isLoading: false }),
-}));
-
 vi.mock('@/hooks/useFilter', () => ({
   useFilter: () => ({
     date: '2024-01-01',

@@ -152,14 +152,6 @@ const hydrateSchedule = async (
   };
 };
 
-const hydrateSchedules = async (
-  ctx: DbCtx,
-  schedules: ScheduleDoc[],
-  options: { includeClient: boolean; includeCancelled: boolean }
-) =>
-  Promise.all(
-    schedules.map((schedule) => hydrateSchedule(ctx, schedule, options))
-  );
 const getScheduleByDate = async (ctx: DbCtx, date: string) =>
   ctx.db
     .query("schedules")
@@ -251,16 +243,6 @@ const paginatePrivateSchedules = async (
   };
 };
 
-export const getPublicSchedules = query({
-  args: {},
-  handler: async (ctx) => {
-    const schedules = await ctx.db.query("schedules").withIndex("by_open").collect();
-    return hydrateSchedules(ctx, schedules, {
-      includeClient: false,
-      includeCancelled: false,
-    });
-  },
-});
 export const getPublicScheduleByDate = query({
   args: {
     date: v.string(),
@@ -278,17 +260,6 @@ export const getPublicScheduleByDate = query({
   },
 });
 
-export const getPrivateSchedules = query({
-  args: {},
-  handler: async (ctx) => {
-    await requireAdmin(ctx);
-    const schedules = await ctx.db.query("schedules").withIndex("by_open").collect();
-    return hydrateSchedules(ctx, schedules, {
-      includeClient: true,
-      includeCancelled: true,
-    });
-  },
-});
 export const getPrivateScheduleById = query({
   args: {
     id: v.string(),
