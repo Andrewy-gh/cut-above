@@ -344,6 +344,42 @@ export const getPrivateScheduleStats = query({
   },
 });
 
+export const listPrivateSchedules = query({
+  args: {
+    paginationOpts: paginationOptsValidator,
+    search: v.optional(v.string()),
+    view: scheduleListViewValidator,
+  },
+  handler: async (ctx, args) => {
+    await requireAdmin(ctx);
+    return paginatePrivateSchedules(ctx, args);
+  },
+});
+
+export const getPrivateScheduleStats = query({
+  args: {},
+  handler: async (ctx) => {
+    await requireAdmin(ctx);
+
+    const nowIso = new Date().toISOString();
+    const [schedules, appointments] = await Promise.all([
+      ctx.db.query("schedules").withIndex("by_open").collect(),
+      ctx.db.query("appointments").collect(),
+    ]);
+
+    const upcomingSchedules = schedules.filter(
+      (schedule) => schedule.open >= nowIso
+    ).length;
+
+    return {
+      totalSchedules: schedules.length,
+      totalAppointments: appointments.length,
+      upcomingSchedules,
+      pastSchedules: schedules.length - upcomingSchedules,
+    };
+  },
+});
+
 export const createSchedules = mutation({
   args: {
     dates: v.array(v.string()),

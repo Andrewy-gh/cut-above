@@ -1,4 +1,4 @@
-/* Dashboard Schedule */
+/* ── Dashboard Schedule ── */
 
 .page {
   max-width: 1100px;
@@ -6,7 +6,7 @@
   padding: 1.5rem 1rem 4rem;
 }
 
-/* Back link */
+/* ── Back link ── */
 .back_link {
   display: inline-flex;
   align-items: center;
@@ -28,7 +28,7 @@
   line-height: 1;
 }
 
-/* Page header */
+/* ── Page header ── */
 .page_header {
   display: flex;
   align-items: baseline;
@@ -52,7 +52,7 @@
   color: #629aa4;
 }
 
-/* Stats strip */
+/* ── Stats strip ── */
 .stats_strip {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -90,7 +90,7 @@
   border-color: #037E94;
 }
 
-/* Filters bar */
+/* ── Filters bar ── */
 .filters_bar {
   display: flex;
   align-items: center;
@@ -125,7 +125,7 @@
   border-color: #037E94;
 }
 
-/* View toggle */
+/* ── View toggle (Upcoming / Past / All) ── */
 .view_toggle {
   display: flex;
   background: #1f1f1f;
@@ -155,7 +155,7 @@
   color: #fff;
 }
 
-/* Section label */
+/* ── Section label ── */
 .section_label {
   font-family: 'Corben', sans-serif;
   font-weight: 700;
@@ -166,7 +166,7 @@
   border-bottom: 1px solid #2a2a2a;
 }
 
-/* Cards grid */
+/* ── Cards grid ── */
 .cards_grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -196,7 +196,7 @@
   color: #fff;
 }
 
-/* Schedule card */
+/* ── Schedule card ── */
 .card {
   background: linear-gradient(145deg, #1a1a1a 0%, #1f1f1f 50%, #1a1a1a 100%);
   border: 1px solid #2a2a2a;
@@ -240,7 +240,7 @@
   opacity: 0.85;
 }
 
-/* Card header row */
+/* ── Card header row ── */
 .card_header {
   display: flex;
   justify-content: space-between;
@@ -265,7 +265,7 @@
   margin-top: 0.15rem;
 }
 
-/* Time badge */
+/* ── Time badge ── */
 .card_time {
   display: flex;
   align-items: center;
@@ -282,7 +282,7 @@
   background: #629aa4;
 }
 
-/* Capacity bar */
+/* ── Capacity bar ── */
 .capacity_section {
   display: flex;
   flex-direction: column;
@@ -317,7 +317,7 @@
   transition: width 0.4s ease;
 }
 
-/* Status breakdown */
+/* ── Status breakdown ── */
 .status_badges {
   display: flex;
   gap: 0.5rem;
@@ -363,14 +363,14 @@
   font-weight: 700;
 }
 
-/* Card footer */
+/* ── Card footer ── */
 .card_footer {
   display: flex;
   justify-content: flex-end;
   padding-top: 0.25rem;
 }
 
-/* Empty state */
+/* ── Empty state ── */
 .empty_state {
   text-align: center;
   padding: 3rem 1rem;
@@ -397,7 +397,7 @@
   font-size: 0.9rem;
 }
 
-/* Responsive */
+/* ── Responsive ── */
 @media (max-width: 640px) {
   .page {
     padding: 1rem 0.75rem 3rem;
