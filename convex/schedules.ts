@@ -18,6 +18,7 @@ const toPublicUser = (user: Doc<"users"> | null) => {
 };
 
 type DbCtx = { db: QueryCtx["db"] };
+type ScheduleDoc = Doc<"schedules">;
 
 const loadUsersByIds = async (ctx: DbCtx, ids: string[]) => {
   const uniqueIds = Array.from(new Set(ids.filter(Boolean)));
@@ -57,37 +58,90 @@ const hydrateAppointments = async (
   }));
 };
 
+const loadScheduleAppointments = async (
+  ctx: DbCtx,
+  scheduleId: string,
+  options: { includeCancelled: boolean }
+) => {
+  const appointments = await ctx.db
+    .query("appointments")
+    .withIndex("by_schedule", (q) => q.eq("scheduleId", scheduleId))
+    .collect();
+
+  const visibleAppointments = options.includeCancelled
+    ? appointments
+    : appointments.filter((appointment) => appointment.status !== "cancelled");
+
+  visibleAppointments.sort((a, b) => a.start.localeCompare(b.start));
+  return visibleAppointments;
+};
+
+const hydrateSchedule = async (
+  ctx: DbCtx,
+  schedule: ScheduleDoc,
+  options: { includeClient: boolean; includeCancelled: boolean }
+) => {
+  const appointments = await loadScheduleAppointments(ctx, schedule.id, {
+    includeCancelled: options.includeCancelled,
+  });
+
+  return {
+    id: schedule.id,
+    date: schedule.date,
+    open: schedule.open,
+    close: schedule.close,
+    appointments: await hydrateAppointments(ctx, appointments, {
+      includeClient: options.includeClient,
+    }),
+  };
+};
+
+const hydrateSchedules = async (
+  ctx: DbCtx,
+  schedules: ScheduleDoc[],
+  options: { includeClient: boolean; includeCancelled: boolean }
+) =>
+  Promise.all(
+    schedules.map((schedule) => hydrateSchedule(ctx, schedule, options))
+  );
+
+const getScheduleByDate = async (ctx: DbCtx, date: string) =>
+  ctx.db
+    .query("schedules")
+    .withIndex("by_date", (q) => q.eq("date", date))
+    .first();
+
+const getScheduleById = async (ctx: DbCtx, id: string) =>
+  ctx.db
+    .query("schedules")
+    .withIndex("by_schedule_id", (q) => q.eq("id", id))
+    .first();
+
 export const getPublicSchedules = query({
   args: {},
   handler: async (ctx) => {
     const schedules = await ctx.db.query("schedules").withIndex("by_open").collect();
+    return hydrateSchedules(ctx, schedules, {
+      includeClient: false,
+      includeCancelled: false,
+    });
+  },
+});
 
-    const hydrated = await Promise.all(
-      schedules.map(async (schedule) => {
-        const appointments = await ctx.db
-          .query("appointments")
-          .withIndex("by_schedule", (q) => q.eq("scheduleId", schedule.id))
-          .collect();
+export const getPublicScheduleByDate = query({
+  args: {
+    date: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const schedule = await getScheduleByDate(ctx, args.date);
+    if (!schedule) {
+      return null;
+    }
 
-        const visibleAppointments = appointments.filter(
-          (appointment) => appointment.status !== "cancelled"
-        );
-
-        visibleAppointments.sort((a, b) => a.start.localeCompare(b.start));
-
-        return {
-          id: schedule.id,
-          date: schedule.date,
-          open: schedule.open,
-          close: schedule.close,
-          appointments: await hydrateAppointments(ctx, visibleAppointments, {
-            includeClient: false,
-          }),
-        };
-      })
-    );
-
-    return hydrated;
+    return hydrateSchedule(ctx, schedule, {
+      includeClient: false,
+      includeCancelled: false,
+    });
   },
 });
 
@@ -96,29 +150,29 @@ export const getPrivateSchedules = query({
   handler: async (ctx) => {
     await requireAdmin(ctx);
     const schedules = await ctx.db.query("schedules").withIndex("by_open").collect();
+    return hydrateSchedules(ctx, schedules, {
+      includeClient: true,
+      includeCancelled: true,
+    });
+  },
+});
 
-    const hydrated = await Promise.all(
-      schedules.map(async (schedule) => {
-        const appointments = await ctx.db
-          .query("appointments")
-          .withIndex("by_schedule", (q) => q.eq("scheduleId", schedule.id))
-          .collect();
+export const getPrivateScheduleById = query({
+  args: {
+    id: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await requireAdmin(ctx);
 
-        appointments.sort((a, b) => a.start.localeCompare(b.start));
+    const schedule = await getScheduleById(ctx, args.id);
+    if (!schedule) {
+      return null;
+    }
 
-        return {
-          id: schedule.id,
-          date: schedule.date,
-          open: schedule.open,
-          close: schedule.close,
-          appointments: await hydrateAppointments(ctx, appointments, {
-            includeClient: true,
-          }),
-        };
-      })
-    );
-
-    return hydrated;
+    return hydrateSchedule(ctx, schedule, {
+      includeClient: true,
+      includeCancelled: true,
+    });
   },
 });
 

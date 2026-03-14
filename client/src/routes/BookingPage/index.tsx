@@ -1,38 +1,29 @@
-
 import { useNavigate, useParams, useLocation } from 'react-router';
 
 import { useEmployeesQuery } from '@/hooks/useEmployeesQuery';
-
-import { useScheduleQuery } from '@/hooks/useScheduleQuery';
-
-import BookingForm from '@/routes/BookingPage/BookingForm';
-
-import BookingDialog from '@/routes/BookingPage/BookingDialog';
-
 import { useBooking } from '@/hooks/useBooking';
-
 import { useFilter } from '@/hooks/useFilter';
-
 import { useDialog } from '@/hooks/useDialog';
-
 import { useAuth } from '@/hooks/useAuth';
 import { useAppointmentAccessToken } from '@/hooks/useAppointmentAccessToken';
-
+import { useBookingScheduleQuery } from '@/hooks/useBookingScheduleQuery';
 import { useNotification } from '@/hooks/useNotification';
-
+import BookingForm from '@/routes/BookingPage/BookingForm';
+import BookingDialog from '@/routes/BookingPage/BookingDialog';
+import AccessDenied from '@/routes/RequireAuth/AccessDenied';
+import { useQuery } from '@/convex/client';
 import { Slot } from '@/types';
 
-import styles from './styles.module.css';
 import { api } from '../../../../convex/_generated/api';
-import { useQuery } from '@/convex/client';
-import AccessDenied from '@/routes/RequireAuth/AccessDenied';
+import styles from './styles.module.css';
 
 export default function BookingPage() {
   const navigate = useNavigate();
   const location = useLocation();
   useEmployeesQuery();
-  useScheduleQuery();
-  const { employee, selection, service, handleSelectionChange } = useFilter();
+  const { date, employee, selection, service, handleSelectionChange } =
+    useFilter();
+  useBookingScheduleQuery(date);
   const { open, handleClose, handleOpen } = useDialog();
   const { handleBooking } = useBooking();
   const { user, role } = useAuth();
@@ -53,7 +44,6 @@ export default function BookingPage() {
     !id && accessToken ? { token: accessToken } : 'skip'
   );
 
-  // Option 1 from discussion: admins should not book appointments (hide entry points + block route).
   if (role === 'admin' && !accessToken) {
     return <AccessDenied requiredRole="client" />;
   }
@@ -73,7 +63,7 @@ export default function BookingPage() {
       });
       return;
     }
-    // Type guard to ensure selection is a Slot
+
     if ('start' in selection && 'end' in selection) {
       handleBooking({
         id,
@@ -98,7 +88,7 @@ export default function BookingPage() {
         </h3>
         {rescheduling && (
           <div className={styles.reschedule_badge}>
-            Rescheduling — select your new date &amp; time
+            Rescheduling - select your new date &amp; time
           </div>
         )}
         <BookingForm handleOpen={handleSelectAndOpen} employee={employee} />
