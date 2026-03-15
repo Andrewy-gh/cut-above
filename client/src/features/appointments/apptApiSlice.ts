@@ -193,7 +193,7 @@ export const useModifyManagedAppointmentMutation = () => {
 export const useUpdateAppointmentStatusMutation = () => {
   const updateStatus = useMutation(api.appointments.updateAppointmentStatus);
 
-  const trigger = async (payload: { id: string; status: string }) => {
+  const trigger = async (payload: { id: string; status: Appointment['status'] }) => {
     return updateStatus(payload);
   };
 

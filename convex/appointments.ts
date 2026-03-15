@@ -2,11 +2,14 @@ import { ConvexError, v } from "convex/values";
 
 import type { Doc } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
-import { extractDateFromISO } from "./lib/dateTime";
+import {
+  appointmentStatusValidator,
+  serviceNameValidator,
+} from "./lib/domainValidators";
 import {
   assertAppointmentAccess,
-  assertRoleAllowed,
   assertAvailable,
+  assertRoleAllowed,
   buildAppointmentResponse,
   cancelAppointmentRecord,
   employeeInput,
@@ -22,6 +25,7 @@ import {
   requireAppointmentAccessToken,
   throwInvalidAppointmentAccess,
 } from "./lib/appointmentAccess";
+import { extractDateFromISO } from "./lib/dateTime";
 import { enqueueAppointmentEmail } from "./lib/emailOutbox";
 import { requireAdmin, requireAuthUser } from "./lib/auth";
 
@@ -129,7 +133,7 @@ export const createAppointment = mutation({
   args: {
     start: v.string(),
     end: v.string(),
-    service: v.string(),
+    service: serviceNameValidator,
     employee: employeeInput,
   },
   handler: async (ctx, args) => {
@@ -184,8 +188,8 @@ export const modifyAppointment = mutation({
     id: v.string(),
     start: v.optional(v.string()),
     end: v.optional(v.string()),
-    service: v.optional(v.string()),
-    status: v.optional(v.string()),
+    service: v.optional(serviceNameValidator),
+    status: v.optional(appointmentStatusValidator),
     employee: v.optional(employeeInput),
   },
   handler: async (ctx, args) => {
@@ -226,7 +230,7 @@ export const modifyManagedAppointmentByToken = mutation({
     token: v.string(),
     start: v.optional(v.string()),
     end: v.optional(v.string()),
-    service: v.optional(v.string()),
+    service: v.optional(serviceNameValidator),
     employee: v.optional(employeeInput),
   },
   handler: async (ctx, args) => {
@@ -261,7 +265,7 @@ export const modifyManagedAppointmentByToken = mutation({
 export const updateAppointmentStatus = mutation({
   args: {
     id: v.string(),
-    status: v.string(),
+    status: appointmentStatusValidator,
   },
   handler: async (ctx, args) => {
     await requireAdmin(ctx);

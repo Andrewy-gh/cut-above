@@ -6,7 +6,7 @@ import { createConvexTest } from './convexTest';
 const scheduleDate = '2026-02-02';
 const scheduleId = 'schedule-1';
 const employeeId = 'employee-1';
-const service = 'Cut';
+const service = 'Haircut';
 const startTime = '2026-02-02T15:00:00.000Z';
 const endTime = '2026-02-02T16:00:00.000Z';
 
@@ -101,6 +101,21 @@ const seedSchedule = async (t: ReturnType<typeof createConvexTest>) => {
   });
 };
 
+const seedAppointment = async (t: ReturnType<typeof createConvexTest>) => {
+  await t.run(async (ctx) => {
+    await ctx.db.insert('appointments', {
+      id: 'existing-appt',
+      status: 'scheduled',
+      service,
+      start: startTime,
+      end: endTime,
+      clientId: 'client-1',
+      employeeId,
+      scheduleId,
+    });
+  });
+};
+
 describe('appointments.createAppointment', () => {
   it(
     'rejects conflicting bookings for the same employee',
@@ -111,18 +126,7 @@ describe('appointments.createAppointment', () => {
       await seedEmployee(t);
       const client = await createAuthUser(t, 'client');
 
-      await t.run(async (ctx) => {
-        await ctx.db.insert('appointments', {
-          id: 'existing-appt',
-          status: 'scheduled',
-          service,
-          start: startTime,
-          end: endTime,
-          clientId: 'client-1',
-          employeeId,
-          scheduleId,
-        });
-      });
+      await seedAppointment(t);
 
       const asClient = t.withIdentity(client.identity);
       await expect(
@@ -227,4 +231,39 @@ describe('appointments.createAppointment', () => {
       ).resolves.toMatchObject({ success: true });
     }
   );
+
+  it('rejects services outside the shared booking contract', async () => {
+    const t = createConvexTest();
+    await seedSchedule(t);
+    await seedEmployee(t);
+    const client = await createAuthUser(t, 'client');
+
+    const asClient = t.withIdentity(client.identity);
+    await expect(
+      asClient.mutation(api.appointments.createAppointment, {
+        start: startTime,
+        end: endTime,
+        service: 'Cut' as never,
+        employee: { id: employeeId, firstName: 'Pat' },
+      })
+    ).rejects.toThrow(/Validator error/);
+  });
+});
+
+describe('appointments.updateAppointmentStatus', () => {
+  it('rejects statuses outside the shared booking contract', async () => {
+    const t = createConvexTest();
+    await seedSchedule(t);
+    await seedEmployee(t);
+    await seedAppointment(t);
+    const admin = await createAuthUser(t, 'admin');
+
+    const asAdmin = t.withIdentity(admin.identity);
+    await expect(
+      asAdmin.mutation(api.appointments.updateAppointmentStatus, {
+        id: 'existing-appt',
+        status: 'invalid-status' as never,
+      })
+    ).rejects.toThrow(/Validator error/);
+  });
 });

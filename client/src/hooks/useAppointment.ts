@@ -11,6 +11,7 @@ import {
 } from '@/features/appointments/appointmentSlice';
 
 import { useNotification } from '@/hooks/useNotification';
+import type { Appointment } from '@/types';
 
 export function useAppointment() {
   const dispatch = useAppDispatch();
@@ -44,7 +45,7 @@ export function useAppointment() {
 
   const handleEndRescheduling = () => dispatch(endRescheduling());
 
-  const handleStatusUpdate = async (id: string, newStatus: string) => {
+  const handleStatusUpdate = async (id: string, newStatus: Appointment['status']) => {
     try {
       const statusUpdate = await updateAppointmentStatus({
         id,
