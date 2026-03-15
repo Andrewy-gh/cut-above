@@ -152,5 +152,5 @@ describeMailpit("emailOutbox.processOutbox (mailpit)", () => {
     expect(findString(message, "Your booking at Cut Above Barbershop:")).toBe(true);
     expect(findString(message, "client@example.com")).toBe(true);
     expect(findString(message, "http://localhost:5173/appointment/123")).toBe(true);
-  });
+  }, 15_000);
 });

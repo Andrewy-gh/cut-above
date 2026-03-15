@@ -17,6 +17,7 @@
     "mailpit:up": "docker compose up -d mailpit",
     "mailpit:down": "docker compose down",
     "email:test": "node scripts/mailpit-email-test.mjs",
+    "email:test:resend": "node scripts/resend-email-test.mjs",
     "seed": "tsx scripts/seed.ts --mode dev",
     "seed:dev": "tsx scripts/seed.ts --mode dev",
     "seed:prod": "tsx scripts/seed.ts --mode prod",

@@ -12,6 +12,7 @@ test-results/
 
 .env.local
 .env.mailpit.local
+.env.resend.local
 .env.prod
 .seed-prod.json
 
