@@ -16,6 +16,19 @@ const resolveEmailConfig = () => ({
   pass: process.env.EMAIL_PASSWORD ?? process.env.DEV_EMAIL_PASSWORD ?? "",
 });
 
+const resolveFromEmail = () =>
+  process.env.RESEND_FROM ??
+  process.env.RESEND_FROM_EMAIL ??
+  process.env.EMAIL_FROM ??
+  process.env.EMAIL_USER ??
+  process.env.DEV_EMAIL_USER ??
+  "";
+
+const resolveResendApiKey = () =>
+  process.env.RESEND_API_KEY ??
+  process.env.RESEND_TOKEN ??
+  "";
+
 export const sendEmailSmtp = internalAction({
   args: {
     receiver: v.string(),
@@ -56,6 +69,63 @@ export const sendEmailSmtp = internalAction({
     });
 
     return { messageId: result?.messageId ?? undefined };
+  },
+});
+
+export const sendEmailResend = internalAction({
+  args: {
+    dedupeKey: v.string(),
+    receiver: v.string(),
+    subject: v.string(),
+    text: v.string(),
+  },
+  handler: async (_ctx, args): Promise<{ messageId?: string }> => {
+    const apiKey = resolveResendApiKey();
+    const from = resolveFromEmail();
+
+    if (!apiKey) {
+      throw new Error("Missing RESEND_API_KEY for email delivery.");
+    }
+
+    if (!from) {
+      throw new Error(
+        "Missing sender email for Resend delivery. Set RESEND_FROM or EMAIL_USER."
+      );
+    }
+
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+        "Idempotency-Key": args.dedupeKey,
+      },
+      body: JSON.stringify({
+        from,
+        to: [args.receiver],
+        subject: args.subject,
+        text: args.text,
+      }),
+    });
+
+    const responseText = await response.text();
+    if (!response.ok) {
+      const details =
+        responseText.length > 0 ? ` ${responseText}` : "";
+      throw new Error(`Resend send failed: ${response.status}${details}`);
+    }
+
+    try {
+      const parsed = JSON.parse(responseText) as Record<string, unknown>;
+      const id = parsed.id;
+      if (typeof id === "string" && id.length) {
+        return { messageId: id };
+      }
+    } catch {
+      // If Resend returns non-JSON payloads, keep the send successful by default.
+    }
+
+    return { messageId: undefined };
   },
 });
 

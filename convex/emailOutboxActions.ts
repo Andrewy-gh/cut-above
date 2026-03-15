@@ -9,6 +9,7 @@ const DEFAULT_BATCH_SIZE = Number(process.env.EMAIL_OUTBOX_BATCH_SIZE ?? "10");
 const MAX_EMAIL_RETRIES = Number(process.env.EMAIL_MAX_RETRIES ?? "3");
 const BASE_RETRY_DELAY_MS = Number(process.env.EMAIL_RETRY_BASE_DELAY_MS ?? "2000");
 const MAX_RETRY_DELAY_MS = Number(process.env.EMAIL_RETRY_MAX_DELAY_MS ?? "60000");
+const RESEND_MODE = "resend";
 
 const getRetryDelayMs = (attempt: number) =>
   Math.min(BASE_RETRY_DELAY_MS * 2 ** attempt, MAX_RETRY_DELAY_MS);
@@ -74,6 +75,20 @@ const sendEmailViaMailpitHttp = async (
   return { messageId: "mailpit" };
 };
 
+const sendEmailViaResend = async (
+  ctx: ActionCtx,
+  payload: EmailPayload,
+  dedupeKey: string
+): Promise<EmailSendResult> => {
+  const template = buildEmailTemplate(payload);
+  return ctx.runAction(internal.emailOutboxNodeActions.sendEmailResend, {
+    dedupeKey,
+    receiver: payload.receiver,
+    subject: template.subject,
+    text: template.text,
+  });
+};
+
 const sendEmailViaSmtp = async (
   ctx: ActionCtx,
   payload: EmailPayload
@@ -88,7 +103,8 @@ const sendEmailViaSmtp = async (
 
 const sendEmail = async (
   ctx: ActionCtx,
-  payload: EmailPayload
+  payload: EmailPayload,
+  dedupeKey: string
 ): Promise<EmailSendResult> => {
   const mode = getDeliveryMode();
 
@@ -104,6 +120,9 @@ const sendEmail = async (
   }
   if (mode === "smtp" && isLocalDeployment() && getMailpitUrl()) {
     return sendEmailViaMailpitHttp(payload);
+  }
+  if (mode === RESEND_MODE) {
+    return sendEmailViaResend(ctx, payload, dedupeKey);
   }
   if (mode === "smtp") {
     return sendEmailViaSmtp(ctx, payload);
@@ -142,7 +161,7 @@ const processOutboxItem = async (
   });
 
   try {
-    const result = await sendEmail(ctx, payload);
+    const result = await sendEmail(ctx, payload, item.dedupeKey);
     await ctx.runMutation(internal.emailOutbox.upsertDeliveryStatus, {
       dedupeKey: item.dedupeKey,
       status: "sent",

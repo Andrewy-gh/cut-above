@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { internal } from "../../convex/_generated/api";
 import { createConvexTest } from "./convexTest";
@@ -52,6 +52,8 @@ describe("emailOutbox.processOutbox", () => {
       "DEV_EMAIL_USER",
       "EMAIL_PASSWORD",
       "DEV_EMAIL_PASSWORD",
+      "RESEND_API_KEY",
+      "RESEND_FROM",
     ].forEach((key) => {
       envBackup[key] = process.env[key];
     });
@@ -116,5 +118,39 @@ describe("emailOutbox.processOutbox", () => {
         .first()
     );
     expect(delivery?.status).toBe("failed");
+  });
+
+  it("passes the outbox dedupe key to Resend as an idempotency header", async () => {
+    process.env.EMAIL_DELIVERY_MODE = "resend";
+    process.env.RESEND_API_KEY = "test-resend-key";
+    process.env.RESEND_FROM = "no-reply@example.com";
+
+    const fetchMock = vi.fn(async () =>
+      new Response(JSON.stringify({ id: "resend-message-id" }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      })
+    );
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = fetchMock as typeof fetch;
+
+    try {
+      const t = createConvexTest();
+      const dedupeKey = "dedupe-resend-idempotency";
+      await insertOutboxItem(t, { dedupeKey });
+
+      await t.action(internal.emailOutboxActions.processOutbox, {});
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      const [, requestInit] = fetchMock.mock.calls[0] ?? [];
+      expect(requestInit).toMatchObject({
+        headers: expect.objectContaining({
+          Authorization: "Bearer test-resend-key",
+          "Idempotency-Key": dedupeKey,
+        }),
+      });
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
   });
 });
