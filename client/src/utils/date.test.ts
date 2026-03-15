@@ -138,4 +138,69 @@ describe('date normalization helpers', () => {
 
     expect(formatTime(slots[0].start)).toBe('8:00am');
   });
+
+  it('filters time slots by employee availability windows', () => {
+    vi.setSystemTime(new Date('2026-01-01T00:00:00.000Z'));
+
+    const slots = findAvailableTimeSlots(
+      {
+        open: '2099-01-24T14:00:00.000Z',
+        close: '2099-01-24T18:00:00.000Z',
+        employeeAvailability: [
+          {
+            employeeId: 'emp-1',
+            start: '2099-01-24T15:00:00.000Z',
+            end: '2099-01-24T17:00:00.000Z',
+          },
+        ],
+        appointments: [],
+      },
+      30,
+      ['emp-1'],
+      undefined
+    );
+
+    expect(slots).toHaveLength(7);
+    expect(slots[0].start.toISOString()).toBe('2099-01-24T15:00:00.000Z');
+    expect(slots[slots.length - 1]?.start.toISOString()).toBe(
+      '2099-01-24T16:30:00.000Z'
+    );
+  });
+
+  it('filters time slots that overlap employee breaks', () => {
+    vi.setSystemTime(new Date('2026-01-01T00:00:00.000Z'));
+
+    const slots = findAvailableTimeSlots(
+      {
+        open: '2099-01-24T14:00:00.000Z',
+        close: '2099-01-24T18:00:00.000Z',
+        employeeAvailability: [
+          {
+            employeeId: 'emp-1',
+            start: '2099-01-24T14:00:00.000Z',
+            end: '2099-01-24T18:00:00.000Z',
+          },
+        ],
+        employeeBreaks: [
+          {
+            id: 'break-1',
+            employeeId: 'emp-1',
+            start: '2099-01-24T15:00:00.000Z',
+            end: '2099-01-24T15:30:00.000Z',
+          },
+        ],
+        appointments: [],
+      },
+      30,
+      ['emp-1'],
+      undefined
+    );
+
+    expect(
+      slots.some((slot) => slot.start.toISOString() === '2099-01-24T15:00:00.000Z')
+    ).toBe(false);
+    expect(
+      slots.some((slot) => slot.start.toISOString() === '2099-01-24T15:15:00.000Z')
+    ).toBe(false);
+  });
 });

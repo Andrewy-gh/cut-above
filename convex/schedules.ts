@@ -6,6 +6,11 @@ import { mutation, query } from "./_generated/server";
 import type { QueryCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import { generateRange } from "./lib/dateTime";
+import {
+  loadAvailabilityForDate,
+  resolveBreakWindows,
+  resolveAvailabilityWindow,
+} from "./lib/availability";
 import { parseName } from "./lib/names";
 import { requireAdmin } from "./lib/auth";
 
@@ -99,15 +104,48 @@ const hydrateSchedule = async (
   schedule: ScheduleDoc,
   options: { includeClient: boolean; includeCancelled: boolean }
 ) => {
-  const appointments = await loadScheduleAppointments(ctx, schedule.id, {
-    includeCancelled: options.includeCancelled,
-  });
+  const [appointments, employees, availabilityData] = await Promise.all([
+    loadScheduleAppointments(ctx, schedule.id, {
+      includeCancelled: options.includeCancelled,
+    }),
+    ctx.db
+      .query("users")
+      .withIndex("by_role", (q) => q.eq("role", "employee"))
+      .collect(),
+    loadAvailabilityForDate(ctx, schedule.date),
+  ]);
+
+  const employeeAvailability = employees
+    .map((employee) =>
+      resolveAvailabilityWindow(
+        schedule,
+        employee.id,
+        availabilityData.rulesByEmployeeId,
+        availabilityData.overridesByEmployeeId
+      )
+    )
+    .filter((window): window is NonNullable<typeof window> => window !== null)
+    .sort((a, b) => a.start.localeCompare(b.start));
+
+  const employeeBreaks = employees
+    .flatMap((employee) =>
+      resolveBreakWindows(
+        schedule,
+        employee.id,
+        availabilityData.breaksByEmployeeId,
+        availabilityData.dateBreaksByEmployeeId,
+        availabilityData.dateBreakPoliciesByEmployeeId
+      )
+    )
+    .sort((a, b) => a.start.localeCompare(b.start));
 
   return {
     id: schedule.id,
     date: schedule.date,
     open: schedule.open,
     close: schedule.close,
+    employeeAvailability,
+    employeeBreaks,
     appointments: await hydrateAppointments(ctx, appointments, {
       includeClient: options.includeClient,
     }),

@@ -102,6 +102,17 @@ interface ScheduleAppointment {
 interface ScheduleInput {
   open: string;
   close: string;
+  employeeAvailability?: {
+    employeeId: string;
+    start: string;
+    end: string;
+  }[];
+  employeeBreaks?: {
+    id: string;
+    employeeId: string;
+    start: string;
+    end: string;
+  }[];
   appointments: ScheduleAppointment[];
 }
 
@@ -138,15 +149,55 @@ export const findAvailableTimeSlots = (
     }
 
     const selectedEmployees = employee ? [employee.id] : employees;
+    const employeeAvailability = new Map(
+      (schedule.employeeAvailability ?? []).map((window) => [window.employeeId, window])
+    );
+    const employeeBreaks = (schedule.employeeBreaks ?? []).reduce<
+      Map<string, { id: string; start: string; end: string }[]>
+    >((acc, entry) => {
+      const current = acc.get(entry.employeeId) ?? [];
+      current.push(entry);
+      acc.set(entry.employeeId, current);
+      return acc;
+    }, new Map());
+    const hasAvailabilityWindows = employeeAvailability.size > 0;
     const availableEmployees = selectedEmployees.filter((employeeId) => {
+      const normalizedEmployeeId = String(employeeId);
+      const availabilityWindow = employeeAvailability.get(normalizedEmployeeId);
+      const isWithinAvailability = hasAvailabilityWindows
+        ? Boolean(
+            availabilityWindow &&
+              !toBusinessDateTime(availabilityWindow.start).isAfter(slotStart) &&
+              !toBusinessDateTime(availabilityWindow.end).isBefore(currentSlotEnd)
+          )
+        : true;
+      if (!isWithinAvailability) {
+        return false;
+      }
+
+      const hasBreakConflict = (employeeBreaks.get(normalizedEmployeeId) ?? []).some(
+        (entry) =>
+          toBusinessDateTime(entry.start).isBefore(currentSlotEnd) &&
+          toBusinessDateTime(entry.end).isAfter(slotStart)
+      );
+      if (hasBreakConflict) {
+        return false;
+      }
+
       const employeeAppointments = appointments.filter((appointment) => {
-        const apptEmpId = appointment.employeeId ||
-          (appointment.employee && typeof appointment.employee === 'object' ? appointment.employee.id : appointment.employee);
-        return apptEmpId === employeeId;
+        const apptEmpId =
+          appointment.employeeId ||
+          (appointment.employee && typeof appointment.employee === 'object'
+            ? appointment.employee.id
+            : appointment.employee);
+        return apptEmpId === normalizedEmployeeId;
       });
       const employeeBooked = employeeAppointments.some(
-        (appointment) => toBusinessDateTime(appointment.start).isBefore(currentSlotEnd) &&
-        (appointment.end ? toBusinessDateTime(appointment.end).isAfter(slotStart) : false)
+        (appointment) =>
+          toBusinessDateTime(appointment.start).isBefore(currentSlotEnd) &&
+          (appointment.end
+            ? toBusinessDateTime(appointment.end).isAfter(slotStart)
+            : false)
       );
       return !employeeBooked;
     });

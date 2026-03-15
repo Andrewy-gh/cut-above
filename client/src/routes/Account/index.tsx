@@ -21,6 +21,16 @@ export default function Account() {
         'Update your profile details, email, password, and account preferences.',
       to: 'settings',
     },
+    ...((isAdmin || role === 'employee')
+      ? [
+          {
+            title: 'Manage availability',
+            description:
+              'Set weekly hours, exceptions, and break windows without changing the core booking flow.',
+            to: 'availability',
+          },
+        ]
+      : []),
     ...(!isAdmin
       ? [
           {

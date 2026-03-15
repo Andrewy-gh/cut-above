@@ -57,6 +57,70 @@ export default defineSchema({
   })
     .index('by_token_hash', ['tokenHash'])
     .index('by_appointment_id', ['appointmentId']),
+  employeeAvailabilityRules: defineTable({
+    id: v.string(),
+    employeeId: v.string(),
+    weekday: v.number(),
+    isWorking: v.boolean(),
+    startTime: v.optional(v.string()),
+    endTime: v.optional(v.string()),
+    updatedAt: v.number(),
+  })
+    .index('by_availability_rule_id', ['id'])
+    .index('by_employee', ['employeeId'])
+    .index('by_employee_weekday', ['employeeId', 'weekday'])
+    .index('by_weekday', ['weekday']),
+  employeeAvailabilityOverrides: defineTable({
+    id: v.string(),
+    employeeId: v.string(),
+    date: v.string(),
+    isWorking: v.boolean(),
+    startTime: v.optional(v.string()),
+    endTime: v.optional(v.string()),
+    reason: v.optional(v.string()),
+    updatedAt: v.number(),
+  })
+    .index('by_availability_override_id', ['id'])
+    .index('by_employee', ['employeeId'])
+    .index('by_employee_date', ['employeeId', 'date'])
+    .index('by_date', ['date']),
+  employeeAvailabilityBreaks: defineTable({
+    id: v.string(),
+    employeeId: v.string(),
+    weekday: v.number(),
+    startTime: v.string(),
+    endTime: v.string(),
+    label: v.optional(v.string()),
+    updatedAt: v.number(),
+  })
+    .index('by_availability_break_id', ['id'])
+    .index('by_employee', ['employeeId'])
+    .index('by_employee_weekday', ['employeeId', 'weekday'])
+    .index('by_weekday', ['weekday']),
+  employeeAvailabilityDateBreaks: defineTable({
+    id: v.string(),
+    employeeId: v.string(),
+    date: v.string(),
+    startTime: v.string(),
+    endTime: v.string(),
+    label: v.optional(v.string()),
+    updatedAt: v.number(),
+  })
+    .index('by_availability_date_break_id', ['id'])
+    .index('by_employee', ['employeeId'])
+    .index('by_employee_date', ['employeeId', 'date'])
+    .index('by_date', ['date']),
+  employeeAvailabilityDateBreakPolicies: defineTable({
+    id: v.string(),
+    employeeId: v.string(),
+    date: v.string(),
+    mode: v.string(),
+    updatedAt: v.number(),
+  })
+    .index('by_availability_date_break_policy_id', ['id'])
+    .index('by_employee', ['employeeId'])
+    .index('by_employee_date', ['employeeId', 'date'])
+    .index('by_date', ['date']),
   emailOutbox: defineTable({
     id: v.string(),
     eventType: emailEventTypeValidator,

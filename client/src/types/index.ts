@@ -14,9 +14,23 @@ export interface Slot {
   available: string[];
 }
 
+export interface EmployeeAvailabilityWindow {
+  employeeId: string;
+  start: string;
+  end: string;
+}
+
+export interface EmployeeBreakWindow extends EmployeeAvailabilityWindow {
+  id: string;
+  label?: string;
+}
+
+export type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
 export interface User {
   id: string;
   firstName: string;
+  lastName?: string;
 }
 
 export interface Appointment {
@@ -38,6 +52,8 @@ export interface Schedule {
   date?: string;
   open: string;
   close: string;
+  employeeAvailability?: EmployeeAvailabilityWindow[];
+  employeeBreaks?: EmployeeBreakWindow[];
   appointments: Appointment[];
 }
 
@@ -56,15 +72,88 @@ export interface ScheduleSummary {
   appointmentStatusCounts: ScheduleAppointmentStatusCounts;
 }
 
+export interface EmployeeAvailabilityWeeklyEntry {
+  weekday: Weekday;
+  isWorking: boolean;
+  startTime?: string;
+  endTime?: string;
+}
+
+export interface EmployeeAvailabilityOverride {
+  id: string;
+  date: string;
+  isWorking: boolean;
+  startTime?: string;
+  endTime?: string;
+  reason?: string;
+}
+
+export interface EmployeeAvailabilityBreak {
+  id: string;
+  weekday: Weekday;
+  startTime: string;
+  endTime: string;
+  label?: string;
+}
+
+export interface EmployeeAvailabilityDateBreak {
+  id: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  label?: string;
+}
+
+export interface EmployeeAvailabilityDateBreakPolicy {
+  date: string;
+  mode: 'add' | 'replace';
+}
+
+export interface EmployeeAvailabilityResponse {
+  employee: User & { lastName?: string };
+  defaultHours: {
+    startTime: string;
+    endTime: string;
+  };
+  weekly: EmployeeAvailabilityWeeklyEntry[];
+  overrides: EmployeeAvailabilityOverride[];
+  breaks: EmployeeAvailabilityBreak[];
+  dateBreaks: EmployeeAvailabilityDateBreak[];
+  dateBreakPolicies: EmployeeAvailabilityDateBreakPolicy[];
+}
+
+export interface EmployeeAvailabilitySummaryItem {
+  id: string;
+  firstName: string;
+  lastName?: string;
+  availabilityWindow: EmployeeAvailabilityWindow | null;
+  breaks: EmployeeBreakWindow[];
+  breakMode: 'add' | 'replace';
+  appointmentCount: number;
+}
+
+export interface EmployeeAvailabilitySummaryResponse {
+  date: string;
+  schedule: {
+    id: string;
+    open: string;
+    close: string;
+  } | null;
+  employees: EmployeeAvailabilitySummaryItem[];
+}
+
+export interface EmployeeAvailabilitySummaryRangeResponse {
+  startDate: string;
+  endDate: string;
+  days: EmployeeAvailabilitySummaryResponse[];
+}
+
 export interface RouteError {
   statusText?: string;
   message?: string;
 }
 
-export interface Employee {
-  id: string;
-  firstName: string;
-}
+export type Employee = User;
 
 export interface EmployeeProfile {
   id: string;

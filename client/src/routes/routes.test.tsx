@@ -294,6 +294,22 @@ describe('Route Navigation', () => {
     expect(screen.getByRole('link', { name: /account/i })).toBeInTheDocument();
   });
 
+  it('Account page shows availability link for employees', () => {
+    mockAuthState.user = 'employee@example.com';
+    mockAuthState.role = 'employee';
+    const TestRoutes = () => (
+      <Routes>
+        <Route element={<RequireAuth />}>
+          <Route path="/account" element={<Account />} />
+        </Route>
+      </Routes>
+    );
+
+    render(<TestRoutes />, { route: '/account' });
+
+    expect(screen.getByRole('link', { name: /manage availability/i })).toBeInTheDocument();
+  });
+
   it('Account page hides appointments link for admin', () => {
     mockAuthState.user = 'admin@example.com';
     mockAuthState.role = 'admin';
