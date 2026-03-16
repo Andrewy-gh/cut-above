@@ -10,6 +10,7 @@ import authConfig from "./auth.config";
 import { components, internal } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
+import { requireOriginUrl } from "./lib/authUrls";
 import { parseName } from "./lib/names";
 
 const appSiteUrl = process.env.SITE_URL ?? process.env.VITE_SITE_URL ?? "";
@@ -17,13 +18,6 @@ const convexSiteUrl = process.env.CONVEX_SITE_URL ?? "";
 
 const isLocalDeployment = () =>
   (process.env.CONVEX_DEPLOYMENT ?? "").toLowerCase().startsWith("local:");
-
-const requireEnv = (value: string, name: string) => {
-  if (!value) {
-    throw new Error(`Missing ${name} for Better Auth configuration.`);
-  }
-  return value;
-};
 
 const resolveAuthSecret = () => {
   const configured =
@@ -97,8 +91,8 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
 export const { onCreate, onUpdate, onDelete } = authComponent.triggersApi();
 
 export const createAuthOptions = (ctx: GenericCtx<DataModel>) => {
-  const baseURL = requireEnv(convexSiteUrl, "CONVEX_SITE_URL");
-  const siteUrl = requireEnv(appSiteUrl, "SITE_URL");
+  const baseURL = requireOriginUrl(convexSiteUrl, "CONVEX_SITE_URL");
+  const siteUrl = requireOriginUrl(appSiteUrl, "SITE_URL");
   const secret = resolveAuthSecret();
 
   return {
