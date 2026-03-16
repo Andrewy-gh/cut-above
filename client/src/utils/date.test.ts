@@ -1,9 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  findAvailableTimeSlots,
   formatDate,
   formatDateSlash,
   formatDateToTime,
+  formatTime,
   normalizeAppointment,
   normalizeAppointments,
   normalizeSchedule,
@@ -19,6 +21,14 @@ type AppointmentInput = {
 };
 
 describe('date normalization helpers', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('normalizes an appointment with ISO start into date and display time', () => {
     const start = '2024-01-22T17:00:00.000Z';
     const appointment: AppointmentInput = {
@@ -91,5 +101,41 @@ describe('date normalization helpers', () => {
 
     expect(schedules).toHaveLength(1);
     expect(schedules[0].date).toBe(formatDate(open));
+  });
+
+  it('renders seeded UTC schedule hours in the shop timezone', () => {
+    vi.setSystemTime(new Date('2026-03-10T15:00:00.000Z'));
+
+    const slots = findAvailableTimeSlots(
+      {
+        open: '2026-03-16T12:00:00.000Z',
+        close: '2026-03-16T21:00:00.000Z',
+        appointments: [],
+      },
+      30,
+      ['emp-1'],
+      undefined
+    );
+
+    expect(slots).toHaveLength(35);
+    expect(formatTime(slots[0].start)).toBe('8:00am');
+    expect(formatTime(slots[slots.length - 1].start)).toBe('4:30pm');
+  });
+
+  it('does not offer pre-opening slots on the current business day', () => {
+    vi.setSystemTime(new Date('2026-03-16T04:20:00.000Z'));
+
+    const slots = findAvailableTimeSlots(
+      {
+        open: '2026-03-16T12:00:00.000Z',
+        close: '2026-03-16T21:00:00.000Z',
+        appointments: [],
+      },
+      30,
+      ['emp-1'],
+      undefined
+    );
+
+    expect(formatTime(slots[0].start)).toBe('8:00am');
   });
 });

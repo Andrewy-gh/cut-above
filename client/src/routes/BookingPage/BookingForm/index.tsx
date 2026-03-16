@@ -8,7 +8,7 @@ import AvailableTimes from '../AvailableTimes';
 
 import { useFilter } from '@/hooks/useFilter';
 import { selectScheduleByFilter } from '@/features/scheduleSlice';
-import { currentDate, oneMonthFromCurrent } from '@/utils/date';
+import { getCurrentDateTime, getOneMonthFromCurrent } from '@/utils/date';
 import { Slot } from '@/types';
 import type { Employee } from '@/features/employeeSlice';
 
@@ -48,8 +48,8 @@ export default function BookingForm({
             <DatePicker
               date={dayjs(date)}
               handleDateChange={handleDateChange}
-              minDate={currentDate}
-              maxDate={oneMonthFromCurrent}
+              minDate={getCurrentDateTime()}
+              maxDate={getOneMonthFromCurrent()}
             />
           </div>
         </div>

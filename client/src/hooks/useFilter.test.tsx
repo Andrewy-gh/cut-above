@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 
 import { createTestStore } from '@/test/test-utils';
 import type { Employee, Slot } from '@/types';
-import { initialCurrentDate } from '@/utils/date';
+import { getInitialCurrentDate } from '@/utils/date';
 import { useFilter } from './useFilter';
 
 let employeesMock: Employee[] = [];
@@ -116,7 +116,7 @@ describe('useFilter', () => {
       result.current.handleFilterReset();
     });
 
-    expect(store.getState().filter.date).toBe(initialCurrentDate);
+    expect(store.getState().filter.date).toBe(getInitialCurrentDate());
     expect(store.getState().filter.employee).toBeUndefined();
     expect(store.getState().filter.service).toEqual({ id: 1, name: 'Haircut', duration: 30 });
   });

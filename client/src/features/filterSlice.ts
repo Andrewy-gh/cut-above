@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { initialCurrentDate } from '../utils/date';
+import { getInitialCurrentDate } from '../utils/date';
 import type { RootState } from '../app/store';
 import type { Employee } from './employeeSlice';
 
@@ -16,7 +16,7 @@ interface FilterState {
 }
 
 const initialState: FilterState = {
-  date: initialCurrentDate,
+  date: getInitialCurrentDate(),
   dateDisabled: false,
   employee: undefined,
   holdStatus: false,
@@ -57,7 +57,7 @@ const filterSlice = createSlice({
       };
     },
     resetFilter: (state) => {
-      state.date = initialCurrentDate;
+      state.date = getInitialCurrentDate();
       state.employee = undefined;
       state.service = { id: 1, name: 'Haircut', duration: 30 };
     },

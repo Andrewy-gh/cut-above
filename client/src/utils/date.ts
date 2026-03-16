@@ -11,36 +11,60 @@ dayjs.locale('en');
 
 type DateInput = string | Date | Dayjs;
 
-export const currentDate = dayjs();
+export const BUSINESS_TIME_ZONE = 'America/New_York';
 
-export const initialCurrentDate = dayjs().format('YYYY-MM-DD');
+const isIsoDateTimeString = (value: string) => value.includes('T');
 
-export const oneMonthFromCurrent = dayjs().add(1, 'month');
+const toBusinessDateTime = (value: DateInput) => {
+  if (dayjs.isDayjs(value)) {
+    return value.tz(BUSINESS_TIME_ZONE, true);
+  }
+
+  if (value instanceof Date) {
+    return dayjs(value).tz(BUSINESS_TIME_ZONE);
+  }
+
+  if (isIsoDateTimeString(value)) {
+    return dayjs.utc(value).tz(BUSINESS_TIME_ZONE);
+  }
+
+  return dayjs.tz(value, BUSINESS_TIME_ZONE);
+};
+
+export const getCurrentDateTime = () => dayjs().tz(BUSINESS_TIME_ZONE);
+
+export const getInitialCurrentDate = () => getCurrentDateTime().format('YYYY-MM-DD');
+
+export const getOneMonthFromCurrent = () => getCurrentDateTime().add(1, 'month');
 
 export const checkIsBefore = (startDate: DateInput, endDate: DateInput) => {
-  return dayjs(startDate).isBefore(dayjs(endDate));
+  return toBusinessDateTime(startDate).isBefore(toBusinessDateTime(endDate));
 };
 
 export const convertUtcToEst = (utcString: DateInput) => {
-  const utcDate = dayjs.utc(utcString);
-  const estDate = utcDate.tz('America/New_York');
+  const estDate = toBusinessDateTime(utcString);
   const estString = estDate.format();
   return estString;
 };
 
 // server format
-export const formatDate = (date: DateInput) => dayjs(date).format('YYYY-MM-DD');
+export const formatDate = (date: DateInput) =>
+  toBusinessDateTime(date).format('YYYY-MM-DD');
 
 // client side format
-export const formatDateSlash = (date: DateInput) => dayjs(date).format('MM/DD/YYYY');
+export const formatDateSlash = (date: DateInput) =>
+  toBusinessDateTime(date).format('MM/DD/YYYY');
 
 // client side format ex: Monday August 21, 2023
-export const formatDateFull = (date: DateInput) => dayjs(date).format('dddd LL');
+export const formatDateFull = (date: DateInput) =>
+  toBusinessDateTime(date).format('dddd LL');
 
 // ex: 10:00am 6:00pm used in component render
-export const formatDateToTime = (date: DateInput) => dayjs(date).format('h:mma');
+export const formatDateToTime = (date: DateInput) =>
+  toBusinessDateTime(date).format('h:mma');
 
-export const formatTime = (time: DateInput) => dayjs(time).format('h:mma');
+export const formatTime = (time: DateInput) =>
+  toBusinessDateTime(time).format('h:mma');
 
 type AppointmentLike = {
   start: string;
@@ -94,14 +118,18 @@ export const findAvailableTimeSlots = (
   const { open, close, appointments } = schedule;
   const searchIncrement = 15;
   const slots = [];
-  const currentEstTime = convertUtcToEst(currentDate);
-  const formattedCurrentDate = formatDate(currentEstTime);
-  const scheduleDate = formatDate(open); // Extract date from open timestamp
-  let slotStart =
-    scheduleDate === formattedCurrentDate
-      ? roundedCurrentDate()
-      : dayjs(open);
-  const slotEnd = dayjs(close);
+  const scheduleOpen = toBusinessDateTime(open);
+  const scheduleClose = toBusinessDateTime(close);
+  const formattedCurrentDate = getInitialCurrentDate();
+  const scheduleDate = formatDate(scheduleOpen);
+  const nextBookableTime = roundedCurrentDate();
+  let slotStart = scheduleOpen;
+
+  if (scheduleDate === formattedCurrentDate && nextBookableTime.isAfter(scheduleOpen)) {
+    slotStart = nextBookableTime;
+  }
+
+  const slotEnd = scheduleClose;
 
   while (slotStart.isBefore(slotEnd)) {
     const currentSlotEnd = slotStart.add(duration, 'minute');
@@ -117,8 +145,8 @@ export const findAvailableTimeSlots = (
         return apptEmpId === employeeId;
       });
       const employeeBooked = employeeAppointments.some(
-        (appointment) => dayjs(appointment.start).isBefore(currentSlotEnd) &&
-        (appointment.end ? dayjs(appointment.end).isAfter(slotStart) : false)
+        (appointment) => toBusinessDateTime(appointment.start).isBefore(currentSlotEnd) &&
+        (appointment.end ? toBusinessDateTime(appointment.end).isAfter(slotStart) : false)
       );
       return !employeeBooked;
     });
@@ -136,7 +164,7 @@ export const findAvailableTimeSlots = (
   return slots;
 };
 
-export const roundedCurrentDate = () => {
+export const roundedCurrentDate = (currentDate = getCurrentDateTime()) => {
   // Round minutes
   const roundedMinutes = Math.round(currentDate.minute() / 30) * 30;
 
@@ -156,15 +184,15 @@ interface DateItem {
 export const splitByUpcomingAndPast = <T extends DateItem>(dateObj: T[]): [T[], T[]] => {
   const upcoming: T[] = [];
   const past: T[] = [];
-  const presentDate = new Date();
+  const presentDate = getCurrentDateTime();
   if (dateObj.length > 0) {
     dateObj.forEach((dateItem) => {
       const itemDate = dateItem.date ?? dateItem.start ?? dateItem.open;
       if (!itemDate) {
         return;
       }
-      const currItemDate = new Date(itemDate);
-      if (currItemDate < presentDate) {
+      const currItemDate = toBusinessDateTime(itemDate);
+      if (currItemDate.isBefore(presentDate)) {
         past.push(dateItem);
       } else {
         upcoming.push(dateItem);

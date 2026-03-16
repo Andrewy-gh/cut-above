@@ -9,10 +9,10 @@ import { selectDate, selectEmployee, selectService } from './filterSlice';
 import type { RootState } from '../app/store';
 import {
   checkIsBefore,
-  convertUtcToEst,
-  currentDate,
   findAvailableTimeSlots,
   formatDate,
+  getCurrentDateTime,
+  getInitialCurrentDate,
 } from '../utils/date';
 import { Schedule } from '../types';
 
@@ -48,16 +48,17 @@ export const selectScheduleByDate = createSelector(
   // selectDateDisabled,
   // add dateDisabled to below
   (schedule, date) => {
-    const currentEstTime = convertUtcToEst(currentDate);
-    const formattedCurrentDate = formatDate(currentEstTime);
+    const formattedCurrentDate = getInitialCurrentDate();
     const inputDate = formatDate(date);
     if (inputDate === formattedCurrentDate) {
       // prevents user from making appointments after closing time if searching for current day appointments
       return schedule.find(
-        (s) => formatDate(s.open) === date && checkIsBefore(currentDate, s.close) // currentDate holds the hours and minutes, currentDate and s.close are in UTC
+        (s) =>
+          formatDate(s.open) === inputDate &&
+          checkIsBefore(getCurrentDateTime(), s.close)
       );
     } else {
-      return schedule.find((s) => formatDate(s.open) === date);
+      return schedule.find((s) => formatDate(s.open) === inputDate);
     }
   }
 );
