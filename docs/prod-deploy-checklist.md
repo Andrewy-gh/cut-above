@@ -8,7 +8,8 @@ Minimum required:
 
 - `SITE_URL` (public frontend origin, e.g. `https://app.example.com`)
 - `BETTER_AUTH_SECRET` (strong random secret)
-- `EMAIL_USER` (from/reply mailbox used by app; required unless `EMAIL_DELIVERY_MODE=log`)
+- `EMAIL_USER` (from/reply mailbox used by app; required for SMTP modes unless `EMAIL_DELIVERY_MODE=log` or `EMAIL_DELIVERY_MODE=resend`)
+- `RESEND_API_KEY` and `RESEND_FROM` (if `EMAIL_DELIVERY_MODE=resend`)
 
 Email provider config (pick one mode):
 
@@ -20,6 +21,10 @@ Email provider config (pick one mode):
   - Optional: `EMAIL_PORT`
   - Optional: `EMAIL_SECURE`
   - Optional: `EMAIL_PASSWORD`
+- Resend mode:
+  - `EMAIL_DELIVERY_MODE=resend`
+  - `RESEND_API_KEY`
+  - Optional fallback sender: `RESEND_FROM` (or `EMAIL_USER`)
 
 Optional:
 

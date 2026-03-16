@@ -11,7 +11,12 @@ const contactDetailsSchema = v.object({
 });
 
 const getEmailUser = () =>
-  process.env.EMAIL_USER ?? process.env.DEV_EMAIL_USER ?? "";
+  process.env.EMAIL_USER ??
+  process.env.RESEND_FROM ??
+  process.env.RESEND_FROM_EMAIL ??
+  process.env.EMAIL_FROM ??
+  process.env.DEV_EMAIL_USER ??
+  "";
 
 const getDeliveryMode = () =>
   (process.env.EMAIL_DELIVERY_MODE ?? "smtp").toLowerCase().trim();

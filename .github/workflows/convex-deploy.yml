@@ -28,6 +28,8 @@ jobs:
       BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
       EMAIL_USER: ${{ secrets.EMAIL_USER || vars.EMAIL_USER }}
       EMAIL_DELIVERY_MODE: ${{ secrets.EMAIL_DELIVERY_MODE || vars.EMAIL_DELIVERY_MODE }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      RESEND_FROM: ${{ secrets.RESEND_FROM || vars.RESEND_FROM }}
       EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE || vars.EMAIL_SERVICE }}
       EMAIL_HOST: ${{ secrets.EMAIL_HOST || vars.EMAIL_HOST }}
       EMAIL_PORT: ${{ secrets.EMAIL_PORT || vars.EMAIL_PORT }}
@@ -60,8 +62,18 @@ jobs:
             echo "::error::Missing required environment value: EMAIL_USER"
             exit 1
           fi
+          
+          if [[ "$mode" == "resend" ]]; then
+            if [[ -z "${RESEND_API_KEY:-}" ]]; then
+              echo "::error::Missing required environment value: RESEND_API_KEY"
+              exit 1
+            fi
 
-          if [[ "$mode" != "log" ]]; then
+            if [[ -z "${RESEND_FROM:-}" && -z "${EMAIL_USER:-}" ]]; then
+              echo "::error::Set RESEND_FROM or EMAIL_USER for resend mode."
+              exit 1
+            fi
+          elif [[ "$mode" != "log" ]]; then
             if [[ -z "${EMAIL_SERVICE:-}" && -z "${EMAIL_HOST:-}" ]]; then
               echo "::error::Set either EMAIL_SERVICE or EMAIL_HOST."
               exit 1

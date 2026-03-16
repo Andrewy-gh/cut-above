@@ -33,7 +33,12 @@ const getClientUrl = () =>
   process.env.SITE_URL ?? process.env.VITE_SITE_URL ?? "";
 
 const getEmailUser = () =>
-  process.env.EMAIL_USER ?? process.env.DEV_EMAIL_USER ?? "";
+  process.env.EMAIL_USER ??
+  process.env.RESEND_FROM ??
+  process.env.RESEND_FROM_EMAIL ??
+  process.env.EMAIL_FROM ??
+  process.env.DEV_EMAIL_USER ??
+  "";
 
 export const buildEmailTemplate = (payload: EmailPayload): EmailTemplate => {
   const employee = payload.employee ?? "";

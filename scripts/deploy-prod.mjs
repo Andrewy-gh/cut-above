@@ -26,7 +26,13 @@ const required = {
 };
 
 const emailUser = process.env.EMAIL_USER ?? "";
+const resendFrom =
+  process.env.RESEND_FROM ??
+  process.env.RESEND_FROM_EMAIL ??
+  process.env.EMAIL_FROM ??
+  "";
 const emailService = process.env.EMAIL_SERVICE ?? "";
+const resendApiKey = process.env.RESEND_API_KEY ?? "";
 const emailPassword = process.env.EMAIL_PASSWORD ?? "";
 const emailHost = process.env.EMAIL_HOST ?? "";
 const emailPort = process.env.EMAIL_PORT ?? "";
@@ -36,6 +42,7 @@ const emailDeliveryMode =
     .toLowerCase()
     .trim() || "log";
 const loggingOnlyMode = emailDeliveryMode === "log";
+const usingResendMode = emailDeliveryMode === "resend";
 
 const missingRequired = Object.entries(required)
   .filter(([, value]) => !value)
@@ -56,12 +63,22 @@ if (missingRequired.length > 0) {
 const usingServiceConfig = Boolean(emailService);
 const usingHostConfig = Boolean(emailHost);
 
-if (!loggingOnlyMode && !emailUser) {
+if (!loggingOnlyMode && usingResendMode && !resendApiKey) {
+  console.error("RESEND_API_KEY is required when EMAIL_DELIVERY_MODE=resend.");
+  process.exit(1);
+}
+
+if (!loggingOnlyMode && usingResendMode && !(resendFrom || emailUser)) {
+  console.error("A sender email is required when EMAIL_DELIVERY_MODE=resend.");
+  process.exit(1);
+}
+
+if (!loggingOnlyMode && !usingResendMode && !emailUser) {
   console.error("EMAIL_USER is required unless EMAIL_DELIVERY_MODE=log.");
   process.exit(1);
 }
 
-if (!loggingOnlyMode && !usingServiceConfig && !usingHostConfig) {
+if (!loggingOnlyMode && !usingResendMode && !usingServiceConfig && !usingHostConfig) {
   console.error(
     [
       "Email config missing. Provide one of:",
@@ -72,7 +89,13 @@ if (!loggingOnlyMode && !usingServiceConfig && !usingHostConfig) {
   process.exit(1);
 }
 
-if (!loggingOnlyMode && usingServiceConfig && !usingHostConfig && !emailPassword) {
+if (
+  !loggingOnlyMode &&
+  !usingResendMode &&
+  usingServiceConfig &&
+  !usingHostConfig &&
+  !emailPassword
+) {
   console.error("EMAIL_PASSWORD is required when EMAIL_SERVICE is set.");
   process.exit(1);
 }
@@ -99,15 +122,20 @@ const setProdEnv = () => {
     envPairs.push(["EMAIL_USER", emailUser]);
   }
 
-  if (!loggingOnlyMode && usingServiceConfig) {
+  if (!loggingOnlyMode && !usingResendMode && usingServiceConfig) {
     envPairs.push(["EMAIL_SERVICE", emailService], ["EMAIL_PASSWORD", emailPassword]);
   }
 
-  if (!loggingOnlyMode && usingHostConfig) {
+  if (!loggingOnlyMode && !usingResendMode && usingHostConfig) {
     envPairs.push(["EMAIL_HOST", emailHost]);
     if (emailPort) envPairs.push(["EMAIL_PORT", emailPort]);
     if (emailSecure) envPairs.push(["EMAIL_SECURE", emailSecure]);
     if (emailPassword) envPairs.push(["EMAIL_PASSWORD", emailPassword]);
+  }
+
+  if (!loggingOnlyMode && usingResendMode) {
+    envPairs.push(["RESEND_API_KEY", resendApiKey]);
+    if (resendFrom) envPairs.push(["RESEND_FROM", resendFrom]);
   }
 
   for (const [key, value] of envPairs) {
