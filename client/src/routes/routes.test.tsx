@@ -128,7 +128,9 @@ describe('Public Routes', () => {
 
   it('renders BookingPage', () => {
     render(<BookingPage />);
-    expect(screen.getByText(/schedule your appointment/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /book your appointment/i })
+    ).toBeInTheDocument();
   });
 });
 

@@ -108,9 +108,15 @@ describe("email outbox critical cases", () => {
     const originalEmailMode = process.env.EMAIL_DELIVERY_MODE;
     const originalEmailUser = process.env.EMAIL_USER;
     const originalDevEmailUser = process.env.DEV_EMAIL_USER;
+    const originalResendFrom = process.env.RESEND_FROM;
+    const originalResendFromEmail = process.env.RESEND_FROM_EMAIL;
+    const originalEmailFrom = process.env.EMAIL_FROM;
     process.env.EMAIL_DELIVERY_MODE = "log";
     delete process.env.EMAIL_USER;
     delete process.env.DEV_EMAIL_USER;
+    delete process.env.RESEND_FROM;
+    delete process.env.RESEND_FROM_EMAIL;
+    delete process.env.EMAIL_FROM;
 
     try {
       const t = createConvexTest();
@@ -141,6 +147,15 @@ describe("email outbox critical cases", () => {
 
       if (originalDevEmailUser === undefined) delete process.env.DEV_EMAIL_USER;
       else process.env.DEV_EMAIL_USER = originalDevEmailUser;
+
+      if (originalResendFrom === undefined) delete process.env.RESEND_FROM;
+      else process.env.RESEND_FROM = originalResendFrom;
+
+      if (originalResendFromEmail === undefined) delete process.env.RESEND_FROM_EMAIL;
+      else process.env.RESEND_FROM_EMAIL = originalResendFromEmail;
+
+      if (originalEmailFrom === undefined) delete process.env.EMAIL_FROM;
+      else process.env.EMAIL_FROM = originalEmailFrom;
     }
   });
 
