@@ -29,6 +29,7 @@ Single source of truth for local, cloud-dev, and production workflows.
 Notes:
 
 - Seed scripts schedule realistic appointments starting 14 days from runtime date by default.
+- Local non-cloud and local cloud `seed:dev` both use `.seed-prod.example.json` as the tracked source of truth for seeded users.
 - Cloud/prod seed and reset are guarded on purpose.
 
 ## Runbooks

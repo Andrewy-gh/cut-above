@@ -39,6 +39,11 @@ export function useAuth() {
 
   const sessionUser = session.data?.user ?? null;
   const user = sessionUser?.email ?? currentUser?.email ?? storedUser;
+  const displayName =
+    [currentUser?.firstName, currentUser?.lastName].filter(Boolean).join(' ') ||
+    currentUser?.name ||
+    sessionUser?.name ||
+    user;
   const role = currentUser?.role ?? storedRole;
   const isAuthLoading = session.isPending || (sessionUser != null && currentUser === undefined);
 
@@ -165,6 +170,7 @@ export function useAuth() {
 
   return {
     user,
+    displayName,
     role,
     isAuthLoading,
     handleLogin,

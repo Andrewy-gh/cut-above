@@ -43,6 +43,8 @@ Seed:
 pnpm seed:dev
 ```
 
+Local seed users come from `.seed-prod.example.json` and use the shared dev password `Strongpassword123!` unless `SEED_PASSWORD` overrides it.
+
 Reset seeded data:
 
 ```bash

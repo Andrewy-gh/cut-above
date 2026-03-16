@@ -83,11 +83,34 @@ export const useGetSingleAppointmentQuery = (
     api.appointments.getAppointmentById,
     enabled && id ? { id } : 'skip'
   );
-  const normalized = data ? normalizeAppointment(data) : undefined;
+  const normalized = data
+    ? (normalizeAppointment(data) as Appointment)
+    : undefined;
 
   return {
     data: normalized,
     isLoading: enabled && id != null && data === undefined,
+    isSuccess: Boolean(data),
+    isError: false,
+  };
+};
+
+export const useGetManagedAppointmentQuery = (
+  token: string | null | undefined,
+  options?: { enabled?: boolean }
+) => {
+  const enabled = options?.enabled ?? true;
+  const data = useQuery(
+    api.appointments.getManagedAppointmentByToken,
+    enabled && token ? { token } : 'skip'
+  );
+  const normalized = data
+    ? (normalizeAppointment(data) as Appointment)
+    : undefined;
+
+  return {
+    data: normalized,
+    isLoading: enabled && token != null && data === undefined,
     isSuccess: Boolean(data),
     isError: false,
   };
@@ -141,6 +164,32 @@ export const useModifyAppointmentMutation = () => {
   return [trigger] as const;
 };
 
+export const useModifyManagedAppointmentMutation = () => {
+  const modifyAppointment = useMutation(
+    api.appointments.modifyManagedAppointmentByToken
+  );
+
+  const trigger = async (
+    appointment: Partial<Appointment> & { token: string }
+  ) => {
+    return modifyAppointment({
+      token: appointment.token,
+      start: appointment.start,
+      end: appointment.end,
+      service: appointment.service,
+      employee:
+        appointment.employee && typeof appointment.employee !== 'string'
+          ? {
+              id: appointment.employee.id,
+              firstName: appointment.employee.firstName,
+            }
+          : undefined,
+    });
+  };
+
+  return [trigger] as const;
+};
+
 export const useUpdateAppointmentStatusMutation = () => {
   const updateStatus = useMutation(api.appointments.updateAppointmentStatus);
 
@@ -155,6 +204,18 @@ export const useCancelAppointmentMutation = () => {
   const cancelAppointment = useMutation(api.appointments.cancelAppointment);
 
   const trigger = async (payload: { id: string }) => {
+    return cancelAppointment(payload);
+  };
+
+  return [trigger] as const;
+};
+
+export const useCancelManagedAppointmentMutation = () => {
+  const cancelAppointment = useMutation(
+    api.appointments.cancelManagedAppointmentByToken
+  );
+
+  const trigger = async (payload: { token: string }) => {
     return cancelAppointment(payload);
   };
 

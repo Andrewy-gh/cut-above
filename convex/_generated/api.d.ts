@@ -17,6 +17,8 @@ import type * as emailOutboxActions from "../emailOutboxActions.js";
 import type * as emailOutboxNodeActions from "../emailOutboxNodeActions.js";
 import type * as employees from "../employees.js";
 import type * as http from "../http.js";
+import type * as lib_appointmentAccess from "../lib/appointmentAccess.js";
+import type * as lib_appointments from "../lib/appointments.js";
 import type * as lib_auth from "../lib/auth.js";
 import type * as lib_authUrls from "../lib/authUrls.js";
 import type * as lib_dateTime from "../lib/dateTime.js";
@@ -42,6 +44,8 @@ declare const fullApi: ApiFromModules<{
   emailOutboxNodeActions: typeof emailOutboxNodeActions;
   employees: typeof employees;
   http: typeof http;
+  "lib/appointmentAccess": typeof lib_appointmentAccess;
+  "lib/appointments": typeof lib_appointments;
   "lib/auth": typeof lib_auth;
   "lib/authUrls": typeof lib_authUrls;
   "lib/dateTime": typeof lib_dateTime;

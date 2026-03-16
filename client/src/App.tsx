@@ -24,6 +24,8 @@ const Cancellation = lazy(() => import('./routes/Cancellation'));
 const RequireAuth = lazy(() => import('./routes/RequireAuth'));
 const AppointmentPage = lazy(() => import('./routes/AppointmentPage'));
 const AppointmentError = lazy(() => import('./routes/AppointmentPage/error'));
+const ManageAppointmentPage = lazy(() => import('./routes/ManageAppointment'));
+const ManageAppointmentError = lazy(() => import('./routes/ManageAppointment/error'));
 const Appointments = lazy(() => import('./routes/Appointments'));
 const AddSchedule = lazy(() => import('./routes/AddSchedule'));
 const DashboardSchedule = lazy(() => import('./routes/DashboardSchedule'));
@@ -53,6 +55,24 @@ const router = createBrowserRouter(
         { path: 'signup', element: <Register /> },
         { path: 'login', element: <Login /> },
         { path: 'bookings', element: <BookingPage /> },
+        {
+          path: 'manage-appointment',
+          element: <ManageAppointmentPage />,
+          errorElement: (
+            <Suspense fallback={<LoadingSpinner />}>
+              <ManageAppointmentError />
+            </Suspense>
+          ),
+        },
+        {
+          path: 'manage-appointment/reschedule',
+          element: <BookingPage />,
+          errorElement: (
+            <Suspense fallback={<LoadingSpinner />}>
+              <ManageAppointmentError />
+            </Suspense>
+          ),
+        },
         { path: 'bookings/:id', element: <LegacyRescheduleRedirect /> },
         {
           element: <RequireAuth />,

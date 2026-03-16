@@ -1,4 +1,5 @@
 import type { MutationCtx } from "../_generated/server";
+import { issueAppointmentManageLink } from "./appointmentAccess";
 import { formatDateSlashISO, formatTimeISO } from "./dateTime";
 
 type EmailOption = "confirmation" | "modification" | "cancellation";
@@ -44,11 +45,6 @@ const buildAppointmentDedupeKey = (input: {
 const getClientUrl = () =>
   process.env.SITE_URL ?? process.env.VITE_SITE_URL ?? "";
 
-const generateAppointmentLink = (id: string) => {
-  const clientUrl = getClientUrl();
-  return clientUrl ? `${clientUrl}/appointment/${id}` : `/appointment/${id}`;
-};
-
 export const enqueueEmail = async (
   ctx: MutationCtx,
   { payload, eventType, dedupeKey, availableAt }: EnqueueEmailOptions
@@ -81,12 +77,20 @@ export const enqueueAppointmentEmail = async (
   ctx: MutationCtx,
   input: AppointmentEmailInput
 ) => {
+  const emailLink =
+    input.option === "cancellation"
+      ? undefined
+      : await issueAppointmentManageLink(ctx, {
+          appointmentId: input.appointmentId,
+          expiresAt: new Date(input.start).getTime(),
+        });
+
   const payload = {
     date: formatDateSlashISO(input.start),
     time: formatTimeISO(input.start),
     employee: input.employeeFirstName,
     option: input.option,
-    emailLink: generateAppointmentLink(input.appointmentId),
+    emailLink,
     receiver: input.receiver,
   };
 

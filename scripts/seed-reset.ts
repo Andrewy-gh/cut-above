@@ -6,13 +6,14 @@ import { ConvexHttpClient } from "convex/browser";
 
 import { api } from "../convex/_generated/api";
 import {
-  defaultSeedUsers,
+  DEFAULT_DEV_SEED_USERS_FILE,
+  DEFAULT_PROD_SEED_USERS_FILE,
+  parseSeedUsersFile,
   type SeedUserProfile,
   validateSeedProfiles,
 } from "./seed-users";
 
 const repoRoot = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
-const DEFAULT_SEED_USERS_FILE = ".seed-prod.json";
 const DEFAULT_SEED_PREFIX = "seed-";
 
 type SeedMode = "dev" | "prod";
@@ -58,20 +59,29 @@ const loadProdUsers = (usersFile: string): SeedUserProfile[] => {
   const absolutePath = resolve(repoRoot, usersFile);
   if (!existsSync(absolutePath)) {
     throw new Error(
-      `Missing ${usersFile}. Copy .seed-prod.example.json to ${usersFile} and update users before running seed:reset --mode prod.`
+      `Missing ${usersFile}. Copy ${DEFAULT_DEV_SEED_USERS_FILE} to ${usersFile} and update users before running seed:reset --mode prod.`
     );
   }
   const raw = readFileSync(absolutePath, "utf8");
-  const parsed = JSON.parse(raw) as { users?: SeedUserProfile[] };
-  if (!Array.isArray(parsed.users)) {
-    throw new Error(`${usersFile} must contain { "users": [...] }`);
+  return validateSeedProfiles(parseSeedUsersFile(raw, usersFile));
+};
+
+const loadDevUsers = (usersFile: string): SeedUserProfile[] => {
+  const absolutePath = resolve(repoRoot, usersFile);
+  if (!existsSync(absolutePath)) {
+    throw new Error(`Missing ${usersFile}. Restore it from git before running seed:reset.`);
   }
-  return validateSeedProfiles(parsed.users);
+
+  const raw = readFileSync(absolutePath, "utf8");
+  return validateSeedProfiles(parseSeedUsersFile(raw, usersFile));
 };
 
 const resolveUsers = (mode: SeedMode) => {
-  if (mode === "dev") return validateSeedProfiles(defaultSeedUsers);
-  const usersFile = env.SEED_USERS_FILE ?? DEFAULT_SEED_USERS_FILE;
+  if (mode === "dev") {
+    const usersFile = env.SEED_DEV_USERS_FILE ?? DEFAULT_DEV_SEED_USERS_FILE;
+    return loadDevUsers(usersFile);
+  }
+  const usersFile = env.SEED_USERS_FILE ?? DEFAULT_PROD_SEED_USERS_FILE;
   return loadProdUsers(usersFile);
 };
 

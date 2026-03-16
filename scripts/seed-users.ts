@@ -1,4 +1,6 @@
 export const seedRoles = ["admin", "employee", "client"] as const;
+export const DEFAULT_DEV_SEED_USERS_FILE = ".seed-prod.example.json";
+export const DEFAULT_PROD_SEED_USERS_FILE = ".seed-prod.json";
 
 export type SeedRole = (typeof seedRoles)[number];
 
@@ -12,28 +14,6 @@ export interface SeedUserProfile {
 export interface SeedUserWithPassword extends SeedUserProfile {
   password: string;
 }
-
-export const defaultSeedUsers: SeedUserProfile[] = [
-  { firstName: "Avery", lastName: "Cole", email: "avery.cole@cutabove.test", role: "admin" },
-  { firstName: "Andre", lastName: "Silva", email: "andre.silva@cutabove.test", role: "employee" },
-  { firstName: "Obi", lastName: "Mensah", email: "obi.mensah@cutabove.test", role: "employee" },
-  { firstName: "Salah", lastName: "Rahman", email: "salah.rahman@cutabove.test", role: "employee" },
-  { firstName: "Mia", lastName: "Chen", email: "mia.chen@cutabove.test", role: "employee" },
-  { firstName: "John", lastName: "Smith", email: "john.smith@cutabove.test", role: "client" },
-  { firstName: "Emily", lastName: "Johnson", email: "emily.johnson@cutabove.test", role: "client" },
-  { firstName: "Michael", lastName: "Brown", email: "michael.brown@cutabove.test", role: "client" },
-  { firstName: "Sophia", lastName: "Davis", email: "sophia.davis@cutabove.test", role: "client" },
-  { firstName: "Daniel", lastName: "Wilson", email: "daniel.wilson@cutabove.test", role: "client" },
-  { firstName: "Olivia", lastName: "Garcia", email: "olivia.garcia@cutabove.test", role: "client" },
-  { firstName: "James", lastName: "Martinez", email: "james.martinez@cutabove.test", role: "client" },
-  { firstName: "Ava", lastName: "Anderson", email: "ava.anderson@cutabove.test", role: "client" },
-  { firstName: "Benjamin", lastName: "Thomas", email: "benjamin.thomas@cutabove.test", role: "client" },
-  { firstName: "Isabella", lastName: "Moore", email: "isabella.moore@cutabove.test", role: "client" },
-  { firstName: "Noah", lastName: "Taylor", email: "noah.taylor@cutabove.test", role: "client" },
-  { firstName: "Charlotte", lastName: "Jackson", email: "charlotte.jackson@cutabove.test", role: "client" },
-  { firstName: "Lucas", lastName: "Martin", email: "lucas.martin@cutabove.test", role: "client" },
-  { firstName: "Amelia", lastName: "Lee", email: "amelia.lee@cutabove.test", role: "client" },
-];
 
 const normalizedRoles = new Set<string>(seedRoles);
 
@@ -83,4 +63,19 @@ export const validateSeedUsersWithPasswords = (
     }
     return { ...profile, password };
   });
+};
+
+export const parseSeedUsersFile = (
+  raw: string,
+  filePath: string
+): Array<SeedUserProfile & { password?: string }> => {
+  const parsed = JSON.parse(raw) as {
+    users?: Array<SeedUserProfile & { password?: string }>;
+  };
+
+  if (!Array.isArray(parsed.users)) {
+    throw new Error(`${filePath} must contain { "users": [...] }`);
+  }
+
+  return parsed.users;
 };

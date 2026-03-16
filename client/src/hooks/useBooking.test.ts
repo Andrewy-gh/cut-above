@@ -6,6 +6,7 @@ import { useBooking } from './useBooking';
 const mocks = vi.hoisted(() => ({
   addMutation: vi.fn(),
   modifyMutation: vi.fn(),
+  modifyManagedMutation: vi.fn(),
   handleEndRescheduling: vi.fn(),
   handleFilterReset: vi.fn(),
   handleSuccess: vi.fn(),
@@ -15,6 +16,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock('@/features/appointments/apptApiSlice', () => ({
   useAddAppointmentMutation: () => [mocks.addMutation],
   useModifyAppointmentMutation: () => [mocks.modifyMutation],
+  useModifyManagedAppointmentMutation: () => [mocks.modifyManagedMutation],
 }));
 
 vi.mock('@/hooks/useAppointment', () => ({
@@ -85,5 +87,29 @@ describe('useBooking', () => {
     });
 
     expect(mocks.handleError).toHaveBeenCalledWith(error);
+  });
+
+  it('uses the scoped mutation when a manage token is provided', async () => {
+    mocks.modifyManagedMutation.mockResolvedValueOnce({
+      success: true,
+      message: 'Appointment successfully updated',
+    });
+
+    const { result } = renderHook(() => useBooking());
+
+    await act(async () => {
+      await result.current.handleBooking({
+        ...baseBooking,
+        token: 'a'.repeat(64),
+      });
+    });
+
+    expect(mocks.modifyManagedMutation).toHaveBeenCalledWith({
+      token: 'a'.repeat(64),
+      ...baseBooking,
+    });
+    expect(mocks.handleSuccess).toHaveBeenCalledWith(
+      'Appointment successfully updated'
+    );
   });
 });

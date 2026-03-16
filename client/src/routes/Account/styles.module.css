@@ -1,4 +1,167 @@
-.header {
-  text-align: center;
+.page {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: 1.5rem 1rem 4rem;
+}
+
+.hero {
+  margin-bottom: 1.75rem;
+}
+
+.page_header {
+  container-type: inline-size;
+  margin-bottom: 0;
+}
+
+.page_title {
+  margin: 0;
+  font-family: 'Corben', sans-serif;
+  font-size: clamp(2.35rem, 5.8cqi, 4.2rem);
+  line-height: 1.08;
   text-wrap: balance;
+  color: #E6B953;
+  max-width: 22ch;
+}
+
+.page_title_suffix {
+  display: inline;
+}
+
+.section {
+  margin-bottom: 2.5rem;
+}
+
+.cards_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.action_card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 210px;
+  padding: 1.25rem;
+  border-radius: 0.875rem;
+  border: 1px solid #2a2a2a;
+  background: linear-gradient(145deg, #1a1a1a 0%, #1f1f1f 50%, #1a1a1a 100%);
+  transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+}
+
+.action_card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, #037E94, #26C4E0, #037E94);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.action_card:hover {
+  transform: translateY(-2px);
+  border-color: #037E94;
+  box-shadow: 0 8px 24px rgba(3, 126, 148, 0.12);
+}
+
+.action_card:hover::before {
+  opacity: 1;
+}
+
+.action_title {
+  margin: 0;
+  font-family: 'Corben', sans-serif;
+  font-size: var(--step-1);
+  line-height: 1.25;
+  color: #E6B953;
+}
+
+.action_description {
+  margin: 0;
+  flex: 1;
+  font-family: 'Nobile', sans-serif;
+  font-size: var(--step--1);
+  color: #b7b7b7;
+}
+
+.action_link {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  font-family: 'Nobile', sans-serif;
+  font-size: var(--step--1);
+  color: #26C4E0;
+  text-decoration: none;
+}
+
+.action_link:hover {
+  color: #E6B953;
+}
+
+.logout_row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  min-height: 56px;
+}
+
+.logout_title {
+  margin: 0;
+  font-family: 'Corben', sans-serif;
+  font-size: var(--step-1);
+  color: #E6B953;
+  text-wrap: balance;
+}
+
+.logout_action {
+  flex-shrink: 0;
+}
+
+@media (min-width: 900px) {
+  .hero {
+    margin-bottom: 2.75rem;
+  }
+
+  .section {
+    margin-bottom: 4rem;
+  }
+}
+
+@container (max-width: 720px) {
+  .page_title {
+    max-width: 100%;
+    font-size: clamp(2rem, 7.5cqi, 3rem);
+  }
+
+  .page_title_suffix {
+    display: block;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding-inline: 0.85rem;
+  }
+
+  .page_title {
+    max-width: 100%;
+    font-size: clamp(1.8rem, 8.8vw, 2.35rem);
+  }
+
+  .action_card {
+    min-height: unset;
+  }
+
+  .logout_row {
+    align-items: flex-start;
+  }
+
+  .logout_action {
+    width: auto;
+  }
 }

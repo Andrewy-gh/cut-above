@@ -1,6 +1,7 @@
 import {
   useAddAppointmentMutation,
   useModifyAppointmentMutation,
+  useModifyManagedAppointmentMutation,
 } from '@/features/appointments/apptApiSlice';
 import { useAppointment } from './useAppointment';
 import { useFilter } from './useFilter';
@@ -20,21 +21,35 @@ interface BookingParams {
 export function useBooking() {
   const [addAppointment] = useAddAppointmentMutation();
   const [modifyAppointment] = useModifyAppointmentMutation();
+  const [modifyManagedAppointment] = useModifyManagedAppointmentMutation();
   const { handleEndRescheduling } = useAppointment();
   const { handleFilterReset } = useFilter();
   const { handleSuccess, handleError } = useNotification();
 
   const handleBooking = async ({
     id,
+    token,
     start,
     end,
     service,
     employee
-  }: BookingParams) => {
+  }: BookingParams & { token?: string | null }) => {
     try {
       if (id) {
         const modifiedAppt = await modifyAppointment({
           id,
+          start,
+          end,
+          service,
+          employee,
+        });
+        if (modifiedAppt.success) {
+          handleSuccess(modifiedAppt.message);
+          handleEndRescheduling();
+        }
+      } else if (token) {
+        const modifiedAppt = await modifyManagedAppointment({
+          token,
           start,
           end,
           service,

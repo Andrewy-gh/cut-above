@@ -1,125 +1,28 @@
 import { ConvexError, v } from "convex/values";
 
-import { mutation, query } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
-import type { QueryCtx } from "./_generated/server";
-import { checkAvailabilityISO, extractDateFromISO } from "./lib/dateTime";
+import { mutation, query } from "./_generated/server";
+import { extractDateFromISO } from "./lib/dateTime";
+import {
+  assertAppointmentAccess,
+  assertRoleAllowed,
+  assertAvailable,
+  buildAppointmentResponse,
+  cancelAppointmentRecord,
+  employeeInput,
+  ensureEmployee,
+  findScheduleForDate,
+  getAppointmentByIdOrThrow,
+  loadUserById,
+  modifyAppointmentRecord,
+  toPublicUser,
+} from "./lib/appointments";
+import {
+  requireAppointmentAccessToken,
+  throwInvalidAppointmentAccess,
+} from "./lib/appointmentAccess";
 import { enqueueAppointmentEmail } from "./lib/emailOutbox";
 import { requireAdmin, requireAuthUser } from "./lib/auth";
-import { parseName } from "./lib/names";
-
-const assertRoleAllowed = (role: string, roles: string[]) => {
-  if (!roles.includes(role)) {
-    throw new ConvexError("Forbidden: role not allowed");
-  }
-};
-
-const assertAppointmentAccess = (
-  role: string,
-  userId: string,
-  appointment: Doc<"appointments">,
-  options: { allowAdmin?: boolean } = {}
-) => {
-  if (options.allowAdmin && role === "admin") return;
-
-  const isClientOwner = role === "client" && appointment.clientId === userId;
-  const isEmployeeOwner = role === "employee" && appointment.employeeId === userId;
-  if (isClientOwner || isEmployeeOwner) return;
-
-  throw new ConvexError("Forbidden: not authorized to access this appointment");
-};
-
-const toPublicUser = (user: Doc<"users"> | null) => {
-  if (!user) return null;
-  const parsedName = parseName(user.name);
-  return {
-    id: user.id,
-    firstName: user.firstName ?? parsedName.firstName ?? "User",
-    lastName: user.lastName ?? parsedName.lastName ?? "",
-  };
-};
-
-type DbCtx = { db: QueryCtx["db"] };
-
-const loadUserById = async (ctx: DbCtx, id: string) =>
-  ctx.db.query("users").withIndex("by_user_id", (q) => q.eq("id", id)).first();
-
-const ensureEmployee = async (
-  ctx: DbCtx,
-  employeeId: string,
-  clientId: string
-) => {
-  if (employeeId === clientId) {
-    throw new ConvexError("Client and employee must be different");
-  }
-  const employee = await loadUserById(ctx, employeeId);
-  if (!employee || employee.role !== "employee") {
-    throw new ConvexError("Invalid employee");
-  }
-  return employee;
-};
-
-const findScheduleForDate = async (ctx: DbCtx, date: string) => {
-  const schedule = await ctx.db
-    .query("schedules")
-    .withIndex("by_date", (q) => q.eq("date", date))
-    .first();
-  if (!schedule) {
-    throw new ConvexError("No schedule found for selected date");
-  }
-  return schedule;
-};
-
-const assertAvailable = async (
-  ctx: DbCtx,
-  scheduleId: string,
-  candidate: { start: string; end: string; employeeId: string },
-  excludeId?: string
-) => {
-  const appointments = await ctx.db
-    .query("appointments")
-    .withIndex("by_schedule", (q) => q.eq("scheduleId", scheduleId))
-    .collect();
-
-  const availability = checkAvailabilityISO(
-    appointments
-      .filter((appt: Doc<"appointments">) => appt.id !== excludeId)
-      .map((appt: Doc<"appointments">) => ({
-        start: appt.start,
-        end: appt.end,
-        employeeId: appt.employeeId,
-      })),
-    candidate
-  );
-
-  if (!availability) {
-    throw new ConvexError("Time slot conflicts with existing appointment");
-  }
-};
-
-const buildAppointmentResponse = (input: {
-  appointment: Doc<"appointments">;
-  employee?: Doc<"users"> | null;
-  client?: Doc<"users"> | null;
-}) => {
-  const base = {
-    id: input.appointment.id,
-    start: input.appointment.start,
-    end: input.appointment.end,
-    service: input.appointment.service,
-    status: input.appointment.status,
-  };
-  return {
-    ...base,
-    ...(input.employee ? { employee: toPublicUser(input.employee) } : {}),
-    ...(input.client ? { client: toPublicUser(input.client) } : {}),
-  };
-};
-
-const employeeInput = v.object({
-  id: v.string(),
-  firstName: v.optional(v.string()),
-});
 
 export const getAppointments = query({
   args: {},
@@ -171,14 +74,7 @@ export const getAppointmentById = query({
 
     assertRoleAllowed(role, ["client", "employee"]);
 
-    const appointment = await ctx.db
-      .query("appointments")
-      .withIndex("by_appointment_id", (q) => q.eq("id", args.id))
-      .first();
-
-    if (!appointment) {
-      throw new ConvexError("Appointment not found");
-    }
+    const appointment = await getAppointmentByIdOrThrow(ctx, args.id);
 
     assertAppointmentAccess(role, authUser._id, appointment);
 
@@ -190,6 +86,34 @@ export const getAppointmentById = query({
       employee,
       client: role === "employee" ? client : null,
     });
+  },
+});
+
+export const getManagedAppointmentByToken = query({
+  args: { token: v.string() },
+  handler: async (ctx, args) => {
+    const accessToken = await requireAppointmentAccessToken(ctx, args.token);
+
+    try {
+      const appointment = await getAppointmentByIdOrThrow(
+        ctx,
+        accessToken.appointmentId
+      );
+      const employee = await loadUserById(ctx, appointment.employeeId);
+
+      return buildAppointmentResponse({
+        appointment,
+        employee,
+      });
+    } catch (error) {
+      if (
+        error instanceof ConvexError &&
+        error.message.includes("Appointment not found")
+      ) {
+        throwInvalidAppointmentAccess();
+      }
+      throw error;
+    }
   },
 });
 
@@ -207,11 +131,7 @@ export const createAppointment = mutation({
 
     assertRoleAllowed(role, ["client"]);
 
-    const employee = await ensureEmployee(
-      ctx,
-      args.employee.id,
-      authUser._id
-    );
+    const employee = await ensureEmployee(ctx, args.employee.id, authUser._id);
 
     const scheduleDate = extractDateFromISO(args.start);
     const schedule = await findScheduleForDate(ctx, scheduleDate);
@@ -267,14 +187,7 @@ export const modifyAppointment = mutation({
 
     assertRoleAllowed(role, ["client", "employee", "admin"]);
 
-    const appointment = await ctx.db
-      .query("appointments")
-      .withIndex("by_appointment_id", (q) => q.eq("id", args.id))
-      .first();
-
-    if (!appointment) {
-      throw new ConvexError("Appointment not found");
-    }
+    const appointment = await getAppointmentByIdOrThrow(ctx, args.id);
 
     assertAppointmentAccess(role, authUser._id, appointment, {
       allowAdmin: true,
@@ -285,65 +198,49 @@ export const modifyAppointment = mutation({
       if (requestedEmployeeId && requestedEmployeeId !== appointment.employeeId) {
         throw new ConvexError("Forbidden: cannot change employee");
       }
-    } else if (requestedEmployeeId) {
-      await ensureEmployee(ctx, requestedEmployeeId, appointment.clientId);
     }
+    return modifyAppointmentRecord(ctx, appointment, {
+      start: args.start,
+      end: args.end,
+      service: args.service,
+      status: args.status,
+      employee: args.employee,
+      fallbackReceiver: user?.email ?? authUser.email,
+    });
+  },
+});
 
-    const nextStart = args.start ?? appointment.start;
-    const nextEnd = args.end ?? appointment.end;
-    const nextService = args.service ?? appointment.service;
-    const nextStatus = args.status ?? appointment.status;
-    const nextEmployeeId = requestedEmployeeId ?? appointment.employeeId;
+export const modifyManagedAppointmentByToken = mutation({
+  args: {
+    token: v.string(),
+    start: v.optional(v.string()),
+    end: v.optional(v.string()),
+    service: v.optional(v.string()),
+    employee: v.optional(employeeInput),
+  },
+  handler: async (ctx, args) => {
+    const accessToken = await requireAppointmentAccessToken(ctx, args.token);
 
-    const nextDate = extractDateFromISO(nextStart);
-    const currentDate = extractDateFromISO(appointment.start);
-    let scheduleId = appointment.scheduleId;
-
-    if (nextDate !== currentDate) {
-      const schedule = await findScheduleForDate(ctx, nextDate);
-      scheduleId = schedule.id;
-    }
-
-    if (
-      args.start ||
-      args.end ||
-      args.employee ||
-      nextDate !== currentDate
-    ) {
-      await assertAvailable(
+    try {
+      const appointment = await getAppointmentByIdOrThrow(
         ctx,
-        scheduleId,
-        { start: nextStart, end: nextEnd, employeeId: nextEmployeeId },
-        appointment.id
+        accessToken.appointmentId
       );
+      return modifyAppointmentRecord(ctx, appointment, {
+        start: args.start,
+        end: args.end,
+        service: args.service,
+        employee: args.employee,
+      });
+    } catch (error) {
+      if (
+        error instanceof ConvexError &&
+        error.message.includes("Appointment not found")
+      ) {
+        throwInvalidAppointmentAccess();
+      }
+      throw error;
     }
-
-    await ctx.db.patch(appointment._id, {
-      start: nextStart,
-      end: nextEnd,
-      service: nextService,
-      status: nextStatus,
-      employeeId: nextEmployeeId,
-      scheduleId,
-    });
-
-    const employee = await loadUserById(ctx, nextEmployeeId);
-    const client = await loadUserById(ctx, appointment.clientId);
-    const employeeFirstName =
-      args.employee?.firstName ?? toPublicUser(employee)?.firstName ?? "Staff";
-
-    await enqueueAppointmentEmail(ctx, {
-      appointmentId: appointment.id,
-      start: nextStart,
-      end: nextEnd,
-      service: nextService,
-      employeeId: nextEmployeeId,
-      employeeFirstName,
-      receiver: client?.email ?? user?.email ?? authUser.email,
-      option: "modification",
-    });
-
-    return { success: true, message: "Appointment successfully updated" };
   },
 });
 
@@ -378,35 +275,34 @@ export const cancelAppointment = mutation({
 
     assertRoleAllowed(role, ["client", "employee", "admin"]);
 
-    const appointment = await ctx.db
-      .query("appointments")
-      .withIndex("by_appointment_id", (q) => q.eq("id", args.id))
-      .first();
-
-    if (!appointment) {
-      throw new ConvexError("Appointment not found");
-    }
+    const appointment = await getAppointmentByIdOrThrow(ctx, args.id);
 
     assertAppointmentAccess(role, authUser._id, appointment, {
       allowAdmin: true,
     });
+    return cancelAppointmentRecord(ctx, appointment, user?.email ?? authUser.email);
+  },
+});
 
-    const employee = await loadUserById(ctx, appointment.employeeId);
-    const client = await loadUserById(ctx, appointment.clientId);
+export const cancelManagedAppointmentByToken = mutation({
+  args: { token: v.string() },
+  handler: async (ctx, args) => {
+    const accessToken = await requireAppointmentAccessToken(ctx, args.token);
 
-    await ctx.db.delete(appointment._id);
-
-    await enqueueAppointmentEmail(ctx, {
-      appointmentId: appointment.id,
-      start: appointment.start,
-      end: appointment.end,
-      service: appointment.service,
-      employeeId: appointment.employeeId,
-      employeeFirstName: toPublicUser(employee)?.firstName ?? "Staff",
-      receiver: client?.email ?? user?.email ?? authUser.email,
-      option: "cancellation",
-    });
-
-    return { success: true, message: "Appointment successfully cancelled" };
+    try {
+      const appointment = await getAppointmentByIdOrThrow(
+        ctx,
+        accessToken.appointmentId
+      );
+      return cancelAppointmentRecord(ctx, appointment);
+    } catch (error) {
+      if (
+        error instanceof ConvexError &&
+        error.message.includes("Appointment not found")
+      ) {
+        throwInvalidAppointmentAccess();
+      }
+      throw error;
+    }
   },
 });

@@ -4,14 +4,14 @@ Use this to generate realistic demo data and refresh safely.
 
 ## Modes
 
-- `seed:dev`: shared password, default user set, realistic appointments.
+- `seed:dev`: shared password, users loaded from `.seed-prod.example.json`, realistic appointments.
 - `seed:prod`: per-user passwords from `.seed-prod.json`.
 - `seed:reset`: reset seeded records (dev mode users).
 - `seed:reset:prod`: reset seeded records using prod user list.
 
 ## Files
 
-- Template tracked: `.seed-prod.example.json`
+- Tracked local seed source of truth: `.seed-prod.example.json`
 - Secret local file: `.seed-prod.json` (gitignored)
 
 ## Defaults
@@ -32,6 +32,7 @@ Use this to generate realistic demo data and refresh safely.
 - `SEED_MAX_APPOINTMENTS_PER_EMPLOYEE_DAY`
 - `SEED_ID_PREFIX`
 - `SEED_USERS_FILE` (for prod mode)
+- `SEED_DEV_USERS_FILE` (defaults to `.seed-prod.example.json`)
 - `SEED_PASSWORD` (dev mode shared password)
 
 ## Safety guards

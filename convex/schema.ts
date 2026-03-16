@@ -37,6 +37,16 @@ export default defineSchema({
     .index("by_client", ["clientId"])
     .index("by_employee", ["employeeId"])
     .index("by_schedule", ["scheduleId"]),
+  appointmentAccessTokens: defineTable({
+    appointmentId: v.string(),
+    tokenHash: v.string(),
+    expiresAt: v.number(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    revokedAt: v.optional(v.number()),
+  })
+    .index("by_token_hash", ["tokenHash"])
+    .index("by_appointment_id", ["appointmentId"]),
   emailOutbox: defineTable({
     id: v.string(),
     eventType: v.string(),

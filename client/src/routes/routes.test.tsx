@@ -17,6 +17,7 @@ import AppointmentPage from '@/routes/AppointmentPage';
 
 const mockAuthState = {
   user: null as string | null,
+  displayName: null as string | null,
   role: null as string | null,
   isAuthLoading: false,
   handleLogin: vi.fn(),
@@ -44,6 +45,7 @@ beforeEach(() => {
     originalError.call(console, ...args);
   };
   mockAuthState.user = null;
+  mockAuthState.displayName = null;
   mockAuthState.role = null;
   mockAuthState.isAuthLoading = false;
 });
@@ -153,6 +155,7 @@ describe('Protected Routes - Unauthenticated', () => {
 describe('Protected Routes - Authenticated', () => {
   it('renders Account page when authenticated', () => {
     mockAuthState.user = 'test@example.com';
+    mockAuthState.displayName = 'Test Person';
     mockAuthState.role = 'user';
     const TestRoutes = () => (
       <Routes>
@@ -164,8 +167,9 @@ describe('Protected Routes - Authenticated', () => {
 
     render(<TestRoutes />, { route: '/account' });
 
-    expect(screen.getByText(/welcome test@example.com/i)).toBeInTheDocument();
-    expect(screen.getByText(/account page/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /welcome test person to the account page/i })
+    ).toBeInTheDocument();
   });
 
   it('shows admin links for admin users', () => {
@@ -181,8 +185,12 @@ describe('Protected Routes - Authenticated', () => {
 
     render(<TestRoutes />, { route: '/account' });
 
-    expect(screen.getByText(/schedule dashboard/i)).toBeInTheDocument();
-    expect(screen.getByText(/add a new schedule/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /^schedule dashboard$/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /^add a new schedule$/i })
+    ).toBeInTheDocument();
   });
 
   it('hides admin links for non-admin users', () => {
@@ -245,6 +253,7 @@ describe('Route Navigation', () => {
 
   it('Account page has links to settings and appointments', () => {
     mockAuthState.user = 'test@example.com';
+    mockAuthState.displayName = 'Test Person';
     mockAuthState.role = 'client';
     const TestRoutes = () => (
       <Routes>
@@ -258,6 +267,9 @@ describe('Route Navigation', () => {
 
     expect(screen.getByRole('link', { name: /account settings/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /view your appointments/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /sign out when you're done/i })
+    ).toBeInTheDocument();
   });
 
   it('Account page hides appointments link for admin', () => {

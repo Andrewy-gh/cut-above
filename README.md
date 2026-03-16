@@ -45,6 +45,7 @@ Cookie based session storage through Redis. Pub/Sub through redis to handle emai
 
 5. Seed the database (Convex dev server must be running):
    `pnpm seed`
+   Local `seed:dev` now reads users from `.seed-prod.example.json` and uses the shared dev password `Strongpassword123!`.
 
 6. Run the client (terminal 2):
    `pnpm -C client dev`

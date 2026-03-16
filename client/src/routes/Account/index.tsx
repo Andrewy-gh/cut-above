@@ -4,36 +4,84 @@ import LogoutButton from './LogoutButton';
 import { useAuth } from '@/hooks/useAuth';
 import styles from './styles.module.css';
 
-export default function Account() {
-  const { user, role } = useAuth();
-  const welcome = user ? `Welcome ${user} to the ` : 'Welcome to the ';
+interface AccountAction {
+  title: string;
+  description: string;
+  to: string;
+}
 
-  const adminRoutes = (
-    <>
-      <div className="body1">
-        <Link to="../dashboard">Schedule Dashboard</Link>
-      </div>
-      <div className="body1">
-        <Link to="../addschedule">Add a new schedule</Link>
-      </div>
-    </>
-  );
+export default function Account() {
+  const { displayName, role } = useAuth();
+  const isAdmin = role === 'admin';
+
+  const primaryActions: AccountAction[] = [
+    {
+      title: 'Account settings',
+      description:
+        'Update your profile details, email, password, and account preferences.',
+      to: 'settings',
+    },
+    ...(!isAdmin
+      ? [
+          {
+            title: 'View your appointments',
+            description:
+              'Review upcoming visits, revisit past bookings, and jump into changes when needed.',
+            to: 'appointments',
+          },
+        ]
+      : []),
+    ...(isAdmin
+      ? [
+          {
+            title: 'Schedule Dashboard',
+            description:
+              'Monitor active schedule coverage, inspect appointment load, and manage the calendar.',
+            to: '../dashboard',
+          },
+          {
+            title: 'Add a new schedule',
+            description:
+              'Create fresh schedule blocks so the team can publish more appointment availability.',
+            to: '../addschedule',
+          },
+        ]
+      : []),
+  ];
 
   return (
-    <main className="container-lg">
-      <h5 className={styles.header}>{welcome} Account page</h5>
-      <div className="body1">
-        <Link to="settings">Account settings</Link>
-      </div>
-      {role !== 'admin' ? (
-        <div className="body1">
-          <Link to="appointments">View your appointments</Link>
+    <main className={styles.page}>
+      <section className={styles.hero}>
+        <div className={styles.page_header}>
+          <div>
+            <h1 className={styles.page_title}>
+              {displayName ? `Welcome ${displayName}` : 'Welcome'}
+              <span className={styles.page_title_suffix}> to the Account page</span>
+            </h1>
+          </div>
         </div>
-      ) : null}
-      {role === 'admin' && adminRoutes}
-      <div className="mt-4">
-        <LogoutButton />
-      </div>
+      </section>
+
+      <section className={styles.section}>
+        <div className={styles.cards_grid}>
+          {primaryActions.map((action) => (
+            <article key={action.title} className={styles.action_card}>
+              <h3 className={styles.action_title}>{action.title}</h3>
+              <p className={styles.action_description}>{action.description}</p>
+              <Link to={action.to} className={styles.action_link}>
+                {action.title}
+              </Link>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.logout_row}>
+        <h2 className={styles.logout_title}>Sign out when you&apos;re done</h2>
+        <div className={styles.logout_action}>
+          <LogoutButton />
+        </div>
+      </section>
     </main>
   );
 }

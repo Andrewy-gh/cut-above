@@ -28,7 +28,7 @@ Use this file as the top-level map. Scenario details live in runbooks.
 - `pnpm dev:setup`: set Convex `SITE_URL` env
 - `pnpm dev:setup:mailpit`: set Convex env for Mailpit delivery mode
 - `pnpm email:test:resend`: send a direct Resend smoke email using `.env.resend.local`
-- `pnpm seed:dev`: generate realistic seeded data (shared dev password)
+- `pnpm seed:dev`: generate realistic seeded data from `.seed-prod.example.json` (shared dev password)
 - `pnpm seed:prod`: seed from `.seed-prod.json` (per-user passwords)
 - `pnpm seed:reset`: clear dev seed-owned data
 - `pnpm seed:reset:prod`: clear prod-seed-owned data

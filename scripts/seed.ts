@@ -10,7 +10,9 @@ import { ConvexHttpClient } from "convex/browser";
 
 import { api } from "../convex/_generated/api";
 import {
-  defaultSeedUsers,
+  DEFAULT_DEV_SEED_USERS_FILE,
+  DEFAULT_PROD_SEED_USERS_FILE,
+  parseSeedUsersFile,
   type SeedUserProfile,
   type SeedUserWithPassword,
   validateSeedProfiles,
@@ -27,7 +29,6 @@ const DEFAULT_START_OFFSET_DAYS = 14;
 const DEFAULT_TOTAL_DAYS = 120;
 const DEFAULT_MIN_APPOINTMENTS_PER_EMPLOYEE_DAY = 2;
 const DEFAULT_MAX_APPOINTMENTS_PER_EMPLOYEE_DAY = 4;
-const DEFAULT_SEED_USERS_FILE = ".seed-prod.json";
 const DEFAULT_SEED_PREFIX = "seed-";
 const SEED_TIME_INCREMENT_MINUTES = 15;
 
@@ -145,23 +146,36 @@ const loadProdUsers = (usersFile: string): SeedUserWithPassword[] => {
   const absolutePath = resolve(repoRoot, usersFile);
   if (!existsSync(absolutePath)) {
     throw new Error(
-      `Missing ${usersFile}. Copy .seed-prod.example.json to ${usersFile} and fill per-user passwords.`
+      `Missing ${usersFile}. Copy ${DEFAULT_DEV_SEED_USERS_FILE} to ${usersFile} and fill per-user passwords.`
     );
   }
 
   const raw = readFileSync(absolutePath, "utf8");
-  const parsed = JSON.parse(raw) as { users?: Array<SeedUserProfile & { password?: string }> };
-  if (!Array.isArray(parsed.users)) {
-    throw new Error(`${usersFile} must contain { "users": [...] }`);
+  return validateSeedUsersWithPasswords(parseSeedUsersFile(raw, usersFile));
+};
+
+const loadDevUsers = (usersFile: string): SeedUserProfile[] => {
+  const absolutePath = resolve(repoRoot, usersFile);
+  if (!existsSync(absolutePath)) {
+    throw new Error(`Missing ${usersFile}. Restore it from git before running local seed.`);
   }
-  return validateSeedUsersWithPasswords(parsed.users);
+
+  const raw = readFileSync(absolutePath, "utf8");
+  return validateSeedProfiles(parseSeedUsersFile(raw, usersFile));
 };
 
 const getSeedUsers = (mode: SeedMode) => {
-  if (mode === "dev") return { profiles: validateSeedProfiles(defaultSeedUsers), sharedPassword: true };
+  if (mode === "dev") {
+    const usersFile = env.SEED_DEV_USERS_FILE ?? DEFAULT_DEV_SEED_USERS_FILE;
+    return {
+      profiles: loadDevUsers(usersFile),
+      sharedPassword: true,
+      usersFile,
+    };
+  }
 
-  const usersFile = env.SEED_USERS_FILE ?? DEFAULT_SEED_USERS_FILE;
-  return { profiles: loadProdUsers(usersFile), sharedPassword: false };
+  const usersFile = env.SEED_USERS_FILE ?? DEFAULT_PROD_SEED_USERS_FILE;
+  return { profiles: loadProdUsers(usersFile), sharedPassword: false, usersFile };
 };
 
 const clientEnv = parseEnvFile(resolve(repoRoot, "client/.env.local"));
@@ -247,6 +261,9 @@ console.info(
 );
 console.info(
   `Seed mode: ${mode}; users: ${users.length}; employees: ${employees.length}; clients: ${clients.length}; start offset: ${startOffsetDays} days; span: ${totalDays} days`
+);
+console.info(
+  `Seed user source: ${userConfig.usersFile}${userConfig.sharedPassword ? ` (shared password: ${sharedPassword})` : ""}`
 );
 
 const convex = new ConvexHttpClient(deploymentUrl);

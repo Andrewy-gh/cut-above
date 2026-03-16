@@ -16,6 +16,7 @@ import { useFilter } from '@/hooks/useFilter';
 import { useDialog } from '@/hooks/useDialog';
 
 import { useAuth } from '@/hooks/useAuth';
+import { useAppointmentAccessToken } from '@/hooks/useAppointmentAccessToken';
 
 import { useNotification } from '@/hooks/useNotification';
 
@@ -36,19 +37,24 @@ export default function BookingPage() {
   const { handleBooking } = useBooking();
   const { user, role } = useAuth();
   const { handleError } = useNotification();
+  const accessToken = useAppointmentAccessToken();
 
   const { id } = useParams();
-  const rescheduling = Boolean(id);
+  const rescheduling = Boolean(id || accessToken);
 
   // If we're rescheduling, validate that the appointment exists and is accessible.
   // If not, Convex will throw and react-router will render the nearest errorElement.
   useQuery(
     api.appointments.getAppointmentById,
-    id && role !== 'admin' ? { id } : 'skip'
+    id && !accessToken && role !== 'admin' ? { id } : 'skip'
+  );
+  useQuery(
+    api.appointments.getManagedAppointmentByToken,
+    !id && accessToken ? { token: accessToken } : 'skip'
   );
 
   // Option 1 from discussion: admins should not book appointments (hide entry points + block route).
-  if (role === 'admin') {
+  if (role === 'admin' && !accessToken) {
     return <AccessDenied requiredRole="client" />;
   }
 
@@ -58,7 +64,7 @@ export default function BookingPage() {
   };
 
   const handleAgree = () => {
-    if (!user) {
+    if (!user && !accessToken) {
       handleError('Please login to complete booking');
       const returnTo = `${location.pathname}${location.search}${location.hash}`;
       navigate(`/login?returnTo=${encodeURIComponent(returnTo)}`, {
@@ -71,6 +77,7 @@ export default function BookingPage() {
     if ('start' in selection && 'end' in selection) {
       handleBooking({
         id,
+        token: accessToken,
         start: (selection as Slot).start.toISOString(),
         end: (selection as Slot).end.toISOString(),
         service: service.name,

@@ -49,6 +49,8 @@ Seed:
 ALLOW_CLOUD_SEED=true pnpm seed:dev
 ```
 
+Local-cloud `seed:dev` also reads users from `.seed-prod.example.json` and uses the shared dev password `Strongpassword123!` unless `SEED_PASSWORD` overrides it.
+
 Reset:
 
 ```bash
