@@ -61,7 +61,7 @@
 }
 
 .stat_card {
-  background: linear-gradient(135deg, #1a1a1a 0%, #1f1f1f 100%);
+  background: linear-gradient(145deg, #1a1a1a 0%, #1f1f1f 50%, #1a1a1a 100%);
   border: 1px solid #2a2a2a;
   border-radius: 0.75rem;
   padding: 1rem 1.25rem;
@@ -80,7 +80,7 @@
 
 .stat_label {
   font-family: 'Nobile', sans-serif;
-  font-size: 0.8rem;
+  font-size: var(--step--2);
   color: #888;
   text-transform: uppercase;
   letter-spacing: 0.06em;

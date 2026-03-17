@@ -56,7 +56,7 @@
 }
 
 .summary_card {
-  background: linear-gradient(135deg, #1a1a1a 0%, #1f1f1f 100%);
+  background: linear-gradient(145deg, #1a1a1a 0%, #1f1f1f 50%, #1a1a1a 100%);
   border: 1px solid #2a2a2a;
   border-radius: 0.75rem;
   padding: 0.875rem 1rem;
@@ -74,7 +74,7 @@
 
 .summary_label {
   font-family: 'Nobile', sans-serif;
-  font-size: 0.75rem;
+  font-size: var(--step--2);
   color: #888;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -82,6 +82,10 @@
 
 .summary_total {
   border-color: #037E94;
+}
+
+.summary_total .summary_value {
+  color: #E6B953;
 }
 
 .summary_scheduled .summary_value {
@@ -94,6 +98,10 @@
 
 .summary_completed .summary_value {
   color: #4caf50;
+}
+
+.summary_cancelled .summary_value {
+  color: #d96c6c;
 }
 
 /* ── Filters bar ── */
