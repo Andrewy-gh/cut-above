@@ -1,5 +1,5 @@
-import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
+import { defineSchema, defineTable } from 'convex/server';
+import { v } from 'convex/values';
 
 export default defineSchema({
   users: defineTable({
@@ -12,17 +12,18 @@ export default defineSchema({
     createdAt: v.optional(v.number()),
     updatedAt: v.optional(v.number()),
   })
-    .index("by_email", ["email"])
-    .index("by_user_id", ["id"])
-    .index("by_role", ["role"]),
+    .index('by_email', ['email'])
+    .index('by_user_id', ['id'])
+    .index('by_role', ['role']),
   schedules: defineTable({
     id: v.string(),
     date: v.string(),
     open: v.string(),
     close: v.string(),
   })
-    .index("by_date", ["date"])
-    .index("by_open", ["open"]),
+    .index('by_date', ['date'])
+    .index('by_schedule_id', ['id'])
+    .index('by_open', ['open']),
   appointments: defineTable({
     id: v.string(),
     status: v.string(),
@@ -33,10 +34,10 @@ export default defineSchema({
     employeeId: v.string(),
     scheduleId: v.string(),
   })
-    .index("by_appointment_id", ["id"])
-    .index("by_client", ["clientId"])
-    .index("by_employee", ["employeeId"])
-    .index("by_schedule", ["scheduleId"]),
+    .index('by_appointment_id', ['id'])
+    .index('by_client', ['clientId'])
+    .index('by_employee', ['employeeId'])
+    .index('by_schedule', ['scheduleId']),
   appointmentAccessTokens: defineTable({
     appointmentId: v.string(),
     tokenHash: v.string(),
@@ -45,8 +46,8 @@ export default defineSchema({
     updatedAt: v.number(),
     revokedAt: v.optional(v.number()),
   })
-    .index("by_token_hash", ["tokenHash"])
-    .index("by_appointment_id", ["appointmentId"]),
+    .index('by_token_hash', ['tokenHash'])
+    .index('by_appointment_id', ['appointmentId']),
   emailOutbox: defineTable({
     id: v.string(),
     eventType: v.string(),
@@ -58,8 +59,9 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   })
-    .index("by_status_available_at", ["status", "availableAt"])
-    .index("by_dedupe_key", ["dedupeKey"]),
+    .index('by_outbox_id', ['id'])
+    .index('by_status_available_at', ['status', 'availableAt'])
+    .index('by_dedupe_key', ['dedupeKey']),
   emailDeliveries: defineTable({
     id: v.string(),
     dedupeKey: v.string(),
@@ -67,5 +69,7 @@ export default defineSchema({
     providerMessageId: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
-  }).index("by_dedupe_key", ["dedupeKey"]),
+  })
+    .index('by_delivery_id', ['id'])
+    .index('by_dedupe_key', ['dedupeKey']),
 });

@@ -1,12 +1,53 @@
-import { v } from "convex/values";
+import { v } from 'convex/values';
 
-import { mutation } from "./_generated/server";
-import { components } from "./_generated/api";
+import type { Doc } from './_generated/dataModel';
+import {
+  action,
+  internalMutation,
+  internalQuery,
+  mutation,
+  type ActionCtx,
+} from './_generated/server';
+import { components, internal } from './_generated/api';
 
 const resolveId = (doc: unknown) => {
-  if (!doc || typeof doc !== "object") return null;
+  if (!doc || typeof doc !== 'object') return null;
   const record = doc as { id?: string; _id?: string };
   return record.id ?? record._id ?? null;
+};
+
+const prefixUpperBound = (value: string) => `${value}\uffff`;
+
+const SEED_RESET_PAGE_SIZE = 100;
+
+const seedResetTable = v.union(
+  v.literal('appointments'),
+  v.literal('schedules'),
+  v.literal('emailOutbox'),
+  v.literal('emailDeliveries')
+);
+
+type SeedResetTable = 'appointments' | 'schedules' | 'emailOutbox' | 'emailDeliveries';
+
+type SeedResetDoc =
+  | Doc<'appointments'>
+  | Doc<'schedules'>
+  | Doc<'emailOutbox'>
+  | Doc<'emailDeliveries'>;
+
+const clearSeededTable = async (ctx: ActionCtx, table: SeedResetTable, idPrefix: string) => {
+  let deleted = 0;
+
+  for (;;) {
+    const result = await ctx.runMutation(internal.seed.deleteSeededTableBatch, {
+      table,
+      idPrefix,
+    });
+    deleted += result.deleted;
+    if (result.deleted === 0) {
+      return deleted;
+    }
+  }
 };
 
 export const ensureAuthUser = mutation({
@@ -18,8 +59,8 @@ export const ensureAuthUser = mutation({
   handler: async (ctx, args) => {
     const email = args.email.toLowerCase();
     const existing = await ctx.runQuery(components.betterAuth.adapter.findOne, {
-      model: "user",
-      where: [{ field: "email", value: email }],
+      model: 'user',
+      where: [{ field: 'email', value: email }],
     });
 
     const existingId = resolveId(existing);
@@ -28,33 +69,30 @@ export const ensureAuthUser = mutation({
     }
 
     const now = Date.now();
-    const createdUser = await ctx.runMutation(
-      components.betterAuth.adapter.create,
-      {
-        input: {
-          model: "user",
-          data: {
-            name: args.name,
-            email,
-            emailVerified: false,
-            createdAt: now,
-            updatedAt: now,
-          },
+    const createdUser = await ctx.runMutation(components.betterAuth.adapter.create, {
+      input: {
+        model: 'user',
+        data: {
+          name: args.name,
+          email,
+          emailVerified: false,
+          createdAt: now,
+          updatedAt: now,
         },
-      }
-    );
+      },
+    });
 
     const authUserId = resolveId(createdUser);
     if (!authUserId) {
-      throw new Error("Seed failed to create auth user.");
+      throw new Error('Seed failed to create auth user.');
     }
 
     await ctx.runMutation(components.betterAuth.adapter.create, {
       input: {
-        model: "account",
+        model: 'account',
         data: {
           accountId: authUserId,
-          providerId: "credential",
+          providerId: 'credential',
           userId: authUserId,
           password: args.passwordHash,
           createdAt: now,
@@ -79,8 +117,8 @@ export const ensureAppUser = mutation({
   handler: async (ctx, args) => {
     const email = args.email.toLowerCase();
     const existing = await ctx.db
-      .query("users")
-      .withIndex("by_email", (q) => q.eq("email", email))
+      .query('users')
+      .withIndex('by_email', (q) => q.eq('email', email))
       .first();
 
     if (existing) {
@@ -96,7 +134,7 @@ export const ensureAppUser = mutation({
     }
 
     const now = Date.now();
-    await ctx.db.insert("users", {
+    await ctx.db.insert('users', {
       id: args.authId,
       name: args.name,
       firstName: args.firstName,
@@ -120,8 +158,8 @@ export const ensureSchedule = mutation({
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
-      .query("schedules")
-      .withIndex("by_date", (q) => q.eq("date", args.date))
+      .query('schedules')
+      .withIndex('by_date', (q) => q.eq('date', args.date))
       .first();
 
     if (existing) {
@@ -129,7 +167,7 @@ export const ensureSchedule = mutation({
     }
 
     const id = args.id ?? `schedule-${args.date}`;
-    await ctx.db.insert("schedules", {
+    await ctx.db.insert('schedules', {
       id,
       date: args.date,
       open: args.open,
@@ -153,15 +191,15 @@ export const ensureAppointment = mutation({
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
-      .query("appointments")
-      .withIndex("by_appointment_id", (q) => q.eq("id", args.id))
+      .query('appointments')
+      .withIndex('by_appointment_id', (q) => q.eq('id', args.id))
       .first();
 
     if (existing) {
       return { id: existing.id, inserted: false };
     }
 
-    await ctx.db.insert("appointments", {
+    await ctx.db.insert('appointments', {
       id: args.id,
       status: args.status,
       service: args.service,
@@ -176,20 +214,69 @@ export const ensureAppointment = mutation({
   },
 });
 
-export const clearSeedData = mutation({
+export const deleteSeededTableBatch = internalMutation({
+  args: {
+    table: seedResetTable,
+    idPrefix: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const upperBound = prefixUpperBound(args.idPrefix);
+    let docs: SeedResetDoc[] = [];
+
+    switch (args.table) {
+      case 'appointments':
+        docs = (await ctx.db
+          .query('appointments')
+          .withIndex('by_appointment_id', (q) => q.gte('id', args.idPrefix).lt('id', upperBound))
+          .take(SEED_RESET_PAGE_SIZE)) as SeedResetDoc[];
+        break;
+      case 'schedules':
+        docs = (await ctx.db
+          .query('schedules')
+          .withIndex('by_schedule_id', (q) => q.gte('id', args.idPrefix).lt('id', upperBound))
+          .take(SEED_RESET_PAGE_SIZE)) as SeedResetDoc[];
+        break;
+      case 'emailOutbox':
+        docs = (await ctx.db
+          .query('emailOutbox')
+          .withIndex('by_outbox_id', (q) => q.gte('id', args.idPrefix).lt('id', upperBound))
+          .take(SEED_RESET_PAGE_SIZE)) as SeedResetDoc[];
+        break;
+      case 'emailDeliveries':
+        docs = (await ctx.db
+          .query('emailDeliveries')
+          .withIndex('by_delivery_id', (q) => q.gte('id', args.idPrefix).lt('id', upperBound))
+          .take(SEED_RESET_PAGE_SIZE)) as SeedResetDoc[];
+        break;
+      default:
+        docs = [];
+        break;
+    }
+
+    let deleted = 0;
+    for (const doc of docs) {
+      await ctx.db.delete(doc._id);
+      deleted += 1;
+    }
+
+    return { deleted };
+  },
+});
+
+export const clearSeedData = action({
   args: {
     confirm: v.string(),
     idPrefix: v.string(),
     seededUserEmails: v.array(v.string()),
   },
   handler: async (ctx, args) => {
-    if (args.confirm !== "RESET_SEED_DATA") {
-      throw new Error("Invalid reset confirmation token.");
+    if (args.confirm !== 'RESET_SEED_DATA') {
+      throw new Error('Invalid reset confirmation token.');
     }
 
     const idPrefix = args.idPrefix.trim();
     if (!idPrefix) {
-      throw new Error("idPrefix is required.");
+      throw new Error('idPrefix is required.');
     }
 
     const normalizedEmails = Array.from(
@@ -204,88 +291,62 @@ export const clearSeedData = mutation({
     let deletedAppUsers = 0;
     let deletedAuthUsers = 0;
 
-    const appointments = await ctx.db.query("appointments").collect();
-    for (const appointment of appointments) {
-      if (appointment.id.startsWith(idPrefix)) {
-        await ctx.db.delete(appointment._id);
-        deletedAppointments += 1;
-      }
-    }
-
-    const schedules = await ctx.db.query("schedules").collect();
-    for (const schedule of schedules) {
-      if (schedule.id.startsWith(idPrefix)) {
-        await ctx.db.delete(schedule._id);
-        deletedSchedules += 1;
-      }
-    }
-
-    const outboxItems = await ctx.db.query("emailOutbox").collect();
-    for (const item of outboxItems) {
-      if (item.id.startsWith(idPrefix)) {
-        await ctx.db.delete(item._id);
-        deletedOutbox += 1;
-      }
-    }
-
-    const deliveries = await ctx.db.query("emailDeliveries").collect();
-    for (const delivery of deliveries) {
-      if (delivery.id.startsWith(idPrefix)) {
-        await ctx.db.delete(delivery._id);
-        deletedDeliveries += 1;
-      }
-    }
+    deletedAppointments = await clearSeededTable(ctx, 'appointments', idPrefix);
+    deletedSchedules = await clearSeededTable(ctx, 'schedules', idPrefix);
+    deletedOutbox = await clearSeededTable(ctx, 'emailOutbox', idPrefix);
+    deletedDeliveries = await clearSeededTable(ctx, 'emailDeliveries', idPrefix);
 
     for (const email of normalizedEmails) {
-      const appUser = await ctx.db
-        .query("users")
-        .withIndex("by_email", (q) => q.eq("email", email))
-        .first();
+      const appUser = await ctx.runQuery(internal.seed.findAppUserByEmail, {
+        email,
+      });
       if (appUser) {
-        await ctx.db.delete(appUser._id);
+        await ctx.runMutation(internal.seed.deleteAppUserById, {
+          userId: appUser._id,
+        });
         deletedAppUsers += 1;
       }
 
       const authUser = await ctx.runQuery(components.betterAuth.adapter.findOne, {
-        model: "user",
-        where: [{ field: "email", value: email }],
+        model: 'user',
+        where: [{ field: 'email', value: email }],
       });
       const authUserId = resolveId(authUser);
       if (!authUserId) continue;
 
       await ctx.runMutation(components.betterAuth.adapter.deleteMany, {
-        input: { model: "session", where: [{ field: "userId", value: authUserId }] },
+        input: { model: 'session', where: [{ field: 'userId', value: authUserId }] },
         paginationOpts,
       });
       await ctx.runMutation(components.betterAuth.adapter.deleteMany, {
-        input: { model: "account", where: [{ field: "userId", value: authUserId }] },
+        input: { model: 'account', where: [{ field: 'userId', value: authUserId }] },
         paginationOpts,
       });
       await ctx.runMutation(components.betterAuth.adapter.deleteMany, {
-        input: { model: "verification", where: [{ field: "identifier", value: email }] },
+        input: { model: 'verification', where: [{ field: 'identifier', value: email }] },
         paginationOpts,
       });
       await ctx.runMutation(components.betterAuth.adapter.deleteMany, {
-        input: { model: "twoFactor", where: [{ field: "userId", value: authUserId }] },
+        input: { model: 'twoFactor', where: [{ field: 'userId', value: authUserId }] },
         paginationOpts,
       });
       await ctx.runMutation(components.betterAuth.adapter.deleteMany, {
-        input: { model: "passkey", where: [{ field: "userId", value: authUserId }] },
+        input: { model: 'passkey', where: [{ field: 'userId', value: authUserId }] },
         paginationOpts,
       });
       await ctx.runMutation(components.betterAuth.adapter.deleteMany, {
         input: {
-          model: "oauthAccessToken",
-          where: [{ field: "userId", value: authUserId }],
+          model: 'oauthAccessToken',
+          where: [{ field: 'userId', value: authUserId }],
         },
         paginationOpts,
       });
       await ctx.runMutation(components.betterAuth.adapter.deleteMany, {
-        input: { model: "oauthConsent", where: [{ field: "userId", value: authUserId }] },
+        input: { model: 'oauthConsent', where: [{ field: 'userId', value: authUserId }] },
         paginationOpts,
       });
       await ctx.runMutation(components.betterAuth.adapter.deleteMany, {
-        input: { model: "user", where: [{ field: "_id", value: authUserId }] },
+        input: { model: 'user', where: [{ field: '_id', value: authUserId }] },
         paginationOpts,
       });
       deletedAuthUsers += 1;
@@ -300,5 +361,21 @@ export const clearSeedData = mutation({
       deletedAuthUsers,
       affectedEmails: normalizedEmails.length,
     };
+  },
+});
+
+export const findAppUserByEmail = internalQuery({
+  args: { email: v.string() },
+  handler: async (ctx, args) =>
+    ctx.db
+      .query('users')
+      .withIndex('by_email', (q) => q.eq('email', args.email))
+      .first(),
+});
+
+export const deleteAppUserById = internalMutation({
+  args: { userId: v.id('users') },
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.userId);
   },
 });

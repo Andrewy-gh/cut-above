@@ -1,30 +1,30 @@
-import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-import { ConvexHttpClient } from "convex/browser";
+import { ConvexHttpClient } from 'convex/browser';
 
-import { api } from "../convex/_generated/api";
+import { api } from '../convex/_generated/api';
 import {
   DEFAULT_DEV_SEED_USERS_FILE,
   DEFAULT_PROD_SEED_USERS_FILE,
   parseSeedUsersFile,
   type SeedUserProfile,
   validateSeedProfiles,
-} from "./seed-users";
+} from './seed-users';
 
-const repoRoot = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
-const DEFAULT_SEED_PREFIX = "seed-";
+const repoRoot = resolve(fileURLToPath(new URL('.', import.meta.url)), '..');
+const DEFAULT_SEED_PREFIX = 'seed-';
 
-type SeedMode = "dev" | "prod";
+type SeedMode = 'dev' | 'prod';
 
 const parseEnvFile = (filePath: string) => {
   if (!existsSync(filePath)) return {};
-  const content = readFileSync(filePath, "utf8");
-  return content.split("\n").reduce<Record<string, string>>((acc, line) => {
+  const content = readFileSync(filePath, 'utf8');
+  return content.split('\n').reduce<Record<string, string>>((acc, line) => {
     const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#")) return acc;
-    const index = trimmed.indexOf("=");
+    if (!trimmed || trimmed.startsWith('#')) return acc;
+    const index = trimmed.indexOf('=');
     if (index === -1) return acc;
     const key = trimmed.slice(0, index).trim();
     const value = trimmed.slice(index + 1).trim();
@@ -34,8 +34,8 @@ const parseEnvFile = (filePath: string) => {
 };
 
 const env = {
-  ...parseEnvFile(resolve(repoRoot, "client/.env.local")),
-  ...parseEnvFile(resolve(repoRoot, ".env.local")),
+  ...parseEnvFile(resolve(repoRoot, 'client/.env.local')),
+  ...parseEnvFile(resolve(repoRoot, '.env.local')),
   ...process.env,
 };
 
@@ -47,8 +47,8 @@ const getArgValue = (name: string) => {
 };
 
 const resolveMode = (): SeedMode => {
-  const mode = (getArgValue("--mode") ?? env.SEED_MODE ?? "dev").toLowerCase().trim();
-  if (mode === "dev" || mode === "prod") return mode;
+  const mode = (getArgValue('--mode') ?? env.SEED_MODE ?? 'dev').toLowerCase().trim();
+  if (mode === 'dev' || mode === 'prod') return mode;
   throw new Error(`Invalid reset mode "${mode}". Use --mode dev or --mode prod.`);
 };
 
@@ -62,7 +62,7 @@ const loadProdUsers = (usersFile: string): SeedUserProfile[] => {
       `Missing ${usersFile}. Copy ${DEFAULT_DEV_SEED_USERS_FILE} to ${usersFile} and update users before running seed:reset --mode prod.`
     );
   }
-  const raw = readFileSync(absolutePath, "utf8");
+  const raw = readFileSync(absolutePath, 'utf8');
   return validateSeedProfiles(parseSeedUsersFile(raw, usersFile));
 };
 
@@ -72,12 +72,12 @@ const loadDevUsers = (usersFile: string): SeedUserProfile[] => {
     throw new Error(`Missing ${usersFile}. Restore it from git before running seed:reset.`);
   }
 
-  const raw = readFileSync(absolutePath, "utf8");
+  const raw = readFileSync(absolutePath, 'utf8');
   return validateSeedProfiles(parseSeedUsersFile(raw, usersFile));
 };
 
 const resolveUsers = (mode: SeedMode) => {
-  if (mode === "dev") {
+  if (mode === 'dev') {
     const usersFile = env.SEED_DEV_USERS_FILE ?? DEFAULT_DEV_SEED_USERS_FILE;
     return loadDevUsers(usersFile);
   }
@@ -85,8 +85,8 @@ const resolveUsers = (mode: SeedMode) => {
   return loadProdUsers(usersFile);
 };
 
-const clientEnv = parseEnvFile(resolve(repoRoot, "client/.env.local"));
-const rootEnv = parseEnvFile(resolve(repoRoot, ".env.local"));
+const clientEnv = parseEnvFile(resolve(repoRoot, 'client/.env.local'));
+const rootEnv = parseEnvFile(resolve(repoRoot, '.env.local'));
 const processEnv = process.env as Record<string, string | undefined>;
 
 const deploymentUrl =
@@ -99,23 +99,21 @@ const deploymentUrl =
 
 if (!deploymentUrl) {
   console.error(
-    "Missing CONVEX_DEPLOYMENT_URL (or CONVEX_URL). Set it in .env.local (preferred) or client/.env.local."
+    'Missing CONVEX_DEPLOYMENT_URL (or CONVEX_URL). Set it in .env.local (preferred) or client/.env.local.'
   );
   process.exit(1);
 }
 
-const isCloudDeployment = deploymentUrl.includes(".convex.cloud");
-if (isCloudDeployment && env.ALLOW_CLOUD_SEED !== "true") {
+const isCloudDeployment = deploymentUrl.includes('.convex.cloud');
+if (isCloudDeployment && env.ALLOW_CLOUD_SEED !== 'true') {
   console.error(
     `Refusing to reset seed data in cloud deployment (${deploymentUrl}). Set ALLOW_CLOUD_SEED=true to proceed.`
   );
   process.exit(1);
 }
 
-if (env.CONFIRM_SEED_RESET !== "true") {
-  console.error(
-    "Refusing to reset seed data. Set CONFIRM_SEED_RESET=true to proceed."
-  );
+if (env.CONFIRM_SEED_RESET !== 'true') {
+  console.error('Refusing to reset seed data. Set CONFIRM_SEED_RESET=true to proceed.');
   process.exit(1);
 }
 
@@ -123,18 +121,18 @@ const mode = resolveMode();
 const users = resolveUsers(mode);
 const seedIdPrefix = (env.SEED_ID_PREFIX ?? DEFAULT_SEED_PREFIX).trim();
 
-if (!seedIdPrefix) throw new Error("SEED_ID_PREFIX cannot be empty.");
+if (!seedIdPrefix) throw new Error('SEED_ID_PREFIX cannot be empty.');
 
 const convex = new ConvexHttpClient(deploymentUrl);
 
 const run = async () => {
-  const result = await convex.mutation(api.seed.clearSeedData, {
-    confirm: "RESET_SEED_DATA",
+  const result = await convex.action(api.seed.clearSeedData, {
+    confirm: 'RESET_SEED_DATA',
     idPrefix: seedIdPrefix,
     seededUserEmails: users.map((user) => user.email),
   });
 
-  console.log("Seed reset complete:", {
+  console.log('Seed reset complete:', {
     mode,
     deploymentUrl,
     idPrefix: seedIdPrefix,
@@ -143,6 +141,6 @@ const run = async () => {
 };
 
 run().catch((error) => {
-  console.error("Seed reset failed:", error);
+  console.error('Seed reset failed:', error);
   process.exit(1);
 });

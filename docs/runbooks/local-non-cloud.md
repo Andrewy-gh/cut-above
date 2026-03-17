@@ -13,6 +13,11 @@ Expected:
 - `CONVEX_DEPLOYMENT_URL=http://localhost:3210`
 - `CONVEX_SITE_URL=http://localhost:3211`
 
+Note:
+
+- `pnpm -C client dev` reads env from the repo-root `.env.local` via `client/vite.config.js`.
+- `client/.env.local` is not authoritative for the local Vite dev server and may contain stale cloud values.
+
 ## 2) Start local stack
 
 All-in-one:

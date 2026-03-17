@@ -44,6 +44,7 @@ Use this file to record trouble encountered at the end of each migration phase.
 - Phase 5e (ops): `scripts/dev-stop.mjs` now also stops `convex-local-backend` so port `3210` doesn't remain bound between runs.
 - Phase 5e (convex env): `pnpm dlx convex env set CONVEX_SITE_URL ...` fails with `EnvVarNameForbidden` because `CONVEX_SITE_URL` is built-in and cannot be overridden; treat it as deployment-provided, not app-configured.
 - Phase 5f (seed alignment): local non-cloud and local cloud `seed:dev` now use `.seed-prod.example.json` as the tracked seed-user source of truth; prod-like seed still uses `.seed-prod.json`.
+- Phase 5g (seed reset): local non-cloud `seed:clearSeedData` could time out on larger datasets; fixed by moving reset orchestration to an action and deleting seeded records in indexed batches.
 
 <!-- opensrc:start -->
 

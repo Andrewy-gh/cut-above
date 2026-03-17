@@ -30,6 +30,7 @@ Notes:
 
 - Seed scripts schedule realistic appointments starting 14 days from runtime date by default.
 - Local non-cloud and local cloud `seed:dev` both use `.seed-prod.example.json` as the tracked source of truth for seeded users.
+- `pnpm -C client dev` reads Convex env from the repo-root `.env.local`; treat `client/.env.local` as non-authoritative for local Vite runs.
 - Cloud/prod seed and reset are guarded on purpose.
 
 ## Runbooks

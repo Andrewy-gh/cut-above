@@ -9,6 +9,11 @@ In repo root `.env.local`, set:
 - `CONVEX_DEPLOYMENT_URL_CLOUD=...`
 - `CONVEX_SITE_URL_CLOUD=...`
 
+Note:
+
+- `pnpm -C client dev` reads env from the repo-root `.env.local` via `client/vite.config.js`.
+- `client/.env.local` is not authoritative for the local Vite dev server and may contain stale local/cloud values.
+
 ## 2) Switch client to cloud URLs
 
 ```bash
