@@ -6,23 +6,40 @@ import styles from './styles.module.css';
 
 export default function Settings() {
   return (
-    <div className={`container-lg ${styles.flex}`}>
-      <div className="mt-4">
-        <Link to="/account">Back to account page</Link>
-      </div>
-      <h2 className={styles.header}>Account settings</h2>
-      <div>
-        <h4 className="text-center">Update Email</h4>
-        <ChangeEmail />
-      </div>
-      <div>
-        <h4 className="text-center">Update Password</h4>
-        <ChangePassword />
-      </div>
-      {/* <div className={styles.mx_auto}>
-        <h4 className="text-center">Delete Account</h4>
-        <DeleteAccount />
-      </div> */}
-    </div>
+    <main className={styles.page}>
+      <Link to="/account" className={styles.back_link}>
+        <span className={styles.back_arrow}>&larr;</span> Account
+      </Link>
+
+      <header className={styles.page_header}>
+        <h1 className={styles.page_title}>Account settings</h1>
+      </header>
+
+      <section className={styles.cards_grid}>
+        <article className={styles.setting_card}>
+          <div className={styles.card_header}>
+            <h2 className={styles.card_title}>Update Email</h2>
+            <p className={styles.card_copy}>
+              Change the address used for sign-in and account notifications.
+            </p>
+          </div>
+          <div className={styles.form_shell}>
+            <ChangeEmail />
+          </div>
+        </article>
+
+        <article className={styles.setting_card}>
+          <div className={styles.card_header}>
+            <h2 className={styles.card_title}>Update Password</h2>
+            <p className={styles.card_copy}>
+              Refresh your password and keep the account secure.
+            </p>
+          </div>
+          <div className={styles.form_shell}>
+            <ChangePassword />
+          </div>
+        </article>
+      </section>
+    </main>
   );
 }

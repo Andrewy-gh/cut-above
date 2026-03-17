@@ -14,6 +14,7 @@ import RequireAuth from '@/routes/RequireAuth';
 import Account from '@/routes/Account';
 import Appointments from '@/routes/Appointments';
 import AppointmentPage from '@/routes/AppointmentPage';
+import Settings from '@/routes/Settings';
 
 const mockAuthState = {
   user: null as string | null,
@@ -270,6 +271,26 @@ describe('Route Navigation', () => {
     expect(
       screen.getByRole('heading', { name: /sign out when you're done/i })
     ).toBeInTheDocument();
+  });
+
+  it('Settings page keeps the account shell navigation', () => {
+    mockAuthState.user = 'test@example.com';
+    mockAuthState.displayName = 'Test Person';
+    mockAuthState.role = 'client';
+    const TestRoutes = () => (
+      <Routes>
+        <Route element={<RequireAuth />}>
+          <Route path="/account/settings" element={<Settings />} />
+        </Route>
+      </Routes>
+    );
+
+    render(<TestRoutes />, { route: '/account/settings' });
+
+    expect(
+      screen.getByRole('heading', { name: /account settings/i })
+    ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /account/i })).toBeInTheDocument();
   });
 
   it('Account page hides appointments link for admin', () => {
