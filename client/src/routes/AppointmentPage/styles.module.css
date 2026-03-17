@@ -2,12 +2,36 @@
   display: flex;
   flex-wrap: wrap;
   margin-inline: auto;
-  background-color: #1f1f1f;
-  border-radius: 0.5rem;
+  background: linear-gradient(145deg, #1a1a1a 0%, #1f1f1f 50%, #1a1a1a 100%);
+  border: 1px solid #2a2a2a;
+  border-radius: 0.875rem;
   padding: 1rem;
   margin-bottom: 1rem;
   gap: 1rem;
   justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+}
+
+.appointment_card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, #037E94, #26C4E0, #037E94);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.appointment_card:hover {
+  transform: translateY(-2px);
+  border-color: #037E94;
+  box-shadow: 0 8px 24px rgba(3, 126, 148, 0.12);
+}
+
+.appointment_card:hover::before {
+  opacity: 1;
 }
 
 .flex_col {
