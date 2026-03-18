@@ -1,10 +1,5 @@
 import { Link } from 'react-router';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Grid from '@mui/material/Grid';
 
 import { services } from '@/data/data';
 import { useFilter } from '@/hooks/useFilter';
@@ -25,43 +20,26 @@ interface ServiceCardProps {
 
 const ServiceCard = ({ service, handleClick }: ServiceCardProps) => {
   return (
-    <Grid container sx={{ marginInline: 'auto', mt: 4, mb: 4 }}>
-      <Card
-        sx={{
-          height: '100%',
-          display: 'flex',
-          flexDirection: { xs: 'column', sm: 'column', md: 'row' },
-        }}
-      >
-        <Grid
-          item
-          md={6}
-          lg={7}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <CardContent sx={{ paddingInline: 4 }}>
-            <h4 className="text-center">{service.name}</h4>
-            <p className={`body1 ${styles.paragraph}`}>{service.description}</p>
-          </CardContent>
-          <CardActions sx={{ marginInline: 'auto', mb: 6 }}>
-            <Link to="/bookings" onClick={() => handleClick(service.id)}>
-              <Button variant="contained">{`Schedule ${service.name}`}</Button>
-            </Link>
-          </CardActions>
-        </Grid>
-        <Grid item md={6} lg={5}>
-          <CardMedia
-            component="img"
-            sx={{ height: '100%', width: '100%' }}
-            image={service.image}
-            alt={service.name}
-          />
-        </Grid>
-      </Card>
-    </Grid>
+    <div className={styles.card}>
+      <div className={styles.card_body}>
+        <div className={styles.card_content}>
+          <h4 className="text-center">{service.name}</h4>
+          <p className={`body1 ${styles.paragraph}`}>{service.description}</p>
+        </div>
+        <div className={styles.card_actions}>
+          <Link to="/bookings" onClick={() => handleClick(service.id)}>
+            <Button variant="contained">{`Schedule ${service.name}`}</Button>
+          </Link>
+        </div>
+      </div>
+      <div className={styles.card_media}>
+        <img
+          className={styles.card_image}
+          src={service.image}
+          alt={service.name}
+        />
+      </div>
+    </div>
   );
 };
 

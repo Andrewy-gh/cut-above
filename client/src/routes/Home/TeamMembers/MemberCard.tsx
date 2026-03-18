@@ -1,10 +1,5 @@
 import { Link } from 'react-router';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Grid from '@mui/material/Grid';
 
 import styles from './styles.module.css';
 import { EmployeeProfile } from '@/types';
@@ -16,35 +11,24 @@ interface MemberCardProps {
 
 export default function MemberCard({ employee, handleClick }: MemberCardProps) {
   return (
-    <Grid item xs={12} sm={6} md={4} sx={{ marginInline: 'auto' }}>
-      <Card
-        sx={{
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <CardMedia
-          component="img"
-          image={employee.image}
-          alt={employee.firstName}
-          sx={{
-            aspectRatio: '9 / 16',
-          }}
-        />
-        <CardContent sx={{ flexGrow: 1 }}>
-          <h4 className={styles.header}>{employee.firstName}</h4>
-          <p className={`body1 ${styles.paragraph}`}>{employee.profile}</p>
-        </CardContent>
-        <CardActions sx={{ marginInline: 'auto', mb: 2 }}>
-          <Link to="/bookings" onClick={() => handleClick(employee)}>
-            <Button
-              size="small"
-              variant="contained"
-            >{`Book with ${employee.firstName}`}</Button>
-          </Link>
-        </CardActions>
-      </Card>
-    </Grid>
+    <div className={styles.card}>
+      <img
+        className={styles.card_image}
+        src={employee.image}
+        alt={employee.firstName}
+      />
+      <div className={styles.card_content}>
+        <h4 className={styles.header}>{employee.firstName}</h4>
+        <p className={`body1 ${styles.paragraph}`}>{employee.profile}</p>
+      </div>
+      <div className={styles.card_actions}>
+        <Link to="/bookings" onClick={() => handleClick(employee)}>
+          <Button
+            size="small"
+            variant="contained"
+          >{`Book with ${employee.firstName}`}</Button>
+        </Link>
+      </div>
+    </div>
   );
 }
