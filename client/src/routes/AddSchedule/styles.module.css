@@ -1,3 +1,42 @@
+.page {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: 1.5rem 1rem 4rem;
+}
+
+.back_link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Nobile', sans-serif;
+  font-size: var(--step--1);
+  color: #629aa4;
+  text-decoration: none;
+  transition: color 0.2s;
+  margin-bottom: 1.5rem;
+}
+
+.back_link:hover {
+  color: #26C4E0;
+}
+
+.back_arrow {
+  font-size: 1.1em;
+  line-height: 1;
+}
+
+.page_header {
+  margin-bottom: 2rem;
+}
+
+.page_title {
+  font-family: 'Corben', sans-serif;
+  font-weight: 700;
+  font-size: var(--step-2);
+  color: #E6B953;
+  margin: 0;
+}
+
 .flex {
   display: flex;
   align-items: center;

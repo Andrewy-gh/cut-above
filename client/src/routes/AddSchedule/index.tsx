@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router';
 import Button from '@mui/material/Button';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import DateRangePicker from '@/components/DatePickers/DateRangePicker';
@@ -48,7 +49,15 @@ export default function AddSchedule() {
   };
 
   return (
-    <div className="container-sm">
+    <main className={styles.page}>
+      <Link to="../dashboard" className={styles.back_link}>
+        <span className={styles.back_arrow}>&larr;</span> Schedules
+      </Link>
+
+      <header className={styles.page_header}>
+        <h1 className={styles.page_title}>Add Schedule</h1>
+      </header>
+
       <div className={styles.flex}>
         <h5>Choose your dates:</h5>
         <DateRangePicker
@@ -72,6 +81,6 @@ export default function AddSchedule() {
           Add Schedule
         </Button>
       </div>
-    </div>
+    </main>
   );
 }
