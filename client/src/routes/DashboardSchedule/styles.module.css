@@ -1,4 +1,4 @@
-/* ── Dashboard Schedule ── */
+/* Dashboard Schedule */
 
 .page {
   max-width: 1100px;
@@ -6,7 +6,7 @@
   padding: 1.5rem 1rem 4rem;
 }
 
-/* ── Back link ── */
+/* Back link */
 .back_link {
   display: inline-flex;
   align-items: center;
@@ -28,7 +28,7 @@
   line-height: 1;
 }
 
-/* ── Page header ── */
+/* Page header */
 .page_header {
   display: flex;
   align-items: baseline;
@@ -52,7 +52,7 @@
   color: #629aa4;
 }
 
-/* ── Stats strip ── */
+/* Stats strip */
 .stats_strip {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -61,7 +61,7 @@
 }
 
 .stat_card {
-  background: linear-gradient(145deg, #1a1a1a 0%, #1f1f1f 50%, #1a1a1a 100%);
+  background: linear-gradient(135deg, #1a1a1a 0%, #1f1f1f 100%);
   border: 1px solid #2a2a2a;
   border-radius: 0.75rem;
   padding: 1rem 1.25rem;
@@ -80,7 +80,7 @@
 
 .stat_label {
   font-family: 'Nobile', sans-serif;
-  font-size: var(--step--2);
+  font-size: 0.8rem;
   color: #888;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -90,7 +90,7 @@
   border-color: #037E94;
 }
 
-/* ── Filters bar ── */
+/* Filters bar */
 .filters_bar {
   display: flex;
   align-items: center;
@@ -125,7 +125,7 @@
   border-color: #037E94;
 }
 
-/* ── View toggle (Upcoming / Past / All) ── */
+/* View toggle */
 .view_toggle {
   display: flex;
   background: #1f1f1f;
@@ -155,7 +155,7 @@
   color: #fff;
 }
 
-/* ── Section label ── */
+/* Section label */
 .section_label {
   font-family: 'Corben', sans-serif;
   font-weight: 700;
@@ -166,14 +166,37 @@
   border-bottom: 1px solid #2a2a2a;
 }
 
-/* ── Cards grid ── */
+/* Cards grid */
 .cards_grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1rem;
 }
 
-/* ── Schedule card ── */
+.load_more_wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.load_more_btn {
+  font-family: 'Nobile', sans-serif;
+  font-size: 0.85rem;
+  color: #E6B953;
+  background: #161616;
+  border: 1px solid #037E94;
+  border-radius: 999px;
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.load_more_btn:hover {
+  background: #037E94;
+  color: #fff;
+}
+
+/* Schedule card */
 .card {
   background: linear-gradient(145deg, #1a1a1a 0%, #1f1f1f 50%, #1a1a1a 100%);
   border: 1px solid #2a2a2a;
@@ -217,7 +240,7 @@
   opacity: 0.85;
 }
 
-/* ── Card header row ── */
+/* Card header row */
 .card_header {
   display: flex;
   justify-content: space-between;
@@ -242,7 +265,7 @@
   margin-top: 0.15rem;
 }
 
-/* ── Time badge ── */
+/* Time badge */
 .card_time {
   display: flex;
   align-items: center;
@@ -259,7 +282,7 @@
   background: #629aa4;
 }
 
-/* ── Capacity bar ── */
+/* Capacity bar */
 .capacity_section {
   display: flex;
   flex-direction: column;
@@ -294,7 +317,7 @@
   transition: width 0.4s ease;
 }
 
-/* ── Status breakdown ── */
+/* Status breakdown */
 .status_badges {
   display: flex;
   gap: 0.5rem;
@@ -340,14 +363,14 @@
   font-weight: 700;
 }
 
-/* ── Card footer ── */
+/* Card footer */
 .card_footer {
   display: flex;
   justify-content: flex-end;
   padding-top: 0.25rem;
 }
 
-/* ── Empty state ── */
+/* Empty state */
 .empty_state {
   text-align: center;
   padding: 3rem 1rem;
@@ -374,7 +397,7 @@
   font-size: 0.9rem;
 }
 
-/* ── Responsive ── */
+/* Responsive */
 @media (max-width: 640px) {
   .page {
     padding: 1rem 0.75rem 3rem;

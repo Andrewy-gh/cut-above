@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Link, useParams } from 'react-router';
-import { useScheduleQuery } from '@/hooks/useScheduleQuery';
+import { useScheduleDetailQuery } from '@/hooks/useScheduleDetailQuery';
 import StatusColumn from './StatusColumn';
 import StatusTab from './StatusTab';
 import { formatDateFull, formatDateToTime, sortAndFormatApptByStartTime } from '@/utils/date';
@@ -19,7 +19,7 @@ const EMPLOYEES = ['Andre', 'Obi', 'Salah'];
 
 export default function DashboardAppointment() {
   const { id } = useParams<{ id: string }>();
-  const { schedule, appointments } = useScheduleQuery(id, { scope: 'private' });
+  const { schedule, appointments } = useScheduleDetailQuery(id);
   const formatTimeAppt = sortAndFormatApptByStartTime(appointments || []);
   const [status, setStatus] = useState('scheduled');
 

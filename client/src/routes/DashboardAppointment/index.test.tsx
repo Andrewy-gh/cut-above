@@ -4,10 +4,10 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from '@/test/test-utils';
 import DashboardAppointment from '.';
 
-const mockUseScheduleQuery = vi.fn();
+const mockUseScheduleDetailQuery = vi.fn();
 
-vi.mock('@/hooks/useScheduleQuery', () => ({
-  useScheduleQuery: (...args: unknown[]) => mockUseScheduleQuery(...args),
+vi.mock('@/hooks/useScheduleDetailQuery', () => ({
+  useScheduleDetailQuery: (...args: unknown[]) => mockUseScheduleDetailQuery(...args),
 }));
 
 vi.mock('./UpdateApptStatus', () => ({
@@ -20,7 +20,7 @@ vi.mock('@/components/ApptCard/ApptButton/CancelAppointment', () => ({
 
 describe('DashboardAppointment', () => {
   it('shows cancelled appointments in a dedicated admin card', () => {
-    mockUseScheduleQuery.mockReturnValue({
+    mockUseScheduleDetailQuery.mockReturnValue({
       schedule: {
         id: 'schedule-1',
         open: '2026-03-17T12:00:00.000Z',

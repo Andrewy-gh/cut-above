@@ -50,6 +50,7 @@ beforeEach(() => {
   mockAuthState.role = null;
   mockAuthState.isAuthLoading = false;
 });
+
 afterEach(() => {
   console.error = originalError;
 });
@@ -71,8 +72,8 @@ vi.mock('@/hooks/useEmployeesQuery', () => ({
   useEmployeesQuery: () => ({ employees: [], isLoading: false }),
 }));
 
-vi.mock('@/hooks/useScheduleQuery', () => ({
-  useScheduleQuery: () => ({ schedule: null, isLoading: false }),
+vi.mock('@/hooks/useScheduleDetailQuery', () => ({
+  useScheduleDetailQuery: () => ({ schedule: null, appointments: null, isLoading: false }),
 }));
 
 vi.mock('@/hooks/useFilter', () => ({

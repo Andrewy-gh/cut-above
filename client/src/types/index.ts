@@ -41,6 +41,21 @@ export interface Schedule {
   appointments: Appointment[];
 }
 
+export interface ScheduleAppointmentStatusCounts {
+  scheduled: number;
+  'checked-in': number;
+  completed: number;
+}
+
+export interface ScheduleSummary {
+  id: string;
+  date?: string;
+  open: string;
+  close: string;
+  appointmentCount: number;
+  appointmentStatusCounts: ScheduleAppointmentStatusCounts;
+}
+
 export interface RouteError {
   statusText?: string;
   message?: string;
