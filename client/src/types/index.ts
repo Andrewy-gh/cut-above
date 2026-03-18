@@ -1,5 +1,7 @@
 import { Dayjs } from "dayjs";
 
+import type { AppointmentStatus, ServiceName } from "@cut-above/shared";
+
 export interface GenericResponse {
   success: boolean;
   message: string;
@@ -25,15 +27,8 @@ export interface Appointment {
   start: string;
   end?: string;
   duration?: number;
-  status:
-    | "scheduled"
-    | "cancelled"
-    | "attended"
-    | "not-attended"
-    | "checked-in"
-    | "completed"
-    | string;
-  service: string;
+  status: AppointmentStatus | "attended" | "not-attended" | string;
+  service: ServiceName | string;
   customerName?: string;
   customerEmail?: string;
 }

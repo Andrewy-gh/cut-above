@@ -32,6 +32,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@cut-above/shared": "workspace:*",
     "dayjs": "^1.11.19",
     "nodemailer": "^6.10.1"
   },

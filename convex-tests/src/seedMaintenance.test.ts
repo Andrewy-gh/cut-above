@@ -61,7 +61,7 @@ describe('seed.clearSeedData', () => {
       const now = Date.now();
       await ctx.db.insert('emailOutbox', {
         id: 'seed-outbox-1',
-        eventType: 'seed.test',
+        eventType: 'appointment.confirmation',
         dedupeKey: 'seed-dedupe',
         payload: { receiver: 'john.smith@cutabove.test' },
         status: 'pending',
@@ -79,7 +79,7 @@ describe('seed.clearSeedData', () => {
       });
       await ctx.db.insert('emailOutbox', {
         id: 'keep-outbox-1',
-        eventType: 'seed.keep',
+        eventType: 'contact.submission',
         dedupeKey: 'keep-dedupe',
         payload: { receiver: 'keep@cutabove.test' },
         status: 'pending',
@@ -92,7 +92,7 @@ describe('seed.clearSeedData', () => {
       for (let index = 0; index < extraSeedRows; index += 1) {
         await ctx.db.insert('emailOutbox', {
           id: `seed-outbox-extra-${index}`,
-          eventType: 'seed.test',
+          eventType: 'appointment.confirmation',
           dedupeKey: `seed-dedupe-extra-${index}`,
           payload: { receiver: 'john.smith@cutabove.test' },
           status: 'pending',
