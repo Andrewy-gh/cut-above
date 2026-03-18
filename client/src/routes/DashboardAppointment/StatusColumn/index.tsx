@@ -32,6 +32,7 @@ const statusLabels: Record<string, string> = {
   scheduled: 'Scheduled',
   'checked-in': 'Checked In',
   completed: 'Completed',
+  cancelled: 'Cancelled',
 };
 
 export default function StatusColumn({
@@ -61,9 +62,15 @@ export default function StatusColumn({
       {appointments.map((appt) => {
         const employee = getEmployeeInfo(appt);
         const clientName = getClientName(appt);
+        const isCancelled = appt.status === 'cancelled';
 
         return (
-          <div key={appt.id} className={styles.appointment_card}>
+          <div
+            key={appt.id}
+            className={`${styles.appointment_card} ${
+              isCancelled ? styles.appointment_card_cancelled : ''
+            }`}
+          >
             {/* Time column */}
             <div className={styles.time_col}>
               <span className={styles.time_value}>{appt.start}</span>
@@ -77,6 +84,9 @@ export default function StatusColumn({
               <div className={styles.client_name}>{clientName}</div>
               <div className={styles.detail_row}>
                 <span className={styles.service_badge}>{appt.service}</span>
+                {isCancelled && (
+                  <span className={styles.cancelled_badge}>Cancelled</span>
+                )}
                 {employee && (
                   <span className={styles.employee_badge}>
                     <span className={styles.employee_avatar}>
@@ -90,8 +100,16 @@ export default function StatusColumn({
 
             {/* Actions */}
             <div className={styles.actions_col}>
-              <UpdateApptStatus appointment={appt} newStatus={newStatus} />
-              <CancelAppointment appointment={appt} />
+              {isCancelled ? (
+                <span className={styles.cancelled_note}>
+                  No further action
+                </span>
+              ) : (
+                <>
+                  <UpdateApptStatus appointment={appt} newStatus={newStatus} />
+                  <CancelAppointment appointment={appt} />
+                </>
+              )}
             </div>
           </div>
         );

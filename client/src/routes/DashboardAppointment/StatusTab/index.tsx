@@ -4,18 +4,21 @@ const statusClassMap: Record<string, string> = {
   scheduled: styles.tab_scheduled,
   'checked-in': styles.tab_checked_in,
   completed: styles.tab_completed,
+  cancelled: styles.tab_cancelled,
 };
 
 const dotClassMap: Record<string, string> = {
   scheduled: styles.dot_scheduled,
   'checked-in': styles.dot_checked_in,
   completed: styles.dot_completed,
+  cancelled: styles.dot_cancelled,
 };
 
 const labelMap: Record<string, string> = {
   scheduled: 'Scheduled',
   'checked-in': 'Checked In',
   completed: 'Completed',
+  cancelled: 'Cancelled',
 };
 
 interface StatusTabProps {

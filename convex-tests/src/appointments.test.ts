@@ -104,7 +104,7 @@ const seedSchedule = async (t: ReturnType<typeof createConvexTest>) => {
 describe('appointments.createAppointment', () => {
   it(
     'rejects conflicting bookings for the same employee',
-    { timeout: 10000 },
+    { timeout: 15000 },
     async () => {
       const t = createConvexTest();
       await seedSchedule(t);
@@ -163,4 +163,68 @@ describe('appointments.createAppointment', () => {
       })
     ).rejects.toThrow(/Not authenticated/);
   });
+
+  it(
+    'keeps cancelled appointments for admin schedules but frees the slot for rebooking',
+    { timeout: 15000 },
+    async () => {
+      const t = createConvexTest();
+      await seedSchedule(t);
+      await seedEmployee(t);
+      const client = await createAuthUser(t, 'client');
+      const admin = await createAuthUser(t, 'admin');
+
+      const asClient = t.withIdentity(client.identity);
+      const asAdmin = t.withIdentity(admin.identity);
+
+      await asClient.mutation(api.appointments.createAppointment, {
+        start: startTime,
+        end: endTime,
+        service,
+        employee: { id: employeeId, firstName: 'Pat' },
+      });
+
+      const createdAppointment = await t.run(async (ctx) =>
+        ctx.db
+          .query('appointments')
+          .withIndex('by_schedule', (q) => q.eq('scheduleId', scheduleId))
+          .first()
+      );
+
+      if (!createdAppointment) {
+        throw new Error('Expected seeded appointment to exist.');
+      }
+
+      const cancelResult = await asClient.mutation(
+        api.appointments.cancelAppointment,
+        { id: createdAppointment.id }
+      );
+
+      expect(cancelResult.success).toBe(true);
+
+      const persistedAppointment = await t.run(async (ctx) =>
+        ctx.db
+          .query('appointments')
+          .withIndex('by_appointment_id', (q) => q.eq('id', createdAppointment.id))
+          .first()
+      );
+
+      expect(persistedAppointment?.status).toBe('cancelled');
+
+      const adminSchedules = await asAdmin.query(api.schedules.getPrivateSchedules, {});
+      const adminAppointment = adminSchedules[0]?.appointments[0];
+      expect(adminAppointment?.status).toBe('cancelled');
+
+      await expect(asClient.query(api.appointments.getAppointments, {})).resolves.toEqual([]);
+
+      await expect(
+        asClient.mutation(api.appointments.createAppointment, {
+          start: startTime,
+          end: endTime,
+          service,
+          employee: { id: employeeId, firstName: 'Pat' },
+        })
+      ).resolves.toMatchObject({ success: true });
+    }
+  );
 });

@@ -162,7 +162,13 @@ describe("email outbox critical cases", () => {
   it("marks outbox failed after max retries", async () => {
     const envBackup = {
       EMAIL_DELIVERY_MODE: process.env.EMAIL_DELIVERY_MODE,
+      EMAIL_HOST: process.env.EMAIL_HOST,
+      EMAIL_PORT: process.env.EMAIL_PORT,
+      EMAIL_SECURE: process.env.EMAIL_SECURE,
       EMAIL_SERVICE: process.env.EMAIL_SERVICE,
+      DEV_EMAIL_HOST: process.env.DEV_EMAIL_HOST,
+      DEV_EMAIL_PORT: process.env.DEV_EMAIL_PORT,
+      DEV_EMAIL_SECURE: process.env.DEV_EMAIL_SECURE,
       DEV_EMAIL_SERVICE: process.env.DEV_EMAIL_SERVICE,
       EMAIL_USER: process.env.EMAIL_USER,
       DEV_EMAIL_USER: process.env.DEV_EMAIL_USER,
@@ -172,7 +178,13 @@ describe("email outbox critical cases", () => {
     };
 
     delete process.env.EMAIL_DELIVERY_MODE;
+    delete process.env.EMAIL_HOST;
+    delete process.env.EMAIL_PORT;
+    delete process.env.EMAIL_SECURE;
     delete process.env.EMAIL_SERVICE;
+    delete process.env.DEV_EMAIL_HOST;
+    delete process.env.DEV_EMAIL_PORT;
+    delete process.env.DEV_EMAIL_SECURE;
     delete process.env.DEV_EMAIL_SERVICE;
     delete process.env.EMAIL_USER;
     delete process.env.DEV_EMAIL_USER;

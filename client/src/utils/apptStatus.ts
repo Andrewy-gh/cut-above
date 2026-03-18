@@ -4,10 +4,12 @@ export const filterByApptStatus = (apptObj: Appointment[]): AppointmentStatusGro
   const scheduled = apptObj.filter((appt) => appt.status === 'scheduled');
   const checkedIn = apptObj.filter((appt) => appt.status === 'checked-in');
   const completed = apptObj.filter((appt) => appt.status === 'completed');
+  const cancelled = apptObj.filter((appt) => appt.status === 'cancelled');
   const statuses: AppointmentStatusGroup[] = [
     { id: 1, name: 'scheduled', data: scheduled },
     { id: 2, name: 'checked-in', data: checkedIn },
     { id: 3, name: 'completed', data: completed },
+    { id: 4, name: 'cancelled', data: cancelled },
   ];
   return statuses;
 };

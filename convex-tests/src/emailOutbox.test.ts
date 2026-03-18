@@ -46,8 +46,14 @@ describe("emailOutbox.processOutbox", () => {
   beforeEach(() => {
     [
       "EMAIL_DELIVERY_MODE",
+      "EMAIL_HOST",
+      "EMAIL_PORT",
+      "EMAIL_SECURE",
       "EMAIL_SERVICE",
       "DEV_EMAIL_SERVICE",
+      "DEV_EMAIL_HOST",
+      "DEV_EMAIL_PORT",
+      "DEV_EMAIL_SECURE",
       "EMAIL_USER",
       "DEV_EMAIL_USER",
       "EMAIL_PASSWORD",
@@ -92,8 +98,14 @@ describe("emailOutbox.processOutbox", () => {
 
   it("schedules a retry when delivery fails", async () => {
     delete process.env.EMAIL_DELIVERY_MODE;
+    delete process.env.EMAIL_HOST;
+    delete process.env.EMAIL_PORT;
+    delete process.env.EMAIL_SECURE;
     delete process.env.EMAIL_SERVICE;
     delete process.env.DEV_EMAIL_SERVICE;
+    delete process.env.DEV_EMAIL_HOST;
+    delete process.env.DEV_EMAIL_PORT;
+    delete process.env.DEV_EMAIL_SECURE;
     delete process.env.EMAIL_USER;
     delete process.env.DEV_EMAIL_USER;
     delete process.env.EMAIL_PASSWORD;

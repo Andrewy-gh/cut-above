@@ -13,6 +13,7 @@ import {
   ensureEmployee,
   findScheduleForDate,
   getAppointmentByIdOrThrow,
+  isCancelledAppointment,
   loadUserById,
   modifyAppointmentRecord,
   toPublicUser,
@@ -44,9 +45,13 @@ export const getAppointments = query({
             .withIndex("by_employee", (q) => q.eq("employeeId", authUser._id))
             .collect();
 
-    appointments.sort((a, b) => a.start.localeCompare(b.start));
+    const visibleAppointments = appointments.filter(
+      (appointment) => !isCancelledAppointment(appointment)
+    );
 
-    const otherIds = appointments.map((appt) =>
+    visibleAppointments.sort((a, b) => a.start.localeCompare(b.start));
+
+    const otherIds = visibleAppointments.map((appt) =>
       role === "client" ? appt.employeeId : appt.clientId
     );
     const users = await Promise.all(otherIds.map((id) => loadUserById(ctx, id)));
@@ -55,7 +60,7 @@ export const getAppointments = query({
       if (loaded) userMap.set(loaded.id, loaded);
     });
 
-    return appointments.map((appointment) =>
+    return visibleAppointments.map((appointment) =>
       buildAppointmentResponse({
         appointment,
         employee: role === "client" ? userMap.get(appointment.employeeId) : null,
@@ -75,6 +80,9 @@ export const getAppointmentById = query({
     assertRoleAllowed(role, ["client", "employee"]);
 
     const appointment = await getAppointmentByIdOrThrow(ctx, args.id);
+    if (isCancelledAppointment(appointment)) {
+      throw new ConvexError("Appointment has been cancelled");
+    }
 
     assertAppointmentAccess(role, authUser._id, appointment);
 
@@ -188,6 +196,9 @@ export const modifyAppointment = mutation({
     assertRoleAllowed(role, ["client", "employee", "admin"]);
 
     const appointment = await getAppointmentByIdOrThrow(ctx, args.id);
+    if (isCancelledAppointment(appointment)) {
+      throw new ConvexError("Appointment has been cancelled");
+    }
 
     assertAppointmentAccess(role, authUser._id, appointment, {
       allowAdmin: true,
@@ -226,6 +237,9 @@ export const modifyManagedAppointmentByToken = mutation({
         ctx,
         accessToken.appointmentId
       );
+      if (isCancelledAppointment(appointment)) {
+        throw new ConvexError("Appointment has been cancelled");
+      }
       return modifyAppointmentRecord(ctx, appointment, {
         start: args.start,
         end: args.end,

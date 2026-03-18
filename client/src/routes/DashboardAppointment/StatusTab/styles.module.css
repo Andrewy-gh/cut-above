@@ -37,6 +37,11 @@
   border-color: rgba(76, 175, 80, 0.3);
 }
 
+.tab_cancelled {
+  background: rgba(217, 108, 108, 0.12);
+  border-color: rgba(217, 108, 108, 0.3);
+}
+
 /* Dot indicator */
 .status_dot {
   width: 8px;
@@ -55,6 +60,10 @@
 
 .dot_completed {
   background: #4caf50;
+}
+
+.dot_cancelled {
+  background: #d96c6c;
 }
 
 /* Label */

@@ -69,14 +69,18 @@ export const getPublicSchedules = query({
           .withIndex("by_schedule", (q) => q.eq("scheduleId", schedule.id))
           .collect();
 
-        appointments.sort((a, b) => a.start.localeCompare(b.start));
+        const visibleAppointments = appointments.filter(
+          (appointment) => appointment.status !== "cancelled"
+        );
+
+        visibleAppointments.sort((a, b) => a.start.localeCompare(b.start));
 
         return {
           id: schedule.id,
           date: schedule.date,
           open: schedule.open,
           close: schedule.close,
-          appointments: await hydrateAppointments(ctx, appointments, {
+          appointments: await hydrateAppointments(ctx, visibleAppointments, {
             includeClient: false,
           }),
         };

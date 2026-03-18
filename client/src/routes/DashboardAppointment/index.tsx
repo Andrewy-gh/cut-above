@@ -83,6 +83,8 @@ export default function DashboardAppointment() {
     allStatuses.find((s) => s.name === 'checked-in')?.data.length || 0;
   const completedCount =
     allStatuses.find((s) => s.name === 'completed')?.data.length || 0;
+  const cancelledCount =
+    allStatuses.find((s) => s.name === 'cancelled')?.data.length || 0;
 
   const hasAppts = appointments && formatTimeAppt.length > 0;
 
@@ -122,7 +124,7 @@ export default function DashboardAppointment() {
             <div
               className={`${styles.summary_card} ${styles.summary_total}`}
             >
-              <span className={styles.summary_value} style={{ color: '#E6B953' }}>
+              <span className={styles.summary_value}>
                 {totalCount}
               </span>
               <span className={styles.summary_label}>Total</span>
@@ -144,6 +146,12 @@ export default function DashboardAppointment() {
             >
               <span className={styles.summary_value}>{completedCount}</span>
               <span className={styles.summary_label}>Completed</span>
+            </div>
+            <div
+              className={`${styles.summary_card} ${styles.summary_cancelled}`}
+            >
+              <span className={styles.summary_value}>{cancelledCount}</span>
+              <span className={styles.summary_label}>Cancelled</span>
             </div>
           </div>
 

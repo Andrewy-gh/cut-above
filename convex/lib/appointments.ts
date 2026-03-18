@@ -9,6 +9,10 @@ import { parseName } from "./names";
 
 type DbCtx = { db: QueryCtx["db"] };
 
+export const isCancelledAppointment = (
+  appointment: Pick<Doc<"appointments">, "status">
+) => appointment.status === "cancelled";
+
 export const employeeInput = v.object({
   id: v.string(),
   firstName: v.optional(v.string()),
@@ -87,7 +91,10 @@ export const assertAvailable = async (
 
   const availability = checkAvailabilityISO(
     appointments
-      .filter((appointment: Doc<"appointments">) => appointment.id !== excludeId)
+      .filter(
+        (appointment: Doc<"appointments">) =>
+          appointment.id !== excludeId && !isCancelledAppointment(appointment)
+      )
       .map((appointment: Doc<"appointments">) => ({
         start: appointment.start,
         end: appointment.end,
@@ -210,11 +217,16 @@ export const cancelAppointmentRecord = async (
   appointment: Doc<"appointments">,
   fallbackReceiver?: string
 ) => {
+  if (isCancelledAppointment(appointment)) {
+    await revokeAppointmentAccessTokens(ctx, appointment.id);
+    return { success: true, message: "Appointment already cancelled" };
+  }
+
   const employee = await loadUserById(ctx, appointment.employeeId);
   const client = await loadUserById(ctx, appointment.clientId);
 
   await revokeAppointmentAccessTokens(ctx, appointment.id);
-  await ctx.db.delete(appointment._id);
+  await ctx.db.patch(appointment._id, { status: "cancelled" });
 
   await enqueueAppointmentEmail(ctx, {
     appointmentId: appointment.id,
