@@ -2,6 +2,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import styles from './styles.module.css';
 
 interface EmployeeAccordionProps {
   children: React.ReactNode;
@@ -34,7 +35,7 @@ export default function EmployeeAccordion({
   return (
     <Accordion sx={accordionSx} slotProps={{ heading: { component: 'h3' } }}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <span style={{ fontFamily: 'Nobile, sans-serif', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#629aa4' }}>
+        <span className={styles.accordion_label}>
           Choose a barber
         </span>
       </AccordionSummary>

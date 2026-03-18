@@ -1,7 +1,6 @@
 import { Link } from 'react-router';
 import Button from '@mui/material/Button';
 
-import { theme } from '@/styles/styles';
 import styles from './styles.module.css';
 
 export default function Hero() {
@@ -10,10 +9,7 @@ export default function Hero() {
       <div className={styles.text_container}>
         <h1 className="text-center">Experience a Cut Above The Rest</h1>
         <p
-          className={`body1 ${styles.text_shadow}`}
-          style={{
-            color: theme.palette.secondary.main,
-          }}
+          className={`body1 ${styles.text_shadow} ${styles.highlight_text}`}
         >
           Book your appointment today and let us help you achieve the perfect
           haircut!

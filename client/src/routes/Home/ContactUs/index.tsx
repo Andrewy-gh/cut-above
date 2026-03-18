@@ -60,7 +60,7 @@ export default function ContactUs() {
 
   return (
     <div className={styles.flex_container}>
-      <h3 style={{ marginBottom: '1rem' }}>Contact us</h3>
+      <h3 className={styles.contact_heading}>Contact us</h3>
       <form onSubmit={handleSubmit}>
         <div className={styles.spacing}>
           <TextField

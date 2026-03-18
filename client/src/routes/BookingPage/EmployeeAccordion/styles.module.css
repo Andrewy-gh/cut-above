@@ -1,3 +1,11 @@
 .yellow {
   color: #e6b953;
 }
+
+.accordion_label {
+  font-family: 'Nobile', sans-serif;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #629aa4;
+}
