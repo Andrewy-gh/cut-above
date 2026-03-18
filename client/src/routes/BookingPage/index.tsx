@@ -23,7 +23,11 @@ export default function BookingPage() {
   useEmployeesQuery();
   const { date, employee, selection, service, handleSelectionChange } =
     useFilter();
-  useBookingScheduleQuery(date);
+  const { timeSlots } = useBookingScheduleQuery(
+    date,
+    service.duration,
+    employee?.id
+  );
   const { open, handleClose, handleOpen } = useDialog();
   const { handleBooking } = useBooking();
   const { user, role } = useAuth();
@@ -91,7 +95,11 @@ export default function BookingPage() {
             Rescheduling - select your new date &amp; time
           </div>
         )}
-        <BookingForm handleOpen={handleSelectAndOpen} employee={employee} />
+        <BookingForm
+          handleOpen={handleSelectAndOpen}
+          employee={employee}
+          timeSlots={timeSlots}
+        />
         <BookingDialog
           open={open}
           handleClose={handleClose}

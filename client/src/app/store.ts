@@ -5,7 +5,6 @@ import authReducer from '../features/auth/authSlice';
 import employeesReducer from '../features/employeeSlice';
 import filterReducer from '../features/filterSlice';
 import notificationReducer from '../features/notificationSlice';
-import schedulesReducer from '../features/scheduleSlice';
 
 import {
   persistStore,
@@ -32,7 +31,6 @@ const rootReducer = combineReducers({
   employees: employeesReducer,
   filter: filterReducer,
   notification: notificationReducer,
-  schedules: schedulesReducer,
 });
 
 export const store = configureStore({

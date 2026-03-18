@@ -14,7 +14,6 @@ import authReducer from '@/features/auth/authSlice';
 import employeesReducer from '@/features/employeeSlice';
 import filterReducer from '@/features/filterSlice';
 import notificationReducer from '@/features/notificationSlice';
-import schedulesReducer from '@/features/scheduleSlice';
 
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
   preloadedState?: Record<string, unknown>;
@@ -29,7 +28,6 @@ export function createTestStore(preloadedState: Record<string, unknown> = {}) {
     employees: employeesReducer,
     filter: filterReducer,
     notification: notificationReducer,
-    schedules: schedulesReducer,
   });
 
   return configureStore({

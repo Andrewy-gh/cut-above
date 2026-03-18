@@ -1,39 +1,44 @@
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
-import { useAppDispatch } from '@/app/hooks';
-import { clearSchedules, setSchedules } from '@/features/scheduleSlice';
-import { normalizeSchedule } from '@/utils/date';
+import { useAppSelector } from '@/app/hooks';
 import { useQuery } from '@/convex/client';
+import { selectEmployeeIds } from '@/features/employeeSlice';
+import { findAvailableTimeSlots, normalizeSchedule } from '@/utils/date';
 
 import { api } from '../../../convex/_generated/api';
 
-export function useBookingScheduleQuery(date: string) {
-  const dispatch = useAppDispatch();
+export function useBookingScheduleQuery(
+  date: string,
+  duration: number,
+  employeeId?: string
+) {
+  const employeeIds = useAppSelector(selectEmployeeIds);
   const scheduleData = useQuery(
     api.schedules.getPublicScheduleByDate,
     date ? { date } : 'skip'
   );
 
-  const normalizedSchedules = useMemo(
-    () => (scheduleData ? [normalizeSchedule(scheduleData)] : []),
+  const schedule = useMemo(
+    () => (scheduleData ? normalizeSchedule(scheduleData) : null),
     [scheduleData]
   );
 
-  useEffect(() => {
-    if (!date) {
-      dispatch(clearSchedules());
-      return;
+  const timeSlots = useMemo(() => {
+    if (!schedule) {
+      return [];
     }
 
-    if (scheduleData === undefined) {
-      return;
-    }
-
-    dispatch(setSchedules(normalizedSchedules));
-  }, [date, dispatch, normalizedSchedules, scheduleData]);
+    return findAvailableTimeSlots(
+      schedule,
+      duration,
+      employeeIds,
+      employeeId ? { id: employeeId } : undefined
+    );
+  }, [duration, employeeId, employeeIds, schedule]);
 
   return {
-    schedule: normalizedSchedules[0] ?? null,
+    schedule,
+    timeSlots,
     isLoading: Boolean(date) && scheduleData === undefined,
   };
 }
