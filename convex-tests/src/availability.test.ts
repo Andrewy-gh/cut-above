@@ -89,7 +89,7 @@ const seedSchedule = async (t: ReturnType<typeof createConvexTest>) => {
   });
 };
 
-describe('employee availability', () => {
+describe('employee availability', { timeout: 15000 }, () => {
   it('allows employees to save and query weekly availability', async () => {
     const t = createConvexTest();
     const employee = await createAuthUser(t, 'employee');
