@@ -19,8 +19,10 @@ export default function DashboardSchedule() {
     pastStatus,
     loadMoreUpcoming,
     loadMorePast,
+    isSearchLoading,
     isLoading,
   } = useDashboardSchedulesQuery(view, search);
+  const hasSearch = search.trim().length > 0;
 
   const isEmpty = !stats || stats.totalSchedules === 0;
   const hasVisibleSchedules =
@@ -33,7 +35,7 @@ export default function DashboardSchedule() {
     handleLoadMore: (numItems: number) => void,
     label: string
   ) =>
-    status === 'CanLoadMore' ? (
+    !hasSearch && status === 'CanLoadMore' ? (
       <div className={styles.load_more_wrap}>
         <button
           className={styles.load_more_btn}
@@ -46,9 +48,10 @@ export default function DashboardSchedule() {
     ) : null;
 
   const emptyMessage =
-    search.trim().length > 0
+    hasSearch
       ? `No ${view === 'all' ? '' : `${view} `}schedules matching "${search}".`
       : `No ${view === 'all' ? '' : `${view} `}schedules.`;
+  const noResultsMessage = isSearchLoading ? 'Searching schedules...' : emptyMessage;
 
   if (isLoading && !stats) {
     return (
@@ -168,7 +171,7 @@ export default function DashboardSchedule() {
               )}
               {!hasVisibleSchedules && (
                 <div className={styles.empty_state}>
-                  <div className={styles.empty_text}>{emptyMessage}</div>
+                  <div className={styles.empty_text}>{noResultsMessage}</div>
                 </div>
               )}
             </>
@@ -176,7 +179,7 @@ export default function DashboardSchedule() {
             <>
               {!hasVisibleSchedules ? (
                 <div className={styles.empty_state}>
-                  <div className={styles.empty_text}>{emptyMessage}</div>
+                  <div className={styles.empty_text}>{noResultsMessage}</div>
                 </div>
               ) : (
                 renderCards(schedules, view === 'past')

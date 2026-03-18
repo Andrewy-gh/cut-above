@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router';
 import Button from '@mui/material/Button';
-import { formatDateFull, formatDateToTime } from '../../utils/date';
+import { formatDate, formatDateFull, formatDateToTime } from '../../utils/date';
 import styles from './styles.module.css';
 import type { ScheduleSummary } from '@/types';
 
@@ -21,7 +21,8 @@ export default function ScheduleCard({ schedule, isPast }: ScheduleCardProps) {
     [schedule.appointmentStatusCounts]
   );
 
-  const fullDate = formatDateFull(schedule.date);
+  const scheduleDate = schedule.date ?? formatDate(schedule.open);
+  const fullDate = formatDateFull(scheduleDate);
   const dateParts = fullDate.split(' ');
   const dayName = dateParts[0]?.replace(',', '') || '';
   const restOfDate = dateParts.slice(1).join(' ');
