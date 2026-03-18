@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { api, components } from '../../convex/_generated/api';
 import { createConvexTest } from './convexTest';
 
-const service = 'Cut';
+const service = 'Haircut';
 
 const extractTokenFromLink = (emailLink: string) => {
   const parsedUrl = new URL(emailLink);
@@ -190,7 +190,7 @@ describe('appointment manage access links', () => {
         token,
         start: '2027-02-02T17:00:00.000Z',
         end: '2027-02-02T18:00:00.000Z',
-        service: 'Line Up',
+        service: 'Beard Trim',
         employee: { id: employeeId, firstName: 'Pat' },
       });
 
@@ -215,7 +215,7 @@ describe('appointment manage access links', () => {
         }
       );
 
-      expect(appointment.service).toBe('Line Up');
+      expect(appointment.service).toBe('Beard Trim');
       expect(appointment.start).toBe('2027-02-02T17:00:00.000Z');
     }
   );
