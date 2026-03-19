@@ -14,7 +14,8 @@
     "strict": false,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@cut-above/shared": ["../shared/src/index.ts"]
     }
   },
   "include": ["src"]

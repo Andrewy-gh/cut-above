@@ -29,6 +29,11 @@ loadOptionalEnvFile('.env.mailpit');
 loadOptionalEnvFile('.env.mailpit.local');
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@cut-above/shared': resolve(repoRoot, 'shared/src/index.ts'),
+    },
+  },
   test: {
     environment: 'edge-runtime',
     server: {
