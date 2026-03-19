@@ -8,6 +8,7 @@ import { useAppDispatch } from '@/app/hooks';
 export interface Employee {
   id: string;
   firstName: string;
+  lastName?: string;
 }
 
 const employeeAdapter = createEntityAdapter<Employee>();
@@ -55,4 +56,3 @@ export const useGetEmployeesQuery = () => {
     isError: false,
   };
 };
-

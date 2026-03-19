@@ -29,6 +29,7 @@ const ManageAppointmentError = lazy(() => import('./routes/ManageAppointment/err
 const Appointments = lazy(() => import('./routes/Appointments'));
 const AddSchedule = lazy(() => import('./routes/AddSchedule'));
 const DashboardSchedule = lazy(() => import('./routes/DashboardSchedule'));
+const EmployeeAvailability = lazy(() => import('./routes/EmployeeAvailability'));
 const DashboardAppointment = lazy(
   () => import('./routes/DashboardAppointment')
 );
@@ -96,6 +97,7 @@ const router = createBrowserRouter(
               children: [
                 { index: true, element: <Account /> },
                 { path: 'settings', element: <Settings /> },
+                { path: 'availability', element: <EmployeeAvailability /> },
                 { path: 'appointments', element: <Appointments /> },
                 {
                   path: 'appointments/:id',

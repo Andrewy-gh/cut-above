@@ -186,6 +186,48 @@ describe('schedules queries', () => {
     });
   });
 
+  it('keeps cancelled appointments in private schedules but excludes them from public booking data', async () => {
+    const t = createConvexTest();
+    await seedSchedules(t);
+    await seedUsersAndAppointment(t);
+    const admin = await createAuthUser(t, 'admin');
+
+    await t.run(async (ctx) => {
+      await ctx.db.insert('appointments', {
+        id: 'appointment-cancelled',
+        status: 'cancelled',
+        service: 'Haircut',
+        start: '2026-02-02T17:00:00.000Z',
+        end: '2026-02-02T17:30:00.000Z',
+        clientId,
+        employeeId,
+        scheduleId,
+      });
+    });
+
+    const publicSchedule = await t.query(api.schedules.getPublicScheduleByDate, {
+      date: scheduleDate,
+    });
+
+    expect(publicSchedule?.appointments.map((appointment) => appointment.id)).toEqual([
+      'appointment-1',
+    ]);
+
+    const asAdmin = t.withIdentity(admin.identity);
+    const privateSchedule = await asAdmin.query(api.schedules.getPrivateScheduleById, {
+      id: scheduleId,
+    });
+
+    expect(privateSchedule?.appointments.map((appointment) => appointment.id)).toEqual([
+      'appointment-1',
+      'appointment-cancelled',
+    ]);
+    expect(privateSchedule?.appointments.find((appointment) => appointment.id === 'appointment-cancelled'))
+      .toMatchObject({
+        status: 'cancelled',
+      });
+  });
+
   it('lists private schedules by view with compact dashboard summaries', async () => {
     const t = createConvexTest();
     await seedSchedules(t);

@@ -1,0 +1,190 @@
+.page {
+  display: grid;
+  gap: 1.5rem;
+  padding-block: 1.5rem 3rem;
+}
+
+.header {
+  margin: 0;
+}
+
+.subtle {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.68);
+}
+
+.employeeSelect {
+  max-width: 18rem;
+}
+
+.heroCard {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem;
+  border-radius: 1rem;
+  color: #f8f3e8;
+  background:
+    radial-gradient(circle at top left, rgba(255, 212, 110, 0.25), transparent 35%),
+    linear-gradient(135deg, #1e2b24 0%, #364737 100%);
+}
+
+.kicker {
+  margin: 0 0 0.25rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+.heroTitle {
+  margin: 0;
+}
+
+.heroMeta {
+  display: grid;
+  gap: 0.4rem;
+  justify-items: end;
+  font-size: 0.95rem;
+}
+
+.section {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.sectionHeader {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.card {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.875rem;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.dayRow {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.checkbox {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.timeRow {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 12rem));
+}
+
+.overrideEditor {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+}
+
+.overrideList {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.overrideItem {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1rem;
+  border-radius: 0.875rem;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.overrideItemActive {
+  outline: 2px solid rgba(53, 92, 72, 0.38);
+  background: rgba(53, 92, 72, 0.08);
+}
+
+.calendar {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: minmax(10rem, 1.3fr) repeat(7, minmax(9rem, 1fr));
+  overflow-x: auto;
+}
+
+.calendarCell {
+  min-width: 0;
+  padding: 0.875rem;
+  border-radius: 0.875rem;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.calendarCorner,
+.calendarHeader,
+.calendarRowLabel {
+  font-weight: 600;
+}
+
+.calendarHeader {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.calendarRowLabel {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+}
+
+.calendarBodyCell {
+  display: grid;
+  gap: 0.4rem;
+}
+
+@media (max-width: 640px) {
+  .heroCard,
+  .sectionHeader,
+  .dayRow,
+  .overrideItem {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .heroMeta {
+    justify-items: start;
+  }
+
+  .timeRow {
+    grid-template-columns: 1fr;
+  }
+
+  .calendar {
+    grid-template-columns: minmax(9rem, 1.1fr) repeat(7, minmax(8.5rem, 1fr));
+  }
+}

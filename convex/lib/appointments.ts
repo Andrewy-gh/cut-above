@@ -5,6 +5,12 @@ import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { revokeAppointmentAccessTokens } from "./appointmentAccess";
 import { checkAvailabilityISO, extractDateFromISO } from "./dateTime";
 import { enqueueAppointmentEmail } from "./emailOutbox";
+import {
+  isSlotWithinAvailability,
+  loadAvailabilityForDate,
+  resolveBreakWindows,
+  resolveAvailabilityWindow,
+} from "./availability";
 import { parseName } from "./names";
 
 type DbCtx = { db: QueryCtx["db"] };
@@ -78,6 +84,19 @@ export const findScheduleForDate = async (ctx: DbCtx, date: string) => {
   return schedule;
 };
 
+const findScheduleById = async (ctx: DbCtx, scheduleId: string) => {
+  const schedule = await ctx.db
+    .query("schedules")
+    .withIndex("by_schedule_id", (q) => q.eq("id", scheduleId))
+    .first();
+
+  if (!schedule) {
+    throw new ConvexError("No schedule found for selected date");
+  }
+
+  return schedule;
+};
+
 export const assertAvailable = async (
   ctx: DbCtx,
   scheduleId: string,
@@ -105,6 +124,26 @@ export const assertAvailable = async (
 
   if (!availability) {
     throw new ConvexError("Time slot conflicts with existing appointment");
+  }
+
+  const schedule = await findScheduleById(ctx, scheduleId);
+  const availabilityData = await loadAvailabilityForDate(ctx, schedule.date);
+  const employeeWindow = resolveAvailabilityWindow(
+    schedule,
+    candidate.employeeId,
+    availabilityData.rulesByEmployeeId,
+    availabilityData.overridesByEmployeeId
+  );
+  const breakWindows = resolveBreakWindows(
+    schedule,
+    candidate.employeeId,
+    availabilityData.breaksByEmployeeId,
+    availabilityData.dateBreaksByEmployeeId,
+    availabilityData.dateBreakPoliciesByEmployeeId
+  );
+
+  if (!isSlotWithinAvailability(employeeWindow, candidate, breakWindows)) {
+    throw new ConvexError("Employee is unavailable for selected time");
   }
 };
 
