@@ -59,7 +59,7 @@ export default function EmployeeRadio({ employees }: EmployeeRadioProps) {
     <FormControl sx={radioGroupSx}>
       <FormLabel>Available Barbers</FormLabel>
       <RadioGroup
-        value={employee}
+        value={employee?.id ?? ''}
         onChange={(e) => handleEmployeeChange(e.target.value)}
         row
       >

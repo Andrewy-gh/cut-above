@@ -46,7 +46,9 @@ export default defineSchema({
     .index('by_appointment_id', ['id'])
     .index('by_client', ['clientId'])
     .index('by_employee', ['employeeId'])
-    .index('by_schedule', ['scheduleId']),
+    .index('by_schedule', ['scheduleId'])
+    .index('by_schedule_employee', ['scheduleId', 'employeeId'])
+    .index('by_employee_start', ['employeeId', 'start']),
   appointmentAccessTokens: defineTable({
     appointmentId: v.string(),
     tokenHash: v.string(),
