@@ -19,10 +19,8 @@ export default function DashboardSchedule() {
     pastStatus,
     loadMoreUpcoming,
     loadMorePast,
-    isSearchLoading,
     isLoading,
   } = useDashboardSchedulesQuery(view, search);
-  const hasSearch = search.trim().length > 0;
 
   const isEmpty = !stats || stats.totalSchedules === 0;
   const hasVisibleSchedules =
@@ -35,7 +33,7 @@ export default function DashboardSchedule() {
     handleLoadMore: (numItems: number) => void,
     label: string
   ) =>
-    !hasSearch && status === 'CanLoadMore' ? (
+    status === 'CanLoadMore' ? (
       <div className={styles.load_more_wrap}>
         <button
           className={styles.load_more_btn}
@@ -48,10 +46,9 @@ export default function DashboardSchedule() {
     ) : null;
 
   const emptyMessage =
-    hasSearch
+    search.trim().length > 0
       ? `No ${view === 'all' ? '' : `${view} `}schedules matching "${search}".`
       : `No ${view === 'all' ? '' : `${view} `}schedules.`;
-  const noResultsMessage = isSearchLoading ? 'Searching schedules...' : emptyMessage;
 
   if (isLoading && !stats) {
     return (
@@ -135,7 +132,7 @@ export default function DashboardSchedule() {
             <input
               type="text"
               className={styles.search_input}
-              placeholder="Search by date..."
+              placeholder="Search dates: 2026-02 or 02-03"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -171,7 +168,7 @@ export default function DashboardSchedule() {
               )}
               {!hasVisibleSchedules && (
                 <div className={styles.empty_state}>
-                  <div className={styles.empty_text}>{noResultsMessage}</div>
+                  <div className={styles.empty_text}>{emptyMessage}</div>
                 </div>
               )}
             </>
@@ -179,7 +176,7 @@ export default function DashboardSchedule() {
             <>
               {!hasVisibleSchedules ? (
                 <div className={styles.empty_state}>
-                  <div className={styles.empty_text}>{noResultsMessage}</div>
+                  <div className={styles.empty_text}>{emptyMessage}</div>
                 </div>
               ) : (
                 renderCards(schedules, view === 'past')

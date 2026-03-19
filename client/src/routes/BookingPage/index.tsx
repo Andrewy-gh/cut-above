@@ -6,7 +6,7 @@ import { useFilter } from '@/hooks/useFilter';
 import { useDialog } from '@/hooks/useDialog';
 import { useAuth } from '@/hooks/useAuth';
 import { useAppointmentAccessToken } from '@/hooks/useAppointmentAccessToken';
-import { useBookingScheduleQuery } from '@/hooks/useBookingScheduleQuery';
+import { useBookingAvailabilityQuery } from '@/hooks/useBookingAvailabilityQuery';
 import { useNotification } from '@/hooks/useNotification';
 import BookingForm from '@/routes/BookingPage/BookingForm';
 import BookingDialog from '@/routes/BookingPage/BookingDialog';
@@ -23,7 +23,7 @@ export default function BookingPage() {
   useEmployeesQuery();
   const { date, employee, selection, service, handleSelectionChange } =
     useFilter();
-  const { timeSlots } = useBookingScheduleQuery(
+  const { timeSlots } = useBookingAvailabilityQuery(
     date,
     service.duration,
     employee?.id

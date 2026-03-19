@@ -1,8 +1,6 @@
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { usePaginatedQuery, useQuery } from '@/convex/client';
-import { formatDate, formatDateFull, formatDateSlash } from '@/utils/date';
-import type { ScheduleSummary } from '@/types';
 
 import { api } from '../../../convex/_generated/api';
 
@@ -10,43 +8,11 @@ export type DashboardScheduleView = 'upcoming' | 'past' | 'all';
 
 const INITIAL_PAGE_SIZE = 12;
 
-export function normalizeDashboardScheduleSummary(
-  schedule: ScheduleSummary
-): ScheduleSummary {
-  return {
-    ...schedule,
-    date: schedule.date ?? formatDate(schedule.open),
-  };
-}
-
-export function matchesDashboardScheduleSearch(
-  schedule: ScheduleSummary,
-  search: string
-) {
-  const query = search.trim().toLowerCase();
-  if (!query) {
-    return true;
-  }
-
-  const normalizedSchedule = normalizeDashboardScheduleSummary(schedule);
-  const searchableValues = [
-    normalizedSchedule.date,
-    formatDateSlash(normalizedSchedule.open),
-    formatDateFull(normalizedSchedule.date),
-    normalizedSchedule.open,
-  ];
-
-  return searchableValues.some((value) =>
-    value?.toLowerCase().includes(query)
-  );
-}
-
 export function useDashboardSchedulesQuery(
   view: DashboardScheduleView,
   search: string
 ) {
-  const normalizedSearch = search.trim();
-  const hasSearch = normalizedSearch.length > 0;
+  const normalizedSearch = search.trim() || undefined;
   const stats = useQuery(api.schedules.getPrivateScheduleStats, {});
 
   const upcomingQuery = usePaginatedQuery(
@@ -55,6 +21,7 @@ export function useDashboardSchedulesQuery(
       ? 'skip'
       : {
           view: 'upcoming',
+          ...(normalizedSearch ? { search: normalizedSearch } : {}),
         },
     { initialNumItems: INITIAL_PAGE_SIZE }
   );
@@ -65,85 +32,29 @@ export function useDashboardSchedulesQuery(
       ? 'skip'
       : {
           view: 'past',
+          ...(normalizedSearch ? { search: normalizedSearch } : {}),
         },
     { initialNumItems: INITIAL_PAGE_SIZE }
   );
 
-  const { isLoading: isUpcomingLoading, loadMore: loadMoreUpcoming, status: upcomingStatus } =
-    upcomingQuery;
-  const { isLoading: isPastLoading, loadMore: loadMorePast, status: pastStatus } =
-    pastQuery;
-
-  useEffect(() => {
-    if (!hasSearch) {
-      return;
-    }
-
-    if (view !== 'past' && upcomingStatus === 'CanLoadMore') {
-      loadMoreUpcoming(INITIAL_PAGE_SIZE);
-    }
-
-    if (view !== 'upcoming' && pastStatus === 'CanLoadMore') {
-      loadMorePast(INITIAL_PAGE_SIZE);
-    }
-  }, [hasSearch, loadMorePast, loadMoreUpcoming, pastStatus, upcomingStatus, view]);
-
-  const upcomingSchedules = useMemo(
-    () =>
-      upcomingQuery.results.map((schedule) =>
-        normalizeDashboardScheduleSummary(schedule)
-      ),
-    [upcomingQuery.results]
-  );
-
-  const pastSchedules = useMemo(
-    () =>
-      pastQuery.results.map((schedule) =>
-        normalizeDashboardScheduleSummary(schedule)
-      ),
-    [pastQuery.results]
-  );
-
-  const filteredUpcomingSchedules = useMemo(
-    () =>
-      upcomingSchedules.filter((schedule) =>
-        matchesDashboardScheduleSearch(schedule, normalizedSearch)
-      ),
-    [normalizedSearch, upcomingSchedules]
-  );
-
-  const filteredPastSchedules = useMemo(
-    () =>
-      pastSchedules.filter((schedule) =>
-        matchesDashboardScheduleSearch(schedule, normalizedSearch)
-      ),
-    [normalizedSearch, pastSchedules]
-  );
-
   const schedules = useMemo(() => {
-    if (view === 'upcoming') return filteredUpcomingSchedules;
-    if (view === 'past') return filteredPastSchedules;
-    return [...filteredUpcomingSchedules, ...filteredPastSchedules];
-  }, [filteredPastSchedules, filteredUpcomingSchedules, view]);
-
-  const isSearchLoading =
-    hasSearch &&
-    ((view !== 'past' && upcomingStatus !== 'Exhausted') ||
-      (view !== 'upcoming' && pastStatus !== 'Exhausted'));
+    if (view === 'upcoming') return upcomingQuery.results;
+    if (view === 'past') return pastQuery.results;
+    return [...upcomingQuery.results, ...pastQuery.results];
+  }, [pastQuery.results, upcomingQuery.results, view]);
 
   return {
     schedules,
     stats,
-    upcomingSchedules: filteredUpcomingSchedules,
-    pastSchedules: filteredPastSchedules,
-    upcomingStatus,
-    pastStatus,
-    loadMoreUpcoming,
-    loadMorePast,
-    isSearchLoading,
+    upcomingSchedules: upcomingQuery.results,
+    pastSchedules: pastQuery.results,
+    upcomingStatus: upcomingQuery.status,
+    pastStatus: pastQuery.status,
+    loadMoreUpcoming: upcomingQuery.loadMore,
+    loadMorePast: pastQuery.loadMore,
     isLoading:
       stats === undefined ||
-      (view !== 'past' && isUpcomingLoading) ||
-      (view !== 'upcoming' && isPastLoading),
+      (view !== 'past' && upcomingQuery.isLoading) ||
+      (view !== 'upcoming' && pastQuery.isLoading),
   };
 }

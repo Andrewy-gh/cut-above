@@ -9,6 +9,8 @@ const otherScheduleId = 'schedule-2';
 const employeeId = 'employee-1';
 const clientId = 'client-1';
 const futureScheduleDate = '2099-02-03';
+const anotherFutureScheduleId = 'schedule-3';
+const anotherFutureScheduleDate = '2099-03-13';
 
 const createAuthUser = async (
   t: ReturnType<typeof createConvexTest>,
@@ -94,6 +96,12 @@ const seedSchedules = async (t: ReturnType<typeof createConvexTest>) => {
       open: '2099-02-03T15:00:00.000Z',
       close: '2099-02-03T21:00:00.000Z',
     });
+    await ctx.db.insert('schedules', {
+      id: anotherFutureScheduleId,
+      date: anotherFutureScheduleDate,
+      open: '2099-03-13T15:00:00.000Z',
+      close: '2099-03-13T21:00:00.000Z',
+    });
   });
 };
 
@@ -141,6 +149,33 @@ describe('schedules queries', () => {
     const t = createConvexTest();
     await seedSchedules(t);
     await seedUsersAndAppointment(t);
+    await t.run(async (ctx) => {
+      await ctx.db.insert('employeeAvailabilityRules', {
+        id: 'rule-1',
+        employeeId,
+        weekday: 1,
+        isWorking: true,
+        startTime: '11:00',
+        endTime: '14:00',
+        updatedAt: Date.now(),
+      });
+      await ctx.db.insert('employeeAvailabilityDateBreaks', {
+        id: 'date-break-1',
+        employeeId,
+        date: scheduleDate,
+        startTime: '13:00',
+        endTime: '13:30',
+        label: 'Dentist',
+        updatedAt: Date.now(),
+      });
+      await ctx.db.insert('employeeAvailabilityDateBreakPolicies', {
+        id: 'date-break-policy-1',
+        employeeId,
+        date: scheduleDate,
+        mode: 'replace',
+        updatedAt: Date.now(),
+      });
+    });
 
     const schedule = await t.query(api.schedules.getPublicScheduleByDate, {
       date: scheduleDate,
@@ -157,6 +192,8 @@ describe('schedules queries', () => {
       },
     });
     expect(schedule?.appointments[0]).not.toHaveProperty('client');
+    expect(schedule).not.toHaveProperty('employeeAvailability');
+    expect(schedule).not.toHaveProperty('employeeBreaks');
   });
 
   it('returns a private schedule by id for admins with client details', async () => {
@@ -222,10 +259,13 @@ describe('schedules queries', () => {
       'appointment-1',
       'appointment-cancelled',
     ]);
-    expect(privateSchedule?.appointments.find((appointment) => appointment.id === 'appointment-cancelled'))
-      .toMatchObject({
-        status: 'cancelled',
-      });
+    expect(
+      privateSchedule?.appointments.find(
+        (appointment) => appointment.id === 'appointment-cancelled'
+      )
+    ).toMatchObject({
+      status: 'cancelled',
+    });
   });
 
   it('lists private schedules by view with compact dashboard summaries', async () => {
@@ -268,20 +308,69 @@ describe('schedules queries', () => {
       },
     });
 
-    expect(upcomingSchedules.page).toEqual([
-      {
-        id: otherScheduleId,
-        date: futureScheduleDate,
-        open: '2099-02-03T15:00:00.000Z',
-        close: '2099-02-03T21:00:00.000Z',
-        appointmentCount: 0,
-        appointmentStatusCounts: {
-          scheduled: 0,
-          'checked-in': 0,
-          completed: 0,
+    expect(upcomingSchedules.page).toEqual(
+      expect.arrayContaining([
+        {
+          id: otherScheduleId,
+          date: futureScheduleDate,
+          open: '2099-02-03T15:00:00.000Z',
+          close: '2099-02-03T21:00:00.000Z',
+          appointmentCount: 0,
+          appointmentStatusCounts: {
+            scheduled: 0,
+            'checked-in': 0,
+            completed: 0,
+          },
         },
+        {
+          id: anotherFutureScheduleId,
+          date: anotherFutureScheduleDate,
+          open: '2099-03-13T15:00:00.000Z',
+          close: '2099-03-13T21:00:00.000Z',
+          appointmentCount: 0,
+          appointmentStatusCounts: {
+            scheduled: 0,
+            'checked-in': 0,
+            completed: 0,
+          },
+        },
+      ])
+    );
+  });
+
+  it('supports substring schedule search across paginated dashboard results', async () => {
+    const t = createConvexTest();
+    await seedSchedules(t);
+    await seedUsersAndAppointment(t);
+    const admin = await createAuthUser(t, 'admin');
+
+    const asAdmin = t.withIdentity(admin.identity);
+
+    const firstPage = await asAdmin.query(api.schedules.listPrivateSchedules, {
+      view: 'upcoming',
+      search: '03',
+      paginationOpts: {
+        numItems: 1,
+        cursor: null,
       },
-    ]);
+    });
+
+    expect(firstPage.page).toHaveLength(1);
+    expect(firstPage.page[0]?.id).toBe(otherScheduleId);
+    expect(firstPage.isDone).toBe(false);
+
+    const secondPage = await asAdmin.query(api.schedules.listPrivateSchedules, {
+      view: 'upcoming',
+      search: '03',
+      paginationOpts: {
+        numItems: 1,
+        cursor: firstPage.continueCursor,
+      },
+    });
+
+    expect(secondPage.page).toHaveLength(1);
+    expect(secondPage.page[0]?.id).toBe(anotherFutureScheduleId);
+    expect(secondPage.isDone).toBe(true);
   });
 
   it('returns private schedule dashboard stats', async () => {
@@ -294,9 +383,9 @@ describe('schedules queries', () => {
     const stats = await asAdmin.query(api.schedules.getPrivateScheduleStats, {});
 
     expect(stats).toEqual({
-      totalSchedules: 2,
+      totalSchedules: 3,
       totalAppointments: 1,
-      upcomingSchedules: 1,
+      upcomingSchedules: 2,
       pastSchedules: 1,
     });
   });

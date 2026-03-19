@@ -11,6 +11,7 @@
 import type * as appointments from "../appointments.js";
 import type * as auth from "../auth.js";
 import type * as availability from "../availability.js";
+import type * as bookingAvailability from "../bookingAvailability.js";
 import type * as crons from "../crons.js";
 import type * as email from "../email.js";
 import type * as emailOutbox from "../emailOutbox.js";
@@ -25,6 +26,7 @@ import type * as lib_authUrls from "../lib/authUrls.js";
 import type * as lib_availability from "../lib/availability.js";
 import type * as lib_availabilityAccess from "../lib/availabilityAccess.js";
 import type * as lib_availabilitySummary from "../lib/availabilitySummary.js";
+import type * as lib_bookingAvailability from "../lib/bookingAvailability.js";
 import type * as lib_dateTime from "../lib/dateTime.js";
 import type * as lib_emailOutbox from "../lib/emailOutbox.js";
 import type * as lib_emailTemplates from "../lib/emailTemplates.js";
@@ -42,6 +44,7 @@ declare const fullApi: ApiFromModules<{
   appointments: typeof appointments;
   auth: typeof auth;
   availability: typeof availability;
+  bookingAvailability: typeof bookingAvailability;
   crons: typeof crons;
   email: typeof email;
   emailOutbox: typeof emailOutbox;
@@ -56,6 +59,7 @@ declare const fullApi: ApiFromModules<{
   "lib/availability": typeof lib_availability;
   "lib/availabilityAccess": typeof lib_availabilityAccess;
   "lib/availabilitySummary": typeof lib_availabilitySummary;
+  "lib/bookingAvailability": typeof lib_bookingAvailability;
   "lib/dateTime": typeof lib_dateTime;
   "lib/emailOutbox": typeof lib_emailOutbox;
   "lib/emailTemplates": typeof lib_emailTemplates;

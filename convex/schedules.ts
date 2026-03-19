@@ -1,6 +1,6 @@
 import { paginationOptsValidator } from "convex/server";
 import type { PaginationOptions } from "convex/server";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 
 import { mutation, query } from "./_generated/server";
 import type { QueryCtx } from "./_generated/server";
@@ -27,6 +27,7 @@ const toPublicUser = (user: Doc<"users"> | null) => {
 type DbCtx = { db: QueryCtx["db"] };
 type ScheduleDoc = Doc<"schedules">;
 type ScheduleListView = "upcoming" | "past";
+type ScheduleScope = "public" | "private";
 type AppointmentStatusCounts = {
   scheduled: number;
   "checked-in": number;
@@ -42,6 +43,40 @@ const createEmptyAppointmentStatusCounts = (): AppointmentStatusCounts => ({
   "checked-in": 0,
   completed: 0,
 });
+
+const normalizeScheduleSearchTerm = (value: string) => value.trim().toLowerCase();
+
+const matchesScheduleSearch = (schedule: ScheduleDoc, search: string) =>
+  schedule.date.toLowerCase().includes(search);
+
+const decodeOffsetCursor = (cursor: PaginationOptions["cursor"]) => {
+  if (cursor === null) {
+    return 0;
+  }
+
+  const parsed = Number.parseInt(cursor, 10);
+  if (!Number.isInteger(parsed) || parsed < 0) {
+    throw new ConvexError("Invalid pagination cursor");
+  }
+
+  return parsed;
+};
+
+const buildPaginatedResult = <T>(
+  items: T[],
+  paginationOpts: PaginationOptions
+) => {
+  const start = decodeOffsetCursor(paginationOpts.cursor);
+  const end = start + paginationOpts.numItems;
+
+  return {
+    page: items.slice(start, end),
+    isDone: end >= items.length,
+    continueCursor: String(Math.min(end, items.length)),
+    splitCursor: null,
+    pageStatus: null,
+  };
+};
 
 const loadUsersByIds = async (ctx: DbCtx, ids: string[]) => {
   const uniqueIds = Array.from(new Set(ids.filter(Boolean)));
@@ -102,12 +137,32 @@ const loadScheduleAppointments = async (
 const hydrateSchedule = async (
   ctx: DbCtx,
   schedule: ScheduleDoc,
-  options: { includeClient: boolean; includeCancelled: boolean }
+  options: {
+    includeClient: boolean;
+    includeCancelled: boolean;
+    scope: ScheduleScope;
+  }
 ) => {
-  const [appointments, employees, availabilityData] = await Promise.all([
-    loadScheduleAppointments(ctx, schedule.id, {
-      includeCancelled: options.includeCancelled,
+  const appointments = await loadScheduleAppointments(ctx, schedule.id, {
+    includeCancelled: options.includeCancelled,
+  });
+
+  const baseSchedule = {
+    id: schedule.id,
+    date: schedule.date,
+    open: schedule.open,
+    close: schedule.close,
+    appointments: await hydrateAppointments(ctx, appointments, {
+      includeClient: options.includeClient,
     }),
+  };
+
+  // Public schedule payloads intentionally exclude employee availability metadata.
+  if (options.scope === "public") {
+    return baseSchedule;
+  }
+
+  const [employees, availabilityData] = await Promise.all([
     ctx.db
       .query("users")
       .withIndex("by_role", (q) => q.eq("role", "employee"))
@@ -140,26 +195,12 @@ const hydrateSchedule = async (
     .sort((a, b) => a.start.localeCompare(b.start));
 
   return {
-    id: schedule.id,
-    date: schedule.date,
-    open: schedule.open,
-    close: schedule.close,
+    ...baseSchedule,
     employeeAvailability,
     employeeBreaks,
-    appointments: await hydrateAppointments(ctx, appointments, {
-      includeClient: options.includeClient,
-    }),
   };
 };
 
-const hydrateSchedules = async (
-  ctx: DbCtx,
-  schedules: ScheduleDoc[],
-  options: { includeClient: boolean; includeCancelled: boolean }
-) =>
-  Promise.all(
-    schedules.map((schedule) => hydrateSchedule(ctx, schedule, options))
-  );
 const getScheduleByDate = async (ctx: DbCtx, date: string) =>
   ctx.db
     .query("schedules")
@@ -214,26 +255,25 @@ const paginatePrivateSchedules = async (
   }
 ) => {
   const nowIso = new Date().toISOString();
-  const search = args.search?.trim().toLowerCase();
+  const search = args.search ? normalizeScheduleSearchTerm(args.search) : undefined;
   const order = args.view === "past" ? "desc" : "asc";
 
   if (search) {
-    const page = await ctx.db
+    const schedules = await ctx.db
       .query("schedules")
-      .withIndex("by_date", (q) =>
-        q.gte("date", search).lte("date", `${search}\uffff`)
+      .withIndex("by_open", (q) =>
+        args.view === "upcoming" ? q.gte("open", nowIso) : q.lt("open", nowIso)
       )
       .order(order)
-      .filter((q) =>
-        args.view === "upcoming"
-          ? q.gte(q.field("open"), nowIso)
-          : q.lt(q.field("open"), nowIso)
-      )
-      .paginate(args.paginationOpts);
+      .collect();
+    const filtered = schedules.filter((schedule) =>
+      matchesScheduleSearch(schedule, search)
+    );
+    const paginated = buildPaginatedResult(filtered, args.paginationOpts);
 
     return {
-      ...page,
-      page: await buildScheduleListItems(ctx, page.page),
+      ...paginated,
+      page: await buildScheduleListItems(ctx, paginated.page),
     };
   }
 
@@ -251,16 +291,6 @@ const paginatePrivateSchedules = async (
   };
 };
 
-export const getPublicSchedules = query({
-  args: {},
-  handler: async (ctx) => {
-    const schedules = await ctx.db.query("schedules").withIndex("by_open").collect();
-    return hydrateSchedules(ctx, schedules, {
-      includeClient: false,
-      includeCancelled: false,
-    });
-  },
-});
 export const getPublicScheduleByDate = query({
   args: {
     date: v.string(),
@@ -274,21 +304,11 @@ export const getPublicScheduleByDate = query({
     return hydrateSchedule(ctx, schedule, {
       includeClient: false,
       includeCancelled: false,
+      scope: "public",
     });
   },
 });
 
-export const getPrivateSchedules = query({
-  args: {},
-  handler: async (ctx) => {
-    await requireAdmin(ctx);
-    const schedules = await ctx.db.query("schedules").withIndex("by_open").collect();
-    return hydrateSchedules(ctx, schedules, {
-      includeClient: true,
-      includeCancelled: true,
-    });
-  },
-});
 export const getPrivateScheduleById = query({
   args: {
     id: v.string(),
@@ -304,6 +324,7 @@ export const getPrivateScheduleById = query({
     return hydrateSchedule(ctx, schedule, {
       includeClient: true,
       includeCancelled: true,
+      scope: "private",
     });
   },
 });

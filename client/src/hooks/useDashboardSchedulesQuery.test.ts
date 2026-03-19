@@ -1,11 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import {
-  matchesDashboardScheduleSearch,
-  normalizeDashboardScheduleSummary,
-  useDashboardSchedulesQuery,
-} from './useDashboardSchedulesQuery';
+import { useDashboardSchedulesQuery } from './useDashboardSchedulesQuery';
 
 const mocks = vi.hoisted(() => ({
   usePaginatedQuery: vi.fn(),
@@ -85,44 +81,42 @@ describe('useDashboardSchedulesQuery', () => {
     });
   });
 
-  it('derives a missing dashboard summary date from the open time', () => {
-    const normalized = normalizeDashboardScheduleSummary({
-      id: 'schedule-1',
-      open: '2026-03-18T14:00:00.000Z',
-      close: '2026-03-18T22:00:00.000Z',
-      appointmentCount: 0,
-      appointmentStatusCounts: baseStatusCounts,
-    });
-
-    expect(normalized.date).toBe('2026-03-18');
-  });
-
-  it('matches flexible date searches against normalized schedule summaries', () => {
-    const schedule = {
-      id: 'schedule-1',
-      open: '2026-03-18T14:00:00.000Z',
-      close: '2026-03-18T22:00:00.000Z',
-      appointmentCount: 0,
-      appointmentStatusCounts: baseStatusCounts,
-    };
-
-    expect(matchesDashboardScheduleSearch(schedule, '03')).toBe(true);
-    expect(matchesDashboardScheduleSearch(schedule, '2026-03')).toBe(true);
-    expect(matchesDashboardScheduleSearch(schedule, '03/18/2026')).toBe(true);
-    expect(matchesDashboardScheduleSearch(schedule, '2026-04')).toBe(false);
-  });
-
-  it('filters normalized results on the client and keeps paging while search is active', () => {
+  it('passes trimmed search terms to both paginated schedule queries', () => {
     const { result } = renderHook(() =>
-      useDashboardSchedulesQuery('all', '03/18/2026')
+      useDashboardSchedulesQuery('all', ' 02-03 ')
     );
 
     expect(result.current.upcomingSchedules).toHaveLength(1);
-    expect(result.current.upcomingSchedules[0].date).toBe('2026-03-18');
-    expect(result.current.pastSchedules).toHaveLength(0);
-    expect(result.current.schedules).toHaveLength(1);
-    expect(result.current.isSearchLoading).toBe(true);
-    expect(mocks.loadMoreUpcoming).toHaveBeenCalledWith(12);
-    expect(mocks.loadMorePast).not.toHaveBeenCalled();
+    expect(result.current.pastSchedules).toHaveLength(1);
+    expect(result.current.schedules).toHaveLength(2);
+    expect(mocks.usePaginatedQuery).toHaveBeenNthCalledWith(
+      1,
+      expect.anything(),
+      { view: 'upcoming', search: '02-03' },
+      { initialNumItems: 12 }
+    );
+    expect(mocks.usePaginatedQuery).toHaveBeenNthCalledWith(
+      2,
+      expect.anything(),
+      { view: 'past', search: '02-03' },
+      { initialNumItems: 12 }
+    );
+  });
+
+  it('skips the hidden view query', () => {
+    renderHook(() => useDashboardSchedulesQuery('upcoming', ''));
+
+    expect(mocks.usePaginatedQuery).toHaveBeenNthCalledWith(
+      1,
+      expect.anything(),
+      { view: 'upcoming' },
+      { initialNumItems: 12 }
+    );
+    expect(mocks.usePaginatedQuery).toHaveBeenNthCalledWith(
+      2,
+      expect.anything(),
+      'skip',
+      { initialNumItems: 12 }
+    );
   });
 });

@@ -11,7 +11,7 @@ import employeesReducer from '@/features/employeeSlice';
 import filterReducer from '@/features/filterSlice';
 import notificationReducer from '@/features/notificationSlice';
 
-import { useBookingScheduleQuery } from './useBookingScheduleQuery';
+import { useBookingAvailabilityQuery } from './useBookingAvailabilityQuery';
 
 const mocks = vi.hoisted(() => ({
   useQuery: vi.fn(),
@@ -48,27 +48,25 @@ const createStore = () =>
       }),
   });
 
-describe('useBookingScheduleQuery', () => {
+describe('useBookingAvailabilityQuery', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('derives available booking slots directly from the queried schedule', () => {
+  it('derives available booking slots directly from the queried availability response', () => {
     mocks.useQuery.mockReturnValue({
-      id: 'schedule-1',
-      open: '2099-03-18T14:00:00.000Z',
-      close: '2099-03-18T16:00:00.000Z',
-      appointments: [
+      schedule: {
+        id: 'schedule-1',
+        date: '2099-03-18',
+        open: '2099-03-18T14:00:00.000Z',
+        close: '2099-03-18T16:00:00.000Z',
+      },
+      slots: [
         {
-          id: 'appointment-1',
-          start: '2099-03-18T14:00:00.000Z',
-          end: '2099-03-18T14:30:00.000Z',
-          service: 'Haircut',
-          status: 'scheduled',
-          employee: {
-            id: 'employee-1',
-            firstName: 'Pat',
-          },
+          id: 'slot-1',
+          start: '2099-03-18T14:30:00.000Z',
+          end: '2099-03-18T15:00:00.000Z',
+          available: ['employee-1'],
         },
       ],
     });
@@ -79,12 +77,12 @@ describe('useBookingScheduleQuery', () => {
     );
 
     const { result } = renderHook(
-      () => useBookingScheduleQuery('2099-03-18', 30, 'employee-1'),
+      () => useBookingAvailabilityQuery('2099-03-18', 30, 'employee-1'),
       { wrapper }
     );
 
     expect(result.current.schedule?.date).toBe('2099-03-18');
     expect(result.current.timeSlots).not.toHaveLength(0);
-    expect(result.current.timeSlots[0].start.format('HH:mm')).toBe('10:30');
+    expect(result.current.timeSlots[0].start.format('HH:mm')).toBe('14:30');
   });
 });

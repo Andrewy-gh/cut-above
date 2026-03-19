@@ -215,8 +215,10 @@ describe('appointments.createAppointment', () => {
 
       expect(persistedAppointment?.status).toBe('cancelled');
 
-      const adminSchedules = await asAdmin.query(api.schedules.getPrivateSchedules, {});
-      const adminAppointment = adminSchedules[0]?.appointments[0];
+      const adminSchedule = await asAdmin.query(api.schedules.getPrivateScheduleById, {
+        id: scheduleId,
+      });
+      const adminAppointment = adminSchedule?.appointments[0];
       expect(adminAppointment?.status).toBe('cancelled');
 
       await expect(asClient.query(api.appointments.getAppointments, {})).resolves.toEqual([]);

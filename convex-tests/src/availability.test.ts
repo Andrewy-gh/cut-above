@@ -168,9 +168,10 @@ describe('employee availability', { timeout: 15000 }, () => {
     ]);
   });
 
-  it('returns employee availability windows on public schedules', async () => {
+  it('returns employee availability windows in admin summaries', async () => {
     const t = createConvexTest();
     const employee = await createAuthUser(t, 'employee');
+    const admin = await createAuthUser(t, 'admin');
     await seedSchedule(t);
 
     await t.run(async (ctx) => {
@@ -210,24 +211,37 @@ describe('employee availability', { timeout: 15000 }, () => {
       });
     });
 
-    const schedule = await t.query(api.schedules.getPublicScheduleByDate, {
+    const asAdmin = t.withIdentity(admin.identity);
+    const summary = await asAdmin.query(api.availability.getAvailabilitySummaryByDate, {
       date: scheduleDate,
     });
 
-    expect(schedule?.employeeAvailability).toEqual([
+    expect(summary.schedule).toEqual({
+      id: scheduleId,
+      open: '2026-02-02T15:00:00.000Z',
+      close: '2026-02-02T21:00:00.000Z',
+    });
+    expect(summary.employees).toEqual([
       {
-        employeeId: employee.id,
-        start: '2026-02-02T16:00:00.000Z',
-        end: '2026-02-02T19:00:00.000Z',
-      },
-    ]);
-    expect(schedule?.employeeBreaks).toEqual([
-      {
-        id: 'date-break-1',
-        employeeId: employee.id,
-        start: '2026-02-02T18:30:00.000Z',
-        end: '2026-02-02T19:00:00.000Z',
-        label: 'Supply run',
+        id: employee.id,
+        firstName: 'Pat',
+        lastName: 'User',
+        availabilityWindow: {
+          employeeId: employee.id,
+          start: '2026-02-02T16:00:00.000Z',
+          end: '2026-02-02T19:00:00.000Z',
+        },
+        breaks: [
+          {
+            id: 'date-break-1',
+            employeeId: employee.id,
+            start: '2026-02-02T18:30:00.000Z',
+            end: '2026-02-02T19:00:00.000Z',
+            label: 'Supply run',
+          },
+        ],
+        breakMode: 'replace',
+        appointmentCount: 0,
       },
     ]);
   });
