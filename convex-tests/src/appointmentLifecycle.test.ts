@@ -246,17 +246,19 @@ describe('appointment lifecycle via manage token', () => {
         []
       );
 
-      const publicSchedules = await t.query(api.schedules.getPublicSchedules, {});
-      expect(publicSchedules).toHaveLength(1);
-      expect(publicSchedules[0]?.appointments).toEqual([]);
+      const publicSchedule = await t.query(api.schedules.getPublicScheduleByDate, {
+        date: scheduleDate,
+      });
+      expect(publicSchedule).not.toBeNull();
+      expect(publicSchedule?.appointments).toEqual([]);
 
-      const privateSchedules = await asAdmin.query(
-        api.schedules.getPrivateSchedules,
-        {}
+      const privateSchedule = await asAdmin.query(
+        api.schedules.getPrivateScheduleById,
+        { id: scheduleId }
       );
-      expect(privateSchedules).toHaveLength(1);
-      expect(privateSchedules[0]?.appointments).toHaveLength(1);
-      expect(privateSchedules[0]?.appointments[0]).toMatchObject({
+      expect(privateSchedule).not.toBeNull();
+      expect(privateSchedule?.appointments).toHaveLength(1);
+      expect(privateSchedule?.appointments[0]).toMatchObject({
         service: updatedService,
         start: updatedStartTime,
         status: 'cancelled',
