@@ -3,8 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "vitest",
-    "test:run": "vitest run"
+    "test": "vitest --exclude src/emailOutbox.mailpit.test.ts",
+    "test:run": "vitest run --exclude src/emailOutbox.mailpit.test.ts",
+    "test:mailpit": "vitest run src/emailOutbox.mailpit.test.ts"
   },
   "devDependencies": {
     "@convex-dev/better-auth": "^0.10.10",

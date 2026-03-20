@@ -28,6 +28,8 @@
     "prepare": "husky",
     "typecheck": "pnpm -r --if-present typecheck",
     "test": "pnpm -r --if-present test",
+    "test:critical": "pnpm -C convex-tests exec vitest run src/appointmentLifecycle.test.ts",
+    "test:mailpit": "pnpm -C convex-tests test:mailpit",
     "test:run": "pnpm -r --if-present test:run",
     "test:e2e": "playwright test"
   },
