@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/knip/schema.json",
+  "include": ["dependencies", "unlisted", "binaries"],
+  "ignoreBinaries": ["eslint", "vitest"],
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/**/*.mjs", "convex/**/*.{ts,js}", ".husky/pre-commit"],
+      "project": ["scripts/**/*.mjs", "convex/**/*.{ts,js}", ".husky/pre-commit"]
+    },
+    "client": {},
+    "shared": {},
+    "convex-tests": {
+      "ignoreDependencies": ["@cut-above/shared"]
+    }
+  }
+}
