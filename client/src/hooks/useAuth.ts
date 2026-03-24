@@ -7,12 +7,13 @@ import {
   selectCurrentUserRole,
   setCredentials,
 } from '@/features/auth/authSlice';
-import { authClient } from '@/convex/authClient';
 import { CONVEX_SITE_URL, CONVEX_URL } from '@/convex/env';
-import { useQuery } from 'convex/react';
-import { api } from '../../../convex/_generated/api';
 import { useNotification } from './useNotification';
 import { cleanEmail } from '@/utils/email';
+import {
+  authSessionAdapter,
+  type AuthSessionAdapter,
+} from './authSessionAdapter';
 
 interface EmailChangePayload {
   email: string;
@@ -28,12 +29,19 @@ interface PasswordResetPayload {
   password: string;
 }
 
-export function useAuth() {
+const publicProblem = (detail: string) => ({
+  type: 'about:blank',
+  title: detail,
+  status: 500,
+  detail,
+});
+
+export function useAuth(adapter: AuthSessionAdapter = authSessionAdapter) {
   const dispatch = useAppDispatch();
   const storedUser = useAppSelector(selectCurrentUser);
   const storedRole = useAppSelector(selectCurrentUserRole);
-  const session = authClient.useSession();
-  const currentUser = useQuery(api.auth.getCurrentUser, {});
+  const session = adapter.useSession();
+  const currentUser = adapter.useCurrentUser();
 
   const { handleSuccess, handleError } = useNotification();
 
@@ -68,7 +76,7 @@ export function useAuth() {
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      const result = await authClient.signIn.email({
+      const result = await adapter.signInEmail({
         email: cleanEmail(email),
         password,
       });
@@ -84,7 +92,7 @@ export function useAuth() {
 
   const handleLogout = async () => {
     try {
-      const result = await authClient.signOut();
+      const result = await adapter.signOut();
       if (result?.error) {
         handleError(result.error);
         return;
@@ -100,13 +108,13 @@ export function useAuth() {
           error,
         });
       }
-      handleError('Could not log out. Backend unreachable.', error);
+      handleError(publicProblem('Could not log out. Backend unreachable.'), error);
     }
   };
 
   const handleUserEmailChange = async (newEmailObj: EmailChangePayload) => {
     try {
-      const result = await authClient.changeEmail({
+      const result = await adapter.changeEmail({
         newEmail: cleanEmail(newEmailObj.email),
       });
       if (result?.error) {
@@ -122,7 +130,7 @@ export function useAuth() {
 
   const handleUserPasswordChange = async (newPasswordObj: PasswordChangePayload) => {
     try {
-      const result = await authClient.changePassword({
+      const result = await adapter.changePassword({
         currentPassword: newPasswordObj.currentPassword,
         newPassword: newPasswordObj.newPassword,
       });
@@ -139,7 +147,7 @@ export function useAuth() {
 
   const handleUserDelete = async () => {
     try {
-      const result = await authClient.deleteUser({});
+      const result = await adapter.deleteUser({});
       if (result?.error) {
         handleError(result.error);
         return;
@@ -153,7 +161,7 @@ export function useAuth() {
 
   const handleUserPasswordReset = async (newCredentials: PasswordResetPayload) => {
     try {
-      const result = await authClient.resetPassword({
+      const result = await adapter.resetPassword({
         token: newCredentials.token,
         newPassword: newCredentials.password,
       });
