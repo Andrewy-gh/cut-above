@@ -28,6 +28,7 @@ import type * as lib_availabilityAccess from "../lib/availabilityAccess.js";
 import type * as lib_availabilitySummary from "../lib/availabilitySummary.js";
 import type * as lib_bookingAvailability from "../lib/bookingAvailability.js";
 import type * as lib_dateTime from "../lib/dateTime.js";
+import type * as lib_domainValidators from "../lib/domainValidators.js";
 import type * as lib_emailOutbox from "../lib/emailOutbox.js";
 import type * as lib_emailTemplates from "../lib/emailTemplates.js";
 import type * as lib_names from "../lib/names.js";
@@ -61,6 +62,7 @@ declare const fullApi: ApiFromModules<{
   "lib/availabilitySummary": typeof lib_availabilitySummary;
   "lib/bookingAvailability": typeof lib_bookingAvailability;
   "lib/dateTime": typeof lib_dateTime;
+  "lib/domainValidators": typeof lib_domainValidators;
   "lib/emailOutbox": typeof lib_emailOutbox;
   "lib/emailTemplates": typeof lib_emailTemplates;
   "lib/names": typeof lib_names;

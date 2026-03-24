@@ -1,8 +1,14 @@
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import { useQuery } from '@/convex/client';
+import { BUSINESS_TIME_ZONE } from '@/utils/date';
 
 import { api } from '../../../convex/_generated/api';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export function useBookingAvailabilityQuery(
   date: string,
@@ -24,8 +30,8 @@ export function useBookingAvailabilityQuery(
     () =>
       (availabilityData?.slots ?? []).map((slot) => ({
         ...slot,
-        start: dayjs(slot.start),
-        end: dayjs(slot.end),
+        start: dayjs.utc(slot.start).tz(BUSINESS_TIME_ZONE),
+        end: dayjs.utc(slot.end).tz(BUSINESS_TIME_ZONE),
       })),
     [availabilityData]
   );

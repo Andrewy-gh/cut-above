@@ -11,7 +11,7 @@ interface EnqueueEmailOptions {
   availableAt?: number;
 }
 
-interface AppointmentEmailInput {
+export interface AppointmentEmailInput {
   appointmentId: string;
   start: string;
   end: string;

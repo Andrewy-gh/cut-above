@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 4173;
+const PORT = 5173;
+const HOST = 'localhost';
 
 export default defineConfig({
   testDir: './e2e',
@@ -9,7 +10,7 @@ export default defineConfig({
     timeout: 5_000,
   },
   use: {
-    baseURL: `http://127.0.0.1:${PORT}`,
+    baseURL: `http://${HOST}:${PORT}`,
     trace: 'on-first-retry',
   },
   projects: [
@@ -19,8 +20,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `pnpm -C client exec vite --host 127.0.0.1 --port ${PORT} --strictPort`,
-    url: `http://127.0.0.1:${PORT}`,
-    reuseExistingServer: !process.env.CI,
+    command: `pnpm -C client exec vite --host ${HOST} --port ${PORT} --strictPort`,
+    url: `http://${HOST}:${PORT}`,
+    reuseExistingServer: false,
   },
 });

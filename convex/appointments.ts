@@ -8,25 +8,20 @@ import {
 } from "./lib/domainValidators";
 import {
   assertAppointmentAccess,
-  assertAvailable,
   assertRoleAllowed,
   buildAppointmentResponse,
   cancelAppointmentRecord,
+  createAppointmentRecord,
   employeeInput,
-  ensureEmployee,
-  findScheduleForDate,
   getAppointmentByIdOrThrow,
   isCancelledAppointment,
   loadUserById,
   modifyAppointmentRecord,
-  toPublicUser,
 } from "./lib/appointments";
 import {
   requireAppointmentAccessToken,
   throwInvalidAppointmentAccess,
 } from "./lib/appointmentAccess";
-import { extractDateFromISO } from "./lib/dateTime";
-import { enqueueAppointmentEmail } from "./lib/emailOutbox";
 import { requireAdmin, requireAuthUser } from "./lib/auth";
 
 export const getAppointments = query({
@@ -142,44 +137,14 @@ export const createAppointment = mutation({
     const role = user?.role ?? "client";
 
     assertRoleAllowed(role, ["client"]);
-
-    const employee = await ensureEmployee(ctx, args.employee.id, authUser._id);
-
-    const scheduleDate = extractDateFromISO(args.start);
-    const schedule = await findScheduleForDate(ctx, scheduleDate);
-    await assertAvailable(ctx, schedule.id, {
-      start: args.start,
-      end: args.end,
-      employeeId: args.employee.id,
-    });
-
-    const id = crypto.randomUUID();
-    await ctx.db.insert("appointments", {
-      id,
+    return createAppointmentRecord(ctx, {
       start: args.start,
       end: args.end,
       service: args.service,
-      status: "scheduled",
+      employee: args.employee,
       clientId: authUser._id,
-      employeeId: args.employee.id,
-      scheduleId: schedule.id,
+      clientEmail: user?.email ?? authUser.email,
     });
-
-    const employeeFirstName =
-      args.employee.firstName ?? toPublicUser(employee)?.firstName ?? "Staff";
-
-    await enqueueAppointmentEmail(ctx, {
-      appointmentId: id,
-      start: args.start,
-      end: args.end,
-      service: args.service,
-      employeeId: args.employee.id,
-      employeeFirstName,
-      receiver: user?.email ?? authUser.email,
-      option: "confirmation",
-    });
-
-    return { success: true, message: "Appointment successfully created" };
   },
 });
 

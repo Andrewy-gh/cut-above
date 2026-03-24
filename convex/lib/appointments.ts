@@ -4,7 +4,10 @@ import type { Doc } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { revokeAppointmentAccessTokens } from "./appointmentAccess";
 import { checkAvailabilityISO, extractDateFromISO } from "./dateTime";
-import { enqueueAppointmentEmail } from "./emailOutbox";
+import {
+  enqueueAppointmentEmail,
+  type AppointmentEmailInput,
+} from "./emailOutbox";
 import {
   isSlotWithinAvailability,
   loadAvailabilityForDate,
@@ -14,6 +17,17 @@ import {
 import { parseName } from "./names";
 
 type DbCtx = { db: QueryCtx["db"] };
+
+export type AppointmentSideEffects = {
+  enqueueAppointmentEmail: (
+    ctx: MutationCtx,
+    input: AppointmentEmailInput
+  ) => Promise<unknown>;
+};
+
+export const appointmentSideEffects: AppointmentSideEffects = {
+  enqueueAppointmentEmail,
+};
 
 export const isCancelledAppointment = (
   appointment: Pick<Doc<"appointments">, "status">
@@ -160,6 +174,60 @@ export const getAppointmentByIdOrThrow = async (ctx: DbCtx, id: string) => {
   return appointment;
 };
 
+export const createAppointmentRecord = async (
+  ctx: MutationCtx,
+  args: {
+    start: string;
+    end: string;
+    service: string;
+    employee: {
+      id: string;
+      firstName?: string;
+    };
+    clientId: string;
+    clientEmail: string;
+  },
+  sideEffects: AppointmentSideEffects = appointmentSideEffects
+) => {
+  const employee = await ensureEmployee(ctx, args.employee.id, args.clientId);
+
+  const scheduleDate = extractDateFromISO(args.start);
+  const schedule = await findScheduleForDate(ctx, scheduleDate);
+  await assertAvailable(ctx, schedule.id, {
+    start: args.start,
+    end: args.end,
+    employeeId: args.employee.id,
+  });
+
+  const id = crypto.randomUUID();
+  await ctx.db.insert("appointments", {
+    id,
+    start: args.start,
+    end: args.end,
+    service: args.service,
+    status: "scheduled",
+    clientId: args.clientId,
+    employeeId: args.employee.id,
+    scheduleId: schedule.id,
+  });
+
+  const employeeFirstName =
+    args.employee.firstName ?? toPublicUser(employee)?.firstName ?? "Staff";
+
+  await sideEffects.enqueueAppointmentEmail(ctx, {
+    appointmentId: id,
+    start: args.start,
+    end: args.end,
+    service: args.service,
+    employeeId: args.employee.id,
+    employeeFirstName,
+    receiver: args.clientEmail,
+    option: "confirmation",
+  });
+
+  return { success: true, message: "Appointment successfully created" };
+};
+
 export const buildAppointmentResponse = (input: {
   appointment: Doc<"appointments">;
   employee?: Doc<"users"> | null;
@@ -192,7 +260,8 @@ export const modifyAppointmentRecord = async (
       firstName?: string;
     };
     fallbackReceiver?: string;
-  }
+  },
+  sideEffects: AppointmentSideEffects = appointmentSideEffects
 ) => {
   const requestedEmployeeId = args.employee?.id;
   if (requestedEmployeeId) {
@@ -237,7 +306,7 @@ export const modifyAppointmentRecord = async (
   const employeeFirstName =
     args.employee?.firstName ?? toPublicUser(employee)?.firstName ?? "Staff";
 
-  await enqueueAppointmentEmail(ctx, {
+  await sideEffects.enqueueAppointmentEmail(ctx, {
     appointmentId: appointment.id,
     start: nextStart,
     end: nextEnd,
@@ -254,7 +323,8 @@ export const modifyAppointmentRecord = async (
 export const cancelAppointmentRecord = async (
   ctx: MutationCtx,
   appointment: Doc<"appointments">,
-  fallbackReceiver?: string
+  fallbackReceiver?: string,
+  sideEffects: AppointmentSideEffects = appointmentSideEffects
 ) => {
   if (isCancelledAppointment(appointment)) {
     await revokeAppointmentAccessTokens(ctx, appointment.id);
@@ -267,7 +337,7 @@ export const cancelAppointmentRecord = async (
   await revokeAppointmentAccessTokens(ctx, appointment.id);
   await ctx.db.patch(appointment._id, { status: "cancelled" });
 
-  await enqueueAppointmentEmail(ctx, {
+  await sideEffects.enqueueAppointmentEmail(ctx, {
     appointmentId: appointment.id,
     start: appointment.start,
     end: appointment.end,

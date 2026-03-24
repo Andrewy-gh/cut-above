@@ -155,4 +155,56 @@ describe('booking availability query', () => {
       false
     );
   });
+
+  it('keeps no-preference slots bookable when another employee is still available', async () => {
+    const t = createConvexTest();
+    await seedSchedule(t);
+    await seedEmployee(t, { id: 'employee-busy', firstName: 'Busy' });
+    await seedEmployee(t, { id: 'employee-open', firstName: 'Open' });
+
+    await t.run(async (ctx) => {
+      await ctx.db.insert('appointments', {
+        id: 'appointment-busy-1',
+        status: 'scheduled',
+        service: 'Haircut',
+        start: '2026-02-02T15:00:00.000Z',
+        end: '2026-02-02T15:30:00.000Z',
+        clientId: 'client-1',
+        employeeId: 'employee-busy',
+        scheduleId,
+      });
+    });
+
+    const noPreferenceAvailability = await t.query(
+      api.bookingAvailability.getPublicBookingAvailability,
+      {
+        date: scheduleDate,
+        serviceDuration: 30,
+      }
+    );
+    const employeeSpecificAvailability = await t.query(
+      api.bookingAvailability.getPublicBookingAvailability,
+      {
+        date: scheduleDate,
+        serviceDuration: 30,
+        employeeId: 'employee-busy',
+      }
+    );
+
+    expect(
+      noPreferenceAvailability.slots.find(
+        (slot) => slot.start === '2026-02-02T15:00:00.000Z'
+      )
+    ).toEqual({
+      id: '2026-02-02T15:00:00.000Z',
+      start: '2026-02-02T15:00:00.000Z',
+      end: '2026-02-02T15:30:00.000Z',
+      available: ['employee-open'],
+    });
+    expect(
+      employeeSpecificAvailability.slots.some(
+        (slot) => slot.start === '2026-02-02T15:00:00.000Z'
+      )
+    ).toBe(false);
+  });
 });

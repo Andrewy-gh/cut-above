@@ -1,6 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { api, components } from '../../convex/_generated/api';
+import { appointmentSideEffects } from '../../convex/lib/appointments';
 import { createConvexTest } from './convexTest';
 
 const scheduleDate = '2026-02-02';
@@ -116,7 +117,76 @@ const seedAppointment = async (t: ReturnType<typeof createConvexTest>) => {
   });
 };
 
+const seedAvailabilityWindow = async (
+  t: ReturnType<typeof createConvexTest>,
+  input: { employeeId: string; weekday: number; startTime: string; endTime: string }
+) => {
+  await t.run(async (ctx) => {
+    await ctx.db.insert('employeeAvailabilityRules', {
+      id: `rule-${input.employeeId}-${input.weekday}-${input.startTime}`,
+      employeeId: input.employeeId,
+      weekday: input.weekday,
+      isWorking: true,
+      startTime: input.startTime,
+      endTime: input.endTime,
+      updatedAt: Date.now(),
+    });
+  });
+};
+
 describe('appointments.createAppointment', () => {
+  it(
+    'creates a booking and queues a confirmation email',
+    { timeout: 15000 },
+    async () => {
+      const t = createConvexTest();
+      await seedSchedule(t);
+      await seedEmployee(t);
+      const client = await createAuthUser(t, 'client');
+
+      const asClient = t.withIdentity(client.identity);
+      await expect(
+        asClient.mutation(api.appointments.createAppointment, {
+          start: startTime,
+          end: endTime,
+          service,
+          employee: { id: employeeId, firstName: 'Pat' },
+        })
+      ).resolves.toMatchObject({ success: true, message: 'Appointment successfully created' });
+
+      const storedAppointments = await t.run((ctx) =>
+        ctx.db
+          .query('appointments')
+          .withIndex('by_schedule', (q) => q.eq('scheduleId', scheduleId))
+          .collect()
+      );
+      expect(storedAppointments).toHaveLength(1);
+      expect(storedAppointments[0]).toMatchObject({
+        status: 'scheduled',
+        service,
+        start: startTime,
+        end: endTime,
+        clientId: client.identity.subject,
+        employeeId,
+        scheduleId,
+      });
+
+      const outboxItems = await t.run((ctx) => ctx.db.query('emailOutbox').collect());
+      expect(outboxItems).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            eventType: 'appointment.confirmation',
+            payload: expect.objectContaining({
+              receiver: client.identity.email,
+              employee: 'Pat',
+              option: 'confirmation',
+            }),
+          }),
+        ])
+      );
+    }
+  );
+
   it(
     'rejects conflicting bookings for the same employee',
     { timeout: 15000 },
@@ -166,6 +236,66 @@ describe('appointments.createAppointment', () => {
         employee: { id: employeeId, firstName: 'Pat' },
       })
     ).rejects.toThrow(/Not authenticated/);
+  });
+
+  it('rejects bookings when the employee is outside their booking window', async () => {
+    const t = createConvexTest();
+    await seedSchedule(t);
+    await seedEmployee(t);
+    await seedAvailabilityWindow(t, {
+      employeeId,
+      weekday: 1,
+      startTime: '11:00',
+      endTime: '12:00',
+    });
+    const client = await createAuthUser(t, 'client');
+
+    const asClient = t.withIdentity(client.identity);
+    await expect(
+      asClient.mutation(api.appointments.createAppointment, {
+        start: startTime,
+        end: endTime,
+        service,
+        employee: { id: employeeId, firstName: 'Pat' },
+      })
+    ).rejects.toThrow(/Employee is unavailable for selected time/);
+  });
+
+  it('rolls back booking creation when confirmation enqueue fails', async () => {
+    const t = createConvexTest();
+    await seedSchedule(t);
+    await seedEmployee(t);
+    const client = await createAuthUser(t, 'client');
+    const asClient = t.withIdentity(client.identity);
+    const originalEnqueue = appointmentSideEffects.enqueueAppointmentEmail;
+
+    appointmentSideEffects.enqueueAppointmentEmail = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('Email outbox unavailable'));
+
+    try {
+      await expect(
+        asClient.mutation(api.appointments.createAppointment, {
+          start: startTime,
+          end: endTime,
+          service,
+          employee: { id: employeeId, firstName: 'Pat' },
+        })
+      ).rejects.toThrow(/Email outbox unavailable/);
+    } finally {
+      appointmentSideEffects.enqueueAppointmentEmail = originalEnqueue;
+    }
+
+    const storedAppointments = await t.run((ctx) =>
+      ctx.db
+        .query('appointments')
+        .withIndex('by_schedule', (q) => q.eq('scheduleId', scheduleId))
+        .collect()
+    );
+    const outboxItems = await t.run((ctx) => ctx.db.query('emailOutbox').collect());
+
+    expect(storedAppointments).toEqual([]);
+    expect(outboxItems).toEqual([]);
   });
 
   it(
