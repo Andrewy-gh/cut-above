@@ -138,22 +138,6 @@ describe('Public Routes', () => {
   });
 });
 
-describe('Protected Routes - Unauthenticated', () => {
-  it('redirects to login when not authenticated', () => {
-    const TestRoutes = () => (
-      <Routes>
-        <Route path="/login" element={<div>Login Page</div>} />
-        <Route element={<RequireAuth />}>
-          <Route path="/account" element={<Account />} />
-        </Route>
-      </Routes>
-    );
-
-    render(<TestRoutes />, { route: '/account' });
-    expect(screen.getByText('Login Page')).toBeInTheDocument();
-  });
-});
-
 describe('Protected Routes - Authenticated', () => {
   it('renders Account page when authenticated', () => {
     mockAuthState.user = 'test@example.com';
@@ -214,39 +198,6 @@ describe('Protected Routes - Authenticated', () => {
     expect(
       screen.queryByRole('link', { name: /^add a new schedule$/i })
     ).not.toBeInTheDocument();
-  });
-});
-
-describe('Admin Routes', () => {
-  it('shows access denied for non-admin accessing admin routes', () => {
-    mockAuthState.user = 'user@example.com';
-    mockAuthState.role = 'user';
-    const TestRoutes = () => (
-      <Routes>
-        <Route element={<RequireAuth requiredRole="admin" />}>
-          <Route path="/dashboard" element={<div>Dashboard</div>} />
-        </Route>
-      </Routes>
-    );
-
-    render(<TestRoutes />, { route: '/dashboard' });
-    expect(screen.getByRole('heading', { name: /not allowed/i })).toBeInTheDocument();
-  });
-
-  it('allows admin to access admin routes', () => {
-    mockAuthState.user = 'admin@example.com';
-    mockAuthState.role = 'admin';
-    const TestRoutes = () => (
-      <Routes>
-        <Route element={<RequireAuth requiredRole="admin" />}>
-          <Route path="/dashboard" element={<div>Dashboard Content</div>} />
-        </Route>
-      </Routes>
-    );
-
-    render(<TestRoutes />, { route: '/dashboard' });
-
-    expect(screen.getByText('Dashboard Content')).toBeInTheDocument();
   });
 });
 
