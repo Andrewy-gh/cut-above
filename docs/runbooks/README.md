@@ -39,3 +39,4 @@ Notes:
 - Local cloud-dev: `docs/runbooks/local-cloud.md`
 - Production deploy: `docs/runbooks/production.md`
 - Seed + reset details: `docs/runbooks/seed-reset.md`
+- Post-deploy smoke test: `docs/testing/manual-prod-smoke.md`

@@ -54,3 +54,9 @@ Reset (break-glass only):
 ```bash
 ALLOW_CLOUD_SEED=true CONFIRM_SEED_RESET=true pnpm seed:reset:prod
 ```
+
+## 6) Post-deploy verification
+
+Run the manual smoke checklist after a production deploy:
+
+- `docs/testing/manual-prod-smoke.md`

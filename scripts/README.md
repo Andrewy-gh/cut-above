@@ -9,6 +9,7 @@ Use this file as the top-level map. Scenario details live in runbooks.
 - Local cloud-dev: `docs/runbooks/local-cloud.md`
 - Production: `docs/runbooks/production.md`
 - Seed/reset details: `docs/runbooks/seed-reset.md`
+- Manual prod smoke: `docs/testing/manual-prod-smoke.md`
 
 ## Scenario Quick Matrix
 
@@ -25,11 +26,15 @@ Use this file as the top-level map. Scenario details live in runbooks.
 - `pnpm dev:convex:local`: run local Convex backend
 - `pnpm dev:convex:cloud`: run Convex dev in cloud mode
 - `pnpm dev:local`: local all-in-one (Convex local + Mailpit + frontend)
+- `pnpm dev:stop`: stop local dev processes started by the local workflow
 - `pnpm dev:setup`: set Convex `SITE_URL` env
 - `pnpm dev:setup:mailpit`: set Convex env for Mailpit delivery mode
+- `pnpm email:test`: run the Mailpit-backed email smoke test
 - `pnpm email:test:resend`: send a direct Resend smoke email using `.env.resend.local`
+- `pnpm knip`: check for unused/unlisted dependency issues covered by the repo config
 - `pnpm seed:dev`: generate realistic seeded data from `.seed-prod.example.json` (shared dev password)
 - `pnpm seed:prod`: seed from `.seed-prod.json` (per-user passwords)
 - `pnpm seed:reset`: clear dev seed-owned data
 - `pnpm seed:reset:prod`: clear prod-seed-owned data
+- `pnpm test:critical`: run the appointment lifecycle regression gate used in pre-commit
 - `pnpm deploy:prod`: run gate, set Convex prod env, deploy Convex

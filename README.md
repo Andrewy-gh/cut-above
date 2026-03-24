@@ -12,7 +12,7 @@ Material UI for components, styles, theming, and responsiveness. Redux Toolkit f
 
 **Backend:** Convex (database + functions) with Better Auth.
 
-Cookie based session storage through Redis. Pub/Sub through redis to handle email services. Nodemailer to send account and appointment information to users.
+Better Auth runs against Convex HTTP/actions, and appointment/contact email flows are managed through the Convex email outbox. Local email testing can target Mailpit, while production can stay in log mode or use a real SMTP provider.
 
 ## Features
 
@@ -31,7 +31,7 @@ Cookie based session storage through Redis. Pub/Sub through redis to handle emai
 
 3. Start Convex dev (terminal 1):
    - Cloud dev deployment (default):
-     `pnpm dev:convex`
+     `pnpm dev:convex:cloud`
    - Local dev deployment (can reach local Mailpit at 127.0.0.1):
      `pnpm dev:convex:local`
    - All-in-one local dev (Convex local + Mailpit + client):
@@ -56,6 +56,11 @@ Cookie based session storage through Redis. Pub/Sub through redis to handle emai
      `pnpm dev:setup:mailpit`
    - Run `pnpm email:test`.
 
+## Development Notes
+
+- `git commit` runs `pnpm lint-staged`, `pnpm knip`, and `pnpm test:critical` via Husky.
+- Run `pnpm knip` manually to check unused/unlisted dependency issues before committing.
+
 ## Switching Convex dev (local vs cloud)
 
 - Store your cloud dev URLs once in `.env.local`:
@@ -75,5 +80,6 @@ Cookie based session storage through Redis. Pub/Sub through redis to handle emai
 - `docs/runbooks/local-cloud.md` for cloud Convex dev + local frontend flow.
 - `docs/runbooks/production.md` for production deploy and host env wiring.
 - `docs/runbooks/seed-reset.md` for seed/reset behavior and safety guards.
+- `docs/testing/manual-prod-smoke.md` for post-deploy production smoke coverage.
 - `docs/prod-deploy-checklist.md` for production release steps.
 - `scripts/README.md` for script index and quick command matrix.
