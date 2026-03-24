@@ -34,6 +34,7 @@ export default function StatusTab({
   total,
   active,
 }: StatusTabProps) {
+  const label = labelMap[name] || name.charAt(0).toUpperCase() + name.slice(1);
   const tabClass = [
     styles.tab,
     active ? styles.tab_active : '',
@@ -43,12 +44,15 @@ export default function StatusTab({
     .join(' ');
 
   return (
-    <div className={tabClass} onClick={handleClick}>
+    <button
+      type="button"
+      className={tabClass}
+      onClick={handleClick}
+      aria-pressed={active}
+    >
       <span className={`${styles.status_dot} ${dotClassMap[name] || ''}`} />
-      <span className={styles.tab_label}>
-        {labelMap[name] || name.charAt(0).toUpperCase() + name.slice(1)}
-      </span>
+      <span className={styles.tab_label}>{label}</span>
       <span className={styles.tab_count}>{total}</span>
-    </div>
+    </button>
   );
 }

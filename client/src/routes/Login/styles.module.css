@@ -1,5 +1,16 @@
 .font {
+  appearance: none;
+  background: none;
+  border: 0;
+  display: block;
   font-family: 'Corben';
   font-weight: 700;
   cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.font:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }

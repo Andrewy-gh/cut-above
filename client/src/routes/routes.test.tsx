@@ -208,8 +208,12 @@ describe('Protected Routes - Authenticated', () => {
 
     render(<TestRoutes />, { route: '/account' });
 
-    expect(screen.queryByText(/schedule dashboard/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/add a new schedule/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: /^schedule dashboard$/i })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: /^add a new schedule$/i })
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -226,7 +230,7 @@ describe('Admin Routes', () => {
     );
 
     render(<TestRoutes />, { route: '/dashboard' });
-    expect(screen.getByText(/not allowed/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /not allowed/i })).toBeInTheDocument();
   });
 
   it('allows admin to access admin routes', () => {
@@ -359,7 +363,7 @@ describe('Admin Restrictions', () => {
     );
 
     render(<TestRoutes />, { route: '/account/appointments' });
-    expect(screen.getByText(/not allowed/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /not allowed/i })).toBeInTheDocument();
   });
 
   it('prevents admin from viewing appointment deep link', () => {
@@ -375,6 +379,6 @@ describe('Admin Restrictions', () => {
     );
 
     render(<TestRoutes />, { route: '/appointment/123' });
-    expect(screen.getByText(/not allowed/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /not allowed/i })).toBeInTheDocument();
   });
 });

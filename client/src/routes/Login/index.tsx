@@ -123,9 +123,13 @@ export default function Login() {
             Login
           </Button>
         </form>
-        <div className={styles.font} onClick={() => setView('reset')}>
+        <button
+          type="button"
+          className={styles.font}
+          onClick={() => setView('reset')}
+        >
           Forgot password?
-        </div>
+        </button>
       </>
     );
   } else {
@@ -155,9 +159,13 @@ export default function Login() {
             Reset password
           </Button>
         </form>
-        <div className={styles.font} onClick={() => setView('login')}>
+        <button
+          type="button"
+          className={styles.font}
+          onClick={() => setView('login')}
+        >
           Login
-        </div>
+        </button>
       </>
     );
   }

@@ -160,12 +160,14 @@ export default function DashboardAppointment() {
             <input
               type="text"
               className={styles.search_input}
+              aria-label="Search client name"
               placeholder="Search client name..."
               value={clientSearch}
               onChange={(e) => setClientSearch(e.target.value)}
             />
             <select
               className={styles.filter_select}
+              aria-label="Filter by service"
               value={serviceFilter}
               onChange={(e) => setServiceFilter(e.target.value)}
             >
@@ -178,6 +180,7 @@ export default function DashboardAppointment() {
             </select>
             <select
               className={styles.filter_select}
+              aria-label="Filter by barber"
               value={employeeFilter}
               onChange={(e) => setEmployeeFilter(e.target.value)}
             >
@@ -190,6 +193,7 @@ export default function DashboardAppointment() {
             </select>
             {hasFilters && (
               <button
+                type="button"
                 className={styles.clear_filters_btn}
                 onClick={clearFilters}
               >

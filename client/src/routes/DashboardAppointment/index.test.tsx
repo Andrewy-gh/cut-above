@@ -54,9 +54,17 @@ describe('DashboardAppointment', () => {
     );
 
     expect(screen.getByText('Jordan')).toBeInTheDocument();
-    expect(screen.getAllByText('Cancelled').length).toBeGreaterThanOrEqual(2);
+    expect(
+      screen.getByRole('textbox', { name: /search client name/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('combobox', { name: /filter by service/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('combobox', { name: /filter by barber/i })
+    ).toBeInTheDocument();
 
-    fireEvent.click(screen.getAllByText('Cancelled')[1]);
+    fireEvent.click(screen.getByRole('button', { name: /cancelled/i }));
 
     expect(screen.getByText('Chris')).toBeInTheDocument();
     expect(screen.getByText('No further action')).toBeInTheDocument();

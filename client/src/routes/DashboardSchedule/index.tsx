@@ -132,6 +132,7 @@ export default function DashboardSchedule() {
             <input
               type="text"
               className={styles.search_input}
+              aria-label="Search schedules by date"
               placeholder="Search dates: 2026-02 or 02-03"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -139,6 +140,7 @@ export default function DashboardSchedule() {
             <div className={styles.view_toggle}>
               {(['upcoming', 'past', 'all'] as DashboardScheduleView[]).map((v) => (
                 <button
+                  type="button"
                   key={v}
                   className={`${styles.toggle_btn} ${
                     view === v ? styles.toggle_btn_active : ''
