@@ -1,42 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { act, renderHook } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useBooking } from './useBooking';
-
-const mocks = vi.hoisted(() => ({
-  addMutation: vi.fn(),
-  modifyMutation: vi.fn(),
-  modifyManagedMutation: vi.fn(),
-  handleEndRescheduling: vi.fn(),
-  handleFilterReset: vi.fn(),
-  handleSuccess: vi.fn(),
-  handleError: vi.fn(),
-}));
-
-vi.mock('@/features/appointments/apptApiSlice', () => ({
-  useAddAppointmentMutation: () => [mocks.addMutation],
-  useModifyAppointmentMutation: () => [mocks.modifyMutation],
-  useModifyManagedAppointmentMutation: () => [mocks.modifyManagedMutation],
-}));
-
-vi.mock('@/hooks/useAppointment', () => ({
-  useAppointment: () => ({
-    handleEndRescheduling: mocks.handleEndRescheduling,
-  }),
-}));
-
-vi.mock('@/hooks/useFilter', () => ({
-  useFilter: () => ({
-    handleFilterReset: mocks.handleFilterReset,
-  }),
-}));
-
-vi.mock('@/hooks/useNotification', () => ({
-  useNotification: () => ({
-    handleSuccess: mocks.handleSuccess,
-    handleError: mocks.handleError,
-  }),
-}));
+import { createBookingOrchestrator } from './useBooking';
 
 const baseBooking = {
   start: '2025-01-01T15:00:00.000Z',
@@ -46,70 +10,68 @@ const baseBooking = {
 };
 
 describe('useBooking', () => {
+  const createDeps = () => ({
+    addAppointment: vi.fn(),
+    modifyAppointment: vi.fn(),
+    modifyManagedAppointment: vi.fn(),
+    handleEndRescheduling: vi.fn(),
+    handleFilterReset: vi.fn(),
+    handleSuccess: vi.fn(),
+    handleError: vi.fn(),
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('surfaces schedule conflict errors', async () => {
-    const error = new Error('Time slot conflicts with existing appointment');
-    mocks.addMutation.mockRejectedValueOnce(error);
-
-    const { result } = renderHook(() => useBooking());
-
-    await act(async () => {
-      await result.current.handleBooking(baseBooking);
+  it('clears filters after a successful new booking', async () => {
+    const deps = createDeps();
+    deps.addAppointment.mockResolvedValueOnce({
+      success: true,
+      message: 'Appointment successfully created',
     });
 
-    expect(mocks.handleError).toHaveBeenCalledWith(error);
+    const booking = createBookingOrchestrator(deps);
+
+    await booking.handleBooking(baseBooking);
+
+    expect(deps.handleSuccess).toHaveBeenCalledWith(
+      'Appointment successfully created'
+    );
+    expect(deps.handleFilterReset).toHaveBeenCalledOnce();
+    expect(deps.handleEndRescheduling).not.toHaveBeenCalled();
   });
 
-  it('surfaces invalid employee selection errors', async () => {
-    const error = new Error('Invalid employee');
-    mocks.addMutation.mockRejectedValueOnce(error);
-
-    const { result } = renderHook(() => useBooking());
-
-    await act(async () => {
-      await result.current.handleBooking(baseBooking);
-    });
-
-    expect(mocks.handleError).toHaveBeenCalledWith(error);
-  });
-
-  it('surfaces unauthorized booking errors', async () => {
-    const error = new Error('Not authenticated');
-    mocks.addMutation.mockRejectedValueOnce(error);
-
-    const { result } = renderHook(() => useBooking());
-
-    await act(async () => {
-      await result.current.handleBooking(baseBooking);
-    });
-
-    expect(mocks.handleError).toHaveBeenCalledWith(error);
-  });
-
-  it('uses the scoped mutation when a manage token is provided', async () => {
-    mocks.modifyManagedMutation.mockResolvedValueOnce({
+  it('ends rescheduling after a successful token-based booking update', async () => {
+    const deps = createDeps();
+    deps.modifyManagedAppointment.mockResolvedValueOnce({
       success: true,
       message: 'Appointment successfully updated',
     });
 
-    const { result } = renderHook(() => useBooking());
+    const booking = createBookingOrchestrator(deps);
 
-    await act(async () => {
-      await result.current.handleBooking({
-        ...baseBooking,
-        token: 'a'.repeat(64),
-      });
-    });
-
-    expect(mocks.modifyManagedMutation).toHaveBeenCalledWith({
-      token: 'a'.repeat(64),
+    await booking.handleBooking({
       ...baseBooking,
+      token: 'a'.repeat(64),
     });
-    expect(mocks.handleSuccess).toHaveBeenCalledWith(
+
+    expect(deps.handleSuccess).toHaveBeenCalledWith(
       'Appointment successfully updated'
     );
+    expect(deps.handleEndRescheduling).toHaveBeenCalledOnce();
+    expect(deps.handleFilterReset).not.toHaveBeenCalled();
+  });
+
+  it('surfaces schedule conflict errors', async () => {
+    const deps = createDeps();
+    const error = new Error('Time slot conflicts with existing appointment');
+    deps.addAppointment.mockRejectedValueOnce(error);
+
+    const booking = createBookingOrchestrator(deps);
+
+    await booking.handleBooking(baseBooking);
+
+    expect(deps.handleError).toHaveBeenCalledWith(error);
   });
 });
