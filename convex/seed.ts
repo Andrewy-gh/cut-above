@@ -196,7 +196,16 @@ export const ensureAppointment = mutation({
       .first();
 
     if (existing) {
-      return { id: existing.id, inserted: false };
+      await ctx.db.patch(existing._id, {
+        status: args.status,
+        service: args.service,
+        start: args.start,
+        end: args.end,
+        clientId: args.clientId,
+        employeeId: args.employeeId,
+        scheduleId: args.scheduleId,
+      });
+      return { id: existing.id, inserted: false, updated: true };
     }
 
     await ctx.db.insert('appointments', {
@@ -210,7 +219,7 @@ export const ensureAppointment = mutation({
       scheduleId: args.scheduleId,
     });
 
-    return { id: args.id, inserted: true };
+    return { id: args.id, inserted: true, updated: false };
   },
 });
 

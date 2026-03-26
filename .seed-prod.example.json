@@ -69,6 +69,48 @@
       "email": "daniel.wilson@cutabove.test",
       "role": "client",
       "password": "ChangeMe_Daniel_123!"
+    },
+    {
+      "firstName": "Noah",
+      "lastName": "Patel",
+      "email": "noah.patel@cutabove.test",
+      "role": "client",
+      "password": "ChangeMe_Noah_123!"
+    },
+    {
+      "firstName": "Marcus",
+      "lastName": "Reed",
+      "email": "marcus.reed@cutabove.test",
+      "role": "client",
+      "password": "ChangeMe_Marcus_123!"
+    },
+    {
+      "firstName": "Jamal",
+      "lastName": "Walker",
+      "email": "jamal.walker@cutabove.test",
+      "role": "client",
+      "password": "ChangeMe_Jamal_123!"
+    },
+    {
+      "firstName": "Leo",
+      "lastName": "Carter",
+      "email": "leo.carter@cutabove.test",
+      "role": "client",
+      "password": "ChangeMe_Leo_123!"
+    },
+    {
+      "firstName": "Victor",
+      "lastName": "Alvarez",
+      "email": "victor.alvarez@cutabove.test",
+      "role": "client",
+      "password": "ChangeMe_Victor_123!"
+    },
+    {
+      "firstName": "Elias",
+      "lastName": "Brooks",
+      "email": "elias.brooks@cutabove.test",
+      "role": "client",
+      "password": "ChangeMe_Elias_123!"
     }
   ]
 }
